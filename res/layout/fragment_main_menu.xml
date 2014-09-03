@@ -12,6 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
+            android:visibility="gone"
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:paddingTop="20dp"
@@ -40,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#ffffff"
+            android:layout_marginTop="15dp"
             android:dividerHeight="0dp" >
         </ListView>
     </LinearLayout>
