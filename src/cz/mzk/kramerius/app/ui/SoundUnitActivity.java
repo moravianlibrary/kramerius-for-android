@@ -119,12 +119,12 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 				return;
 			}
 
-			addFakeTrack(children, "Losing My Religion", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-			addFakeTrack(children, "Shiny Happy People", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-			addFakeTrack(children, "Everybody Hurts", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-			addFakeTrack(children, "Man On The Moon", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-			addFakeTrack(children, "Bad Day", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-			addFakeTrack(children, "Leaving New Your", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
+//			addFakeTrack(children, "Losing My Religion", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
+//			addFakeTrack(children, "Shiny Happy People", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
+//			addFakeTrack(children, "Everybody Hurts", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
+//			addFakeTrack(children, "Man On The Moon", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
+//			addFakeTrack(children, "Bad Day", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
+//			addFakeTrack(children, "Leaving New Your", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
 
 			mSoundUnitInfo.setText("Skladby: " + children.size());
 			mAdapter = new TrackArrayAdapter(tContext, children);

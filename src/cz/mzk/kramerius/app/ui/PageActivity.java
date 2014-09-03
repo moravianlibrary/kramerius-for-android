@@ -293,7 +293,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	public boolean dispatchKeyEvent(KeyEvent event) {
 		boolean useHardwareButton = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				getString(R.string.pref_hardware_buttons_key),
-				Boolean.parseBoolean(getString(R.string.pref_hardware_buttons_key)));
+				Boolean.parseBoolean(getString(R.string.pref_hardware_buttons_default)));
 		if (useHardwareButton) {
 			int action = event.getAction();
 			int keyCode = event.getKeyCode();

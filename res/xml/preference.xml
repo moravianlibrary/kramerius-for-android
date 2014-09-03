@@ -2,13 +2,13 @@
 
     <PreferenceCategory android:title="Prohlížení dokumentů" >
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="@string/pref_hardware_buttons_default"
             android:key="@string/pref_hardware_buttons_key"
             android:summary="Použítvat harwarová tlačítka pro otáčení stránek"
             android:title="Použítvat harwarová tlačítka" />
 
         <ListPreference
-            android:defaultValue="1"
+            android:defaultValue="@string/pref_view_mode_default"
             android:entries="@array/view_mode_entries"
             android:entryValues="@array/view_mode_values"
             android:key="@string/pref_view_mode_key"

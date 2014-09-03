@@ -108,10 +108,10 @@ public class K5Connector {
 		// "periodical", "Rovnost");
 		addItemToList(list, "uuid:ba632b35-45d3-4a1e-8357-3eb866f9d00e", "soundrecording",
 				"Le veau d'or Vous qui faites l'endormie");
-		addItemToList(list, "uuid:9f2fec5f-076b-424f-9b8d-d3a0aed4f0b1", "soundrecording", "Nocturne Es-dur");
-		addItemToList(list, "uuid:86943124-5a4a-4679-a887-787ae0006b26", "soundrecording", "Zločin a trest");
-		addItemToList(list, "uuid:206aac01-e915-4806-a828-324d3d8ee525", "soundrecording",
-				"Pohřeb presidenta osvoboditele v ČS rozhlase 21.IX. 1937");
+//		addItemToList(list, "uuid:9f2fec5f-076b-424f-9b8d-d3a0aed4f0b1", "soundrecording", "Nocturne Es-dur");
+//		addItemToList(list, "uuid:86943124-5a4a-4679-a887-787ae0006b26", "soundrecording", "Zločin a trest");
+//		addItemToList(list, "uuid:206aac01-e915-4806-a828-324d3d8ee525", "soundrecording",
+//				"Pohřeb presidenta osvoboditele v ČS rozhlase 21.IX. 1937");
 
 		addItemToList(list, "uuid:f40df848-b2d3-4334-a898-ed2c9aae6cb1", "periodical", "Tisk, noviny a novináři");
 		addItemToList(
@@ -120,13 +120,13 @@ public class K5Connector {
 				"periodical",
 				"Noviny : list vydavatelů časopisů a novinářů československých : věstník Ústř. svazu vydav. a nakl. časopisů a periodických spisů v Praze a Jednoty čsl. novinářů v Praze");
 
-		addItemToList(list, "uuid:d65f964d-60e2-411b-99a3-907783d419e4", "monograph",
-				"Pazourek - nejstarší kulturní nerost, aneb, Kámen všech kamenů")
-				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:d65f964d-60e2-411b-99a3-907783d419e4&stream=IMG_FULL&action=GETRAW");
-
-		addItemToList(list, "uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8", "monograph",
-				"Lidský kapitál a investice do vzdělání (16. ročník, 2013)")
-				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8&stream=IMG_FULL&action=GETRAW");
+//		addItemToList(list, "uuid:d65f964d-60e2-411b-99a3-907783d419e4", "monograph",
+//				"Pazourek - nejstarší kulturní nerost, aneb, Kámen všech kamenů")
+//				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:d65f964d-60e2-411b-99a3-907783d419e4&stream=IMG_FULL&action=GETRAW");
+//
+//		addItemToList(list, "uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8", "monograph",
+//				"Lidský kapitál a investice do vzdělání (16. ročník, 2013)")
+//				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8&stream=IMG_FULL&action=GETRAW");
 
 		addItemToList(list, "uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8", "monograph", "Philosophy of Balance")
 				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8&stream=IMG_FULL&action=GETRAW");
