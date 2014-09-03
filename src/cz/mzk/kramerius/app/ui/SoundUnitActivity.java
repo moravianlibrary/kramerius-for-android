@@ -221,5 +221,16 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
 	}
+	
+	@Override
+	protected void onPause() {
+		if(mPlayerFragment != null) {
+			mPlayerFragment.pause();
+		}
+		if(mAdapter != null) {
+			mAdapter.setPlaying(false);
+		}
+		super.onPause();
+	}
 
 }

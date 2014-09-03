@@ -171,13 +171,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, OnCompl
 	}
 
 	private void onPlayButtonClicked() {
-		if (mMediaPlayer.isPlaying()) {
-			return;
-		}
-		mMediaPlayer.start();
-		mPlay.setVisibility(View.GONE);
-		mPause.setVisibility(View.VISIBLE);
-		mHandler.postDelayed(mTimerTask, 1000);
+		play();
 		if (mCallback != null) {
 			mCallback.onPlayerPlay();
 		}
@@ -185,16 +179,30 @@ public class PlayerFragment extends Fragment implements OnClickListener, OnCompl
 	}
 
 	private void onPauseButtonClicked() {
+		pause();
+		if (mCallback != null) {
+			mCallback.onPlayerPause();
+		}
+	}
+	
+	public void pause() {
 		if (!mMediaPlayer.isPlaying()) {
 			return;
 		}
 		mMediaPlayer.pause();
 		mPlay.setVisibility(View.VISIBLE);
 		mPause.setVisibility(View.GONE);
-		mHandler.removeCallbacks(mTimerTask);
-		if (mCallback != null) {
-			mCallback.onPlayerPause();
+		mHandler.removeCallbacks(mTimerTask);		
+	}
+	
+	public void play() {
+		if (mMediaPlayer.isPlaying()) {
+			return;
 		}
+		mMediaPlayer.start();
+		mPlay.setVisibility(View.GONE);
+		mPause.setVisibility(View.VISIBLE);
+		mHandler.postDelayed(mTimerTask, 1000);		
 	}
 
 	private void onPreviousButtonClicked() {
