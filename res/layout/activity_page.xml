@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="0dp" >
+
+    <fragment
+            android:id="@+id/fragmentViewer"
+            android:name="cz.mzk.kramerius.app.viewer.PageViewerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"  />
+
+    <ImageView
+        android:id="@+id/page_loader"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/img_loader"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/page_topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/green"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <ImageView
+            android:id="@+id/page_metadata"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_about_white" />
+
+        <TextView
+            android:id="@+id/page_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/page_bottomPanel"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/green"
+        android:paddingLeft="0dp"
+        android:paddingRight="10dp" >
+
+        <ImageView
+            android:id="@+id/page_list"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_group_white" />
+
+        <TextView
+            android:id="@+id/page_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="17dp" />
+
+        <SeekBar
+            android:id="@+id/page_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@id/page_index"
+            android:layout_toRightOf="@id/page_list" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/page_seek_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/page_bottomPanel"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/seek_index_bg"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:visibility="gone" />
+
+    <fragment
+        android:id="@+id/page_listFragment"
+        android:name="cz.mzk.kramerius.app.ui.PageSelectionFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/page_bottomPanel"
+        android:layout_below="@id/page_topPanel" />
+
+</RelativeLayout>

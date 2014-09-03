@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="view_mode_values">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="4">4</item>
+    </string-array>
+    
+    
+    
+    <string-array name="view_mode_entries">
+        <item name="1">Fit to Screen</item>
+        <item name="2">Align Top Left</item>
+        <item name="3">Align Center</item>
+        <item name="4">Align Horizontal Center</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Prohlížení dokumentů" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pref_hardware_buttons_key"
+            android:summary="Použítvat harwarová tlačítka pro otáčení stránek"
+            android:title="Použítvat harwarová tlačítka" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/view_mode_entries"
+            android:entryValues="@array/view_mode_values"
+            android:key="@string/pref_view_mode_key"
+            android:summary="Jakým způsobem zobrazit obrázek na obrazovce"
+            android:title="Způsob zobrazení" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Zdroj dat" >
+        <Preference
+            android:key="@string/pref_select_domain_key"
+            android:title="Vyberte zdroj dat" >
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

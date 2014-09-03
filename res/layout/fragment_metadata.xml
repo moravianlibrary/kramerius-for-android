@@ -1,0 +1,198 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <LinearLayout
+        android:id="@+id/metadata_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp" >
+
+        <TextView
+            android:id="@+id/metadata_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Když slunéčko svítí"
+            android:textColor="@color/grey"
+            android:textSize="22dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Hlavní název:"
+                android:textColor="@color/light_grey"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/metadata_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Když slunéčko svítí"
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Podnázev:"
+                android:textColor="@color/light_grey"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/metadata_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="verše"
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="ISSN:"
+                android:textColor="@color/light_grey"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/metadata_issn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1802-6265"
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Autor"
+            android:textColor="@color/light_grey"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Jméno:"
+                android:textColor="@color/light_grey"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/metadata_authorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rais, Karel Václav"
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Datum:"
+                android:textColor="@color/light_grey"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/metadata_authorDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1859-1926"
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Vydavatel"
+            android:textColor="@color/light_grey"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="Název vydavatele:"
+                android:textColor="@color/light_grey"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/metadata_publisher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Al. Hynek"
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Poznámka"
+            android:textColor="@color/light_grey"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/metadata_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Od roku 2010 vychází 4x ročně elektronicky na http://duha.mzk.cz (ISSN elektronické verze: 1804-4255). Tištěně vychází 2x ročně."
+            android:textColor="@color/grey"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+</RelativeLayout>

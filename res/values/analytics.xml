@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="TypographyDashes">
+  <!--Replace placeholder ID with your tracking ID-->
+  <string name="ga_trackingId">UA-54422702-1</string>
+
+  <!--Enable automatic activity tracking-->
+  <bool name="ga_autoActivityTracking">true</bool>
+
+  <!--Enable automatic exception tracking-->
+  <bool name="ga_reportUncaughtExceptions">true</bool>
+  
+  
+  <string name="cz.mzk.kramerius.app.ui.MainActivity">Main</string>
+  <string name="cz.mzk.kramerius.app.ui.DomainActivity">Domain</string>
+  <string name="cz.mzk.kramerius.app.ui.MetadataActivity">Metadata</string>
+  <string name="cz.mzk.kramerius.app.ui.PageActivity">Page</string>
+  <string name="cz.mzk.kramerius.app.ui.PdfViewerActivity">Pdf</string>
+  <string name="cz.mzk.kramerius.app.ui.PeriodicalActivity">Periodical</string>
+  <string name="cz.mzk.kramerius.app.ui.SoundRecordingActivity">Sound Recording</string>
+  <string name="cz.mzk.kramerius.app.ui.SoundUnitActivity">Sound Unit</string>
+  
+  
+  
+  
+</resources>

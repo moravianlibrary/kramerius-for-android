@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="60dp" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Přihlašovací jméno"
+        android:textColor="@color/grey"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/login_userName"
+        android:layout_width="300dp"
+        android:layout_height="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Heslo"
+        android:textColor="@color/grey"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/login_userPassword"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/login_confirm"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/green"
+        android:text="Přihlásit"
+        android:textColor="#ffffff"
+        android:textSize="20dp" />
+    
+    
+    <TextView
+        android:id="@+id/login_message"         
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+		android:textSize="22dp"
+		android:text="SSpatne zadane jmeno nebo heslo"
+		android:textColor="#aa4444"        
+        
+        />
+
+</LinearLayout>

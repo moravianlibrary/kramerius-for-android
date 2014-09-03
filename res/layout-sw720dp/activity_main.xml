@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg" >
+
+    <FrameLayout
+        android:id="@+id/main_menu"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:background="#ffffff" >
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/main_menu" >
+    </FrameLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/main_menu"
+        android:background="#dddddd" />
+
+</RelativeLayout>

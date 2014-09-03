@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        
+    <color name="status_bar">#006e81</color>
+    <color name="status_bar2">#006064</color>
+    <color name="green">#0097a7</color>
+    <color name="green5">#004d40</color>
+    <color name="green4">#00bcd4</color>
+    <color name="green3">#00695c</color>
+    <color name="green2">#009688</color>
+    
+    
+    <color name="bg">#e3e3e3</color>    
+    <color name="card_pressed">#f9f9f9</color>
+    
+    <color name="dark_green">#00675b</color>    
+    <color name="green_semi_transparent">#aa009688</color>
+    <color name="grey">#757575</color>
+    <color name="light_grey">#959595</color>
+    <color name="light_light_grey">#c5c5c5</color>
+    <color name="dark_grey">#555555</color>
+    <color name="dark_dark_grey">#222222</color>
+    <color name="red">#962222</color>
+    <color name="white">#ffffff</color>
+
+</resources>
