@@ -62,24 +62,26 @@ public class K5Connector {
 		return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, extended, limit);
 	}
 
+	// API doesn't support feed/selected. This is a temporary solution for
+	// creating a list with selected documents.
 	public List<Item> getSelected(Context context, boolean extended, int limit) {
 		List<Item> list = new ArrayList<Item>();
 
-		addItemToList(list, "uuid:4873e8c7-5967-4003-8544-96f64ca55da7", "monograph", "Symbiotické zemědělství")
-				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:4873e8c7-5967-4003-8544-96f64ca55da7&stream=IMG_FULL&action=GETRAW");
-
 		addItemToList(list, "uuid:530719f5-ee95-4449-8ce7-12b0f4cadb22", "monograph", "Když slunéčko svítí");
 		addItemToList(list, "uuid:e044d220-b0c1-4f15-95a0-0fd86747cc24", "monograph", "Dvanáct pohádek");
+		addItemToList(list, "uuid:33b0c420-e25f-49cf-ab8d-c9471c927167", "monograph", "Kožuchy");
 		addItemToList(list, "uuid:f1c7c08d-8f64-4b66-be28-5f209c2c7021", "periodical", "Rovnost");
+		addItemToList(list, "uuid:c4d321f6-53b6-4a43-a80f-6a73138500f0", "monograph",
+				"Král Myška a princ Junák : příhody statečných trpaslíků");
+
 		addItemToList(list, "uuid:59e708b6-c462-4610-90c5-ac5ca030050a", "soundrecording", "Oh, Kay!. Clap yo' hands");
 
 		addItemToList(list, "uuid:2fa33e93-7bb8-441c-aa5a-0f63bd565b93", "graphic",
 				"Der steinere Saal bei Adamsthal [Kostelik]");
 
-	
-		
-		
-		
+		addItemToList(list, "uuid:4873e8c7-5967-4003-8544-96f64ca55da7", "monograph", "Symbiotické zemědělství")
+				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:4873e8c7-5967-4003-8544-96f64ca55da7&stream=IMG_FULL&action=GETRAW");
+
 		// addItemToList(list, "uuid:cf35b628-18ac-4bb6-9999-d55ff17a068b",
 		// "monograph",
 		// "Diagnostika předškoláka : správný vývoj řeči dítěte");
@@ -101,7 +103,7 @@ public class K5Connector {
 				"Beide Himmels-Halbkugeln in Stereographischer Polarprojection");
 		addItemToList(list, "uuid:36e7c070-4bd3-4bc4-b991-3b66fe16f936", "manuscript",
 				"Thajský rukopis na palmových listech");
-		addItemToList(list, "uuid:33b0c420-e25f-49cf-ab8d-c9471c927167", "monograph", "Kožuchy");
+
 		// addItemToList(list, "uuid:f1c7c08d-8f64-4b66-be28-5f209c2c7021",
 		// "periodical", "Rovnost");
 		addItemToList(list, "uuid:ba632b35-45d3-4a1e-8357-3eb866f9d00e", "soundrecording",
@@ -129,15 +131,10 @@ public class K5Connector {
 		addItemToList(list, "uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8", "monograph", "Philosophy of Balance")
 				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8&stream=IMG_FULL&action=GETRAW");
 
-		
-		 addItemToList(list, "uuid:c4d321f6-53b6-4a43-a80f-6a73138500f0",
-				 "monograph",
-				 "Král Myška a princ Junák : příhody statečných trpaslíků");
-				
-				 addItemToList(list, "uuid:bdc405b0-e5f9-11dc-bfb2-000d606f5dc6",
-				 "periodical",
-				 "Lidové noviny");
-		
+		// addItemToList(list, "uuid:bdc405b0-e5f9-11dc-bfb2-000d606f5dc6",
+		// "periodical",
+		// "Lidové noviny");
+
 		if (limit > -1 && list.size() > limit) {
 			list = list.subList(0, limit);
 		}
@@ -266,6 +263,15 @@ public class K5Connector {
 				item.setTitle(jsonItem.optString("title"));
 				item.setRootTitle(jsonItem.optString("root_title"));
 				item.setRootPid(jsonItem.optString("root_pid"));
+
+				JSONObject details = jsonItem.optJSONObject("details");
+				if (details != null) {
+					item.setYear(details.optString("year"));
+					item.setVolumeNumber(details.optString("volumeNumber"));
+					item.setIssueNumber(details.optString("issueNumber"));
+					item.setPeriodicalItemDate(details.optString("date"));
+					item.setPartNumber(details.optString("partNumber"));
+				}
 				list.add(item);
 			}
 		} catch (IllegalStateException e) {

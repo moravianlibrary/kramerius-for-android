@@ -16,7 +16,16 @@ public class Item implements Parcelable {
 	private String pdf;
 
 	private String author;
-
+	
+	//periodicalVolume
+	private String year;
+	private String volumeNumber;
+	
+	//periodicalItem
+	private String issueNumber;
+	private String periodicalItemDate;
+	private String partNumber;
+	
 	public Item() {
 
 	}
@@ -32,7 +41,11 @@ public class Item implements Parcelable {
 		children = in.readByte() != 0;
 		pdf = in.readString();
 		author = in.readString();
-
+		year = in.readString();
+		volumeNumber = in.readString();
+		issueNumber = in.readString();
+		periodicalItemDate = in.readString();
+		partNumber = in.readString();
 	}
 
 	public String getPid() {
@@ -119,6 +132,54 @@ public class Item implements Parcelable {
 	public void setPdf(String pdf) {
 		this.pdf = pdf;
 	}
+	
+	
+	
+	
+
+	public String getYear() {
+		return year;
+	}
+
+	public String getVolumeNumber() {
+		return volumeNumber;
+	}
+
+	public String getIssueNumber() {
+		return issueNumber;
+	}
+
+	public String getPeriodicalItemDate() {
+		return periodicalItemDate;
+	}
+
+	public String getPartNumber() {
+		return partNumber;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public void setVolumeNumber(String volumeNumber) {
+		this.volumeNumber = volumeNumber;
+	}
+
+	public void setIssueNumber(String issueNumber) {
+		this.issueNumber = issueNumber;
+	}
+
+	public void setPeriodicalItemDate(String periodicalItemDate) {
+		this.periodicalItemDate = periodicalItemDate;
+	}
+
+	public void setPartNumber(String partNumber) {
+		this.partNumber = partNumber;
+	}
+
+
+
+
 
 	public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
 		public Item createFromParcel(Parcel in) {
@@ -147,7 +208,13 @@ public class Item implements Parcelable {
 		dest.writeByte((byte) (children ? 1 : 0));
 		dest.writeString(pdf);
 		dest.writeString(author);
-
+		dest.writeString(year);
+		dest.writeString(volumeNumber);
+		dest.writeString(issueNumber);
+		dest.writeString(periodicalItemDate);
+		dest.writeString(partNumber);
 	}
 
+
+	
 }

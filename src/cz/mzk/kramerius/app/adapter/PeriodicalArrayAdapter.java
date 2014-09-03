@@ -95,16 +95,39 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		Item item = getItem(position);
 		if (mType == TYPE_VOLUME) {
-			holder.title.setText("Ročník " + item.getTitle());
-			holder.info.setText("ROK VYDÁNÍ: 1941");
+			String year = item.getYear() == null ? "" : item.getYear();
+			String volumeNumber = item.getVolumeNumber() == null ? "" : item.getVolumeNumber();
+
+			holder.title.setText("Ročník " + volumeNumber);
+			holder.info.setText("ROK VYDÁNÍ: " + year);
 			holder.actionLabel.setText("Zobrazit čísla");
 			holder.actionIcon.setImageResource(R.drawable.ic_attach_green);
 		} else if (mType == TYPE_ITEM) {
-			holder.title.setText("Číslo " + item.getTitle());
-			holder.info.setText("DATUM VYDÁNÍ: 3.4.1941");
+			String number = item.getIssueNumber();
+			if(number == null || number.isEmpty()) {
+				number = item.getPartNumber();
+			} else {
+				number += "/" + item.getPartNumber(); 
+			}
+			
+			String date = item.getPeriodicalItemDate() == null ? "" : item.getPeriodicalItemDate();
+			holder.title.setText("Číslo " + number);
+			holder.info.setText("DATUM VYDÁNÍ: " + date);
 			holder.actionLabel.setText("Otevřít číslo");
 			holder.actionIcon.setImageResource(R.drawable.ic_book_green);
 		}
+
+		// if (mType == TYPE_VOLUME) {
+		// holder.title.setText("Ročník " + item.getTitle());
+		// holder.info.setText("ROK VYDÁNÍ: 1941");
+		// holder.actionLabel.setText("Zobrazit čísla");
+		// holder.actionIcon.setImageResource(R.drawable.ic_attach_green);
+		// } else if (mType == TYPE_ITEM) {
+		// holder.title.setText("Číslo " + item.getTitle());
+		// holder.info.setText("DATUM VYDÁNÍ: 3.4.1941");
+		// holder.actionLabel.setText("Otevřít číslo");
+		// holder.actionIcon.setImageResource(R.drawable.ic_book_green);
+		// }
 		String url = K5Api.getThumbnailPath(mContext, item.getPid());
 		ImageLoader.getInstance().displayImage(url, holder.thumb, mOptions);
 

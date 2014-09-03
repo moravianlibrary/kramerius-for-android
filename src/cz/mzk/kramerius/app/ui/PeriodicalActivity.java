@@ -91,7 +91,7 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 			getActionBar().setTitle(TextUtil.shortenforActionBar(result.getParent().getTitle()));						
 			List<Item> items = result.getChildren();
 			if (items != null) {
-				Collections.sort(items, new ItemByTitleComparator());
+				//Collections.sort(items, new ItemByTitleComparator());
 				int type = PeriodicalArrayAdapter.TYPE_ITEM;
 				if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
 					type = PeriodicalArrayAdapter.TYPE_VOLUME;
