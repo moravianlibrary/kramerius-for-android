@@ -88,6 +88,12 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		boolean keepScreenOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+				getString(R.string.pref_keep_screen_on_key),
+				Boolean.parseBoolean(getString(R.string.pref_keep_screen_on_default)));
+		if(keepScreenOn) {
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}		
 		mSystemBarTintManager = new SystemBarTintManager(this);
 		mSystemBarTintManager.setStatusBarTintEnabled(false);
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);

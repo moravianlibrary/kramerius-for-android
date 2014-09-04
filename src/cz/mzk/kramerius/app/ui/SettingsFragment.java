@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
@@ -33,6 +34,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		}
 
 		Preference domainButton = (Preference) findPreference(getString(R.string.pref_select_domain_key));
+		
+		String domain = K5Api.getDomain(getActivity());
+		domainButton.setSummary(domain);
 		domainButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {

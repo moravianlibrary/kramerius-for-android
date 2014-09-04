@@ -79,21 +79,31 @@
     
     
     
+    <string name="pref_category_viewer">Prohlížení dokumentů</string>
+    <string name="pref_category_data">Zdroj dat</string>
     
+    <string name="pref_keep_screen_on_default" translatable="false">true</string>
+    <string name="pref_keep_screen_on_key" translatable="false">p_keep_screen_on</string>
+    <string name="pref_keep_screen_on_title">Nevypínat obrazovku</string>
+    <string name="pref_keep_screen_on_summary">Nevypínat obrazovku při prohlížení dokumentů</string>
     
     <string name="pref_hardware_buttons_default" translatable="false">true</string>
     <string name="pref_hardware_buttons_key" translatable="false">p_hardware_buttons</string>
-    
+    <string name="pref_hardware_buttons_title">Použítvat harwarová tlačítka</string>
+    <string name="pref_hardware_buttons_summary">Použítvat harwarová tlačítka pro otáčení stránek</string>
+      
     <string name="pref_view_mode_default" translatable="false">4</string>
     <string name="pref_view_mode_key" translatable="false">p_view_mode</string>
+    <string name="pref_view_mode_title">Způsob zobrazení</string>
+    <string name="pref_view_mode_summary">Jakým způsobem zobrazit obrázek na obrazovce</string>
     
     <string name="pref_select_domain_key" translatable="false">p_select_domain</string>
+    <string name="pref_select_domain_title">Vyberte zdroj dat</string>
     
     <string name="pref_domain_default" translatable="false">docker.mzk.cz</string>
     <string name="pref_domain_key" translatable="false">p_domain</string>
     <string name="pref_protocol_default" translatable="false">http</string>
     <string name="pref_protocol_key" translatable="false">p_protocol</string>
-    
     
     
     
