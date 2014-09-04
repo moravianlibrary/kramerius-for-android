@@ -278,6 +278,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onAbout() {
+		changeFragment(new AboutFragment(), false, R.string.about_title);
 	}
 
 	@Override
