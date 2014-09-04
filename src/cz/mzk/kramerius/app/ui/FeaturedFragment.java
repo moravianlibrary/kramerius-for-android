@@ -18,6 +18,7 @@ import cz.mzk.kramerius.app.adapter.GridItemAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class FeaturedFragment extends BaseFragment {
@@ -55,7 +56,7 @@ public class FeaturedFragment extends BaseFragment {
 		Configuration config = getResources().getConfiguration();
 		if (isPhone()) {
 			ScreenUtil.setInsets(getActivity(), view);
-		}	
+		}
 		mGridview = (GridView) view.findViewById(R.id.gridview);
 
 		mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,6 +80,23 @@ public class FeaturedFragment extends BaseFragment {
 		}
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		switch (mType) {
+		case K5Api.FEED_NEWEST:
+			Analytics.sendScreenView(getActivity(), R.string.ga_appview_newest);
+			break;
+		case K5Api.FEED_SELECTED:
+			Analytics.sendScreenView(getActivity(), R.string.ga_appview_selected);
+			break;
+		case K5Api.FEED_MOST_DESIRABLE:
+			Analytics.sendScreenView(getActivity(), R.string.ga_appview_most_desirable);
+			break;
+		}
+
+	}
+
 	class GetFeaturedTask extends AsyncTask<Integer, Void, List<Item>> {
 
 		private Context tContext;
@@ -96,7 +114,7 @@ public class FeaturedFragment extends BaseFragment {
 		protected List<Item> doInBackground(Integer... params) {
 			if (params[0] == K5Api.FEED_NEWEST) {
 				return K5Connector.getInstance().getNewest(tContext, true, -1);
-			} else if (params[0] ==  K5Api.FEED_MOST_DESIRABLE) {
+			} else if (params[0] == K5Api.FEED_MOST_DESIRABLE) {
 				return K5Connector.getInstance().getMostDesirable(tContext, true, -1);
 			} else {
 				return K5Connector.getInstance().getSelected(tContext, true, -1);
@@ -113,7 +131,6 @@ public class FeaturedFragment extends BaseFragment {
 			mGridview.setAdapter(mAdapter);
 		}
 
-		
 	}
 
 }

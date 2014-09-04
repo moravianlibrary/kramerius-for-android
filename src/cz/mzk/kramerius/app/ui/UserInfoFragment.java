@@ -18,6 +18,7 @@ import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class UserInfoFragment extends Fragment implements OnClickListener {
@@ -80,7 +81,7 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 			populateUser(user);
 		}
 	}
-	
+
 	class GetUserRightsTask extends AsyncTask<Void, Void, Map<String, Boolean>> {
 
 		private Context tContext;
@@ -98,13 +99,13 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 		protected void onPostExecute(Map<String, Boolean> result) {
 			populateUserRights(result);
 		}
-	}	
+	}
 
 	private void populateUser(User user) {
 		if (getActivity() == null) {
 			return;
 		}
-		
+
 		if (user == null) {
 			return;
 		}
@@ -114,7 +115,8 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 		for (String role : user.getRoles()) {
 			TextView tv = new TextView(getActivity());
 			tv.setText(role);
-			tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT));
 			tv.setTextColor(getActivity().getResources().getColor(R.color.grey));
 			tv.setTypeface(null, Typeface.ITALIC);
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
@@ -122,28 +124,25 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 		}
 
 	}
-	
+
 	private void populateUserRights(Map<String, Boolean> rights) {
 		if (getActivity() == null) {
 			return;
 		}
-		
 		if (rights == null) {
 			return;
 		}
-		
-
 		for (String right : rights.keySet()) {
 			TextView tv = new TextView(getActivity());
 			tv.setText(right + ": " + (rights.get(right) ? "Ano" : "Ne"));
-			tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT));
 			tv.setTextColor(getActivity().getResources().getColor(R.color.grey));
 			tv.setTypeface(null, Typeface.ITALIC);
 			tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
 			mRights.addView(tv);
 		}
-
-	}	
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -152,6 +151,12 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 				mCallback.onLogOut();
 			}
 		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Analytics.sendScreenView(getActivity(), R.string.ga_appview_user_info);
 	}
 
 }

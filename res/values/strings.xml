@@ -65,6 +65,19 @@
     
     
     
+    <string name="ga_appview_about" translatable="false">About</string>
+    <string name="ga_appview_help" translatable="false">Help</string>
+    <string name="ga_appview_main_featured" translatable="false">Main Featured</string>
+    <string name="ga_appview_selected" translatable="false">Selected</string>
+    <string name="ga_appview_newest" translatable="false">Newest</string>
+    <string name="ga_appview_most_desirable" translatable="false">Most Desirable</string>
+    <string name="ga_appview_login" translatable="false">Login</string>
+    <string name="ga_appview_page_selection" translatable="false">Page Selection</string>
+    <string name="ga_appview_user_info" translatable="false">User Info</string>
+    <string name="ga_appview_virtual_collections" translatable="false">Virtual Collections</string>
+    <string name="ga_appview_settings" translatable="false">Settings</string>
+    
+    
     
     
     

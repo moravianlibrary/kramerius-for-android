@@ -14,6 +14,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class LoginFragment extends Fragment {
@@ -113,5 +114,12 @@ public class LoginFragment extends Fragment {
 			}
 		}
 	}
+	
+	@Override
+	public void onStart() {
+	    super.onStart();
+	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_login);
+	}		
+	
 
 }

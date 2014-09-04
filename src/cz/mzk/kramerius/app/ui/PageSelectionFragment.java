@@ -13,6 +13,7 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.PageSelectionAdapter;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.util.Analytics;
 
 public class PageSelectionFragment extends BaseFragment {
 
@@ -62,5 +63,12 @@ public class PageSelectionFragment extends BaseFragment {
 		mAdapter = new PageSelectionAdapter(c, items);
 		mGridview.setAdapter(mAdapter);
 	}
+	
+	@Override
+	public void onStart() {
+	    super.onStart();
+	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_page_selection);
+	}		
+	
 
 }

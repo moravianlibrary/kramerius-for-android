@@ -15,6 +15,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.VirtualCollectionsArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class VirtualCollectionsFragment extends Fragment {
@@ -79,6 +80,12 @@ public class VirtualCollectionsFragment extends Fragment {
 		@Override
 		protected void onProgressUpdate(Void... values) {
 		}
+	}
+	
+	@Override
+	public void onStart() {
+	    super.onStart();
+	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_virtual_collections);
 	}
 
 }

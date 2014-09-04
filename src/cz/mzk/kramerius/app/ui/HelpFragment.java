@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class HelpFragment extends Fragment {
@@ -22,5 +23,13 @@ public class HelpFragment extends Fragment {
 		}				
 		return view;
 	}
+	
+	
+	@Override
+	public void onStart() {
+	    super.onStart();
+	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_help);
+	}	
+
 
 }

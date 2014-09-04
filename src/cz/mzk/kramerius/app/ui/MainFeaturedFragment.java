@@ -20,6 +20,7 @@ import cz.mzk.kramerius.app.adapter.GridItemAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class MainFeaturedFragment extends BaseFragment implements OnClickListener {
@@ -261,5 +262,12 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			mCallback.onFeatured(K5Api.FEED_MOST_DESIRABLE);
 		}
 	}
+	
+	
+	@Override
+	public void onStart() {
+	    super.onStart();
+	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_main_featured);
+	}		
 
 }
