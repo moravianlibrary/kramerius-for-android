@@ -228,8 +228,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	}
 
 	private void showMetadata() {
-		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);
-		intent.putExtra(BaseActivity.EXTRA_PID, mParentPid);
+		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);		
+		intent.putExtra(BaseActivity.EXTRA_PID, mPageList.get(mCurrentPage).getPid());
 		startActivity(intent);
 	}
 

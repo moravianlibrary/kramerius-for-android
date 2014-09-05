@@ -20,7 +20,7 @@ public class MetadataActivity extends BaseActivity {
 		getActionBar().setDisplayUseLogoEnabled(false);
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setTitle("Metadata");
+
 
 		MetadataFragment metadataFragment = (MetadataFragment) getFragmentManager().findFragmentById(
 				id.metadata_metadataFragment);

@@ -19,6 +19,8 @@ import org.json.JSONTokener;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Pair;
+import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.Metadata;
 import cz.mzk.kramerius.app.model.User;
@@ -108,10 +110,13 @@ public class K5Connector {
 		// "periodical", "Rovnost");
 		addItemToList(list, "uuid:ba632b35-45d3-4a1e-8357-3eb866f9d00e", "soundrecording",
 				"Le veau d'or Vous qui faites l'endormie");
-//		addItemToList(list, "uuid:9f2fec5f-076b-424f-9b8d-d3a0aed4f0b1", "soundrecording", "Nocturne Es-dur");
-//		addItemToList(list, "uuid:86943124-5a4a-4679-a887-787ae0006b26", "soundrecording", "Zločin a trest");
-//		addItemToList(list, "uuid:206aac01-e915-4806-a828-324d3d8ee525", "soundrecording",
-//				"Pohřeb presidenta osvoboditele v ČS rozhlase 21.IX. 1937");
+		// addItemToList(list, "uuid:9f2fec5f-076b-424f-9b8d-d3a0aed4f0b1",
+		// "soundrecording", "Nocturne Es-dur");
+		// addItemToList(list, "uuid:86943124-5a4a-4679-a887-787ae0006b26",
+		// "soundrecording", "Zločin a trest");
+		// addItemToList(list, "uuid:206aac01-e915-4806-a828-324d3d8ee525",
+		// "soundrecording",
+		// "Pohřeb presidenta osvoboditele v ČS rozhlase 21.IX. 1937");
 
 		addItemToList(list, "uuid:f40df848-b2d3-4334-a898-ed2c9aae6cb1", "periodical", "Tisk, noviny a novináři");
 		addItemToList(
@@ -120,13 +125,15 @@ public class K5Connector {
 				"periodical",
 				"Noviny : list vydavatelů časopisů a novinářů československých : věstník Ústř. svazu vydav. a nakl. časopisů a periodických spisů v Praze a Jednoty čsl. novinářů v Praze");
 
-//		addItemToList(list, "uuid:d65f964d-60e2-411b-99a3-907783d419e4", "monograph",
-//				"Pazourek - nejstarší kulturní nerost, aneb, Kámen všech kamenů")
-//				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:d65f964d-60e2-411b-99a3-907783d419e4&stream=IMG_FULL&action=GETRAW");
-//
-//		addItemToList(list, "uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8", "monograph",
-//				"Lidský kapitál a investice do vzdělání (16. ročník, 2013)")
-//				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8&stream=IMG_FULL&action=GETRAW");
+		// addItemToList(list, "uuid:d65f964d-60e2-411b-99a3-907783d419e4",
+		// "monograph",
+		// "Pazourek - nejstarší kulturní nerost, aneb, Kámen všech kamenů")
+		// .setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:d65f964d-60e2-411b-99a3-907783d419e4&stream=IMG_FULL&action=GETRAW");
+		//
+		// addItemToList(list, "uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8",
+		// "monograph",
+		// "Lidský kapitál a investice do vzdělání (16. ročník, 2013)")
+		// .setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8&stream=IMG_FULL&action=GETRAW");
 
 		addItemToList(list, "uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8", "monograph", "Philosophy of Balance")
 				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8&stream=IMG_FULL&action=GETRAW");
@@ -142,8 +149,11 @@ public class K5Connector {
 		if (extended) {
 			for (Item o : list) {
 				Metadata metadata = getModsMetadata(context, o.getRootPid());
-				if (metadata != null && metadata.getAuthorName() != null) {
-					o.setAuthor(metadata.getAuthorName());
+				if (metadata != null && !metadata.getAuthors().isEmpty()) {
+					Author author = metadata.getAuthors().get(0);
+					if (author != null && author.getName() != null) {
+						o.setAuthor(author.getName());
+					}
 				}
 			}
 		}
@@ -202,13 +212,54 @@ public class K5Connector {
 		if (extended) {
 			for (Item o : list) {
 				Metadata metadata = getModsMetadata(context, o.getRootPid());
-				if (metadata != null && metadata.getAuthorName() != null) {
-					o.setAuthor(metadata.getAuthorName());
+				if (metadata != null && !metadata.getAuthors().isEmpty()) {
+					Author author = metadata.getAuthors().get(0);
+					if (author != null && author.getName() != null) {
+						o.setAuthor(author.getName());
+					}
 				}
 			}
 		}
 		return list;
 	}
+	
+	
+	public List<Pair<String, String>> getHierarychy(Context context, String pid) {
+		try {
+			String requst = K5Api.getItemPath(context, pid);
+			HttpGet request = new HttpGet(requst);
+			HttpResponse response = getClient().execute(request);
+			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
+			List<Pair<String, String>> hierarchy = new ArrayList<Pair<String,String>>();
+			
+			JSONArray a = jsonItem.optJSONArray("context");
+			if(a == null) {
+				hierarchy.add(new Pair<String, String>(jsonItem.optString("pid"), jsonItem.optString("model")));				
+			} else {
+				if(a.length() == 1 && a.get(0) instanceof JSONArray) {
+					a = (JSONArray) a.get(0);
+				}
+				for(int i = 0; i < a.length(); i++) {
+					JSONObject c = a.getJSONObject(i);
+					if(c != null) {
+						hierarchy.add(new Pair<String, String>(c.optString("pid"), c.optString("model")));
+					}
+				}
+			}
+			return hierarchy;
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}	
+	
 
 	public Item getItem(Context context, String pid) {
 		try {

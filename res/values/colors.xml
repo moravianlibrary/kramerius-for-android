@@ -26,4 +26,12 @@
 
     <color name="card_line">#d5d5d5</color>
     
+    
+    <color name="metadata_title">@color/dark_grey</color>
+    <color name="metadata_subtitle">@color/dark_grey</color>
+    <color name="metadata_value">@color/grey</color>
+    <color name="metadata_key">@color/light_grey</color>
+    <color name="metadata_divider">#d5d5d5</color>
+    
+    
 </resources>

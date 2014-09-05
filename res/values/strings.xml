@@ -37,7 +37,7 @@
     <string name="virtual_collections_title">Virtuální sbírky</string>
     <string name="settings_title">Nastavení</string>
     <string name="help_title">Nápověda</string>
-    
+    <string name="metadata_title">Detail</string>
     
     
     <string name="main_menu_home">Domů</string>
@@ -65,6 +65,48 @@
     
     
     
+    
+    <string name="metadata_title_info_title">Hlavní název</string>
+    <string name="metadata_title_info_subtitle">Podnázev</string>
+    <string name="metadata_title_info_part_number">Číslo části</string>
+    <string name="metadata_title_info_part_name">Název části</string>
+    
+    <string name="metadata_author">Autor</string>
+    <string name="metadata_authors">Autoři</string>
+    <string name="metadata_author_name">Jméno</string>
+    <string name="metadata_author_date">Datum</string>
+    <string name="metadata_author_unknown">Neznámý</string>
+   
+    <string name="metadata_publisher">Vydavatel</string>
+    <string name="metadata_publishers">Vydavatelé</string>
+    <string name="metadata_publisher_name">Název vydavatele</string>
+    <string name="metadata_publisher_date">Datum vydání:</string>
+    <string name="metadata_publisher_place">Místo vydání</string>
+    
+    <string name="metadata_location">Místo uložení</string>
+    <string name="metadata_location_physical">Místo uložení</string>
+    <string name="metadata_location_shelf">Signatura</string>
+     
+    <string name="metadata_notes">Poznámky</string>
+   
+    <string name="metadata_page">Stránka</string>
+    <string name="metadata_page_number">Číslo stránky</string>
+	
+	<string name="metadata_page_index">Index stránky</string>
+    <string name="metadata_part_volume_number">Ročník</string>
+    <string name="metadata_part_issue_number">Číslo</string>
+    <string name="metadata_part_part_number">Číslo části</string>
+	
+        
+    <string name="metadata_part_volume_date">Rok vydání</string>
+    <string name="metadata_part_issue_date">Datum vydání</string>
+
+    
+   <string name="metadata_periodical_volume">Ročník</string>
+   <string name="metadata_periodical_item">Číslo</string>
+    
+    
+     
     <string name="ga_appview_about" translatable="false">About</string>
     <string name="ga_appview_help" translatable="false">Help</string>
     <string name="ga_appview_main_featured" translatable="false">Main Featured</string>

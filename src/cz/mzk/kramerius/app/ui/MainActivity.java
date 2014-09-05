@@ -1,8 +1,12 @@
 package cz.mzk.kramerius.app.ui;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import org.apache.http.protocol.HTTP;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -13,10 +17,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
