@@ -69,7 +69,8 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 				Boolean.parseBoolean(getString(R.string.pref_keep_screen_on_default)));
 		if(keepScreenOn) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}	
+		}			
+		
 		mSystemBarTintManager = new SystemBarTintManager(this);
 		mSystemBarTintManager.setStatusBarTintEnabled(false);
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);

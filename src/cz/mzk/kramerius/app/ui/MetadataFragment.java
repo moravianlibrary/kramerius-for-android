@@ -4,16 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
@@ -50,7 +55,7 @@ public class MetadataFragment extends BaseFragment {
 		new getMetadataTask(getActivity()).execute(pid);
 	}
 
-	private void populateTopLevelMetadata(Metadata metadata) {
+	private void populateTopLevelMetadata(Metadata metadata, String model, boolean expandable) {
 		if (metadata.getTitleInfo().getTitle() != null) {
 			TextView mainTitle = new TextView(getActivity());
 			mainTitle.setText(metadata.getTitleInfo().getTitle());
@@ -62,6 +67,22 @@ public class MetadataFragment extends BaseFragment {
 			mainTitle.setLayoutParams(llp);
 			mContainer.addView(mainTitle);
 		}
+
+		View.OnClickListener onClick = null;
+		final String pid = metadata.getPid();
+		if (expandable && ModelUtil.PERIODICAL.equals(model)) {
+			onClick = new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(getActivity(), PeriodicalActivity.class);
+					intent.putExtra(BaseActivity.EXTRA_PID, pid);
+					startActivity(intent);
+				}
+			};
+		}
+		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(model)), expandable, onClick));
+
 		addTitleInfo(metadata);
 		addAuthors(metadata);
 		addPublishers(metadata);
@@ -69,8 +90,23 @@ public class MetadataFragment extends BaseFragment {
 		addNotes(metadata);
 	}
 
-	private void populatePeriodicalVolume(Metadata metadata) {
-		mContainer.addView(createSubtitleView(getString(R.string.metadata_periodical_volume)));
+	private void populatePeriodicalVolume(Metadata metadata, boolean expandable) {
+		View.OnClickListener onClick = null;
+		final String pid = metadata.getPid();
+		if (expandable) {
+			onClick = new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(getActivity(), PeriodicalActivity.class);
+					intent.putExtra(BaseActivity.EXTRA_PID, pid);
+					startActivity(intent);
+				}
+			};
+		}
+		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_VOLUME)),
+				expandable, onClick));
+
 		Part part = metadata.getPart();
 		if (part == null) {
 			return;
@@ -81,7 +117,10 @@ public class MetadataFragment extends BaseFragment {
 	}
 
 	private void populatePeriodicalItem(Metadata metadata) {
-		mContainer.addView(createSubtitleView(getString(R.string.metadata_periodical_item)));
+		// mContainer.addView(createSubtitleView(getString(R.string.metadata_periodical_item)));
+		mContainer
+				.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_ITEM)), false, null));
+
 		Part part = metadata.getPart();
 		if (part == null) {
 			return;
@@ -93,7 +132,11 @@ public class MetadataFragment extends BaseFragment {
 	}
 
 	private void populatePage(Metadata metadata) {
-		mContainer.addView(createSubtitleView(getString(R.string.metadata_page)));
+//		mContainer.addView(createSubtitleView(getString(R.string.metadata_page)));
+		mContainer
+		.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PAGE)), false, null));
+
+		
 		Part part = metadata.getPart();
 		if (part == null) {
 			return;
@@ -103,7 +146,7 @@ public class MetadataFragment extends BaseFragment {
 		addNotes(metadata);
 	}
 
-	private void populateMetadata(Metadata metadata, String model) {
+	private void populateMetadata(Metadata metadata, String model, boolean expandable) {
 		if (metadata == null || model == null) {
 			return;
 		}
@@ -111,11 +154,12 @@ public class MetadataFragment extends BaseFragment {
 				|| model.equals(ModelUtil.MONOGRAPH) || model.equals(ModelUtil.SOUND_RECORDING)
 				|| model.equals(ModelUtil.MAP) || model.equals(ModelUtil.GRAPHIC)
 				|| model.equals(ModelUtil.SHEET_MUSIC) || model.equals(ModelUtil.ARCHIVE)) {
-			populateTopLevelMetadata(metadata);
+			populateTopLevelMetadata(metadata, model, expandable);
+
 		} else if (model.equals(ModelUtil.PAGE)) {
 			populatePage(metadata);
 		} else if (model.equals(ModelUtil.PERIODICAL_VOLUME)) {
-			populatePeriodicalVolume(metadata);
+			populatePeriodicalVolume(metadata, expandable);
 		} else if (model.equals(ModelUtil.PERIODICAL_ITEM)) {
 			populatePeriodicalItem(metadata);
 		}
@@ -222,6 +266,54 @@ public class MetadataFragment extends BaseFragment {
 		return view;
 	}
 
+	private View createModelHeaderView(String title, boolean expandable, View.OnClickListener onClick) {
+		RelativeLayout rl = new RelativeLayout(getActivity());
+		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		// rlp.topMargin =
+		// getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_top);
+		// rlp.bottomMargin =
+		// getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_bottom);
+		rl.setLayoutParams(rlp);
+
+		rl.setPadding(0, getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_top), 0,
+				getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_bottom));
+
+		TextView textView = new TextView(getActivity());
+		textView.setText(title);
+		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_subtitle));
+		textView.setTextColor(getResources().getColor(R.color.metadata_subtitle));
+
+		rl.addView(textView);
+
+		if (expandable) {
+			Button button = new Button(getActivity());
+			button.setText(getString(R.string.metadata_open_parent));
+			button.setBackgroundColor(getResources().getColor(R.color.green));
+			button.setTextColor(getResources().getColor(R.color.white));
+			button.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+					getResources().getDimensionPixelSize(R.dimen.metadata_button_text_size));
+
+			button.setPadding(0, 0, 0, 0);
+
+			button.setGravity(Gravity.CENTER);
+
+			if (onClick != null) {
+				button.setOnClickListener(onClick);
+			}
+
+			RelativeLayout.LayoutParams buttonRlp = new RelativeLayout.LayoutParams(getResources()
+					.getDimensionPixelSize(R.dimen.metadata_button_width), getResources().getDimensionPixelSize(
+					R.dimen.metadata_button_height));
+			buttonRlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+			rl.addView(button, buttonRlp);
+
+		}
+
+		return rl;
+	}
+
 	private void addKeyValueView(String key, String value) {
 		if (value == null || value.isEmpty()) {
 			return;
@@ -291,6 +383,9 @@ public class MetadataFragment extends BaseFragment {
 		protected List<Pair<Metadata, String>> doInBackground(String... params) {
 			String pid = params[0];
 			List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, pid);
+			if (hierarchy == null) {
+				return null;
+			}
 			List<Pair<Metadata, String>> hierarchyMetadata = new ArrayList<Pair<Metadata, String>>();
 			for (int i = 0; i < hierarchy.size(); i++) {
 				Metadata metadata = K5Connector.getInstance().getModsMetadata(tContext, hierarchy.get(i).first);
@@ -311,7 +406,8 @@ public class MetadataFragment extends BaseFragment {
 
 	private void populateHierarchy(List<Pair<Metadata, String>> hierarchy) {
 		for (int i = 0; i < hierarchy.size(); i++) {
-			populateMetadata(hierarchy.get(i).first, hierarchy.get(i).second);
+			boolean expandable = i < hierarchy.size() - 2;
+			populateMetadata(hierarchy.get(i).first, hierarchy.get(i).second, expandable);
 			if (hierarchy.size() > 0 && i < hierarchy.size() - 1) {
 				mContainer.addView(createDividerView());
 			}

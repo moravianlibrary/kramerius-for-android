@@ -93,11 +93,12 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 				Boolean.parseBoolean(getString(R.string.pref_keep_screen_on_default)));
 		if(keepScreenOn) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}		
+		}	
+		
 		mSystemBarTintManager = new SystemBarTintManager(this);
 		mSystemBarTintManager.setStatusBarTintEnabled(false);
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);
-
+				
 		setContentView(R.layout.activity_page);
 		String pid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
 		mIndex = (TextView) findViewById(R.id.page_index);
@@ -250,6 +251,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
 			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			if(item == null) {
+				return null;
+			}
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
 		}
 
@@ -257,7 +261,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		protected void onPostExecute(ParentChildrenPair result) {
 			mLoader.clearAnimation();
 			mLoader.setVisibility(View.GONE);
-			if (tContext == null || result.getParent() == null) {
+			if (tContext == null || result == null || result.getParent() == null) {
 				return;
 			}
 			mPageList = new ArrayList<Item>();

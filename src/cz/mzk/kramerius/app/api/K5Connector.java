@@ -477,7 +477,11 @@ public class K5Connector {
 
 	public Metadata getModsMetadata(Context context, String pid) {
 		String url = K5Api.getModsStreamPath(context, pid);
-		return ModsParser.getMetadata(url);
+		Metadata metadata = ModsParser.getMetadata(url);
+		if(metadata != null) {
+			metadata.setPid(pid);
+		}
+		return metadata;
 	}
 
 }

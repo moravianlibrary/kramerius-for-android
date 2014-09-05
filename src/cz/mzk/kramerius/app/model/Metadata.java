@@ -11,6 +11,8 @@ import cz.mzk.kramerius.app.metadata.TitleInfo;
 
 public class Metadata {
 	
+	private String pid;
+	
 	private String issn;
 	private String isbn;
 
@@ -31,6 +33,20 @@ public class Metadata {
 		authors = new ArrayList<Author>();
 		publishers = new ArrayList<Publisher>();
 	}
+	
+	
+
+	public String getPid() {
+		return pid;
+	}
+
+
+
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+
+
 
 	public String writeNotes() {		
 		String s = "";

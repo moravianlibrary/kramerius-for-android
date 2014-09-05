@@ -82,6 +82,9 @@ public class SoundRecordingActivity extends BaseActivity {
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
 			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			if(item == null) {
+				return null;
+			}
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
 		}
 

@@ -78,6 +78,9 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
 			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			if(item == null) {
+				return null;
+			}
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
 		}
 
@@ -85,7 +88,7 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 		protected void onPostExecute(ParentChildrenPair result) {
 			mLoader.clearAnimation();
 			mLoader.setVisibility(View.GONE);
-			if (tContext == null || result.getParent() == null) {
+			if (tContext == null || result == null || result.getParent() == null) {
 				return;
 			}
 			getActionBar().setTitle(TextUtil.shortenforActionBar(result.getParent().getTitle()));						

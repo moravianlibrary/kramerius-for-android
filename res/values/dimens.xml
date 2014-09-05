@@ -20,5 +20,17 @@
     	<dimen name="metadata_divider_width">100dp</dimen>
     	<dimen name="metadata_divider_margin_bottom">10dp</dimen>
     	<dimen name="metadata_divider_margin_top">17dp</dimen>
-    
+
+    	
+    	
+		<dimen name="metadata_model_header_margin_bottom">8dp</dimen>
+        <dimen name="metadata_model_header_margin_top">12dp</dimen>
+        
+        <dimen name="metadata_button_width">70dp</dimen>
+        <dimen name="metadata_button_height">22dp</dimen>
+        <dimen name="metadata_button_text_size">13dp</dimen>
+    	
+    	
+    	
+    	
 </resources>
