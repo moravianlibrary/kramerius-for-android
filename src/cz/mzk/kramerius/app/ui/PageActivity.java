@@ -305,13 +305,13 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			int keyCode = event.getKeyCode();
 			switch (keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
-				if (action == KeyEvent.ACTION_DOWN) {
-					nextPage();
+				if (action == KeyEvent.ACTION_DOWN) {					
+					previousPage();
 				}
 				return true;
 			case KeyEvent.KEYCODE_VOLUME_DOWN:
 				if (action == KeyEvent.ACTION_DOWN) {
-					previousPage();
+					nextPage();
 				}
 				return true;
 			default:

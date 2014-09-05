@@ -145,6 +145,36 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		boolean useHardwareButton = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+				getString(R.string.pref_hardware_buttons_key),
+				Boolean.parseBoolean(getString(R.string.pref_hardware_buttons_default)));
+		if (useHardwareButton) {
+			int action = event.getAction();
+			int keyCode = event.getKeyCode();
+			switch (keyCode) {
+			case KeyEvent.KEYCODE_VOLUME_UP:
+				if (action == KeyEvent.ACTION_DOWN) {					
+					onPreviousPage();
+				}
+				return true;
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
+				if (action == KeyEvent.ACTION_DOWN) {
+					onNextPage();
+				}
+				return true;
+			default:
+				return super.dispatchKeyEvent(event);
+			}
+		} else {
+			return super.dispatchKeyEvent(event);
+		}
+	}
+	
+	
+	
 
 	// @Override
 	// public void onTap() {
