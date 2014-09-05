@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,9 +14,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListAdapter;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
+import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.GridItemAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
@@ -23,7 +30,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class MainFeaturedFragment extends BaseFragment implements OnClickListener {
+public class MainFeaturedFragment extends BaseFragment implements OnClickListener, OnOpenDetailListener {
 
 	private static final int FEATURED_PHONE_LIMIT = 4;
 	private static final int FEATURED_TABLET_LIMIT = 5;
@@ -70,7 +77,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_featured_main, container, false);
-		if(isPhone()) {
+		if (isPhone()) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}
 		// TextView tt = (TextView) view.findViewById(R.id.test);
@@ -210,15 +217,15 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			return;
 		}
 		if (type == K5Api.FEED_SELECTED) {
-			mSelectedAdapter = new GridItemAdapter(getActivity(), mSelectedList);
+			mSelectedAdapter = new GridItemAdapter(getActivity(), mSelectedList, this);
 			mSelectedGridView.setAdapter(mSelectedAdapter);
 			setGridViewHeightBasedOnChildren(mSelectedGridView, mFeaturedLimit);
 		} else if (type == K5Api.FEED_NEWEST) {
-			mNewestAdapter = new GridItemAdapter(getActivity(), mNewestList);
+			mNewestAdapter = new GridItemAdapter(getActivity(), mNewestList, this);
 			mNewestGridView.setAdapter(mNewestAdapter);
 			setGridViewHeightBasedOnChildren(mNewestGridView, mFeaturedLimit);
 		} else if (type == K5Api.FEED_MOST_DESIRABLE) {
-			mMostDesirableAdapter = new GridItemAdapter(getActivity(), mMostDesirableList);
+			mMostDesirableAdapter = new GridItemAdapter(getActivity(), mMostDesirableList, this);
 			mMostDesirableGridView.setAdapter(mMostDesirableAdapter);
 			setGridViewHeightBasedOnChildren(mMostDesirableGridView, mFeaturedLimit);
 		}
@@ -239,7 +246,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 				int c = Math.min(items, count);
 				totalHeight = totalHeight * c;
 			} else {
-				totalHeight+=getResources().getDisplayMetrics().density * 10;
+				totalHeight += getResources().getDisplayMetrics().density * 10;
 			}
 		}
 
@@ -262,12 +269,18 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			mCallback.onFeatured(K5Api.FEED_MOST_DESIRABLE);
 		}
 	}
-	
-	
+
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_main_featured);
-	}		
+		super.onStart();
+		Analytics.sendScreenView(getActivity(), R.string.ga_appview_main_featured);
+	}
+
+	@Override
+	public void onOpenDetail(String pid) {		
+		Intent intent = new Intent(getActivity(), MetadataActivity.class);
+		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
+		startActivity(intent);
+	}
 
 }

@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Item;
@@ -33,14 +34,17 @@ public class GridItemAdapter extends BaseAdapter {
 	private final List<Item> mList;
 
 	private DisplayImageOptions mOptions;
+	private OnOpenDetailListener mOnOpenDetailListener;
 
-	public GridItemAdapter(Context context, List<Item> list) {
+	public GridItemAdapter(Context context, List<Item> list, OnOpenDetailListener onOpenDetailListener) {
 		mContext = context;
 		mList = list;
+		mOnOpenDetailListener = onOpenDetailListener;
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext.getApplicationContext())
 				.build();
 
-		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.anim_loading).cacheInMemory(true).cacheOnDisk(true).build();
+		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.anim_loading).cacheInMemory(true)
+				.cacheOnDisk(true).build();
 
 		ImageLoader.getInstance().init(config);
 	}
@@ -51,6 +55,7 @@ public class GridItemAdapter extends BaseAdapter {
 		public TextView type;
 		public ImageView thumb;
 		public ImageView modelIcon;
+		public ImageView detailButton;
 	}
 
 	@Override
@@ -65,14 +70,23 @@ public class GridItemAdapter extends BaseAdapter {
 			viewHolder.type = (TextView) rowView.findViewById(R.id.grid_item_type);
 			viewHolder.thumb = (ImageView) rowView.findViewById(R.id.grid_item_thumb);
 			viewHolder.modelIcon = (ImageView) rowView.findViewById(R.id.grid_item_modeIcon);
+			viewHolder.detailButton = (ImageView) rowView.findViewById(R.id.grid_item_details);
 			rowView.setTag(viewHolder);
 		}
 
-		ViewHolder holder = (ViewHolder) rowView.getTag();
-		Item item = mList.get(position);
-		if(holder.author != null) {
+		final ViewHolder holder = (ViewHolder) rowView.getTag();
+		final Item item = mList.get(position);
+		if (holder.author != null) {
 			holder.author.setText(item.getAuthor());
 		}
+		holder.detailButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				onDetailClick(item.getPid());
+			}
+		});
+
 		holder.title.setText(item.getTitle());
 		holder.type.setText(mContext.getString(ModelUtil.getLabel(item.getModel())));
 		int modelIconRes = ModelUtil.getIcon(item.getModel());
@@ -80,6 +94,12 @@ public class GridItemAdapter extends BaseAdapter {
 		String url = K5Api.getThumbnailPath(mContext, item.getPid());
 		ImageLoader.getInstance().displayImage(url, holder.thumb, mOptions);
 		return rowView;
+	}
+
+	private void onDetailClick(String pid) {
+		if (mOnOpenDetailListener != null) {
+			mOnOpenDetailListener.onOpenDetail(pid);
+		}
 	}
 
 	@Override

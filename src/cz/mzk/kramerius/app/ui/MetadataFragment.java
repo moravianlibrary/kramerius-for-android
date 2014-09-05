@@ -77,6 +77,7 @@ public class MetadataFragment extends BaseFragment {
 		}
 		addKeyValueView(getString(R.string.metadata_part_volume_number), part.getVolumeNumber());
 		addKeyValueView(getString(R.string.metadata_part_volume_date), part.getDate());
+		addNotes(metadata);
 	}
 
 	private void populatePeriodicalItem(Metadata metadata) {
@@ -88,6 +89,7 @@ public class MetadataFragment extends BaseFragment {
 		addKeyValueView(getString(R.string.metadata_part_issue_number), part.getIssueNumber());
 		addKeyValueView(getString(R.string.metadata_part_part_number), part.getPartNumber());
 		addKeyValueView(getString(R.string.metadata_part_issue_date), part.getDate());
+		addNotes(metadata);
 	}
 
 	private void populatePage(Metadata metadata) {
@@ -98,6 +100,7 @@ public class MetadataFragment extends BaseFragment {
 		}
 		addKeyValueView(getString(R.string.metadata_page_number), part.getPageNumber());
 		addKeyValueView(getString(R.string.metadata_page_index), part.getPageIndex());
+		addNotes(metadata);
 	}
 
 	private void populateMetadata(Metadata metadata, String model) {

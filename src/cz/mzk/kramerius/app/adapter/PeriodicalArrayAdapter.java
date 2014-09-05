@@ -16,6 +16,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Item;
@@ -30,12 +31,15 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 	private int mType;
 	private List<Item> mItems;
 	private List<Item> mAllItems;
+	private OnOpenDetailListener mOnOpenDetailListener;
 
-	public PeriodicalArrayAdapter(Context context, List<Item> list, int type) {
+
+	public PeriodicalArrayAdapter(Context context, List<Item> list, int type,OnOpenDetailListener onOpenDetailListener) {		
 		super(context, R.layout.item_periodical, R.id.periodical_item_title, list);
 		mContext = context;
 		mType = type;
 		mItems = list;
+		mOnOpenDetailListener = onOpenDetailListener;
 		mAllItems = new ArrayList<Item>(mItems);
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext.getApplicationContext())
 				.build();
@@ -57,6 +61,7 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 		public ImageView thumb;
 		public TextView actionLabel;
 		public ImageView actionIcon;
+		public ImageView detailButton;
 	}
 
 	public void filter(String prefix) {
@@ -89,11 +94,12 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 			viewHolder.thumb = (ImageView) rowView.findViewById(R.id.periodical_item_thumb);
 			viewHolder.actionLabel = (TextView) rowView.findViewById(R.id.periodical_item_actionLabel);
 			viewHolder.actionIcon = (ImageView) rowView.findViewById(R.id.periodical_item_actionIcon);
+			viewHolder.detailButton = (ImageView) rowView.findViewById(R.id.periodical_item_details);
 			rowView.setTag(viewHolder);
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
-		Item item = getItem(position);
+		final Item item = getItem(position);
 		if (mType == TYPE_VOLUME) {
 			String year = item.getYear() == null ? "" : item.getYear();
 			String volumeNumber = item.getVolumeNumber() == null ? "" : item.getVolumeNumber();
@@ -116,22 +122,26 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 			holder.actionLabel.setText("Otevřít číslo");
 			holder.actionIcon.setImageResource(R.drawable.ic_book_green);
 		}
+		
+		holder.detailButton.setOnClickListener(new View.OnClickListener() {
 
-		// if (mType == TYPE_VOLUME) {
-		// holder.title.setText("Ročník " + item.getTitle());
-		// holder.info.setText("ROK VYDÁNÍ: 1941");
-		// holder.actionLabel.setText("Zobrazit čísla");
-		// holder.actionIcon.setImageResource(R.drawable.ic_attach_green);
-		// } else if (mType == TYPE_ITEM) {
-		// holder.title.setText("Číslo " + item.getTitle());
-		// holder.info.setText("DATUM VYDÁNÍ: 3.4.1941");
-		// holder.actionLabel.setText("Otevřít číslo");
-		// holder.actionIcon.setImageResource(R.drawable.ic_book_green);
-		// }
+			@Override
+			public void onClick(View v) {
+				onDetailClick(item.getPid());
+			}
+		});
+		
 		String url = K5Api.getThumbnailPath(mContext, item.getPid());
 		ImageLoader.getInstance().displayImage(url, holder.thumb, mOptions);
 
 		return rowView;
+	}
+	
+	
+	private void onDetailClick(String pid) {
+		if (mOnOpenDetailListener != null) {
+			mOnOpenDetailListener.onOpenDetail(pid);
+		}
 	}
 
 }

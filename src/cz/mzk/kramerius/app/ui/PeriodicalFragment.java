@@ -3,6 +3,7 @@ package cz.mzk.kramerius.app.ui;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,11 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
+import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.PeriodicalArrayAdapter;
 import cz.mzk.kramerius.app.model.Item;
 
-public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener, OnOpenDetailListener {
 
 	public static final String TAG = PeriodicalFragment.class.getName();
 
@@ -61,7 +63,7 @@ public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTe
 		if (getActivity() == null) {
 			return;
 		}
-		mAdapter = new PeriodicalArrayAdapter(getActivity(), items, type);
+		mAdapter = new PeriodicalArrayAdapter(getActivity(), items, type, this);
 		mList.setAdapter(mAdapter);
 	}
 
@@ -105,5 +107,12 @@ public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTe
 	public boolean onClose() {
 		filterItems(null);
 		return false;
+	}
+
+	@Override
+	public void onOpenDetail(String pid) {		
+		Intent intent = new Intent(getActivity(), MetadataActivity.class);
+		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
+		startActivity(intent);
 	}
 }

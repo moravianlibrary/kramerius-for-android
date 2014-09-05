@@ -3,6 +3,7 @@ package cz.mzk.kramerius.app.ui;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
+import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.GridItemAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
@@ -21,7 +23,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class FeaturedFragment extends BaseFragment {
+public class FeaturedFragment extends BaseFragment implements OnOpenDetailListener {
 
 	private static final String EXTRA_TYPE = "extra_type";
 
@@ -126,11 +128,18 @@ public class FeaturedFragment extends BaseFragment {
 			if (tContext == null) {
 				return;
 			}
-			mAdapter = new GridItemAdapter(tContext, result);
+			mAdapter = new GridItemAdapter(tContext, result, FeaturedFragment.this);
 			stopLoaderAnimation();
 			mGridview.setAdapter(mAdapter);
 		}
 
+	}
+
+	@Override
+	public void onOpenDetail(String pid) {
+		Intent intent = new Intent(getActivity(), MetadataActivity.class);
+		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
+		startActivity(intent);
 	}
 
 }

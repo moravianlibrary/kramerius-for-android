@@ -34,21 +34,37 @@
         android:paddingRight="5dp"
         android:paddingTop="5dp" >
 
-        <TextView
-            android:id="@+id/periodical_item_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:lines="2"
-            android:text="ROČNÍK: 34"
-            android:textColor="@color/grey"
-            android:textSize="15dp" />
-        
-          <TextView
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/periodical_item_details"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_card_detail" />
+
+            <TextView
+                android:id="@+id/periodical_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_toLeftOf="@id/periodical_item_details"
+                android:lines="2"
+                android:text="ROČNÍK: 34"
+                android:textColor="@color/grey"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
+        <TextView
             android:id="@+id/periodical_item_info"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:text="ROK VYDÁNÍ: 1923"
             android:lines="1"
+            android:text="ROK VYDÁNÍ: 1923"
             android:textColor="@color/light_grey"
             android:textSize="13dp" />
 

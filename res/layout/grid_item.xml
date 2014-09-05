@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="135dp"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp" >
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp" >
 
     <ImageView
         android:layout_width="match_parent"
@@ -17,9 +17,9 @@
         android:layout_height="125dp"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
+        android:paddingBottom="4dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:paddingBottom="4dp"
         android:paddingTop="2dp"
         android:scaleType="fitCenter"
         android:src="@drawable/anim_loading" />
@@ -34,21 +34,37 @@
         android:paddingRight="5dp"
         android:paddingTop="5dp" >
 
-        <TextView
-            android:id="@+id/grid_item_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Lidove noviny"
-            android:lines="2"
-            android:textColor="@color/grey"
-            android:textSize="15dp" />
-        
-         <TextView
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/grid_item_details"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_card_detail" />
+
+            <TextView
+                android:id="@+id/grid_item_title"                
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_toLeftOf="@id/grid_item_details"
+                android:lines="2"
+                android:text="Lidove noviny"
+                android:textColor="@color/grey"
+                android:textSize="15dp" />
+        </RelativeLayout>
+
+        <TextView
             android:id="@+id/grid_item_author"
             android:layout_width="match_parent"
             android:layout_height="25dp"
-            android:text="Autor"
             android:lines="1"
+            android:text="Autor"
             android:textColor="@color/light_grey"
             android:textSize="14dp" />
 
