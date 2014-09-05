@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.VirtualCollectionsArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Connector;
@@ -18,7 +19,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class VirtualCollectionsFragment extends Fragment {
+public class VirtualCollectionsFragment extends BaseFragment {
 
 	private static final String TAG = VirtualCollectionsFragment.class.getName();
 
@@ -46,6 +47,10 @@ public class VirtualCollectionsFragment extends Fragment {
 			ScreenUtil.setInsets(getActivity(), view);
 		}				
 		mListView = (ListView) view.findViewById(R.id.listview);
+		
+
+		inflateLoader((ViewGroup) view, inflater);
+		
 		new GetVirtualCollectionsTask(getActivity()).execute();
 		return view;
 	}
@@ -60,7 +65,7 @@ public class VirtualCollectionsFragment extends Fragment {
 
 		@Override
 		protected void onPreExecute() {
-
+			startLoaderAnimation();
 		}
 
 		@Override
@@ -73,6 +78,7 @@ public class VirtualCollectionsFragment extends Fragment {
 			if(tContext == null) {
 				return;
 			}
+			stopLoaderAnimation();
 			mListView.setAdapter(new VirtualCollectionsArrayAdapter(tContext, result));
 
 		}
