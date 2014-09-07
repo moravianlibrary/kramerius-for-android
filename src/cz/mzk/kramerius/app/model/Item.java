@@ -135,6 +135,30 @@ public class Item implements Parcelable {
 	
 	
 	
+	public String getVolumeTitle() {
+		if (volumeNumber != null && !volumeNumber.isEmpty()) {
+			return volumeNumber;
+		}
+		if(year != null && !year.isEmpty()) {
+			return year;			
+		}
+		return title;
+	}
+
+	public String getIssueTitle() {
+		if((issueNumber == null || issueNumber.isEmpty()) && (partNumber == null || partNumber.isEmpty())) {
+			return title;
+		}		
+		if(issueNumber == null || issueNumber.isEmpty()) {
+			return partNumber;
+		}
+		if(partNumber != null && !partNumber.isEmpty()) {
+			issueNumber += "/" + partNumber;	
+		} 
+		return issueNumber;				
+	}
+	
+	
 	
 
 	public String getYear() {

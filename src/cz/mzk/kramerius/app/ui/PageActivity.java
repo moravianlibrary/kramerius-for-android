@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
+import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
@@ -42,6 +44,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		EventListener {
 
 	private static final String EXTRA_TITLE = "extra_title";
+	private static final String EXTRA_SUBTITLE = "extra_subtitle";
+	private static final String EXTRA_COMPLEX_TITLE = "extra_complex_title";
 	private static final String EXTRA_ITEMS = "extra_items";
 	private static final String EXTRA_PARENT_PID = "extra_parent_pid";
 	private static final String EXTRA_CURRENT_PAGE = "extra_current_page";
@@ -66,6 +70,11 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private View mBottomPanel;
 	private View mTopPanel;
 	private TextView mTitleView;
+	private TextView mTitle1View;
+	private TextView mTitle2View;
+	private View mComplextTitleView;
+	
+	
 	private SeekBar mSeekBar;
 	private int mLastProgress;
 	private TextView mSeekPosition;
@@ -79,7 +88,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private PageSelectionFragment mPageSelectionFragment;
 	private boolean mListShown;
 
+	private String mSubtitle;
 	private String mTitle;
+	private boolean mComplexTitle;
 
 	private IPageViewerFragment mPageViewerFragment;
 
@@ -127,6 +138,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mTopPanel = findViewById(R.id.page_topPanel);
 		mTopPanel.setVisibility(View.GONE);
 		mTitleView = (TextView) findViewById(R.id.page_title);
+		mTitle1View = (TextView) findViewById(R.id.page_complex_title1);
+		mTitle2View = (TextView) findViewById(R.id.page_complex_title2);
+		mComplextTitleView = findViewById(R.id.page_complex_title);
 		mSeekPosition = (TextView) findViewById(R.id.page_seek_position);
 		mSeekPosition.setVisibility(View.GONE);
 		mSeekBar = (SeekBar) findViewById(R.id.page_seekBar);
@@ -154,6 +168,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			}
 			mParentPid = savedInstanceState.getString(EXTRA_PARENT_PID);
 			mTitle = savedInstanceState.getString(EXTRA_TITLE);
+			mSubtitle = savedInstanceState.getString(EXTRA_SUBTITLE);
+			mComplexTitle = savedInstanceState.getBoolean(EXTRA_COMPLEX_TITLE);
 			mFullscreen = savedInstanceState.getBoolean(EXTRA_FULLSCREEN);
 			if (!mFullscreen) {
 				setFullscreen(false);
@@ -184,6 +200,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		outState.putInt(EXTRA_CURRENT_PAGE, mCurrentPage);
 		outState.putString(EXTRA_PARENT_PID, mParentPid);
 		outState.putString(EXTRA_TITLE, mTitle);
+		outState.putString(EXTRA_SUBTITLE, mSubtitle);
+		outState.putBoolean(EXTRA_COMPLEX_TITLE, mComplexTitle);		
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		super.onSaveInstanceState(outState);
 	}
@@ -254,6 +272,18 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			if(item == null) {
 				return null;
 			}
+		    if(ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
+		    	List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
+		    	for(int i = 0; i < hierarchy.size(); i++) {
+		    		if(ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
+		    			Item parent =  K5Connector.getInstance().getItem(tContext, hierarchy.get(i).first);
+		    			if(parent != null) {
+		    				item.setTitle("Ročník " + parent.getVolumeTitle() + ", Číslo " + item.getIssueTitle());
+		    			}
+		    		}
+		    	}
+		    }
+			
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
 		}
 
@@ -270,16 +300,34 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			} else {
 				mPageList = result.getChildren();
 			}
-			Collections.sort(mPageList, new ItemByTitleComparator());
+			//Collections.sort(mPageList, new ItemByTitleComparator());
 			mCurrentPage = 0;
-			mTitle = result.getParent().getTitle();
+			mTitle = TextUtil.parseTitle(result.getParent().getRootTitle());
+			if(ModelUtil.PERIODICAL_ITEM.equals(result.getParent().getModel())) {
+				mComplexTitle = true;
+				mSubtitle = result.getParent().getTitle();
+			} else {
+				mComplexTitle = false;
+			}
+			 
 			mParentPid = result.getParent().getPid();
 			init();
 		}
 	}
 
 	private void init() {
-		mTitleView.setText(TextUtil.shortenforActionBar(mTitle));
+		if(mComplexTitle) {
+			mTitle1View.setText(mTitle);
+			mTitle2View.setText(mSubtitle);
+			mComplextTitleView.setVisibility(View.VISIBLE);
+			mTitleView.setVisibility(View.GONE);
+			
+		} else {
+			mTitleView.setText(mTitle);
+			mComplextTitleView.setVisibility(View.GONE);
+			mTitleView.setVisibility(View.VISIBLE);
+		}
+		
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		initPageViewrFragment();

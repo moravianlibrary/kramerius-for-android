@@ -260,6 +260,8 @@ public class K5Connector {
 		return null;
 	}	
 	
+		
+	
 
 	public Item getItem(Context context, String pid) {
 		try {
@@ -283,6 +285,18 @@ public class K5Connector {
 				}
 			}
 			item.setRootPid(jsonItem.optString("root_pid"));
+			
+
+			JSONObject details = jsonItem.optJSONObject("details");
+			if (details != null) {
+				item.setYear(details.optString("year"));
+				item.setVolumeNumber(details.optString("volumeNumber"));
+				item.setIssueNumber(details.optString("issueNumber"));
+				item.setPeriodicalItemDate(details.optString("date"));
+				item.setPartNumber(details.optString("partNumber"));
+			}
+			
+			
 			return item;
 		} catch (IllegalStateException e) {
 			e.printStackTrace();

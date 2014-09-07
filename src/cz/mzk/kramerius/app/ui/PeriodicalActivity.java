@@ -91,16 +91,20 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 			if (tContext == null || result == null || result.getParent() == null) {
 				return;
 			}
-			getActionBar().setTitle(TextUtil.shortenforActionBar(result.getParent().getTitle()));						
+			String title = TextUtil.parseTitle(result.getParent().getRootTitle());
+			getActionBar().setTitle(title);
+			String subtitle = "";
 			List<Item> items = result.getChildren();
+			int type = PeriodicalArrayAdapter.TYPE_ITEM;
+			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
+				type = PeriodicalArrayAdapter.TYPE_VOLUME;				
+			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
+				type = PeriodicalArrayAdapter.TYPE_ITEM;
+				subtitle = "Ročník " + result.getParent().getVolumeTitle();
+				getActionBar().setSubtitle(subtitle);				
+			}						
+			
 			if (items != null) {
-				//Collections.sort(items, new ItemByTitleComparator());
-				int type = PeriodicalArrayAdapter.TYPE_ITEM;
-				if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
-					type = PeriodicalArrayAdapter.TYPE_VOLUME;
-				} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
-					type = PeriodicalArrayAdapter.TYPE_ITEM;
-				}
 				mPeriodicalFragment.setItems(items, type);
 			}
 		}

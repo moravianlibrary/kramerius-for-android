@@ -8,15 +8,23 @@ public class TextUtil {
 		}
 		return text.substring(0, length);
 	}
-	
+
 	public static String shortenforActionBar(String text) {
 		String title = text;
-		if(title == null) {
+		if (title == null) {
 			return "";
 		}
-		if(title.length() > 25) {
+		if (title.length() > 25) {
 			title = title.substring(0, 24) + "...";
 		}
 		return title;
-	}	
+	}
+
+	public static String parseTitle(String text) {
+		String title = text;
+		if (title.contains(" : ")) {
+			title = title.substring(0, title.indexOf(" : "));
+		}
+		return title;
+	}
 }

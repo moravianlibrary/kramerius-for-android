@@ -86,5 +86,20 @@ public class Part {
 	}
 	
 	
+	
+	public String getIssueTitle() {
+		if((issueNumber == null || issueNumber.isEmpty()) && (partNumber == null || partNumber.isEmpty())) {
+			return "";
+		}		
+		if(issueNumber == null || issueNumber.isEmpty()) {
+			return partNumber;
+		}
+		if(partNumber != null && !partNumber.isEmpty()) {
+			issueNumber += "/" + partNumber;	
+		} 
+		return issueNumber;				
+	} 
+	
+	
 
 }

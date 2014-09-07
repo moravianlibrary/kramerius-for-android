@@ -117,17 +117,27 @@ public class MetadataFragment extends BaseFragment {
 	}
 
 	private void populatePeriodicalItem(Metadata metadata) {
-		// mContainer.addView(createSubtitleView(getString(R.string.metadata_periodical_item)));
 		mContainer
 				.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_ITEM)), false, null));
-
-		Part part = metadata.getPart();
-		if (part == null) {
-			return;
+		Part part = metadata.getPart();		
+		String date = null;
+		String issue = null;
+		if(part != null) {
+			date = part.getDate();
+			issue = part.getIssueTitle();
 		}
-		addKeyValueView(getString(R.string.metadata_part_issue_number), part.getIssueNumber());
-		addKeyValueView(getString(R.string.metadata_part_part_number), part.getPartNumber());
-		addKeyValueView(getString(R.string.metadata_part_issue_date), part.getDate());
+		if(issue == null || issue.isEmpty()) {
+			issue = metadata.getTitleInfo().getPartName();;
+		}
+		
+		if(date == null || date.isEmpty()) {
+			if(!metadata.getPublishers().isEmpty()) {
+				date = metadata.getPublishers().get(0).getDate();
+			}
+		}
+		
+		addKeyValueView(getString(R.string.metadata_part_issue_number), issue);		
+		addKeyValueView(getString(R.string.metadata_part_issue_date), date);
 		addNotes(metadata);
 	}
 
