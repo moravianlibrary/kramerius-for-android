@@ -158,6 +158,15 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
 		mListShown = false;
 
+		findViewById(R.id.page_title_container).setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		
+		
 		mCurrentPage = 0;
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(EXTRA_CURRENT_PAGE)) {

@@ -4,6 +4,7 @@
         
     <color name="status_bar">#006e81</color>
     <color name="status_bar2">#006064</color>
+    <color name="primary_highlight">#33a4b0</color>
     <color name="green">#0097a7</color>
     <color name="green5">#004d40</color>
     <color name="green4">#00bcd4</color>
