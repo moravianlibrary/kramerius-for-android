@@ -49,7 +49,7 @@
                 android:src="@drawable/ic_card_detail" />
 
             <TextView
-                android:id="@+id/grid_item_title"                
+                android:id="@+id/grid_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_toLeftOf="@id/grid_item_details"
@@ -75,7 +75,7 @@
             android:layout_marginTop="2dp"
             android:background="@color/card_line" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -85,21 +85,33 @@
                 android:id="@+id/grid_item_modeIcon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_music_green" />
+                android:src="@drawable/ic_attach_green" />
+
+            <ImageView
+                android:id="@+id/grid_item_lockIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_lock"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/grid_item_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/grid_item_lockIcon"
+                android:layout_toRightOf="@id/grid_item_modeIcon"
                 android:lines="1"
                 android:paddingLeft="5dp"
                 android:text="Hudebnina"
                 android:textColor="@color/green"
                 android:textSize="16dp" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

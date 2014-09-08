@@ -21,8 +21,8 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Pair;
 import cz.mzk.kramerius.app.metadata.Author;
+import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.model.Metadata;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
@@ -191,7 +191,8 @@ public class K5Connector {
 				item.setDate(jsonItem.optString("date"));
 				item.setTitle(jsonItem.optString("title"));
 				item.setRootTitle(jsonItem.optString("root_title"));
-				item.setRootPid(jsonItem.optString("root_pid"));
+				item.setRootPid(jsonItem.optString("root_pid"));				
+				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
 				list.add(item);
 			}
 		} catch (IllegalStateException e) {
@@ -285,7 +286,7 @@ public class K5Connector {
 				}
 			}
 			item.setRootPid(jsonItem.optString("root_pid"));
-			
+			item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
 
 			JSONObject details = jsonItem.optJSONObject("details");
 			if (details != null) {
@@ -328,7 +329,7 @@ public class K5Connector {
 				item.setTitle(jsonItem.optString("title"));
 				item.setRootTitle(jsonItem.optString("root_title"));
 				item.setRootPid(jsonItem.optString("root_pid"));
-
+				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
 				JSONObject details = jsonItem.optJSONObject("details");
 				if (details != null) {
 					item.setYear(details.optString("year"));

@@ -55,6 +55,7 @@ public class GridItemAdapter extends BaseAdapter {
 		public TextView type;
 		public ImageView thumb;
 		public ImageView modelIcon;
+		public ImageView lockIcon;
 		public ImageView detailButton;
 	}
 
@@ -70,6 +71,7 @@ public class GridItemAdapter extends BaseAdapter {
 			viewHolder.type = (TextView) rowView.findViewById(R.id.grid_item_type);
 			viewHolder.thumb = (ImageView) rowView.findViewById(R.id.grid_item_thumb);
 			viewHolder.modelIcon = (ImageView) rowView.findViewById(R.id.grid_item_modeIcon);
+			viewHolder.lockIcon = (ImageView) rowView.findViewById(R.id.grid_item_lockIcon);
 			viewHolder.detailButton = (ImageView) rowView.findViewById(R.id.grid_item_details);
 			rowView.setTag(viewHolder);
 		}
@@ -86,6 +88,12 @@ public class GridItemAdapter extends BaseAdapter {
 				onDetailClick(item.getPid());
 			}
 		});
+
+		if (item.isPrivate()) {
+			holder.lockIcon.setVisibility(View.VISIBLE);
+		} else {
+			holder.lockIcon.setVisibility(View.GONE);
+		}
 
 		holder.title.setText(item.getTitle());
 		holder.type.setText(mContext.getString(ModelUtil.getLabel(item.getModel())));

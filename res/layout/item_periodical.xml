@@ -75,7 +75,7 @@
             android:layout_marginTop="2dp"
             android:background="@color/card_line" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -83,23 +83,37 @@
 
             <ImageView
                 android:id="@+id/periodical_item_actionIcon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_vertical"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+				android:layout_centerVertical="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_attach_green" />
 
+
+            <ImageView
+                android:id="@+id/periodical_item_lockIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_lock" />
+            
+            
             <TextView
                 android:id="@+id/periodical_item_actionLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:lines="1"
+                android:layout_centerVertical="true"
+                android:lines="1"                
+                android:layout_toRightOf="@id/periodical_item_actionIcon"
+                android:layout_toLeftOf="@id/periodical_item_lockIcon"
                 android:paddingLeft="5dp"
                 android:text="Zobrazit čísla"
                 android:textColor="@color/green"
                 android:textSize="16dp" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

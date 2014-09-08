@@ -16,10 +16,10 @@ import org.dom4j.io.SAXReader;
 import android.util.Log;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Location;
+import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.metadata.Part;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
-import cz.mzk.kramerius.app.model.Metadata;
 
 public class ModsParser {
 

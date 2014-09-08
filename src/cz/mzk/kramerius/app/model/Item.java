@@ -15,6 +15,8 @@ public class Item implements Parcelable {
 	private boolean children;
 	private String pdf;
 
+	private boolean policyPrivate;
+	
 	private String author;
 	
 	//periodicalVolume
@@ -46,6 +48,7 @@ public class Item implements Parcelable {
 		issueNumber = in.readString();
 		periodicalItemDate = in.readString();
 		partNumber = in.readString();
+		policyPrivate = in.readByte() != 0;
 	}
 
 	public String getPid() {
@@ -202,6 +205,13 @@ public class Item implements Parcelable {
 	}
 
 
+	public void setPolicyPrivate(boolean policyPrivate) {
+		this.policyPrivate = policyPrivate;
+	}
+	
+	public boolean isPrivate() {
+		return policyPrivate;
+	}
 
 
 
@@ -237,6 +247,7 @@ public class Item implements Parcelable {
 		dest.writeString(issueNumber);
 		dest.writeString(periodicalItemDate);
 		dest.writeString(partNumber);
+		dest.writeByte((byte) (policyPrivate ? 1 : 0));
 	}
 
 

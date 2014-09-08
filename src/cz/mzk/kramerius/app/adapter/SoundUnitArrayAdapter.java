@@ -38,6 +38,7 @@ public class SoundUnitArrayAdapter extends ArrayAdapter<Item> {
 	static class ViewHolder {
 		public TextView title;
 		public ImageView thumb;
+		public ImageView lockIcon;
 	}
 
 	@Override
@@ -49,11 +50,20 @@ public class SoundUnitArrayAdapter extends ArrayAdapter<Item> {
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.title = (TextView) rowView.findViewById(R.id.soundunit_item_title);
 			viewHolder.thumb = (ImageView) rowView.findViewById(R.id.soundunit_item_thumb);
+			viewHolder.lockIcon = (ImageView) rowView.findViewById(R.id.soundunit_item_lockIcon);
 			rowView.setTag(viewHolder);
 		}
+		
+		
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		Item item = getItem(position);
+		if(item.isPrivate()) {
+			holder.lockIcon.setVisibility(View.VISIBLE);
+		} else {
+			holder.lockIcon.setVisibility(View.GONE);
+		}
+		
 		holder.title.setText(item.getTitle());
 		String url = K5Api.getThumbnailPath(mContext, item.getPid());
 		ImageLoader.getInstance().displayImage(url, holder.thumb, mOptions);

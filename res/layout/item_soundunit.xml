@@ -42,13 +42,13 @@
             android:text="Horror Express"
             android:textColor="@color/grey"
             android:textSize="15dp" />
-        
-          <TextView
+
+        <TextView
             android:id="@+id/soundunit_item_info"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:text="SKLADBY: 1"
             android:lines="1"
+            android:text="SKLADBY: 1"
             android:textColor="@color/light_grey"
             android:textSize="13dp" />
 
@@ -59,30 +59,41 @@
             android:layout_marginTop="2dp"
             android:background="@color/card_line" />
 
-        <LinearLayout
-            android:id="@+id/soundunit_item_play"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:gravity="center_vertical" >
 
             <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_vertical"
+                android:id="@+id/soundunit_item_playIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerVertical="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_play_green" />
+
+            <ImageView
+                android:id="@+id/soundunit_item_lockIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_lock"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/soundunit_item_lockIcon"
+                android:layout_toRightOf="@id/soundunit_item_playIcon"
                 android:lines="1"
                 android:paddingLeft="5dp"
                 android:text="Přehrát"
                 android:textColor="@color/green"
                 android:textSize="16dp" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

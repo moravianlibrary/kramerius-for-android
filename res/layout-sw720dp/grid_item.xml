@@ -66,12 +66,12 @@
                 android:id="@+id/grid_item_details"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:paddingTop="6dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="0dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:paddingTop="6dp"
                 android:src="@drawable/ic_card_detail" />
 
             <TextView
@@ -88,5 +88,15 @@
                 android:textSize="16dp" />
         </RelativeLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/grid_item_lockIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_lock"
+        android:visibility="gone" />
 
 </RelativeLayout>

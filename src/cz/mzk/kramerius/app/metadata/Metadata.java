@@ -1,13 +1,8 @@
-package cz.mzk.kramerius.app.model;
+package cz.mzk.kramerius.app.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.mzk.kramerius.app.metadata.Author;
-import cz.mzk.kramerius.app.metadata.Location;
-import cz.mzk.kramerius.app.metadata.Part;
-import cz.mzk.kramerius.app.metadata.Publisher;
-import cz.mzk.kramerius.app.metadata.TitleInfo;
 
 public class Metadata {
 	

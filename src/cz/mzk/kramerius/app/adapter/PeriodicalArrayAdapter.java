@@ -61,6 +61,7 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 		public ImageView thumb;
 		public TextView actionLabel;
 		public ImageView actionIcon;
+		public ImageView lockIcon;
 		public ImageView detailButton;
 	}
 
@@ -94,12 +95,18 @@ public class PeriodicalArrayAdapter extends ArrayAdapter<Item> {
 			viewHolder.thumb = (ImageView) rowView.findViewById(R.id.periodical_item_thumb);
 			viewHolder.actionLabel = (TextView) rowView.findViewById(R.id.periodical_item_actionLabel);
 			viewHolder.actionIcon = (ImageView) rowView.findViewById(R.id.periodical_item_actionIcon);
+			viewHolder.lockIcon = (ImageView) rowView.findViewById(R.id.periodical_item_lockIcon);
 			viewHolder.detailButton = (ImageView) rowView.findViewById(R.id.periodical_item_details);
 			rowView.setTag(viewHolder);
 		}
 
 		ViewHolder holder = (ViewHolder) rowView.getTag();
 		final Item item = getItem(position);
+		if(item.isPrivate()) {
+			holder.lockIcon.setVisibility(View.VISIBLE);
+		} else {
+			holder.lockIcon.setVisibility(View.GONE);
+		}
 		if (mType == TYPE_VOLUME) {
 			String year = item.getYear() == null ? "" : item.getYear();
 			String volumeNumber = item.getVolumeNumber() == null ? "" : item.getVolumeNumber();
