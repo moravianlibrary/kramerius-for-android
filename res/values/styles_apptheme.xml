@@ -18,8 +18,18 @@
 
   <style name="SpinnerAppTheme" parent="android:Widget.Holo.Light.Spinner">
       <item name="android:background">@drawable/apptheme_spinner_background_holo_light</item>
-      <item name="android:dropDownSelector">@drawable/apptheme_list_selector_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/apptheme_list_selector_holo_light</item>  
   </style>
+  
+  <style name="SpinnerDropDownItemAppTheme" parent="android:Widget.Holo.Light.DropDownItem.Spinner">
+    <item name="android:textColor">@color/dark_grey</item>
+  </style>
+  
+  <style name="SpinnerItemAppTheme" parent="android:Widget.Holo.Light.DropDownItem.Spinner">
+    <item name="android:textColor">@color/dark_grey</item>
+  </style>  
+        
+  
 
   <style name="TabAppTheme">
       <item name="android:gravity">center_horizontal</item>

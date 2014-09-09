@@ -1,36 +1,74 @@
 package cz.mzk.kramerius.app.ui;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
+import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class SearchFragment extends Fragment implements OnClickListener {
+public class SearchFragment extends BaseFragment implements OnClickListener {
+
+	private static final int MENU_SEARCH = 101;
 
 	private static final String TAG = SearchFragment.class.getName();
 
-	private Button mSearch;
+	private Button mAdvanced;
 	private EditText mInputTitle;
+	private EditText mInputAuthor;
+	private CheckBox mCheckPublicOnly;
+	private Spinner mSpinnerType;
 	private OnSearchListener mOnSearchListener;
 
 	public interface OnSearchListener {
-		public void onSearchByTitle(String title);
+		public void onSearchQuery(String query);
 	}
 
 	public void setOnSearchListener(OnSearchListener onSearchListener) {
 		mOnSearchListener = onSearchListener;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		MenuItem itemSearch = menu.add(1, MENU_SEARCH, 1, "Vyhledat");
+		itemSearch.setIcon(android.R.drawable.ic_menu_send);
+		if (isTablet()) {
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		} else {
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_SEARCH:
+			search();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -40,10 +78,13 @@ public class SearchFragment extends Fragment implements OnClickListener {
 		if (config.smallestScreenWidthDp < 720) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}
-
-		mSearch = (Button) view.findViewById(R.id.search_button);
-		mSearch.setOnClickListener(this);
+		mSpinnerType = (Spinner) view.findViewById(R.id.search_spinner_type);
+		mSpinnerType.setSelection(0);
+		mAdvanced = (Button) view.findViewById(R.id.search_advanced);
+		mAdvanced.setOnClickListener(this);
 		mInputTitle = (EditText) view.findViewById(R.id.search_input_title);
+		mInputAuthor = (EditText) view.findViewById(R.id.search_input_author);
+		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
 
 		return view;
 	}
@@ -54,21 +95,65 @@ public class SearchFragment extends Fragment implements OnClickListener {
 		Analytics.sendScreenView(getActivity(), R.string.ga_appview_search);
 	}
 
+	private void search() {
+		InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+		View view = getActivity().getCurrentFocus();
+		if (view != null) {
+			inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+		String title = mInputTitle.getText().toString().toLowerCase();
+		String author = mInputAuthor.getText().toString().toLowerCase();
+		String policy = null;
+		if (mCheckPublicOnly.isChecked()) {
+			policy = "public";
+		}
+
+		int typePosition = mSpinnerType.getSelectedItemPosition();
+		String type = null;
+		switch (typePosition) {
+		case 0:
+			type = ModelUtil.MONOGRAPH;
+			break;
+		case 1:
+			type = ModelUtil.PERIODICAL;
+			break;
+		case 2:
+			type = ModelUtil.MANUSCRIPT;
+			break;
+		case 3:
+			type = ModelUtil.MAP;
+			break;
+		case 4:
+			type = ModelUtil.GRAPHIC;
+			break;
+		case 5:
+			type = ModelUtil.SHEET_MUSIC;
+			break;
+		case 6:
+			type = ModelUtil.ARCHIVE;
+			break;
+		case 7:
+			type = ModelUtil.SOUND_RECORDING;
+			break;
+		}
+
+		SearchQuery query = new SearchQuery().add(SearchQuery.TITLE, title).add(SearchQuery.AUTHOR, author)
+				.add(SearchQuery.POLICY, policy);
+		if (type == null) {
+			query.allModels();
+		} else {
+			query.add(SearchQuery.MODEL, type);
+		}
+
+		if (mOnSearchListener != null) {
+			mOnSearchListener.onSearchQuery(query.build());
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
-		if (v == mSearch) {
-			InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
-					Context.INPUT_METHOD_SERVICE);
-
-			// check if no view has focus:
-			View view = getActivity().getCurrentFocus();
-			if (view != null) {
-				inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-			}
-			String title = mInputTitle.getText().toString();
-			if (mOnSearchListener != null) {
-				mOnSearchListener.onSearchByTitle(title);
-			}
+		if (v == mAdvanced) {
 		}
 
 	}

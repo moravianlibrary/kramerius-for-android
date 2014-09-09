@@ -350,8 +350,8 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	}
 
 	@Override
-	public void onSearchByTitle(String title) {
-		SearchResultFragment fragment = SearchResultFragment.newInstance(title);
+	public void onSearchQuery(String query) {
+		SearchResultFragment fragment = SearchResultFragment.newInstance(query);
 		fragment.setOnItemSelectedListener(this);
 		changeFragment(fragment, false, R.string.search_result_title);		
 		mSearchResultActive = true;

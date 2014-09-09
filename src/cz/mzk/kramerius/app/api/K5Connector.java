@@ -428,16 +428,14 @@ public class K5Connector {
 	
 	
 	
-	public List<Item> getSearchResult(Context context, String title) {
+	public List<Item> getSearchResult(Context context, String query) {
 		try {
-			String requestPath = K5Api.getSearchByTitlePath(context, title);
+			String requestPath = K5Api.getSearchPath(context, query);
 			HttpGet request = new HttpGet(requestPath);									
-			
+			Log.d(TAG, "query:" + requestPath);
 			request.setHeader("Content-Type", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
-			Log.d(TAG, "json:" + requestPath);
-			Log.d(TAG, "json:" + jsonString);
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
 			if(responseJson == null) {
@@ -461,7 +459,15 @@ public class K5Connector {
 					item.setAuthor(authors.optString(0));
 				}
 				item.setPolicyPrivate("private".equals(itemJson.optString("dostupnost")));
-				item.setModel(ModelUtil.MONOGRAPH);
+				//item.setModel(ModelUtil.MONOGRAPH);
+				
+				
+				JSONArray models = itemJson.optJSONArray("document_type");
+				if(models != null && models.length() > 0) {
+					item.setModel(models.optString(0));
+				}
+				
+				
 				items.add(item);
 			}
 			

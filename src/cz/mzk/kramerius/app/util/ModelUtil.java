@@ -16,7 +16,8 @@ public class ModelUtil {
 	public static final String MAP = "map";
 	public static final String GRAPHIC = "graphic";
 	public static final String SHEET_MUSIC = "sheetmusic";
-	public static final String ARCHIVE = "archive";
+	public static final String ARCHIVE = "archive";	
+	
 	
 	public static int getLabel(String value) {
 		if (value == null || value.isEmpty()) {

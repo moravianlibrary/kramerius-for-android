@@ -8,13 +8,25 @@
         <item name="4">4</item>
     </string-array>
     
-    
-    
     <string-array name="view_mode_entries">
         <item name="1">Fit to Screen</item>
         <item name="2">Align Top Left</item>
         <item name="3">Align Center</item>
         <item name="4">Align Horizontal Center</item>
     </string-array>
+    
+    <string-array name="search_doctype_entries">
+        <item name="0">@string/document_monograph</item>
+        <item name="1">@string/document_periodical</item>
+        <item name="2">@string/document_manuscript</item>
+        <item name="3">@string/document_map</item>
+        <item name="4">@string/document_graphic</item>
+        <item name="5">@string/document_sheetmusic</item>
+        <item name="6">@string/document_archive</item>
+        <item name="7">@string/document_sound_recording</item>
+        <item name="8">@string/document_all</item>
+    </string-array>
+    
+   
 
 </resources>

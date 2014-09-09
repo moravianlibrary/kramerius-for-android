@@ -50,7 +50,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mSearchQuery = getArguments().getString(EXTRA_QUERY, "");		
+		mSearchQuery = getArguments().getString(EXTRA_QUERY, "*:*");		
 	}
 
 	@Override
@@ -104,8 +104,8 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 		@Override
 		protected List<Item> doInBackground(String... params) {
-			String title = params[0];
-			return K5Connector.getInstance().getSearchResult(tContext, title);
+			String query = params[0];
+			return K5Connector.getInstance().getSearchResult(tContext, query);
 		}
 
 		@Override

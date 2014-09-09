@@ -24,6 +24,7 @@
     <string name="document_sheetmusic">Hudebnina</string>
     <string name="document_archive">Archiválie</string>
     <string name="document_unknown">Neznámý typ</string>
+    <string name="document_all">Vše</string>
     
     
     
@@ -60,7 +61,7 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.1.8/DEV</string>
+    <string name="about_app_version">v0.1.9/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
     
