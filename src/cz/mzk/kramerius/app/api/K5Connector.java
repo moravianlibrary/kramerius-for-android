@@ -19,11 +19,13 @@ import org.json.JSONTokener;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Pair;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
 public class K5Connector {
@@ -420,6 +422,79 @@ public class K5Connector {
 		return null;
 	}
 
+	
+	
+	
+	
+	
+	
+	public List<Item> getSearchResult(Context context, String title) {
+		try {
+			String requestPath = K5Api.getSearchByTitlePath(context, title);
+			HttpGet request = new HttpGet(requestPath);									
+			
+			request.setHeader("Content-Type", "application/json");
+			HttpResponse response = getClient().execute(request);
+			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			Log.d(TAG, "json:" + requestPath);
+			Log.d(TAG, "json:" + jsonString);
+			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
+			JSONObject responseJson = json.optJSONObject("response");
+			if(responseJson == null) {
+				return null;
+			}
+			JSONArray itemArray = responseJson.optJSONArray("docs");			
+			if(itemArray == null) {
+				return null;
+			}
+			List<Item> items = new ArrayList<Item>();
+			for(int i = 0; i < itemArray.length(); i++) {
+				JSONObject itemJson = itemArray.getJSONObject(i);
+				Item item = new Item();
+				item.setPid(itemJson.optString("PID"));
+				item.setTitle(itemJson.optString("dc.title"));
+				item.setRootTitle(itemJson.optString("root_title"));
+				item.setRootPid(itemJson.optString("root_pid"));
+				item.setRootPid(itemJson.optString("root_pid"));
+				JSONArray authors = itemJson.optJSONArray("dc.creator");
+				if(authors != null && authors.length() > 0) {
+					item.setAuthor(authors.optString(0));
+				}
+				item.setPolicyPrivate("private".equals(itemJson.optString("dostupnost")));
+				item.setModel(ModelUtil.MONOGRAPH);
+				items.add(item);
+			}
+			
+			return items;
+			
+			
+			
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public Map<String, Boolean> getUserRights(Context context) {
 		String userName = K5Api.getUser(context);
 		String password = K5Api.getPassword(context);

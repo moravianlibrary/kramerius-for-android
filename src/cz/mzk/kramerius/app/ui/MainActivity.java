@@ -34,22 +34,25 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
 import cz.mzk.kramerius.app.ui.MainFeaturedFragment.OnFeaturedListener;
 import cz.mzk.kramerius.app.ui.MainMenuFragment.MainMenuListener;
+import cz.mzk.kramerius.app.ui.SearchFragment.OnSearchListener;
 import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
-		OnFeaturedListener, OnItemSelectedListener {
+		OnFeaturedListener, OnItemSelectedListener, OnSearchListener {
 
 	public static final String TAG = MainActivity.class.getName();
 
 	private MainMenuFragment mMenuFragment;
 	private boolean mMainFragmentActive;
+	private boolean mSearchResultActive;
 	private FrameLayout mMenuContainer;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private int mDrawerTitle;
 	private int mTitle;
 	private MainFeaturedFragment mMainFragment;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,8 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mMenuFragment = new MainMenuFragment();
 		mMenuFragment.setCallback(this);
 		getFragmentManager().beginTransaction().replace(R.id.main_menu, mMenuFragment).commit();
-
+		getActionBar().setDisplayUseLogoEnabled(false);
+		getActionBar().setDisplayShowHomeEnabled(false);
 		if (getDevice() == TABLET) {
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 		} else {
@@ -197,6 +201,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		}
 		ft.replace(R.id.main_content, fragment).commit();
 		mMainFragmentActive = main;
+		mSearchResultActive = false;
 		refreshTitle(titleRes);
 		closeSlidingMenu();
 	}
@@ -222,6 +227,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	@Override
 	public void onBackPressed() {
 		if (closeSlidingMenu()) {
+			return;
+		}
+		if (mSearchResultActive) {
+			onSearch();
+			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_SEARCH);
 			return;
 		}
 		if (!mMainFragmentActive) {
@@ -291,6 +301,9 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onSearch() {
+		SearchFragment fragment = new SearchFragment();
+		fragment.setOnSearchListener(this);
+		changeFragment(fragment, false, R.string.search_title);			
 	}
 
 	@Override
@@ -334,6 +347,14 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
+	}
+
+	@Override
+	public void onSearchByTitle(String title) {
+		SearchResultFragment fragment = SearchResultFragment.newInstance(title);
+		fragment.setOnItemSelectedListener(this);
+		changeFragment(fragment, false, R.string.search_result_title);		
+		mSearchResultActive = true;
 	}
 	
 	

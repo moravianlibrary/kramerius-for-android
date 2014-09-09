@@ -60,9 +60,13 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.1.6</string>
+    <string name="about_app_version">v0.1.8/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
+    
+    <string name="search_title">Hledání</string>
+    
+    <string name="search_result_title">Výsledky Hledání</string>
     
     
     
@@ -112,6 +116,8 @@
      
     <string name="ga_appview_about" translatable="false">About</string>
     <string name="ga_appview_help" translatable="false">Help</string>
+    <string name="ga_appview_search" translatable="false">Search</string>
+    <string name="ga_appview_search_result" translatable="false">Search Result</string>
     <string name="ga_appview_main_featured" translatable="false">Main Featured</string>
     <string name="ga_appview_selected" translatable="false">Selected</string>
     <string name="ga_appview_newest" translatable="false">Newest</string>

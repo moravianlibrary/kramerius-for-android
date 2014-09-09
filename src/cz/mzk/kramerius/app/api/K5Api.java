@@ -41,6 +41,7 @@ public class K5Api {
 		return new Uri.Builder().scheme(getProtocol(context)).authority(getDomain(context)).appendPath(PATH_SEARCH)
 				.build();
 	}
+	
 
 	public static Uri getApiUri(Context context) {
 		return getBaseUri(context).buildUpon().appendPath(PATH_API).appendPath(PATH_API_VERSION).build();
@@ -139,4 +140,14 @@ public class K5Api {
 	public static String getMp3StreamPath(Context context, String pid) {
 		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MP3).build().toString();
 	}
+	
+	public static String getSearchByTitlePath(Context context, String title) {
+		//String q = "dc.title:*" + title + "*%20AND%20fedora.model:monograph";
+		String q = "dc.title:*" + title + "* AND fedora.model:monograph";
+		
+		
+		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", q).appendQueryParameter("rows", "50").build().toString();
+	}
+	
+	
 }
