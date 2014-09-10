@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.VirtualCollectionsArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
@@ -24,6 +26,9 @@ public class VirtualCollectionsFragment extends BaseFragment {
 	private static final String TAG = VirtualCollectionsFragment.class.getName();
 
 	private ListView mListView;
+	private OnVirtualCollectionListener mOnVirtualCollectionListener;
+	private VirtualCollectionsArrayAdapter mAdapter;
+	
 
 	public static VirtualCollectionsFragment newInstance() {
 		VirtualCollectionsFragment f = new VirtualCollectionsFragment();
@@ -31,6 +36,10 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		// args.putInt(EXTRA_TYPE, type);
 		// f.setArguments(args);
 		return f;
+	}
+	
+	public void setOnVirtualCollectionListener(OnVirtualCollectionListener listener) {
+		mOnVirtualCollectionListener = listener;
 	}
 
 	@Override
@@ -41,18 +50,37 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
 		View view = inflater.inflate(R.layout.fragment_virtual_collections, container, false);
 		Configuration config = getResources().getConfiguration();
 		if (config.smallestScreenWidthDp < 720) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}				
 		mListView = (ListView) view.findViewById(R.id.listview);
-		
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> a, View v, int position, long id) {				
+				if(mAdapter == null) {
+					return;
+				}
+				onVirtualCollectionSelected(mAdapter.getItem(position));
+			}
+		});
 
 		inflateLoader((ViewGroup) view, inflater);
 		
 		new GetVirtualCollectionsTask(getActivity()).execute();
 		return view;
+	}
+	
+	public interface OnVirtualCollectionListener {
+		public void onVirtualCollectionSelected(Item vc);
+	}
+	
+	private void onVirtualCollectionSelected(Item vc) {
+		if(mOnVirtualCollectionListener != null) {
+			mOnVirtualCollectionListener.onVirtualCollectionSelected(vc);
+		}
 	}
 
 	class GetVirtualCollectionsTask extends AsyncTask<Void, Void, List<Item>> {
@@ -79,7 +107,8 @@ public class VirtualCollectionsFragment extends BaseFragment {
 				return;
 			}
 			stopLoaderAnimation();
-			mListView.setAdapter(new VirtualCollectionsArrayAdapter(tContext, result));
+			mAdapter = new VirtualCollectionsArrayAdapter(tContext, result);
+			mListView.setAdapter(mAdapter);
 
 		}
 

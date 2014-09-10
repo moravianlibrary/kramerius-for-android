@@ -2,10 +2,6 @@
 <resources>
 
     
-    
-    
-    
-    
     <string name="app_name">Kramerius</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
@@ -61,7 +57,7 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.1.9/DEV</string>
+    <string name="about_app_version">v0.2.1/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
     

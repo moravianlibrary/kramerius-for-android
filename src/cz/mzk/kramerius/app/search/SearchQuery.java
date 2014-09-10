@@ -10,6 +10,7 @@ public class SearchQuery {
 	public static final String ISSN = "issn";
 	public static final String POLICY = "dostupnost";
 	public static final String MODEL = "document_type";
+	public static final String COLLECTION = "collection";
 
 	private String mQuery;
 
@@ -24,6 +25,14 @@ public class SearchQuery {
 			}
 			mQuery = mQuery + key + ":*" + value + "*";
 		}
+		return this;
+	}
+
+	public SearchQuery virtualCollection(String pid) {
+		if (!mQuery.isEmpty()) {
+			mQuery = mQuery + " AND ";
+		}
+		mQuery = mQuery + COLLECTION + ":\"" + pid + "\"";
 		return this;
 	}
 

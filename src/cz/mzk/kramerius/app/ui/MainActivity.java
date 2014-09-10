@@ -1,12 +1,6 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
-
-import org.apache.http.protocol.HTTP;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -17,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,26 +24,29 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
 import cz.mzk.kramerius.app.ui.MainFeaturedFragment.OnFeaturedListener;
 import cz.mzk.kramerius.app.ui.MainMenuFragment.MainMenuListener;
 import cz.mzk.kramerius.app.ui.SearchFragment.OnSearchListener;
 import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
+import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.OnVirtualCollectionListener;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
-		OnFeaturedListener, OnItemSelectedListener, OnSearchListener {
+		OnFeaturedListener, OnItemSelectedListener, OnSearchListener, OnVirtualCollectionListener {
 
 	public static final String TAG = MainActivity.class.getName();
 
 	private MainMenuFragment mMenuFragment;
 	private boolean mMainFragmentActive;
 	private boolean mSearchResultActive;
+	private boolean mVirtualCollectionActive;
 	private FrameLayout mMenuContainer;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private int mDrawerTitle;
-	private int mTitle;
+	private String mTitle;
 	private MainFeaturedFragment mMainFragment;
 	
 
@@ -76,7 +72,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		}
 		setContentView(R.layout.activity_main);
 
-		mTitle = R.string.main_title;
+		mTitle = getString(R.string.main_title);
 		mDrawerTitle = R.string.main_menu_title;
 		getActionBar().setHomeButtonEnabled(true);
 
@@ -123,9 +119,9 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		changeFragment(mMainFragment, true, R.string.main_title);
 	}
 
-	private void refreshTitle(int resId) {
-		mTitle = resId;
-		getActionBar().setTitle(resId);
+	private void refreshTitle(String title) {
+		mTitle = title;
+		getActionBar().setTitle(title);
 	}
 
 	@Override
@@ -186,7 +182,9 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onVirtualCollections() {
-		changeFragment(VirtualCollectionsFragment.newInstance(), false, R.string.virtual_collections_title);
+		VirtualCollectionsFragment fragment = VirtualCollectionsFragment.newInstance();
+		fragment.setOnVirtualCollectionListener(this);
+		changeFragment(fragment, false, R.string.virtual_collections_title);
 	}
 
 	@Override
@@ -195,6 +193,10 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	}
 
 	private void changeFragment(Fragment fragment, boolean main, int titleRes) {
+		changeFragment(fragment, main, getString(titleRes));
+	}
+	
+	private void changeFragment(Fragment fragment, boolean main, String title) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (isTablet()) {
 			ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_left);
@@ -202,9 +204,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		ft.replace(R.id.main_content, fragment).commit();
 		mMainFragmentActive = main;
 		mSearchResultActive = false;
-		refreshTitle(titleRes);
+		mVirtualCollectionActive = false;
+		refreshTitle(title);
 		closeSlidingMenu();
-	}
+	}	
+	
 
 	@Override
 	public void onFeatured(int type) {
@@ -234,6 +238,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_SEARCH);
 			return;
 		}
+		if (mVirtualCollectionActive) {
+			onVirtualCollections();
+			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_VIRTUAL_COLLECTION);
+			return;
+		}		
 		if (!mMainFragmentActive) {
 			onHome();
 			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_HOME);
@@ -355,6 +364,18 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		fragment.setOnItemSelectedListener(this);
 		changeFragment(fragment, false, R.string.search_result_title);		
 		mSearchResultActive = true;
+	}
+
+	@Override
+	public void onVirtualCollectionSelected(Item vc) {
+		SearchQuery query = new SearchQuery().virtualCollection(vc.getPid())
+				.allModels();
+		SearchResultFragment fragment = SearchResultFragment.newInstance(query.build());
+		fragment.setOnItemSelectedListener(this);
+		changeFragment(fragment, false, vc.getTitle());		
+		mVirtualCollectionActive = true;
+			
+
 	}
 	
 	

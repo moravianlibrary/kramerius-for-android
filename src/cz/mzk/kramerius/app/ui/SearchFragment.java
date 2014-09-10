@@ -55,7 +55,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		MenuItem itemSearch = menu.add(1, MENU_SEARCH, 1, "Vyhledat");
 		itemSearch.setIcon(android.R.drawable.ic_menu_send);
 		if (isTablet()) {
-			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		} else {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
@@ -140,12 +140,16 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 
 		SearchQuery query = new SearchQuery().add(SearchQuery.TITLE, title).add(SearchQuery.AUTHOR, author)
 				.add(SearchQuery.POLICY, policy);
+		
+		if (type != null) {
+			query.add(SearchQuery.MODEL, type);			
+
+		}
+		Analytics.sendEvent(getActivity(), "search", "query", query.build());
+		
 		if (type == null) {
 			query.allModels();
-		} else {
-			query.add(SearchQuery.MODEL, type);
-		}
-
+		} 
 		if (mOnSearchListener != null) {
 			mOnSearchListener.onSearchQuery(query.build());
 		}
