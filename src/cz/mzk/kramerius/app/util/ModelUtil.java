@@ -1,6 +1,15 @@
 package cz.mzk.kramerius.app.util;
 
+import android.app.Activity;
+import android.content.Intent;
+import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.ui.PageActivity;
+import cz.mzk.kramerius.app.ui.PdfViewerActivity;
+import cz.mzk.kramerius.app.ui.PeriodicalActivity;
+import cz.mzk.kramerius.app.ui.SoundRecordingActivity;
+import cz.mzk.kramerius.app.ui.SoundUnitActivity;
 
 public class ModelUtil {
 	
@@ -86,6 +95,25 @@ public class ModelUtil {
 			return R.drawable.ic_archive_green;
 		}
 		return R.drawable.ic_help_green;
+	}
+	
+	public static void startActivityByModel(Activity activity, Item item) {
+		Intent intent = null;
+		if (ModelUtil.SOUND_RECORDING.equals(item.getModel())) {
+			intent = new Intent(activity, SoundRecordingActivity.class);
+		} else if (ModelUtil.SOUND_UNIT.equals(item.getModel())) {
+			intent = new Intent(activity, SoundUnitActivity.class);
+		} else if (ModelUtil.PERIODICAL.equals(item.getModel())) {
+			intent = new Intent(activity, PeriodicalActivity.class);
+		} else if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
+			intent = new Intent(activity, PeriodicalActivity.class);
+		} else if (item.getPdf() != null) {
+			intent = new Intent(activity, PdfViewerActivity.class);
+		} else {
+			intent = new Intent(activity, PageActivity.class);
+		}
+		intent.putExtra(BaseActivity.EXTRA_PID, item.getPid());
+		activity.startActivity(intent);		
 	}
 
 }

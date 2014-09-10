@@ -10,6 +10,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 public class BaseActivity extends Activity {
 
 	public static final String EXTRA_PID = "extra_pid";
+	public static final String EXTRA_TITLE = "extra_title";
 
 	public static final int PHONE = 0;
 	public static final int TABLET = 1;

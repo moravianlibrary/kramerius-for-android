@@ -58,7 +58,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		View view = inflater.inflate(R.layout.fragment_featured, container, false);
 		Configuration config = getResources().getConfiguration();
 		if (isPhone()) {
-			ScreenUtil.setInsets(getActivity(), view);
+		//	ScreenUtil.setInsets(getActivity(), view);
 		}
 		mGridview = (GridView) view.findViewById(R.id.gridview);
 

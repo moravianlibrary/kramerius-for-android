@@ -24,7 +24,6 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
 import cz.mzk.kramerius.app.ui.MainFeaturedFragment.OnFeaturedListener;
 import cz.mzk.kramerius.app.ui.MainMenuFragment.MainMenuListener;
@@ -40,8 +39,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	private MainMenuFragment mMenuFragment;
 	private boolean mMainFragmentActive;
-	private boolean mSearchResultActive;
-	private boolean mVirtualCollectionActive;
 	private FrameLayout mMenuContainer;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -202,9 +199,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 			ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_left);
 		}
 		ft.replace(R.id.main_content, fragment).commit();
-		mMainFragmentActive = main;
-		mSearchResultActive = false;
-		mVirtualCollectionActive = false;
+		mMainFragmentActive = main;		
 		refreshTitle(title);
 		closeSlidingMenu();
 	}	
@@ -232,16 +227,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	public void onBackPressed() {
 		if (closeSlidingMenu()) {
 			return;
-		}
-		if (mSearchResultActive) {
-			onSearch();
-			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_SEARCH);
-			return;
-		}
-		if (mVirtualCollectionActive) {
-			onVirtualCollections();
-			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_VIRTUAL_COLLECTION);
-			return;
 		}		
 		if (!mMainFragmentActive) {
 			onHome();
@@ -253,22 +238,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onItemSelected(Item item) {
-		Intent intent = null;
-		if (ModelUtil.SOUND_RECORDING.equals(item.getModel())) {
-			intent = new Intent(MainActivity.this, SoundRecordingActivity.class);
-		} else if (ModelUtil.SOUND_UNIT.equals(item.getModel())) {
-			intent = new Intent(MainActivity.this, SoundUnitActivity.class);
-		} else if (ModelUtil.PERIODICAL.equals(item.getModel())) {
-			intent = new Intent(MainActivity.this, PeriodicalActivity.class);
-		} else if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
-			intent = new Intent(MainActivity.this, PeriodicalActivity.class);
-		} else if (item.getPdf() != null) {
-			intent = new Intent(MainActivity.this, PdfViewerActivity.class);
-		} else {
-			intent = new Intent(MainActivity.this, PageActivity.class);
-		}
-		intent.putExtra(EXTRA_PID, item.getPid());
-		startActivity(intent);
+		ModelUtil.startActivityByModel(this, item);
 	}
 
 	private void goToDocument(String pid) {
@@ -360,24 +330,19 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onSearchQuery(String query) {
-		SearchResultFragment fragment = SearchResultFragment.newInstance(query);
-		fragment.setOnItemSelectedListener(this);
-		changeFragment(fragment, false, R.string.search_result_title);		
-		mSearchResultActive = true;
+		Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
+		intent.putExtra(SearchResultActivity.EXTRA_QUERY, query);
+		startActivity(intent);
 	}
 
 	@Override
 	public void onVirtualCollectionSelected(Item vc) {
-		SearchQuery query = new SearchQuery().virtualCollection(vc.getPid())
-				.allModels();
-		SearchResultFragment fragment = SearchResultFragment.newInstance(query.build());
-		fragment.setOnItemSelectedListener(this);
-		changeFragment(fragment, false, vc.getTitle());		
-		mVirtualCollectionActive = true;
-			
-
+		Intent intent = new Intent(MainActivity.this, VirtualCollectionActivity.class);
+		intent.putExtra(EXTRA_PID, vc.getPid());
+		intent.putExtra(EXTRA_TITLE, vc.getTitle());
+		startActivity(intent);
 	}
-	
+
 	
 
 }
