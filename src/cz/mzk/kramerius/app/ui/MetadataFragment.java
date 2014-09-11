@@ -29,6 +29,7 @@ import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Location;
 import cz.mzk.kramerius.app.metadata.Metadata;
@@ -263,15 +264,16 @@ public class MetadataFragment extends BaseFragment {
 
 		}
 	}
-	
+
 	private void addCartographics(Metadata metadata) {
 		if (metadata.getCartographics() == null) {
 			return;
 		}
 		mContainer.addView(createSubtitleView(getString(R.string.metadata_cartographics)));
 		addKeyValueView(getString(R.string.metadata_cartographics_scale), metadata.getCartographics().getScale());
-		addKeyValueView(getString(R.string.metadata_cartographics_coordinates), metadata.getCartographics().getCoordinates());
-		}	
+		addKeyValueView(getString(R.string.metadata_cartographics_coordinates), metadata.getCartographics()
+				.getCoordinates());
+	}
 
 	private void addAbstract(Metadata metadata) {
 		if (metadata.getAbstract() == null) {
@@ -318,7 +320,21 @@ public class MetadataFragment extends BaseFragment {
 		}
 		String languages = "";
 		for (int i = 0; i < metadata.getLanguages().size(); i++) {
-			languages += metadata.getLanguages().get(i);
+
+			String language = metadata.getLanguages().get(i);
+			Cursor c = getActivity().getContentResolver().query(KrameriusContract.LanguageEntry.CONTENT_URI,
+					new String[] { LanguageEntry.COLUMN_NAME }, LanguageEntry.COLUMN_CODE + "=?",
+					new String[] { language }, null);
+			if (c.moveToFirst()) {
+				String l = c.getString(0);
+				if (l != null && !l.isEmpty()) {
+					language = l;
+				}
+			}
+			c.close();
+
+			languages += language;
+
 			if (i < metadata.getLanguages().size() - 1) {
 				languages += ", ";
 			}

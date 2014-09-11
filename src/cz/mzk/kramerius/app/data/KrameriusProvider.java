@@ -9,6 +9,7 @@ import android.net.Uri;
 public class KrameriusProvider extends ContentProvider {
 
 	private static final int INSTITUTION = 100;
+	private static final int LANGUAGE = 110;
 
 	private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -17,8 +18,8 @@ public class KrameriusProvider extends ContentProvider {
 	private static UriMatcher buildUriMatcher() {
 		final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 		final String authority = KrameriusContract.AUTHORITY_URI;
-
 		matcher.addURI(authority, KrameriusContract.PATH_INSTITUTION, INSTITUTION);
+		matcher.addURI(authority, KrameriusContract.PATH_LANGUAGE, LANGUAGE);
 		return matcher;
 	}
 
@@ -33,6 +34,8 @@ public class KrameriusProvider extends ContentProvider {
 		switch (match) {
 		case INSTITUTION:
 			return KrameriusContract.InstitutuinEntry.CONTENT_TYPE;
+		case LANGUAGE:
+			return KrameriusContract.LanguageEntry.CONTENT_TYPE;
 		default:
 			throw new UnsupportedOperationException("Unknown uri:" + uri);
 		}
@@ -55,6 +58,10 @@ public class KrameriusProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case INSTITUTION:
 			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.InstitutuinEntry.TABLE_NAME, projection,
+					selection, selectionArgs, null, null, sortOrder);
+			break;
+		case LANGUAGE:
+			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.LanguageEntry.TABLE_NAME, projection,
 					selection, selectionArgs, null, null, sortOrder);
 			break;
 		default:

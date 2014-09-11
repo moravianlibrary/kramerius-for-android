@@ -1,0 +1,379 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (javaClasses.cpp:136), pid=22653, tid=139683445315328
+#  fatal error: Invalid layout of preloaded class
+#
+# JRE version:  (7.0_45-b18) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.45-b08 mixed mode linux-amd64 compressed oops)
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f0a9000a000):  JavaThread "Unknown thread" [_thread_in_vm, id=22658, stack(0x00007f0a96139000,0x00007f0a9623a000)]
+
+Stack: [0x00007f0a96139000,0x00007f0a9623a000],  sp=0x00007f0a96238780,  free space=1021k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0x992c8a]  VMError::report_and_die()+0x2ea
+V  [libjvm.so+0x493559]  report_fatal(char const*, int, char const*)+0x59
+V  [libjvm.so+0x5fdd00]  compute_offset(int&, klassOopDesc*, Symbol*, Symbol*, bool)+0x140
+V  [libjvm.so+0x5fe819]  java_lang_String::compute_offsets()+0x39
+V  [libjvm.so+0x918f55]  SystemDictionary::initialize_preloaded_classes(Thread*)+0x1a5
+V  [libjvm.so+0x967c94]  Universe::genesis(Thread*)+0x494
+V  [libjvm.so+0x968149]  universe2_init()+0x29
+V  [libjvm.so+0x5a969d]  init_globals()+0xbd
+V  [libjvm.so+0x94ed1d]  Threads::create_vm(JavaVMInitArgs*, bool*)+0x1ed
+V  [libjvm.so+0x630804]  JNI_CreateJavaVM+0x74
+C  [libjli.so+0x2f8e]  JavaMain+0x9e
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x00007f0a9000a000 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=22658, stack(0x00007f0a96139000,0x00007f0a9623a000)]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.029 loading class 0x00007f0a940136f0 done
+Event: 0.029 loading class 0x00007f0a94013110 done
+Event: 0.029 loading class 0x00007f0a940130f0
+Event: 0.030 loading class 0x00007f0a9401b1f0
+Event: 0.030 loading class 0x00007f0a9401b1f0 done
+Event: 0.030 loading class 0x00007f0a9401b220
+Event: 0.030 loading class 0x00007f0a9401b220 done
+Event: 0.030 loading class 0x00007f0a9401b250
+Event: 0.030 loading class 0x00007f0a9401b250 done
+Event: 0.030 loading class 0x00007f0a940130f0 done
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:06 22940106                           /home/hanis/programs/jdk1.7.0_45/bin/java
+00600000-00601000 rw-p 00000000 08:06 22940106                           /home/hanis/programs/jdk1.7.0_45/bin/java
+020bb000-020dc000 rw-p 00000000 00:00 0                                  [heap]
+bee00000-c0300000 rw-p 00000000 00:00 0 
+c0300000-c4000000 rw-p 00000000 00:00 0 
+c4000000-c6800000 rw-p 00000000 00:00 0 
+c6800000-ec000000 rw-p 00000000 00:00 0 
+ec000000-ed400000 rw-p 00000000 00:00 0 
+ed400000-100000000 rw-p 00000000 00:00 0 
+7f0a6c000000-7f0a6c021000 rw-p 00000000 00:00 0 
+7f0a6c021000-7f0a70000000 ---p 00000000 00:00 0 
+7f0a74000000-7f0a74021000 rw-p 00000000 00:00 0 
+7f0a74021000-7f0a78000000 ---p 00000000 00:00 0 
+7f0a7c000000-7f0a7c021000 rw-p 00000000 00:00 0 
+7f0a7c021000-7f0a80000000 ---p 00000000 00:00 0 
+7f0a84000000-7f0a84021000 rw-p 00000000 00:00 0 
+7f0a84021000-7f0a88000000 ---p 00000000 00:00 0 
+7f0a895de000-7f0a8984a000 rw-p 00000000 00:00 0 
+7f0a8984a000-7f0a89921000 r--s 013fe000 08:06 23331791                   /home/hanis/programs/adt-bundle-linux-x86_64-20131030/sdk/platforms/android-19/android.jar
+7f0a89921000-7f0a8bc30000 rw-p 00000000 00:00 0 
+7f0a8bc30000-7f0a8bc31000 ---p 00000000 00:00 0 
+7f0a8bc31000-7f0a8bd31000 rw-p 00000000 00:00 0                          [stack:22662]
+7f0a8bd31000-7f0a8bd32000 ---p 00000000 00:00 0 
+7f0a8bd32000-7f0a8be32000 rw-p 00000000 00:00 0                          [stack:22661]
+7f0a8be32000-7f0a8be33000 ---p 00000000 00:00 0 
+7f0a8be33000-7f0a8bf33000 rw-p 00000000 00:00 0                          [stack:22660]
+7f0a8bf33000-7f0a8bf34000 ---p 00000000 00:00 0 
+7f0a8bf34000-7f0a8c048000 rw-p 00000000 00:00 0                          [stack:22659]
+7f0a8c048000-7f0a8c174000 rw-p 00000000 00:00 0 
+7f0a8c174000-7f0a8c17f000 rw-p 00000000 00:00 0 
+7f0a8c17f000-7f0a8c19d000 rw-p 00000000 00:00 0 
+7f0a8c19d000-7f0a8c1b1000 rw-p 00000000 00:00 0 
+7f0a8c1b1000-7f0a8c2dd000 rw-p 00000000 00:00 0 
+7f0a8c2dd000-7f0a8c2e7000 rw-p 00000000 00:00 0 
+7f0a8c2e7000-7f0a8c37d000 rw-p 00000000 00:00 0 
+7f0a8c37d000-7f0a8c37e000 rw-p 00000000 00:00 0 
+7f0a8c37e000-7f0a8c5ee000 rwxp 00000000 00:00 0 
+7f0a8c5ee000-7f0a8f37e000 rw-p 00000000 00:00 0 
+7f0a8f37e000-7f0a8f398000 r-xp 00000000 08:06 22940896                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libzip.so
+7f0a8f398000-7f0a8f598000 ---p 0001a000 08:06 22940896                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libzip.so
+7f0a8f598000-7f0a8f599000 rw-p 0001a000 08:06 22940896                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libzip.so
+7f0a8f599000-7f0a8f5a5000 r-xp 00000000 08:06 15208300                   /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7f0a8f5a5000-7f0a8f7a4000 ---p 0000c000 08:06 15208300                   /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7f0a8f7a4000-7f0a8f7a5000 r--p 0000b000 08:06 15208300                   /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7f0a8f7a5000-7f0a8f7a6000 rw-p 0000c000 08:06 15208300                   /lib/x86_64-linux-gnu/libnss_files-2.17.so
+7f0a8f7a6000-7f0a8f7b1000 r-xp 00000000 08:06 15208304                   /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7f0a8f7b1000-7f0a8f9b0000 ---p 0000b000 08:06 15208304                   /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7f0a8f9b0000-7f0a8f9b1000 r--p 0000a000 08:06 15208304                   /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7f0a8f9b1000-7f0a8f9b2000 rw-p 0000b000 08:06 15208304                   /lib/x86_64-linux-gnu/libnss_nis-2.17.so
+7f0a8f9b2000-7f0a8f9c9000 r-xp 00000000 08:06 15208294                   /lib/x86_64-linux-gnu/libnsl-2.17.so
+7f0a8f9c9000-7f0a8fbc8000 ---p 00017000 08:06 15208294                   /lib/x86_64-linux-gnu/libnsl-2.17.so
+7f0a8fbc8000-7f0a8fbc9000 r--p 00016000 08:06 15208294                   /lib/x86_64-linux-gnu/libnsl-2.17.so
+7f0a8fbc9000-7f0a8fbca000 rw-p 00017000 08:06 15208294                   /lib/x86_64-linux-gnu/libnsl-2.17.so
+7f0a8fbca000-7f0a8fbcc000 rw-p 00000000 00:00 0 
+7f0a8fbcc000-7f0a8fbd4000 r-xp 00000000 08:06 15208296                   /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7f0a8fbd4000-7f0a8fdd3000 ---p 00008000 08:06 15208296                   /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7f0a8fdd3000-7f0a8fdd4000 r--p 00007000 08:06 15208296                   /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7f0a8fdd4000-7f0a8fdd5000 rw-p 00008000 08:06 15208296                   /lib/x86_64-linux-gnu/libnss_compat-2.17.so
+7f0a8fdd5000-7f0a8fdfe000 r-xp 00000000 08:06 22940887                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libjava.so
+7f0a8fdfe000-7f0a8fffe000 ---p 00029000 08:06 22940887                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libjava.so
+7f0a8fffe000-7f0a90000000 rw-p 00029000 08:06 22940887                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libjava.so
+7f0a90000000-7f0a90055000 rw-p 00000000 00:00 0 
+7f0a90055000-7f0a94000000 ---p 00000000 00:00 0 
+7f0a94013000-7f0a940a1000 rw-p 00000000 00:00 0 
+7f0a940a1000-7f0a940bf000 rw-p 00000000 00:00 0 
+7f0a940bf000-7f0a940cc000 r-xp 00000000 08:06 22940876                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libverify.so
+7f0a940cc000-7f0a942cb000 ---p 0000d000 08:06 22940876                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libverify.so
+7f0a942cb000-7f0a942cd000 rw-p 0000c000 08:06 22940876                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/libverify.so
+7f0a942cd000-7f0a942d4000 r-xp 00000000 08:06 15208347                   /lib/x86_64-linux-gnu/librt-2.17.so
+7f0a942d4000-7f0a944d3000 ---p 00007000 08:06 15208347                   /lib/x86_64-linux-gnu/librt-2.17.so
+7f0a944d3000-7f0a944d4000 r--p 00006000 08:06 15208347                   /lib/x86_64-linux-gnu/librt-2.17.so
+7f0a944d4000-7f0a944d5000 rw-p 00007000 08:06 15208347                   /lib/x86_64-linux-gnu/librt-2.17.so
+7f0a944d5000-7f0a945d8000 r-xp 00000000 08:06 15208275                   /lib/x86_64-linux-gnu/libm-2.17.so
+7f0a945d8000-7f0a947d7000 ---p 00103000 08:06 15208275                   /lib/x86_64-linux-gnu/libm-2.17.so
+7f0a947d7000-7f0a947d8000 r--p 00102000 08:06 15208275                   /lib/x86_64-linux-gnu/libm-2.17.so
+7f0a947d8000-7f0a947d9000 rw-p 00103000 08:06 15208275                   /lib/x86_64-linux-gnu/libm-2.17.so
+7f0a947d9000-7f0a9533b000 r-xp 00000000 08:06 22940894                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so
+7f0a9533b000-7f0a9553b000 ---p 00b62000 08:06 22940894                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so
+7f0a9553b000-7f0a955fe000 rw-p 00b62000 08:06 22940894                   /home/hanis/programs/jdk1.7.0_45/jre/lib/amd64/server/libjvm.so
+7f0a955fe000-7f0a9563f000 rw-p 00000000 00:00 0 
+7f0a9563f000-7f0a957fc000 r-xp 00000000 08:06 15208224                   /lib/x86_64-linux-gnu/libc-2.17.so
+7f0a957fc000-7f0a959fc000 ---p 001bd000 08:06 15208224                   /lib/x86_64-linux-gnu/libc-2.17.so
+7f0a959fc000-7f0a95a00000 r--p 001bd000 08:06 15208224                   /lib/x86_64-linux-gnu/libc-2.17.so
+7f0a95a00000-7f0a95a02000 rw-p 001c1000 08:06 15208224                   /lib/x86_64-linux-gnu/libc-2.17.so
+7f0a95a02000-7f0a95a07000 rw-p 00000000 00:00 0 
+7f0a95a07000-7f0a95a0a000 r-xp 00000000 08:06 15208239                   /lib/x86_64-linux-gnu/libdl-2.17.so
+7f0a95a0a000-7f0a95c09000 ---p 00003000 08:06 15208239                   /lib/x86_64-linux-gnu/libdl-2.17.so
+7f0a95c09000-7f0a95c0a000 r--p 00002000 08:06 15208239                   /lib/x86_64-linux-gnu/libdl-2.17.so
+7f0a95c0a000-7f0a95c0b000 rw-p 00003000 08:06 15208239                   /lib/x86_64-linux-gnu/libdl-2.17.so
+7f0a95c0b000-7f0a95c21000 r-xp 00000000 08:06 22939718                   /home/hanis/programs/jdk1.7.0_45/lib/amd64/jli/libjli.so
+7f0a95c21000-7f0a95e21000 ---p 00016000 08:06 22939718                   /home/hanis/programs/jdk1.7.0_45/lib/amd64/jli/libjli.so
+7f0a95e21000-7f0a95e22000 rw-p 00016000 08:06 22939718                   /home/hanis/programs/jdk1.7.0_45/lib/amd64/jli/libjli.so
+7f0a95e22000-7f0a95e39000 r-xp 00000000 08:06 15208339                   /lib/x86_64-linux-gnu/libpthread-2.17.so
+7f0a95e39000-7f0a96039000 ---p 00017000 08:06 15208339                   /lib/x86_64-linux-gnu/libpthread-2.17.so
+7f0a96039000-7f0a9603a000 r--p 00017000 08:06 15208339                   /lib/x86_64-linux-gnu/libpthread-2.17.so
+7f0a9603a000-7f0a9603b000 rw-p 00018000 08:06 15208339                   /lib/x86_64-linux-gnu/libpthread-2.17.so
+7f0a9603b000-7f0a9603f000 rw-p 00000000 00:00 0 
+7f0a9603f000-7f0a96062000 r-xp 00000000 08:06 15208200                   /lib/x86_64-linux-gnu/ld-2.17.so
+7f0a96079000-7f0a96083000 rw-p 00000000 00:00 0 
+7f0a96083000-7f0a96139000 rw-p 00000000 00:00 0 
+7f0a96139000-7f0a9613c000 ---p 00000000 00:00 0 
+7f0a9613c000-7f0a9623f000 rw-p 00000000 00:00 0                          [stack:22658]
+7f0a9623f000-7f0a96255000 rw-p 00000000 00:00 0 
+7f0a96255000-7f0a9625d000 rw-s 00000000 08:06 16777409                   /tmp/hsperfdata_hanis/22653
+7f0a9625d000-7f0a9625e000 rw-p 00000000 00:00 0 
+7f0a9625e000-7f0a9625f000 r--p 00000000 00:00 0 
+7f0a9625f000-7f0a96261000 rw-p 00000000 00:00 0 
+7f0a96261000-7f0a96262000 r--p 00022000 08:06 15208200                   /lib/x86_64-linux-gnu/ld-2.17.so
+7f0a96262000-7f0a96264000 rw-p 00023000 08:06 15208200                   /lib/x86_64-linux-gnu/ld-2.17.so
+7fff110dd000-7fff110fe000 rw-p 00000000 00:00 0                          [stack]
+7fff11140000-7fff11142000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 -Xbootclasspath:/home/hanis/programs/adt-bundle-linux-x86_64-20131030/sdk/platforms/android-19/android.jar 
+java_command: cz.mzk.kramerius.app.data.KrameriusDatabase
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/home/hanis/programs/jdk1.7.0_45/
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/hanis/programs/jdk1.7.0_45/bin:/home/hanis/programs/jdk1.7.0_45/bin
+USERNAME=hanis
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x9935b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x9935b0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x810330], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x811820], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGINT: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGTERM: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGQUIT: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+
+
+---------------  S Y S T E M  ---------------
+
+OS:wheezy/sid
+
+uname:Linux 3.11.0-24-generic #42-Ubuntu SMP Fri Jul 4 21:19:31 UTC 2014 x86_64
+libc:glibc 2.17 NPTL 2.17 
+rlimit: STACK 8192k, CORE 0k, NPROC 29973, NOFILE 4096, AS infinity
+load average:0.29 0.69 0.72
+
+/proc/meminfo:
+MemTotal:        3931248 kB
+MemFree:          222780 kB
+Buffers:           23780 kB
+Cached:           602832 kB
+SwapCached:       101344 kB
+Active:          2584064 kB
+Inactive:         879924 kB
+Active(anon):    2434340 kB
+Inactive(anon):   747792 kB
+Active(file):     149724 kB
+Inactive(file):   132132 kB
+Unevictable:          32 kB
+Mlocked:              32 kB
+SwapTotal:       9765884 kB
+SwapFree:        8967404 kB
+Dirty:               244 kB
+Writeback:             0 kB
+AnonPages:       2816728 kB
+Mapped:           156540 kB
+Shmem:            344756 kB
+Slab:             117284 kB
+SReclaimable:      74780 kB
+SUnreclaim:        42504 kB
+KernelStack:        6408 kB
+PageTables:        59196 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    11731508 kB
+Committed_AS:    9651656 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      354868 kB
+VmallocChunk:   34359371864 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       78512 kB
+DirectMap2M:     1927168 kB
+DirectMap1G:     2097152 kB
+
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 69 stepping 1, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, erms, ht, tsc, tscinvbit
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 69
+model name	: Intel(R) Core(TM) i5-4200U CPU @ 1.60GHz
+stepping	: 1
+microcode	: 0x10
+cpu MHz		: 800.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4589.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 69
+model name	: Intel(R) Core(TM) i5-4200U CPU @ 1.60GHz
+stepping	: 1
+microcode	: 0x10
+cpu MHz		: 800.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4589.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 69
+model name	: Intel(R) Core(TM) i5-4200U CPU @ 1.60GHz
+stepping	: 1
+microcode	: 0x10
+cpu MHz		: 800.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4589.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 69
+model name	: Intel(R) Core(TM) i5-4200U CPU @ 1.60GHz
+stepping	: 1
+microcode	: 0x10
+cpu MHz		: 800.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 fma cx16 xtpr pdcm pcid sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm ida arat epb xsaveopt pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+bogomips	: 4589.25
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 3931248k(222780k free), swap 9765884k(8967404k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (24.45-b08) for linux-amd64 JRE (1.7.0_45-b18), built on Oct  8 2013 05:44:25 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Fri Sep 12 00:35:44 2014
+elapsed time: 0 seconds
+
