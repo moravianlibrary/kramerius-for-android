@@ -56,7 +56,7 @@ public class GridItemAdapter extends BaseAdapter {
 		public ImageView thumb;
 		public ImageView modelIcon;
 		public ImageView lockIcon;
-		public ImageView detailButton;
+		public View detailButton;
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class GridItemAdapter extends BaseAdapter {
 			viewHolder.thumb = (ImageView) rowView.findViewById(R.id.grid_item_thumb);
 			viewHolder.modelIcon = (ImageView) rowView.findViewById(R.id.grid_item_modeIcon);
 			viewHolder.lockIcon = (ImageView) rowView.findViewById(R.id.grid_item_lockIcon);
-			viewHolder.detailButton = (ImageView) rowView.findViewById(R.id.grid_item_details);
+			viewHolder.detailButton = rowView.findViewById(R.id.grid_item_details_toucharea);
 			rowView.setTag(viewHolder);
 		}
 

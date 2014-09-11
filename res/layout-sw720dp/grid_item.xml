@@ -86,6 +86,14 @@
                 android:text="Hudebnina"
                 android:textColor="@color/green"
                 android:textSize="16dp" />
+
+            <FrameLayout
+                android:id="@+id/grid_item_details_toucharea"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true" />
         </RelativeLayout>
     </LinearLayout>
 

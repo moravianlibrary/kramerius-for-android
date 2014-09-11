@@ -235,7 +235,7 @@ public class MetadataFragment extends BaseFragment {
 			Cursor c = getActivity().getContentResolver().query(KrameriusContract.InstitutuinEntry.CONTENT_URI,
 					new String[] { InstitutuinEntry.COLUMN_NAME }, InstitutuinEntry.COLUMN_SIGLA + "=?",
 					new String[] { location.getPhysicalLocation() }, null);
-			if(c.moveToFirst()) {
+			if (c.moveToFirst()) {
 				String phyciscalLocation = c.getString(c.getColumnIndex(InstitutuinEntry.COLUMN_NAME));
 				addKeyValueView(getString(R.string.metadata_location_physical), phyciscalLocation);
 			}
@@ -261,6 +261,22 @@ public class MetadataFragment extends BaseFragment {
 			if (author.getDate() != null) {
 				s += ", " + author.getDate();
 			}
+			if (!author.getRoleCodes().isEmpty()) {
+				s += " (";
+				for (int i = 0; i < author.getRoleCodes().size(); i++) {
+					String role = author.getRoleCodes().get(i);
+					int resId = getResources().getIdentifier("author_" + role, "string", getActivity().getPackageName());
+					if (resId != 0) {
+						role = getString(resId);
+					}
+					s += role;
+					if (i < author.getRoleCodes().size() - 1) {
+						s += ", ";
+					}
+				}
+				s += ")";
+			}
+
 			mContainer.addView(createValueView(s));
 		}
 	}

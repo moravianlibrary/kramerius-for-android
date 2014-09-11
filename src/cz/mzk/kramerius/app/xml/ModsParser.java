@@ -91,7 +91,6 @@ public class ModsParser {
 		}
 		metadata.setTitleInfo(titleInfo);
 	}
-	
 
 	private static void fillPart(Element element, Metadata metadata) {
 		Part part = new Part();
@@ -125,7 +124,7 @@ public class ModsParser {
 		if (node != null) {
 			part.setText(node.getText());
 		}
-		if(!part.isEmpty()) {
+		if (!part.isEmpty()) {
 			metadata.setPart(part);
 		}
 	}
@@ -144,6 +143,17 @@ public class ModsParser {
 				if (node != null) {
 					author.setDate(node.getText());
 				}
+
+				List<Node> roleNodes = n.selectNodes("role/roleTerm[@type='code']");
+				if (roleNodes != null) {
+					for (Node roleNode : roleNodes) {
+						String role = roleNode.getText();
+						if (role != null && !role.isEmpty()) {
+							author.addRole(role);
+						}
+					}
+				}
+
 				if (!author.isEmpty()) {
 					metadata.addAuthor(author);
 				}
