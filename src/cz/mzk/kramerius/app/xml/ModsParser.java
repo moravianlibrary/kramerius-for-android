@@ -135,9 +135,26 @@ public class ModsParser {
 			for (Node n : nodes) {
 				Author author = new Author();
 				Node node = null;
-				node = n.selectSingleNode("namePart");
-				if (node != null) {
-					author.setName(node.getText());
+
+				// <namePart type="family">Petrasová</namePart>
+				// <namePart type="given">Taťána</namePart>
+				String family = "";
+				Node familyNode = n.selectSingleNode("namePart[@type='family']");
+				if (familyNode != null) {
+					family = familyNode.getText();
+				}
+				String given = "";
+				Node givenNode = n.selectSingleNode("namePart[@type='given']");
+				if (givenNode != null) {
+					given = givenNode.getText();
+				}
+				if (given.isEmpty() && family.isEmpty()) {
+					node = n.selectSingleNode("namePart[not(@type)]");
+					if (node != null) {
+						author.setName(node.getText());
+					}
+				} else {
+					author.setName(family + ", " + given);
 				}
 				node = n.selectSingleNode("namePart[@type='date']");
 				if (node != null) {
