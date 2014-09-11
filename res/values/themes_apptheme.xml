@@ -35,8 +35,4 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
     </style>
 
-    <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/green</item>
-    </style>
-
 </resources>

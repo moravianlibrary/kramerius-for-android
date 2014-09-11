@@ -3,6 +3,19 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    
+      <style name="ActionBarStyle" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/green</item>
+        <item name="android:subtitleTextStyle">@style/ActionBarStyle.SubTitleTextStyle</item>
+    </style>
+    
+  <style name="ActionBarStyle.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:textSize">13dp</item>
+  </style>      
+    
+    
+    
   <style name="AutoCompleteTextViewAppTheme" parent="android:Widget.Holo.Light.AutoCompleteTextView">
       <item name="android:dropDownSelector">@drawable/apptheme_list_selector_holo_light</item>
 	    <item name="android:background">@drawable/apptheme_edit_text_holo_light</item>

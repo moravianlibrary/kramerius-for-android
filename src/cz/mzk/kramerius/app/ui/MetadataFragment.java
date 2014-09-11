@@ -13,6 +13,9 @@ import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
@@ -37,11 +41,16 @@ public class MetadataFragment extends BaseFragment {
 
 	private static final String TAG = MetadataFragment.class.getName();
 
+	private static final int MENU_SHARE = 101;
+	
 	private ViewGroup mContainer;
 
+	private String mPid;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -54,7 +63,42 @@ public class MetadataFragment extends BaseFragment {
 		return view;
 	}
 
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		MenuItem itemSearch = menu.add(1, MENU_SHARE, 1, "Sdílet");
+		itemSearch.setIcon(android.R.drawable.ic_menu_share);
+		if (isTablet()) {
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		} else {
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_SHARE:
+			shareDocument();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}	
+	
+	private void shareDocument() {
+		String url = K5Api.getPersistentUrl(getActivity(), mPid);
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(Intent.ACTION_SEND);
+		sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+		sendIntent.setType("text/plain");
+		startActivity(sendIntent);	
+	}
+	
+	
 	public void assignPid(String pid) {
+		mPid = pid;
 		new getMetadataTask(getActivity()).execute(pid);
 	}
 

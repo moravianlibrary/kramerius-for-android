@@ -13,6 +13,7 @@ public class K5Api {
 
 	private static final String PATH_API = "api";
 	private static final String PATH_SEARCH = "search";
+	private static final String PATH_HANDLE = "handle";
 	private static final String PATH_API_VERSION = "v5.0";
 
 	private static final String PATH_FEED = "feed";
@@ -142,11 +143,11 @@ public class K5Api {
 	}
 	
 	public static String getSearchPath(Context context, String query) {
-		//String q = "dc.title:*" + title + "*%20AND%20fedora.model:monograph";
-		//String q = "dc.title:*" + title + "* AND fedora.model:monograph";
-		
-		
 		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", query).appendQueryParameter("rows", "50").build().toString();
+	}
+	
+	public static String getPersistentUrl(Context context, String pid) {
+		return getBaseUri(context).buildUpon().appendPath(PATH_HANDLE).appendPath(pid).toString();
 	}
 	
 	
