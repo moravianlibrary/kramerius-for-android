@@ -142,7 +142,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 				.add(SearchQuery.POLICY, policy);
 		
 		if (type != null) {
-			query.add(SearchQuery.MODEL, type);			
+			query.add(SearchQuery.MODEL, type, false);			
 
 		}
 		Analytics.sendEvent(getActivity(), "search", "query", query.build());

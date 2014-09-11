@@ -18,16 +18,23 @@ public class SearchQuery {
 		mQuery = "";
 	}
 
-	public SearchQuery add(String key, String value) {
+	
+	
+	public SearchQuery add(String key, String value, boolean substring) {
 		if (value != null && !value.isEmpty()) {
 			if (!mQuery.isEmpty()) {
 				mQuery = mQuery + " AND ";
-			}
-			mQuery = mQuery + key + ":*" + value + "*";
+			}			
+			mQuery = mQuery + key + ":" + (substring ? "*" : "") + value + (substring ? "*" : "");
 		}
 		return this;
 	}
 
+	public SearchQuery add(String key, String value) {
+		return add(key, value, true);
+	}
+	
+	
 	public SearchQuery virtualCollection(String pid) {
 		if (!mQuery.isEmpty()) {
 			mQuery = mQuery + " AND ";
