@@ -71,6 +71,22 @@
     <string name="metadata_title_info_subtitle">Podnázev</string>
     <string name="metadata_title_info_part_number">Číslo části</string>
     <string name="metadata_title_info_part_name">Název části</string>
+    <string name="metadata_identifier_issn">ISSN</string>
+    <string name="metadata_identifier_isbn">ISBN</string>
+    <string name="metadata_identifier_ccnb">čČNB</string>
+    <string name="metadata_identifier_oclc">OCLC</string>
+    
+
+    <string name="metadata_language">Jazyk</string>
+    <string name="metadata_languages">Jazyky</string>
+    <string name="metadata_keywords">Klíčová slova</string>
+    <string name="metadata_abstract">Abstrakt</string>
+    <string name="metadata_physical_description">Fyzický popis</string>
+    <string name="metadata_physical_description_scale">Rozměry</string>
+    <string name="metadata_physical_description_extent">Rozsah</string>
+    <string name="metadata_cartographics">Kartografické údaje</string>
+    <string name="metadata_cartographics_scale">Měřítko</string>
+    <string name="metadata_cartographics_coordinates">Souřadnice</string>
     
     <string name="metadata_author">Autor</string>
     <string name="metadata_authors">Autoři</string>

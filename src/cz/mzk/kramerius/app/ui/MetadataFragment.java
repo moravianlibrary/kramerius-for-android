@@ -33,20 +33,22 @@ import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Location;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.metadata.Part;
+import cz.mzk.kramerius.app.metadata.PhysicalDescription;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.TextUtil;
 
 public class MetadataFragment extends BaseFragment {
 
 	private static final String TAG = MetadataFragment.class.getName();
 
 	private static final int MENU_SHARE = 101;
-	
+
 	private ViewGroup mContainer;
 
 	private String mPid;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,19 +65,18 @@ public class MetadataFragment extends BaseFragment {
 		return view;
 	}
 
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		MenuItem itemSearch = menu.add(1, MENU_SHARE, 1, "Sdílet");
 		itemSearch.setIcon(android.R.drawable.ic_menu_share);
 		if (isTablet()) {
-			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		} else {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -85,18 +86,17 @@ public class MetadataFragment extends BaseFragment {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}	
-	
+	}
+
 	private void shareDocument() {
 		String url = K5Api.getPersistentUrl(getActivity(), mPid);
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
 		sendIntent.putExtra(Intent.EXTRA_TEXT, url);
 		sendIntent.setType("text/plain");
-		startActivity(sendIntent);	
+		startActivity(sendIntent);
 	}
-	
-	
+
 	public void assignPid(String pid) {
 		mPid = pid;
 		new getMetadataTask(getActivity()).execute(pid);
@@ -131,9 +131,15 @@ public class MetadataFragment extends BaseFragment {
 		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(model)), expandable, onClick));
 
 		addTitleInfo(metadata);
+		addIdentifiers(metadata);
+		addLanguages(metadata);
 		addAuthors(metadata);
 		addPublishers(metadata);
+		addAbstract(metadata);
+		addKeywords(metadata);
 		addLocation(metadata);
+		addPhysicalDescription(metadata);
+		addCartographics(metadata);
 		addNotes(metadata);
 	}
 
@@ -239,16 +245,85 @@ public class MetadataFragment extends BaseFragment {
 		}
 	}
 
+	private void addPhysicalDescription(Metadata metadata) {
+		if (metadata.getPhysicalDescription() == null) {
+			return;
+		}
+		mContainer.addView(createSubtitleView(getString(R.string.metadata_physical_description)));
+		addKeyValueView(getString(R.string.metadata_physical_description_scale), metadata.getPhysicalDescription()
+				.getScale());
+		addKeyValueView(getString(R.string.metadata_physical_description_extent), metadata.getPhysicalDescription()
+				.getExtent());
+
+		if (!metadata.getPhysicalDescription().getNotes().isEmpty()) {
+			String notes = TextUtil.writeNotes(metadata.getPhysicalDescription().getNotes());
+			if (!notes.isEmpty()) {
+				mContainer.addView(createValueView(notes));
+			}
+
+		}
+	}
+	
+	private void addCartographics(Metadata metadata) {
+		if (metadata.getCartographics() == null) {
+			return;
+		}
+		mContainer.addView(createSubtitleView(getString(R.string.metadata_cartographics)));
+		addKeyValueView(getString(R.string.metadata_cartographics_scale), metadata.getCartographics().getScale());
+		addKeyValueView(getString(R.string.metadata_cartographics_coordinates), metadata.getCartographics().getCoordinates());
+		}	
+
+	private void addAbstract(Metadata metadata) {
+		if (metadata.getAbstract() == null) {
+			return;
+		}
+		mContainer.addView(createSubtitleView(getString(R.string.metadata_abstract)));
+		mContainer.addView(createValueView(metadata.getAbstract()));
+	}
+
 	private void addNotes(Metadata metadata) {
 		if (metadata.getNotes().isEmpty()) {
 			return;
 		}
-		String notes = metadata.writeNotes();
+		String notes = TextUtil.writeNotes(metadata.getNotes());
 		if (notes.trim().isEmpty()) {
 			return;
 		}
 		mContainer.addView(createSubtitleView(getString(R.string.metadata_notes)));
 		mContainer.addView(createValueView(notes));
+	}
+
+	private void addKeywords(Metadata metadata) {
+		if (metadata.getKeywords().isEmpty()) {
+			return;
+		}
+		String keywords = "";
+		for (int i = 0; i < metadata.getKeywords().size(); i++) {
+			keywords += metadata.getKeywords().get(i);
+			if (i < metadata.getKeywords().size() - 1) {
+				keywords += ", ";
+			}
+		}
+		mContainer.addView(createSubtitleView(getString(R.string.metadata_keywords)));
+		mContainer.addView(createValueView(keywords));
+	}
+
+	private void addLanguages(Metadata metadata) {
+		if (metadata.getLanguages().isEmpty()) {
+			return;
+		}
+		String title = getString(R.string.metadata_language);
+		if (metadata.getLanguages().size() > 1) {
+			title = getString(R.string.metadata_languages);
+		}
+		String languages = "";
+		for (int i = 0; i < metadata.getLanguages().size(); i++) {
+			languages += metadata.getLanguages().get(i);
+			if (i < metadata.getLanguages().size() - 1) {
+				languages += ", ";
+			}
+		}
+		addKeyValueView(title, languages);
 	}
 
 	// private void addPart(Metadata metadata) {
@@ -309,7 +384,8 @@ public class MetadataFragment extends BaseFragment {
 				s += " (";
 				for (int i = 0; i < author.getRoleCodes().size(); i++) {
 					String role = author.getRoleCodes().get(i);
-					int resId = getResources().getIdentifier("author_" + role, "string", getActivity().getPackageName());
+					int resId = getResources()
+							.getIdentifier("author_" + role, "string", getActivity().getPackageName());
 					if (resId != 0) {
 						role = getString(resId);
 					}
@@ -334,6 +410,13 @@ public class MetadataFragment extends BaseFragment {
 		addKeyValueView(getString(R.string.metadata_title_info_subtitle), info.getSubtitle());
 		addKeyValueView(getString(R.string.metadata_title_info_part_name), info.getPartName());
 		addKeyValueView(getString(R.string.metadata_title_info_part_number), info.getPartNumber());
+	}
+
+	private void addIdentifiers(Metadata metadata) {
+		addKeyValueView(getString(R.string.metadata_identifier_issn), metadata.getIssn());
+		addKeyValueView(getString(R.string.metadata_identifier_isbn), metadata.getIsbn());
+		addKeyValueView(getString(R.string.metadata_identifier_ccnb), metadata.getCcnb());
+		addKeyValueView(getString(R.string.metadata_identifier_oclc), metadata.getOclc());
 	}
 
 	private View createSubtitleView(String subtitle) {

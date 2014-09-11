@@ -15,9 +15,11 @@ import org.dom4j.io.SAXReader;
 
 import android.util.Log;
 import cz.mzk.kramerius.app.metadata.Author;
+import cz.mzk.kramerius.app.metadata.Cartographics;
 import cz.mzk.kramerius.app.metadata.Location;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.metadata.Part;
+import cz.mzk.kramerius.app.metadata.PhysicalDescription;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
 
@@ -45,7 +47,25 @@ public class ModsParser {
 			metadata.setIsbn(node.getText());
 		}
 
-		List<Node> nodes = root.selectNodes("//note");
+		node = root.selectSingleNode("//identifier[@type='oclc']");
+		if (node != null) {
+			metadata.setOclc(node.getText());
+		}
+
+		node = root.selectSingleNode("//identifier[@type='ccnb']");
+		if (node != null) {
+			metadata.setCcnb(node.getText());
+		}
+
+		node = root.selectSingleNode("//abstract");
+		if (node != null) {
+			String a = node.getText();
+			if(!a.trim().isEmpty()) {
+				metadata.setAbstract(a);
+			}
+		}
+
+		List<Node> nodes = root.selectNodes("//modes/note");
 		if (nodes != null) {
 			for (Node n : nodes) {
 				String note = n.getText();
@@ -53,18 +73,29 @@ public class ModsParser {
 				metadata.addNote(note);
 			}
 		}
-		nodes = root.selectNodes("//physicalDescription/note");
+
+		nodes = root.selectNodes("//subject/topic");
 		if (nodes != null) {
 			for (Node n : nodes) {
-				String note = n.getText();
-				note = removeSpaces(note);
-				metadata.addPhysicalDescriptionNote(note);
+				String keyword = n.getText();
+				metadata.addKayword(keyword);
 			}
 		}
+
+		nodes = root.selectNodes("//language/languageTerm[@type='code']");
+		if (nodes != null) {
+			for (Node n : nodes) {
+				String language = n.getText();
+				metadata.addLanguage(language);
+			}
+		}
+
 		fillTitleInfo(root, metadata);
 		fillAuthors(root, metadata);
+		fillPhysicalDescription(root, metadata);
 		fillPublishers(root, metadata);
 		fillPart(root, metadata);
+		fillCartographics(root, metadata);
 		fillLocation(root, metadata);
 
 		return metadata;
@@ -92,6 +123,22 @@ public class ModsParser {
 		metadata.setTitleInfo(titleInfo);
 	}
 
+	private static void fillCartographics(Element element, Metadata metadata) {
+		Cartographics cartographics = new Cartographics();
+		Node node = null;
+		node = element.selectSingleNode("//subject/cartographics/scale");
+		if (node != null) {
+			cartographics.setScale(node.getText());
+		}
+		node = element.selectSingleNode("//subject/cartographics/coordinates");
+		if (node != null) {
+			cartographics.setCoordinates(node.getText());
+		}
+		if(!cartographics.isEmpty()) {
+			metadata.setCartographics(cartographics);
+		}
+	}
+	
 	private static void fillPart(Element element, Metadata metadata) {
 		Part part = new Part();
 		Node node = null;
@@ -217,6 +264,27 @@ public class ModsParser {
 				}
 				if (!publisher.isEmpty()) {
 					metadata.addPublisher(publisher);
+				}
+			}
+		}
+	}
+
+	private static void fillPhysicalDescription(Element element, Metadata metadata) {
+		PhysicalDescription description = new PhysicalDescription();
+
+		Node node = element.selectSingleNode("//physicalDescription/extent");
+		if (node != null) {
+			description.setExtent(node.getText());
+		}
+		List<Node> nodes = element.selectNodes("//physicalDescription/note");
+		if (nodes != null) {
+			for (Node n : nodes) {
+				String note = n.getText();
+				if (note != null && !note.isEmpty()) {
+					description.addNote(note);
+				}
+				if (!description.isEmpty()) {
+					metadata.setPhysicalDescription(description);
 				}
 			}
 		}
