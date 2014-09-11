@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cz.mzk.kramerius.app"
-    android:versionCode="12"
-    android:versionName="0.2.1" >
+    android:versionCode="13"
+    android:versionName="0.2.2" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -82,6 +82,11 @@
             android:name="cz.mzk.kramerius.app.ui.SearchResultActivity"
             android:label="@string/search_result_title" >
         </activity>
+        
+        <provider
+            android:name=".data.KrameriusProvider"
+            android:authorities="cz.mzk.kramerius.app.kramerius"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.data.KrameriusContract;
+import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Location;
 import cz.mzk.kramerius.app.metadata.Metadata;
@@ -119,34 +122,33 @@ public class MetadataFragment extends BaseFragment {
 	private void populatePeriodicalItem(Metadata metadata) {
 		mContainer
 				.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_ITEM)), false, null));
-		Part part = metadata.getPart();		
+		Part part = metadata.getPart();
 		String date = null;
 		String issue = null;
-		if(part != null) {
+		if (part != null) {
 			date = part.getDate();
 			issue = part.getIssueTitle();
 		}
-		if(issue == null || issue.isEmpty()) {
-			issue = metadata.getTitleInfo().getPartName();;
+		if (issue == null || issue.isEmpty()) {
+			issue = metadata.getTitleInfo().getPartName();
+			;
 		}
-		
-		if(date == null || date.isEmpty()) {
-			if(!metadata.getPublishers().isEmpty()) {
+
+		if (date == null || date.isEmpty()) {
+			if (!metadata.getPublishers().isEmpty()) {
 				date = metadata.getPublishers().get(0).getDate();
 			}
 		}
-		
-		addKeyValueView(getString(R.string.metadata_part_issue_number), issue);		
+
+		addKeyValueView(getString(R.string.metadata_part_issue_number), issue);
 		addKeyValueView(getString(R.string.metadata_part_issue_date), date);
 		addNotes(metadata);
 	}
 
 	private void populatePage(Metadata metadata) {
-//		mContainer.addView(createSubtitleView(getString(R.string.metadata_page)));
-		mContainer
-		.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PAGE)), false, null));
+		// mContainer.addView(createSubtitleView(getString(R.string.metadata_page)));
+		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PAGE)), false, null));
 
-		
 		Part part = metadata.getPart();
 		if (part == null) {
 			return;
@@ -227,7 +229,18 @@ public class MetadataFragment extends BaseFragment {
 		}
 		mContainer.addView(createSubtitleView(getString(R.string.metadata_location)));
 		Location location = metadata.getLocation();
-		addKeyValueView(getString(R.string.metadata_location_physical), location.getPhysicalLocation());
+
+		if (location.getPhysicalLocation() != null && !location.getPhysicalLocation().isEmpty()
+				&& getActivity() != null) {
+			Cursor c = getActivity().getContentResolver().query(KrameriusContract.InstitutuinEntry.CONTENT_URI,
+					new String[] { InstitutuinEntry.COLUMN_NAME }, InstitutuinEntry.COLUMN_SIGLA + "=?",
+					new String[] { location.getPhysicalLocation() }, null);
+			if(c.moveToFirst()) {
+				String phyciscalLocation = c.getString(c.getColumnIndex(InstitutuinEntry.COLUMN_NAME));
+				addKeyValueView(getString(R.string.metadata_location_physical), phyciscalLocation);
+			}
+			c.close();
+		}
 		for (String shelf : location.getShelfLocatons()) {
 			addKeyValueView(getString(R.string.metadata_location_shelf), shelf);
 		}
