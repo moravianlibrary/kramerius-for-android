@@ -5,12 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -75,8 +77,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private TextView mTitle1View;
 	private TextView mTitle2View;
 	private View mComplextTitleView;
-	
-	
+
 	private SeekBar mSeekBar;
 	private int mLastProgress;
 	private TextView mSeekPosition;
@@ -95,6 +96,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private boolean mComplexTitle;
 
 	private IPageViewerFragment mPageViewerFragment;
+	private ViewGroup mContainer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,16 +106,16 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		boolean keepScreenOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				getString(R.string.pref_keep_screen_on_key),
 				Boolean.parseBoolean(getString(R.string.pref_keep_screen_on_default)));
-		if(keepScreenOn) {
+		if (keepScreenOn) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		}	
-		
-		
+		}
+
 		mSystemBarTintManager = new SystemBarTintManager(this);
 		mSystemBarTintManager.setStatusBarTintEnabled(false);
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);
-				
+
 		setContentView(R.layout.activity_page);
+		mContainer = (ViewGroup) findViewById(R.id.page_container);
 		setBackgroundColor();
 		String pid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
 		mIndex = (TextView) findViewById(R.id.page_index);
@@ -163,14 +165,13 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mListShown = false;
 
 		findViewById(R.id.page_title_container).setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		
-		
+
 		mCurrentPage = 0;
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(EXTRA_CURRENT_PAGE)) {
@@ -204,17 +205,15 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 		return pids;
 	}
-	
-	
+
 	private void setBackgroundColor() {
-		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_viewer_bg_color_key),
-				getString(R.string.pref_viewer_bg_color_default));
-		ViewGroup container = (ViewGroup) findViewById(R.id.page_container);
-		if("white".equals(bgColorValue)) {
-			container.setBackgroundColor(Color.WHITE);
-		} else if("black".equals(bgColorValue)) {
-			container.setBackgroundColor(Color.BLACK);
-		}		
+		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				getString(R.string.pref_viewer_bg_color_key), getString(R.string.pref_viewer_bg_color_default));
+		if ("white".equals(bgColorValue)) {
+			mContainer.setBackgroundColor(Color.WHITE);
+		} else if ("black".equals(bgColorValue)) {
+			mContainer.setBackgroundColor(Color.BLACK);
+		}
 	}
 
 	@Override
@@ -226,7 +225,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		outState.putString(EXTRA_PARENT_PID, mParentPid);
 		outState.putString(EXTRA_TITLE, mTitle);
 		outState.putString(EXTRA_SUBTITLE, mSubtitle);
-		outState.putBoolean(EXTRA_COMPLEX_TITLE, mComplexTitle);		
+		outState.putBoolean(EXTRA_COMPLEX_TITLE, mComplexTitle);
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		super.onSaveInstanceState(outState);
 	}
@@ -272,7 +271,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	}
 
 	private void showMetadata() {
-		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);		
+		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);
 		intent.putExtra(BaseActivity.EXTRA_PID, mPageList.get(mCurrentPage).getPid());
 		startActivity(intent);
 	}
@@ -294,21 +293,21 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
 			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
-			if(item == null) {
+			if (item == null) {
 				return null;
 			}
-		    if(ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
-		    	List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
-		    	for(int i = 0; i < hierarchy.size(); i++) {
-		    		if(ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
-		    			Item parent =  K5Connector.getInstance().getItem(tContext, hierarchy.get(i).first);
-		    			if(parent != null) {
-		    				item.setTitle("Ročník " + parent.getVolumeTitle() + ", Číslo " + item.getIssueTitle());
-		    			}
-		    		}
-		    	}
-		    }
-			
+			if (ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
+				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
+				for (int i = 0; i < hierarchy.size(); i++) {
+					if (ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
+						Item parent = K5Connector.getInstance().getItem(tContext, hierarchy.get(i).first);
+						if (parent != null) {
+							item.setTitle("Ročník " + parent.getVolumeTitle() + ", Číslo " + item.getIssueTitle());
+						}
+					}
+				}
+			}
+
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
 		}
 
@@ -325,34 +324,34 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			} else {
 				mPageList = result.getChildren();
 			}
-			//Collections.sort(mPageList, new ItemByTitleComparator());
+			// Collections.sort(mPageList, new ItemByTitleComparator());
 			mCurrentPage = 0;
 			mTitle = TextUtil.parseTitle(result.getParent().getRootTitle());
-			if(ModelUtil.PERIODICAL_ITEM.equals(result.getParent().getModel())) {
+			if (ModelUtil.PERIODICAL_ITEM.equals(result.getParent().getModel())) {
 				mComplexTitle = true;
 				mSubtitle = result.getParent().getTitle();
 			} else {
 				mComplexTitle = false;
 			}
-			 
+
 			mParentPid = result.getParent().getPid();
 			init();
 		}
 	}
 
 	private void init() {
-		if(mComplexTitle) {
+		if (mComplexTitle) {
 			mTitle1View.setText(mTitle);
 			mTitle2View.setText(mSubtitle);
 			mComplextTitleView.setVisibility(View.VISIBLE);
 			mTitleView.setVisibility(View.GONE);
-			
+
 		} else {
 			mTitleView.setText(mTitle);
 			mComplextTitleView.setVisibility(View.GONE);
 			mTitleView.setVisibility(View.VISIBLE);
 		}
-		
+
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		initPageViewrFragment();
@@ -382,7 +381,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			int keyCode = event.getKeyCode();
 			switch (keyCode) {
 			case KeyEvent.KEYCODE_VOLUME_UP:
-				if (action == KeyEvent.ACTION_DOWN) {					
+				if (action == KeyEvent.ACTION_DOWN) {
 					previousPage();
 				}
 				return true;
@@ -470,10 +469,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	public void onSingleTap(float x, float y) {
-		mFullscreen = !mFullscreen;
-		setFullscreen(mFullscreen);
+		float w = x/mContainer.getWidth();
+		float h = y/mContainer.getHeight();
+		Log.d(LOG_TAG, "onTap - w:" + w + ", h:" + h);
+		if (w < 0.15 || h < 0.15) {
+			previousPage();
+		} else if (w > 0.85 || h > 0.85) {
+			nextPage();
+		} else {
+			mFullscreen = !mFullscreen;
+			setFullscreen(mFullscreen);
+		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -484,6 +492,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
-	}	
+	}
 
 }
