@@ -150,5 +150,8 @@ public class K5Api {
 		return getBaseUri(context).buildUpon().appendPath(PATH_HANDLE).appendPath(pid).toString();
 	}
 	
+	public static String getDoctypeCountPath(Context context, String type) {
+		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", "document_type:" + type).appendQueryParameter("rows", "0").build().toString();
+	}
 	
 }

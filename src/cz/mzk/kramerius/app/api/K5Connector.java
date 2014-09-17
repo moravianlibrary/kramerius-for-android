@@ -495,6 +495,33 @@ public class K5Connector {
 	
 	
 	
+	public int getDoctypeCount(Context context, String type) {
+		try {
+			String requestPath = K5Api.getDoctypeCountPath(context, type);
+			HttpGet request = new HttpGet(requestPath);									
+			Log.d(TAG, "query:" + requestPath);
+			request.setHeader("accept", "application/json");
+			HttpResponse response = getClient().execute(request);
+			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);			
+			//Log.d(TAG, "result:" + jsonString);
+			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
+			JSONObject responseJson = json.optJSONObject("response");
+			if(responseJson == null) {
+				return 0;
+			}
+			return responseJson.optInt("numFound");			
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	
 	
 	
