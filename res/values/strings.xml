@@ -220,6 +220,12 @@
     <string name="pref_view_mode_key" translatable="false">p_view_mode</string>
     <string name="pref_view_mode_title">Způsob zobrazení</string>
     <string name="pref_view_mode_summary">Jakým způsobem zobrazit obrázek na obrazovce</string>
+
+    <string name="pref_viewer_bg_color_default" translatable="false">black</string>
+    <string name="pref_viewer_bg_color_key" translatable="false">p_viewer_bg_color</string>
+    <string name="pref_viewer_bg_color_title">Barva pozadí</string>
+    <string name="pref_viewer_bg_color_summary">Barva pozadí prohlížečky</string>
+    
     
     <string name="pref_select_domain_key" translatable="false">p_select_domain</string>
     <string name="pref_select_domain_title">Vyberte zdroj dat</string>

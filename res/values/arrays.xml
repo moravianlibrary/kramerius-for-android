@@ -13,6 +13,17 @@
         <item name="3">Align Center</item>
         <item name="4">Align Horizontal Center</item>
     </string-array>
+    
+    <string-array name="viewer_bg_color_values">
+        <item name="1">black</item>
+        <item name="2">white</item>
+    </string-array>
+    <string-array name="viewer_bg_color_entries">
+        <item name="1">Černá</item>
+        <item name="2">Bílá</item>
+    </string-array>    
+    
+    
     <string-array name="search_doctype_entries">
         <item name="0">@string/document_monograph</item>
         <item name="1">@string/document_periodical</item>

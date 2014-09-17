@@ -19,6 +19,15 @@
             android:key="@string/pref_view_mode_key"
             android:summary="@string/pref_view_mode_summary"
             android:title="@string/pref_view_mode_title" />
+        
+        <ListPreference
+            android:defaultValue="@string/pref_viewer_bg_color_default"
+            android:entries="@array/viewer_bg_color_entries"
+            android:entryValues="@array/viewer_bg_color_values"
+            android:key="@string/pref_viewer_bg_color_key"
+            android:summary="@string/pref_viewer_bg_color_summary"
+            android:title="@string/pref_viewer_bg_color_title" />        
+        
     </PreferenceCategory>
    
     <PreferenceCategory android:title="@string/pref_category_data" >

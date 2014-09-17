@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +15,7 @@ import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
@@ -106,11 +108,13 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		}	
 		
+		
 		mSystemBarTintManager = new SystemBarTintManager(this);
 		mSystemBarTintManager.setStatusBarTintEnabled(false);
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);
 				
 		setContentView(R.layout.activity_page);
+		setBackgroundColor();
 		String pid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
 		mIndex = (TextView) findViewById(R.id.page_index);
 
@@ -199,6 +203,18 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			}
 		}
 		return pids;
+	}
+	
+	
+	private void setBackgroundColor() {
+		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(getString(R.string.pref_viewer_bg_color_key),
+				getString(R.string.pref_viewer_bg_color_default));
+		ViewGroup container = (ViewGroup) findViewById(R.id.page_container);
+		if("white".equals(bgColorValue)) {
+			container.setBackgroundColor(Color.WHITE);
+		} else if("black".equals(bgColorValue)) {
+			container.setBackgroundColor(Color.BLACK);
+		}		
 	}
 
 	@Override

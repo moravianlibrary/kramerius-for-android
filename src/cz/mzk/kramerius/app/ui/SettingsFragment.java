@@ -47,6 +47,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		});
 
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
+		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_viewer_bg_color_key)));
 		// bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_hardware_buttons_key)));
 
 		return view;
