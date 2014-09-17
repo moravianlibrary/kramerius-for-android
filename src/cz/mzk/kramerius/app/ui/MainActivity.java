@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -30,6 +31,7 @@ import cz.mzk.kramerius.app.ui.MainMenuFragment.MainMenuListener;
 import cz.mzk.kramerius.app.ui.SearchFragment.OnSearchListener;
 import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
 import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.OnVirtualCollectionListener;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
@@ -341,6 +343,24 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		intent.putExtra(EXTRA_PID, vc.getPid());
 		intent.putExtra(EXTRA_TITLE, vc.getTitle());
 		startActivity(intent);
+	}
+
+	@Override
+	public void onFeedback() {
+		closeSlidingMenu();
+		Analytics.sendEvent(this, "feedback", "from_menu");
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.setType("message/rfc822");
+		i.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.feedback_email) });
+		String subject = "Feedback - Kramerius " + getString(R.string.about_app_version);
+		i.putExtra(Intent.EXTRA_SUBJECT, subject);
+		i.putExtra(Intent.EXTRA_TEXT, "");
+		try {
+			startActivity(Intent.createChooser(i, getString(R.string.feedback_chooseEmailClient)));
+		} catch (android.content.ActivityNotFoundException ex) {
+			Toast.makeText(MainActivity.this, getString(R.string.feedback_noEmailClient), Toast.LENGTH_SHORT)
+					.show();
+		}
 	}
 
 	

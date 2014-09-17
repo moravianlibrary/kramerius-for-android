@@ -27,7 +27,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	public static final int MENU_SEARCH = 2;
 	public static final int MENU_ABOUT = 3;
 	public static final int MENU_HELP = 4;
-	public static final int MENU_SETTINGS = 5;
+	public static final int MENU_FEEDBACK = 5;
+	public static final int MENU_SETTINGS = 6;
 
 	private TextView mUser;
 	private MainMenuListener mCallback;
@@ -67,6 +68,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		list.add(new MenuListItem(getString(R.string.main_menu_about), R.drawable.ic_about_grey,
 				R.drawable.ic_about_green));
 		list.add(new MenuListItem(getString(R.string.main_menu_help), R.drawable.ic_help_grey, R.drawable.ic_help_green));
+		list.add(new MenuListItem(getString(R.string.main_menu_feedback), R.drawable.ic_attach_grey, R.drawable.ic_attach_green));
 		list.add(new MenuListItem(getString(R.string.main_menu_settings), R.drawable.ic_settings_grey,
 				R.drawable.ic_settings_green));
 
@@ -82,28 +84,35 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	public void onMenuItemSelected(int index) {
 		if (mCallback == null) {
 			return;
-		}
-		mMenuAdapter.setSelection(index);
+		}		
 		switch (index) {
 		case MENU_HOME:
+			mMenuAdapter.setSelection(index);
 			mCallback.onHome();
 			break;
 		case MENU_VIRTUAL_COLLECTION:
+			mMenuAdapter.setSelection(index);
 			mCallback.onVirtualCollections();
 			break;
 		case MENU_SEARCH:
+			mMenuAdapter.setSelection(index);
 			mCallback.onSearch();
 			break;
 		case MENU_ABOUT:
+			mMenuAdapter.setSelection(index);
 			mCallback.onAbout();
 			break;
 		case MENU_HELP:
+			mMenuAdapter.setSelection(index);
 			mCallback.onHelp();
 			break;
 		case MENU_SETTINGS:
+			mMenuAdapter.setSelection(index);
 			mCallback.onSettings();
 			break;
-
+		case MENU_FEEDBACK:
+			mCallback.onFeedback();
+			break;			
 		}
 	}
 
@@ -132,6 +141,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		public void onSearch();
 
 		public void onHelp();
+		
+		public void onFeedback();
 
 		public void onAbout();
 

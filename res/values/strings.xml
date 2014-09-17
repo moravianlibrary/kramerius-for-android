@@ -42,6 +42,7 @@
     <string name="main_menu_search">Hledat</string>
     <string name="main_menu_about">O aplikaci</string>
     <string name="main_menu_help">Nápověda</string>
+    <string name="main_menu_feedback">Zpětná vazba</string>
     <string name="main_menu_settings">Nastavení</string>    
     
     
@@ -57,7 +58,7 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.2.3/DEV</string>
+    <string name="about_app_version">v0.2.4/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
     
@@ -65,6 +66,10 @@
     
     <string name="search_result_title">Výsledky Hledání</string>
     
+    
+    <string name="feedback_email">jan.rychtar.dev@gmail.com</string>
+    <string name="feedback_chooseEmailClient">Vyberte e-mailového klienta</string>
+	<string name="feedback_noEmailClient">Nemáte nainstalovanou žádnou aplikaci na posílání e-mailů.</string>
     
     
     <string name="metadata_title_info_title">Hlavní název</string>
