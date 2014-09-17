@@ -57,7 +57,7 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.2.2</string>
+    <string name="about_app_version">v0.2.3/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
     
@@ -156,8 +156,6 @@
 	<string name="author_pht">fotograf</string>
 	<string name="author_hnr">poctěná osoba</string>
 	<string name="author_sng">zpěvák</string>
-	<string name="author_adp">autor adaptace</string>
-	<string name="author_rev">recenzent</string>
 	<string name="author_cwt">autor komentáře textu</string>
 	<string name="author_trl">překladatel</string>
 	<string name="author_voc">pěvec</string>

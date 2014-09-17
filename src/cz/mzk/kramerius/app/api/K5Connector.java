@@ -433,9 +433,13 @@ public class K5Connector {
 			String requestPath = K5Api.getSearchPath(context, query);
 			HttpGet request = new HttpGet(requestPath);									
 			Log.d(TAG, "query:" + requestPath);
-			request.setHeader("Content-Type", "application/json");
+			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			
+			//Log.d(TAG, "result:" + jsonString);
+			
+			
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
 			if(responseJson == null) {
