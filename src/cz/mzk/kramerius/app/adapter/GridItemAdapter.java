@@ -58,6 +58,11 @@ public class GridItemAdapter extends BaseAdapter {
 		public ImageView lockIcon;
 		public View detailButton;
 	}
+	
+	public void addAll(List<Item> items) {
+		mList.addAll(items);
+		notifyDataSetChanged();
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

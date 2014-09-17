@@ -142,8 +142,10 @@ public class K5Api {
 		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MP3).build().toString();
 	}
 	
-	public static String getSearchPath(Context context, String query) {
-		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", query).appendQueryParameter("rows", "50").build().toString();
+	public static String getSearchPath(Context context, String query, int start, int rows) {
+		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", query)
+				.appendQueryParameter("start", String.valueOf(start))
+				.appendQueryParameter("rows", String.valueOf(rows)).build().toString();
 	}
 	
 	public static String getPersistentUrl(Context context, String pid) {

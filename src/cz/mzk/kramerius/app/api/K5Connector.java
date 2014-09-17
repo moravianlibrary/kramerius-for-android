@@ -428,9 +428,9 @@ public class K5Connector {
 	
 	
 	
-	public List<Item> getSearchResult(Context context, String query) {
+	public Pair<List<Item>, Integer> getSearchResult(Context context, String query, int start, int rows) {
 		try {
-			String requestPath = K5Api.getSearchPath(context, query);
+			String requestPath = K5Api.getSearchPath(context, query, start, rows);
 			HttpGet request = new HttpGet(requestPath);									
 			Log.d(TAG, "query:" + requestPath);
 			request.setHeader("accept", "application/json");
@@ -445,6 +445,7 @@ public class K5Connector {
 			if(responseJson == null) {
 				return null;
 			}
+			int numFound = responseJson.optInt("numFound");
 			JSONArray itemArray = responseJson.optJSONArray("docs");			
 			if(itemArray == null) {
 				return null;
@@ -475,7 +476,7 @@ public class K5Connector {
 				items.add(item);
 			}
 			
-			return items;
+			return new Pair<List<Item>, Integer>(items, numFound);
 			
 			
 			
