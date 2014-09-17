@@ -44,7 +44,7 @@ public class GridItemAdapter extends BaseAdapter {
 				.build();
 
 		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.anim_loading).cacheInMemory(true)
-				.cacheOnDisk(true).build();
+				.cacheOnDisk(true).showImageOnFail(R.drawable.img_empty).build();
 
 		ImageLoader.getInstance().init(config);
 	}

@@ -29,7 +29,7 @@ public class SoundUnitArrayAdapter extends ArrayAdapter<Item> {
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(mContext.getApplicationContext())
 				.build();
 
-		mOptions = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.anim_loading).cacheInMemory(true)
+		mOptions = new DisplayImageOptions.Builder().showImageOnFail(R.drawable.img_empty).showImageOnLoading(R.drawable.anim_loading).cacheInMemory(true)
 				.cacheOnDisk(true).build();
 
 		ImageLoader.getInstance().init(config);

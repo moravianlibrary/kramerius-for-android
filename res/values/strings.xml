@@ -146,65 +146,7 @@
     <string name="ga_appview_virtual_collections" translatable="false">Virtual Collections</string>
     <string name="ga_appview_settings" translatable="false">Settings</string>
     
-    
-    
-	<string name="author_cre">autor</string>
-	<string name="author_aut">autor</string>
-	<string name="author_cmp">skladatel</string>
-	<string name="author_dis">autor diplomové práce</string>
-	<string name="author_com">sestavovatel</string>
-	<string name="author_ill">ilustrátor</string>
-	<string name="author_edt">editor</string>
-	<string name="author_art">umělec</string>
-	<string name="author_prf">účinkující</string>
-	<string name="author_arr">autor aranžmá</string>
-	<string name="author_pht">fotograf</string>
-	<string name="author_hnr">poctěná osoba</string>
-	<string name="author_sng">zpěvák</string>
-	<string name="author_cwt">autor komentáře textu</string>
-	<string name="author_trl">překladatel</string>
-	<string name="author_voc">pěvec</string>
-	<string name="author_ctg">kartograf</string>
-	<string name="author_ive">dotazovaný</string>
-	<string name="author_itr">instrumentalista</string>
-	<string name="author_aui">autor úvodu</string>
-	<string name="author_lyr">textař</string>
-	<string name="author_pbl">vydavatel</string>
-	<string name="author_red">redaktor</string>
-	<string name="author_ant">bibliografický předchůdce</string>
-	<string name="author_drt">režisér</string>
-	<string name="author_lbt">libretista</string>
-	<string name="author_cnd">dirigent</string>
-	<string name="author_oth">ostatní</string>
-	<string name="author_ivr">dotazovatel</string>
-	<string name="author_sce">scénárista</string>
-	<string name="author_crp">korespondent</string>
-	<string name="author_aud">autor dialogů</string>
-	<string name="author_lso">udělovatel povolení</string>
-	<string name="author_cns">cenzor</string>
-	<string name="author_rcp">adresát</string>
-	<string name="author_ann">anotátor</string>
-	<string name="author_adp">autor adaptace</string>
-	<string name="author_aft">autor doslovu</string>
-	<string name="author_aus">autor scénáře</string>
-	<string name="author_cmm">komentátor</string>
-	<string name="author_dnr">donor</string>
-	<string name="author_act">herec</string>
-	<string name="author_mus">hudebník</string>
-	<string name="author_ilu">iluminátor</string>
-	<string name="author_dub">domnělý autor</string>
-	<string name="author_pbd">šéfredaktor</string>
-	<string name="author_ltg">litograf</string>
-	<string name="author_egr">rytec</string>
-	<string name="author_prt">tiskař</string>
 
-    
-    
-    
-    
-    
-    
-    
     
     
     

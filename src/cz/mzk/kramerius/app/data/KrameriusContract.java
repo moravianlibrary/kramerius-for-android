@@ -11,6 +11,7 @@ public class KrameriusContract {
 
 	public static final String PATH_INSTITUTION = "institution";
 	public static final String PATH_LANGUAGE = "language";
+	public static final String PATH_RELATOR = "relator";
 
 	public static final class InstitutuinEntry implements BaseColumns {
 
@@ -40,7 +41,20 @@ public class KrameriusContract {
 
 		public static final String COLUMN_CODE = "lang_code";
 		public static final String COLUMN_NAME = "name";
-
 	}
+	
+	public static final class RelatorEntry implements BaseColumns {
+
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RELATOR).build();
+
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY_URI + "/" + PATH_RELATOR;
+
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY_URI + "/" + PATH_RELATOR;
+
+		public static final String TABLE_NAME = "relator";
+
+		public static final String COLUMN_CODE = "relator_code";
+		public static final String COLUMN_NAME = "name";
+	}	
 
 }
