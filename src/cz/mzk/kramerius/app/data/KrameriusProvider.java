@@ -10,6 +10,7 @@ public class KrameriusProvider extends ContentProvider {
 
 	private static final int INSTITUTION = 100;
 	private static final int LANGUAGE = 110;
+	private static final int RELATOR = 120;
 
 	private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -20,6 +21,7 @@ public class KrameriusProvider extends ContentProvider {
 		final String authority = KrameriusContract.AUTHORITY_URI;
 		matcher.addURI(authority, KrameriusContract.PATH_INSTITUTION, INSTITUTION);
 		matcher.addURI(authority, KrameriusContract.PATH_LANGUAGE, LANGUAGE);
+		matcher.addURI(authority, KrameriusContract.PATH_RELATOR, RELATOR);
 		return matcher;
 	}
 
@@ -35,6 +37,8 @@ public class KrameriusProvider extends ContentProvider {
 		case INSTITUTION:
 			return KrameriusContract.InstitutuinEntry.CONTENT_TYPE;
 		case LANGUAGE:
+			return KrameriusContract.LanguageEntry.CONTENT_TYPE;
+		case RELATOR:
 			return KrameriusContract.LanguageEntry.CONTENT_TYPE;
 		default:
 			throw new UnsupportedOperationException("Unknown uri:" + uri);
@@ -62,6 +66,10 @@ public class KrameriusProvider extends ContentProvider {
 			break;
 		case LANGUAGE:
 			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.LanguageEntry.TABLE_NAME, projection,
+					selection, selectionArgs, null, null, sortOrder);
+			break;
+		case RELATOR:
+			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.RelatorEntry.TABLE_NAME, projection,
 					selection, selectionArgs, null, null, sortOrder);
 			break;
 		default:

@@ -15,12 +15,14 @@ import android.util.Log;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
 
 public class KrameriusDatabase extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION_INITIAL = 1;
+	private static final int DATABASE_VERSION_RELATORS = 2;
 
-	private static final int DATABASE_VERSION = DATABASE_VERSION_INITIAL;
+	private static final int DATABASE_VERSION = DATABASE_VERSION_RELATORS;
 
 	private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
 	private static final String DATABASE_NAME_EXTERNAL = Environment
@@ -52,23 +54,48 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 				+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
 				+ ");";
 
+		final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
+				+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
+
+		final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
+				+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
+
 		db.execSQL(SQL_CREATE_INSTITUTION_TABLE);
 		db.execSQL(SQL_CREATE_INSTITUTION_SIGLA_INDEX);
 
 		db.execSQL(SQL_CREATE_LANGUAGE_TABLE);
 		db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
 
+		db.execSQL(SQL_CREATE_RELATOR_TABLE);
+		db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
+
 		populateFrom(db, R.raw.institution);
 		populateFrom(db, R.raw.languages);
+		populateFrom(db, R.raw.relators);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//TODO
+		int version = oldVersion;
+		switch (version) {
+		case DATABASE_VERSION_INITIAL:
+			final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
+					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
+
+			final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
+					+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE
+					+ ");";
+			db.execSQL(SQL_CREATE_RELATOR_TABLE);
+			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
+			populateFrom(db, R.raw.relators);
+
+			version = DATABASE_VERSION_RELATORS;
+		}
 	}
-	
-	
-	private void populateFrom(SQLiteDatabase db, int resourceId) {		
+
+	private void populateFrom(SQLiteDatabase db, int resourceId) {
 		if (db == null || !db.isOpen()) {
 			throw new IllegalStateException("Failed populate table");
 		}
@@ -79,7 +106,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 		try {
 			db.beginTransaction();
 			while ((line = reader.readLine()) != null) {
-				if (!TextUtils.isEmpty(line) && !line.startsWith("--")) {					
+				if (!TextUtils.isEmpty(line) && !line.startsWith("--")) {
 					db.execSQL(line);
 				}
 			}
@@ -92,11 +119,5 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			db.endTransaction();
 		}
 	}
-	
-	
-	
 
-	
-	
-	
 }

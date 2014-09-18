@@ -30,6 +30,7 @@ import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Location;
 import cz.mzk.kramerius.app.metadata.Metadata;
@@ -400,11 +401,22 @@ public class MetadataFragment extends BaseFragment {
 				s += " (";
 				for (int i = 0; i < author.getRoleCodes().size(); i++) {
 					String role = author.getRoleCodes().get(i);
-					int resId = getResources()
-							.getIdentifier("author_" + role, "string", getActivity().getPackageName());
-					if (resId != 0) {
-						role = getString(resId);
+					// int resId = getResources()
+					// .getIdentifier("author_" + role, "string",
+					// getActivity().getPackageName());
+					// if (resId != 0) {
+					// role = getString(resId);
+					// }
+					Cursor c = getActivity().getContentResolver().query(KrameriusContract.RelatorEntry.CONTENT_URI,
+							new String[] { RelatorEntry.COLUMN_NAME }, RelatorEntry.COLUMN_CODE + "=?",
+							new String[] { role }, null);
+					if (c.moveToFirst()) {
+						String r = c.getString(0);
+						if (r != null && !r.isEmpty()) {
+							role = r;
+						}
 					}
+					c.close();
 					s += role;
 					if (i < author.getRoleCodes().size() - 1) {
 						s += ", ";

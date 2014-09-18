@@ -20,6 +20,7 @@ public class VirtualCollectionsArrayAdapter extends ArrayAdapter<Item> {
 		mContext = context;
 	}
 
+	
 	static class ViewHolder {
 		public TextView title;
 	}

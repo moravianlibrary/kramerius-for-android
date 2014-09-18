@@ -8,6 +8,8 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
@@ -43,6 +46,8 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	private int mStart = 0;
 	private int mNumFound = -1;
 	private boolean mFirst = true;
+	
+	private TextView mMessage;
 
 	public static SearchResultFragment newInstance(String query) {
 		SearchResultFragment f = new SearchResultFragment();
@@ -81,6 +86,18 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 				onItemSelected(item);
 			}
 		});
+		mMessage = new TextView(getActivity());
+		mMessage.setText("Nebyly nalezeny žádné výsledky.");
+		mMessage.setTextColor(getResources().getColor(R.color.dark_grey));
+		mMessage.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+		mMessage.setVisibility(View.GONE);		
+		container.addView(mMessage);
+		ViewGroup.LayoutParams params = mMessage.getLayoutParams();
+		params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+		params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+		mMessage.setLayoutParams(params);
+		mMessage.setGravity(Gravity.CENTER);
+		
 		inflateLoader(container, inflater);
 		mLoading = true;
 		new GetResultTask(getActivity()).execute(mSearchQuery);
@@ -126,7 +143,8 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 				return;
 			}
 			if (result.second == 0) {
-				// TODO empty result set
+				mMessage.setVisibility(View.VISIBLE);
+			//	return;
 			}
 			mNumFound = result.second;
 			if (mAdapter == null) {
