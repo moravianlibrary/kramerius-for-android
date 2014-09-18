@@ -34,7 +34,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No access rights"
+                android:text="@string/viewer_no_access_rights"
                 android:textSize="30sp" />
         </LinearLayout>
 
