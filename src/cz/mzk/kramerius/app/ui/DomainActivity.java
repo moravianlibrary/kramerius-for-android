@@ -64,19 +64,19 @@ public class DomainActivity extends BaseActivity {
 		List<Domain> list = new ArrayList<Domain>();
 		list.add(new Domain("Moravská zemská knihovna", "Digitální knihovna MZK", "http", "kramerius.mzk.cz",
 				R.drawable.logo_mzk));
-		list.add(new Domain("Národní knihovna", "Digitální knihovna NKP", "http", "kramerius.nkp.cz",						
+		list.add(new Domain("Národní knihovna", "Digitální knihovna NKP", "http", "kramerius4.nkp.cz",						
 				R.drawable.logo_nkp));
 		list.add(new Domain("Národní digitální knihovna", "Digitální knihovna NDK", "http", "krameriusndktest.mzk.cz",						
 				R.drawable.logo_ndk));		
-		list.add(new Domain("Vědecká knihovna v Olomouci", "Digitální knihovna VKP", "http", "kramerius.vkp.cz",
-				R.drawable.logo_vkol));
-		list.add(new Domain("Knihovna Akademie věd ČR", "Digitální knihovna KNAV", "http", "cdk-test.lib.cas.cz",
-				R.drawable.logo_knav));
-		list.add(new Domain("Národní technická knihovna", "Digitální knihovna NTK", "http", "kramerius.ntk.cz",
-				R.drawable.logo_ntk));
-		list.add(new Domain("Moravská zemská knihovna", "Test MZK", "http", "krameriustest.mzk.cz", R.drawable.logo_mzk));
-		list.add(new Domain("Moravská zemská knihovna", "Demo MZK", "http", "krameriusdemo.mzk.cz", R.drawable.logo_mzk));
+//		list.add(new Domain("Vědecká knihovna v Olomouci", "Digitální knihovna VKP", "http", "kramerius.vkp.cz",
+//				R.drawable.logo_vkol));
+//		list.add(new Domain("Knihovna Akademie věd ČR", "Digitální knihovna KNAV", "http", "cdk-test.lib.cas.cz",
+//				R.drawable.logo_knav));
+//		list.add(new Domain("Národní technická knihovna", "Digitální knihovna NTK", "http", "kramerius.ntk.cz",
+//				R.drawable.logo_ntk));
 		list.add(new Domain("Moravská zemská knihovna", "Docker MZK", "http", "docker.mzk.cz", R.drawable.logo_mzk));
+	//	list.add(new Domain("Moravská zemská knihovna", "Test MZK", "http", "krameriustest.mzk.cz", R.drawable.logo_mzk));
+	//	list.add(new Domain("Moravská zemská knihovna", "Demo MZK", "http", "krameriusdemo.mzk.cz", R.drawable.logo_mzk));
 
 		return list;
 	}
