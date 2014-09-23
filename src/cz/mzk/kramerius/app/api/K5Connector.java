@@ -59,11 +59,11 @@ public class K5Connector {
 	}
 
 	public List<Item> getNewest(Context context, boolean extended, int limit) {
-		return getFeatured(context, K5Api.FEED_NEWEST, extended, limit);
+		return getFeatured(context, K5Api.FEED_NEWEST, false, limit);
 	}
 
 	public List<Item> getMostDesirable(Context context, boolean extended, int limit) {
-		return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, extended, limit);
+		return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, false, limit);
 	}
 
 	// API doesn't support feed/selected. This is a temporary solution for
@@ -192,6 +192,10 @@ public class K5Connector {
 				item.setIssn(jsonItem.optString("issn"));
 				item.setDate(jsonItem.optString("date"));
 				item.setTitle(jsonItem.optString("title"));
+				JSONArray authors = jsonItem.optJSONArray("autor");
+				if(authors != null && authors.length() > 0) {
+					item.setAuthor(authors.optString(0));
+				}				
 				item.setRootTitle(jsonItem.optString("root_title"));
 				item.setRootPid(jsonItem.optString("root_pid"));				
 				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));

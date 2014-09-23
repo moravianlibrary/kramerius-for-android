@@ -17,7 +17,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp" >
+                android:layout_marginTop="10dp"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -60,6 +61,7 @@
                 android:horizontalSpacing="5dp"
                 android:isScrollContainer="false"
                 android:numColumns="1"
+                android:visibility="gone"
                 android:stretchMode="columnWidth" />
 
             <RelativeLayout
@@ -117,8 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone" >
+                android:layout_marginTop="10dp" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -139,6 +140,17 @@
                     android:text="@string/featured_show_all"
                     android:textColor="@color/white"
                     android:textSize="12dp" />
+
+                <ImageView
+                    android:id="@+id/featured_mostdesirable_loader"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img_loader"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <GridView

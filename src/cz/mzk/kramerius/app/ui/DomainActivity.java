@@ -68,7 +68,10 @@ public class DomainActivity extends BaseActivity {
 				R.drawable.logo_nkp));
 		list.add(new Domain("Národní digitální knihovna", "Digitální knihovna NDK", "http", "krameriusndktest.mzk.cz",						
 				R.drawable.logo_ndk));		
-//		list.add(new Domain("Vědecká knihovna v Olomouci", "Digitální knihovna VKP", "http", "kramerius.vkp.cz",
+		list.add(new Domain("Knihovna Akademie věd ČR", "Digitální knihovna KNAV", "http", "kramerius.lib.cas.cz",
+		R.drawable.logo_knav));
+
+		//		list.add(new Domain("Vědecká knihovna v Olomouci", "Digitální knihovna VKP", "http", "kramerius.vkp.cz",
 //				R.drawable.logo_vkol));
 //		list.add(new Domain("Knihovna Akademie věd ČR", "Digitální knihovna KNAV", "http", "cdk-test.lib.cas.cz",
 //				R.drawable.logo_knav));

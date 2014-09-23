@@ -53,6 +53,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	private OnItemSelectedListener mOnItemSelectedListener;
 	private View mLoaderSelected;
 	private View mLoaderNewest;
+	private View mLoaderMostDesirable;
 
 	private int mFeaturedLimit;
 
@@ -85,6 +86,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		// "Roboto-Thin.ttf"));
 		mLoaderSelected = view.findViewById(R.id.featured_selected_loader);
 		mLoaderNewest = view.findViewById(R.id.featured_newest_loader);
+		mLoaderMostDesirable = view.findViewById(R.id.featured_mostdesirable_loader);
 		mSelectedGridView = (GridView) view.findViewById(R.id.featured_selected);
 		mNewestGridView = (GridView) view.findViewById(R.id.featured_newest);
 		mMostDesirableGridView = (GridView) view.findViewById(R.id.featured_mostdesirable);
@@ -129,12 +131,20 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		mMostDesirableExpandButton = view.findViewById(R.id.featured_mostdesirable_expand);
 		mMostDesirableExpandButton.setOnClickListener(this);
 
-		if (mSelectedList == null) {
-			mSelectedExpandButton.setVisibility(View.GONE);
-			startLoaderAnimation(mLoaderSelected);
-			new GetFeaturedTask(getActivity(), K5Api.FEED_SELECTED).execute();
+		// if (mSelectedList == null) {
+		// mSelectedExpandButton.setVisibility(View.GONE);
+		// startLoaderAnimation(mLoaderSelected);
+		// new GetFeaturedTask(getActivity(), K5Api.FEED_SELECTED).execute();
+		// } else {
+		// populateGrid(K5Api.FEED_SELECTED);
+		// }
+
+		if (mMostDesirableList == null) {
+			mMostDesirableExpandButton.setVisibility(View.GONE);
+			startLoaderAnimation(mLoaderMostDesirable);
+			new GetFeaturedTask(getActivity(), K5Api.FEED_MOST_DESIRABLE).execute();
 		} else {
-			populateGrid(K5Api.FEED_SELECTED);
+			populateGrid(K5Api.FEED_MOST_DESIRABLE);
 		}
 
 		if (mNewestList == null) {
@@ -197,6 +207,8 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 				mNewestList = new ArrayList<Item>();
 				fillList(result, mNewestList);
 			} else if (tType == K5Api.FEED_MOST_DESIRABLE) {
+				stopLoaderAnimation(mLoaderMostDesirable);
+				mMostDesirableExpandButton.setVisibility(View.VISIBLE);
 				mMostDesirableList = new ArrayList<Item>();
 				fillList(result, mMostDesirableList);
 			}
@@ -277,7 +289,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	}
 
 	@Override
-	public void onOpenDetail(String pid) {		
+	public void onOpenDetail(String pid) {
 		Intent intent = new Intent(getActivity(), MetadataActivity.class);
 		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
 		startActivity(intent);
