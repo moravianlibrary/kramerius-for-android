@@ -8,15 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,8 +21,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -39,7 +36,7 @@ import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.pdfviewer.PdfViewerFragment;
 import cz.mzk.kramerius.pdfviewer.PdfViewerFragment.PdfViewerListener;
 
-public class PdfViewerActivity extends Activity implements OnClickListener, PdfViewerListener {
+public class PdfViewerActivity extends Activity implements OnClickListener, OnSeekBarChangeListener, PdfViewerListener {
 
 	private View mLoader;
 	private TextView mIndex;
@@ -58,6 +55,13 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 	private View mZoomInButton;
 	private View mZoomOutButton;
 	private PdfViewerFragment mPdfViewer;
+	
+	private SeekBar mSeekBar;
+	private int mLastProgress;
+	private TextView mSeekPosition;
+
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +94,13 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 		mZoomInButton.setOnClickListener(this);
 		mZoomOutButton = findViewById(R.id.pdf_zoomout);
 		mZoomOutButton.setOnClickListener(this);
-
+		mSeekBar = (SeekBar) findViewById(R.id.pdf_seekBar);
+		mSeekBar.setOnSeekBarChangeListener(this);
+		mSeekPosition = (TextView) findViewById(R.id.pdf_seek_position);
+		mSeekPosition.setVisibility(View.GONE);
+		
+		
+		
 		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
 		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
 
@@ -129,23 +139,6 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 		startActivity(intent);
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				getString(R.string.pref_hardware_buttons_key),
-				Boolean.parseBoolean(getString(R.string.pref_hardware_buttons_key))
-
-		)) {
-			if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
-				onPreviousPage();
-				return true;
-			} else if ((keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
-				onNextPage();
-				return true;
-			}
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 	
 	@Override
 	public boolean dispatchKeyEvent(KeyEvent event) {
@@ -174,29 +167,7 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 		}
 	}
 	
-	
-	
 
-	// @Override
-	// public void onTap() {
-	// // Toast.makeText(PageActivity.this, "view clicked",
-	// // Toast.LENGTH_LONG).show();
-	// if (!mFullscreen) {
-	// getWindow()
-	// .setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-	// WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	// mBottomPanel.setVisibility(View.GONE);
-	// mTopPanel.setVisibility(View.GONE);
-	// mSystemBarTintManager.setStatusBarTintEnabled(false);
-	// } else {
-	// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	// mBottomPanel.setVisibility(View.VISIBLE);
-	// mTopPanel.setVisibility(View.VISIBLE);
-	// mSystemBarTintManager.setStatusBarTintEnabled(true);
-	// }
-	// mFullscreen = !mFullscreen;
-	//
-	// }
 
 	@Override
 	public void onClick(View v) {
@@ -206,45 +177,10 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 			mPdfViewer.zoomIn();
 		} else if (v == mZoomOutButton) {
 			mPdfViewer.zoomOut();
-		} else if (v == mIndex) {
-			showPageSelectionDialog();
-		}
+		} 
 	}
 
-	private void showPageSelectionDialog() {
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View pagenumView = factory.inflate(R.layout.dialog_pagenumber, null);
-		final int pageNumber = mPdfViewer.getCurrentPageNumber();
-		final EditText edPagenum = (EditText) pagenumView.findViewById(R.id.pagenum_edit);
-		edPagenum.setText(Integer.toString(pageNumber));
-		edPagenum.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (event == null || (event.getAction() == 1)) {
-					// Hide the keyboard
-					InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(edPagenum.getWindowToken(), 0);
-				}
-				return true;
-			}
-		});
-		new AlertDialog.Builder(this).setTitle("Jump to page").setView(pagenumView)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String strPagenum = edPagenum.getText().toString();
-						int pageNum = pageNumber;
-						try {
-							pageNum = Integer.parseInt(strPagenum);
-						} catch (NumberFormatException ignore) {
-						}
-						mPdfViewer.goToPage(pageNum);
-					}
-				}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-					}
-				}).create().show();
-
-	}
 
 	class LoadPdfTask extends AsyncTask<String, Void, Item> {
 
@@ -326,6 +262,8 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 
 	@Override
 	public void onPdfPageLoaded() {
+		mSeekBar.setMax(mPdfViewer.getNumberOfPages() - 1);
+		mSeekBar.setProgress(mPdfViewer.getCurrentPageNumber() - 1);
 		mIndex.setText(mPdfViewer.getCurrentPageNumber() + "/" + mPdfViewer.getNumberOfPages());
 	}
 
@@ -363,5 +301,30 @@ public class PdfViewerActivity extends Activity implements OnClickListener, PdfV
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
+	}
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		if (fromUser) {
+			mLastProgress = progress + 1;
+			mSeekPosition.setText(String.valueOf(progress + 1));
+		}
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		mLastProgress = -1;
+		mSeekPosition.setVisibility(View.VISIBLE);
+		//mSeekPosition.setText(String.valueOf(mCurrentPage + 1));
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		mSeekPosition.setVisibility(View.GONE);
+		if (mLastProgress > -1) {
+			//mCurrentPage = mLastProgress;
+			mPdfViewer.goToPage(mLastProgress);
+		}
+
 	}
 }

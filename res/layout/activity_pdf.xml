@@ -61,7 +61,7 @@
             android:padding="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_zoomout_white" />
-
+                
         <TextView
             android:id="@+id/pdf_index"
             android:layout_width="wrap_content"
@@ -70,8 +70,23 @@
             android:layout_centerVertical="true"
             android:textColor="@color/white"
             android:textSize="17dp" />
+        
+        <SeekBar
+            android:id="@+id/pdf_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@id/pdf_index"
+            android:layout_toRightOf="@id/pdf_zoomout" />
+        
+        
     </RelativeLayout>
 
+
+  
+    
+    
     <fragment
         android:id="@+id/pdf_viewer"
         android:name="cz.mzk.kramerius.pdfviewer.PdfViewerFragment"
@@ -80,6 +95,18 @@
         android:layout_above="@id/pdf_bottomPanel"
         android:layout_below="@id/pdf_topPanel" />
 
+ <TextView
+        android:id="@+id/pdf_seek_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/pdf_bottomPanel"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/seek_index_bg"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:visibility="gone" />
+    
     <ImageView
         android:id="@+id/pdf_loader"
         android:layout_width="100dp"
