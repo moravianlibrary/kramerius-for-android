@@ -36,6 +36,10 @@
                     android:host="kramerius.mzk.cz"
                     android:pathPrefix="/search"
                     android:scheme="http" />
+                <data
+                    android:host="docker.mzk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
@@ -82,7 +86,7 @@
             android:name="cz.mzk.kramerius.app.ui.SearchResultActivity"
             android:label="@string/search_result_title" >
         </activity>
-        
+
         <provider
             android:name=".data.KrameriusProvider"
             android:authorities="cz.mzk.kramerius.app.kramerius"

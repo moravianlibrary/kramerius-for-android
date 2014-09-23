@@ -27,6 +27,7 @@ public class K5Api {
 	private static final String PATH_STREAM = "streams";
 	private static final String PATH_MODS = "BIBLIO_MODS";
 	private static final String PATH_MP3 = "MP3";
+	private static final String PATH_IMG_FULL = "IMG_FULL";
 
 	public static String getDomain(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(
@@ -155,5 +156,17 @@ public class K5Api {
 	public static String getDoctypeCountPath(Context context, String type) {
 		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", "document_type:" + type).appendQueryParameter("rows", "0").build().toString();
 	}
+	
+	
+	public static String getPdfPath(Context context, String pid) {
+		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("pid", pid)
+					.appendQueryParameter("stream", PATH_IMG_FULL)
+					.appendQueryParameter("action", "GETRAW")
+					.build().toString();
+	}
+	
+	
+	
+	
 	
 }

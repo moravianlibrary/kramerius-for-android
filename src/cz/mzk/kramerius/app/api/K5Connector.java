@@ -459,6 +459,13 @@ public class K5Connector {
 				item.setRootTitle(itemJson.optString("root_title"));
 				item.setRootPid(itemJson.optString("root_pid"));
 				item.setRootPid(itemJson.optString("root_pid"));
+				
+				if("application/pdf".equals(itemJson.optString("img_full_mime"))) {
+					item.setPdf(K5Api.getPdfPath(context, item.getPid()));
+				}
+				
+				
+				
 				JSONArray authors = itemJson.optJSONArray("dc.creator");
 				if(authors != null && authors.length() > 0) {
 					item.setAuthor(authors.optString(0));
