@@ -11,6 +11,8 @@ public class SearchQuery {
 	public static final String POLICY = "dostupnost";
 	public static final String MODEL = "document_type";
 	public static final String COLLECTION = "collection";
+	public static final String DATE_BEGIN = "datum_begin";
+	public static final String DATE_END = "datum_end";
 
 	private String mQuery;
 
@@ -30,9 +32,16 @@ public class SearchQuery {
 		return this;
 	}
 
+	
 	public SearchQuery add(String key, String value) {
 		return add(key, value, true);
 	}
+	
+	
+	public SearchQuery date(int begin, int end) {		
+		String value = "[" + begin + " TO " + end + "]";
+		return add(DATE_BEGIN, value, false);
+	}	
 	
 	
 	public SearchQuery virtualCollection(String pid) {

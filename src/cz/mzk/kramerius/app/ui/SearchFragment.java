@@ -33,16 +33,22 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	private EditText mInputAuthor;
 	private CheckBox mCheckPublicOnly;
 	private Spinner mSpinnerType;
+	private EditText mInputDateFrom;
+	private EditText mInputDateTo;
+	
 	private OnSearchListener mOnSearchListener;
 
+	
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
 	}
 
+	
 	public void setOnSearchListener(OnSearchListener onSearchListener) {
 		mOnSearchListener = onSearchListener;
 	}
 
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,6 +90,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		mAdvanced.setOnClickListener(this);
 		mInputTitle = (EditText) view.findViewById(R.id.search_input_title);
 		mInputAuthor = (EditText) view.findViewById(R.id.search_input_author);
+		mInputDateFrom = (EditText) view.findViewById(R.id.search_date_from);
+		mInputDateTo = (EditText) view.findViewById(R.id.search_date_to);
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
 
 		return view;
@@ -104,6 +112,11 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		}
 		String title = mInputTitle.getText().toString().toLowerCase();
 		String author = mInputAuthor.getText().toString().toLowerCase();
+		
+		
+		
+		
+		
 		String policy = null;
 		if (mCheckPublicOnly.isChecked()) {
 			policy = "public";
@@ -143,8 +156,18 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		
 		if (type != null) {
 			query.add(SearchQuery.MODEL, type, false);			
-
 		}
+		String dateFrom = mInputDateFrom.getText().toString();
+		String dateTo = mInputDateTo.getText().toString();
+		try {
+			int begin = Integer.valueOf(dateFrom);
+			int end = Integer.valueOf(dateTo);
+			query.date(begin, end);			
+		} catch (NumberFormatException ex) {
+			
+		}
+		
+		
 		Analytics.sendEvent(getActivity(), "search", "query", query.build());
 		
 		if (type == null) {

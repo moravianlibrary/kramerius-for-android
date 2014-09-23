@@ -251,6 +251,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 	}
 
+
 	private void nextPage() {
 		if (mPageList == null) {
 			return;

@@ -32,6 +32,43 @@
             android:layout_marginTop="10dp"
             android:hint="Autor" />
 
+        <LinearLayout 
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
+            
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Od: "
+                />
+            
+            <EditText 
+                android:id="@+id/search_date_from"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                />
+            
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Do: "
+                />
+            
+            <EditText 
+                android:id="@+id/search_date_to"
+                android:layout_width="100dp"
+                android:inputType="numberDecimal"
+                android:layout_height="wrap_content"
+                />
+            
+            
+        </LinearLayout>
+        
         <CheckBox
             android:id="@+id/search_check_public"
             android:layout_width="match_parent"
