@@ -72,7 +72,8 @@ public class DomainArrayAdapter extends ArrayAdapter<Domain> {
 						.putString(getContext().getString(R.string.pref_protocol_key), domain.getProtocol()).commit();
 				K5Connector.getInstance().restart();
 				Intent intent = new Intent(getContext(), MainActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+				
 				getContext().startActivity(intent);
 			}
 		});
