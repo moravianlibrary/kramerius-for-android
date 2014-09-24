@@ -138,8 +138,12 @@
    <string name="search_filter_isbn">ISBN</string>
    <string name="search_filter_ddt">DDT</string>
    <string name="search_filter_mdt">MDT</string>
+   <string name="search_filter_signature">Signatura</string>
+   <string name="search_filter_sysno">Systémové číslo</string>
    
-    
+	<string name="search_filter_date_invalid_nan">Rok vydání nemá format celého čísla</string>    
+	<string name="search_filter_date_invalid_tltf">Rok vydání "do" musí být větší nebo roven "od"</string>
+   
     
      
     <string name="ga_appview_about" translatable="false">About</string>
@@ -157,6 +161,10 @@
     <string name="ga_appview_settings" translatable="false">Settings</string>
     
 
+
+    <string name="gen_ok">Ok</string>
+    <string name="gen_yes">Ano</string>
+    <string name="gen_no">Ne</string>
     
     
     

@@ -16,6 +16,10 @@ public class SearchQuery {
 	public static final String COLLECTION = "collection";
 	public static final String DATE_BEGIN = "datum_begin";
 	public static final String DATE_END = "datum_end";
+	public static final String IDENTIFIER = "dc.identifier";
+	public static final String SYSNO = "sysno";
+	public static final String SIGNATURE = "signature";
+	
 
 	private String mQuery;
 	boolean hasModel = false;
@@ -25,6 +29,10 @@ public class SearchQuery {
 	}
 
 
+	public SearchQuery identifier(String key, String value) {
+		String iv =  key + "\\:" + value;
+		return add(IDENTIFIER, iv, false);
+	}
 	
 	public SearchQuery add(String key, String value, boolean substring) {
 		if (value != null && !value.isEmpty()) {

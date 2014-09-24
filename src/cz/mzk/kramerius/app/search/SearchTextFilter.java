@@ -19,14 +19,23 @@ public class SearchTextFilter implements SearchFilter, OnClickListener {
 	private TextView mInput;
 	private View mDeleteButton;
 	private View mView;
+	
+	private boolean mWithIdentifier;
 
-	public SearchTextFilter(Context context, ViewGroup parentView, OnFilterDeletedListener onFilterDeletedListener, String key, String name) {
+	
+	public SearchTextFilter(Context context, ViewGroup parentView, OnFilterDeletedListener onFilterDeletedListener, String key, String name, boolean withIdentifier) {
 		mContext = context;
 		mParentView = parentView;
 		mKey = key;
 		mName = name;
+		mWithIdentifier = withIdentifier;
 		mOnFilterDeletedListener = onFilterDeletedListener;
 		populate();
+	}
+
+	
+	public SearchTextFilter(Context context, ViewGroup parentView, OnFilterDeletedListener onFilterDeletedListener, String key, String name) {
+		this(context, parentView, onFilterDeletedListener, key, name, false);
 	}
 
 	private void populate() {
@@ -71,8 +80,13 @@ public class SearchTextFilter implements SearchFilter, OnClickListener {
 	}
 
 	@Override
-	public void addToQuery(SearchQuery query) {
-		query.add(mKey, getValue());
+	public void addToQuery(SearchQuery query) {		
+		if(mWithIdentifier) {
+			query.identifier(mKey, getValue());
+		} else {
+			query.add(mKey, getValue());
+		}
+		
 	}
 
 	@Override

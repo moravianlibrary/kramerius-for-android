@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.R.string;
 
 public class SearchDateFilter implements SearchFilter, OnClickListener {
 
@@ -65,6 +66,23 @@ public class SearchDateFilter implements SearchFilter, OnClickListener {
 
 	@Override
 	public int validate() {
+		String dateFrom = mInputDateFrom.getText().toString();
+		String dateTo = mInputDateTo.getText().toString();
+		if (dateFrom.isEmpty()) {
+			dateFrom = "0";
+		}
+		if (dateTo.isEmpty()) {
+			dateTo = "2050";
+		}
+		try {
+			int begin = Integer.valueOf(dateFrom);
+			int end = Integer.valueOf(dateTo);
+			if (begin > end) {
+				return R.string.search_filter_date_invalid_tltf;
+			}
+		} catch (NumberFormatException ex) {
+			return R.string.search_filter_date_invalid_nan;
+		}
 		return 0;
 	}
 
@@ -72,6 +90,12 @@ public class SearchDateFilter implements SearchFilter, OnClickListener {
 	public void addToQuery(SearchQuery query) {
 		String dateFrom = mInputDateFrom.getText().toString();
 		String dateTo = mInputDateTo.getText().toString();
+		if (dateFrom.isEmpty()) {
+			dateFrom = "0";
+		}
+		if (dateTo.isEmpty()) {
+			dateTo = "2050";
+		}
 		try {
 			int begin = Integer.valueOf(dateFrom);
 			int end = Integer.valueOf(dateTo);

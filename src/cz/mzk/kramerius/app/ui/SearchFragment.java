@@ -105,6 +105,15 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 	}
 
 	private void search() {
+		// validate filters
+		for (SearchFilter filter : mFilters) {
+			int v = filter.validate();
+			if(v != 0) {
+				showInvalidFilterDialog(v);
+				return;
+			}
+		}
+				
 		InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
 				Context.INPUT_METHOD_SERVICE);
 		View view = getActivity().getCurrentFocus();
@@ -126,6 +135,19 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 		if (mOnSearchListener != null) {
 			mOnSearchListener.onSearchQuery(queryString);
 		}
+	}
+	
+	private void showInvalidFilterDialog(int res) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setMessage(res).setPositiveButton(R.string.gen_ok, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		builder.create().show();
 	}
 
 	@Override
@@ -168,6 +190,12 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 			mFilters.add(new SearchDoctypeFilter(getActivity(), mFilterLayout, this, SearchQuery.MODEL, name));
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
 			mFilters.add(new SearchDateFilter(getActivity(), mFilterLayout, this, SearchQuery.DATE_BEGIN, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_isbn))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.ISBN, name, true));
+		} else if (name.equals(getResources().getString(R.string.search_filter_signature))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.SIGNATURE, name, true));
+		} else if (name.equals(getResources().getString(R.string.search_filter_sysno))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.SYSNO, name, true));
 		}
 	}
 
