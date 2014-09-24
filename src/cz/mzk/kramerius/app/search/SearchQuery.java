@@ -8,6 +8,9 @@ public class SearchQuery {
 	public static final String TITLE = "dc.title";
 	public static final String LANGUAGE = "language";
 	public static final String ISSN = "issn";
+	public static final String ISBN = "isbn";
+	public static final String DDT = "ddt";
+	public static final String MDT = "mdt";	
 	public static final String POLICY = "dostupnost";
 	public static final String MODEL = "document_type";
 	public static final String COLLECTION = "collection";
@@ -15,18 +18,22 @@ public class SearchQuery {
 	public static final String DATE_END = "datum_end";
 
 	private String mQuery;
+	boolean hasModel = false;
 
 	public SearchQuery() {
 		mQuery = "";
 	}
 
-	
+
 	
 	public SearchQuery add(String key, String value, boolean substring) {
 		if (value != null && !value.isEmpty()) {
 			if (!mQuery.isEmpty()) {
 				mQuery = mQuery + " AND ";
 			}			
+			if(MODEL.equals(key)) {
+				hasModel = true;
+			}
 			mQuery = mQuery + key + ":" + (substring ? "*" : "") + value + (substring ? "*" : "");
 		}
 		return this;
@@ -52,7 +59,8 @@ public class SearchQuery {
 		return this;
 	}
 
-	public SearchQuery allModels() {
+	
+	private SearchQuery allModels() {
 		if (!mQuery.isEmpty()) {
 			mQuery = mQuery + " AND ";
 		}
@@ -74,6 +82,10 @@ public class SearchQuery {
 	}
 
 	public String build() {
+		if(!hasModel) {
+			allModels();
+			hasModel = true;
+		}
 		if (mQuery.isEmpty()) {
 			return "*:*";
 		}

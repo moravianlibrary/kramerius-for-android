@@ -1,8 +1,15 @@
 package cz.mzk.kramerius.app.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,42 +20,40 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Spinner;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.search.OnFilterDeletedListener;
+import cz.mzk.kramerius.app.search.SearchDateFilter;
+import cz.mzk.kramerius.app.search.SearchDoctypeFilter;
+import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
+import cz.mzk.kramerius.app.search.SearchTextFilter;
 import cz.mzk.kramerius.app.util.Analytics;
-import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class SearchFragment extends BaseFragment implements OnClickListener {
+public class SearchFragment extends BaseFragment implements OnClickListener, OnFilterDeletedListener {
 
 	private static final int MENU_SEARCH = 101;
 
 	private static final String TAG = SearchFragment.class.getName();
 
-	private Button mAdvanced;
-	private EditText mInputTitle;
-	private EditText mInputAuthor;
+	private Button mAddFilter;
 	private CheckBox mCheckPublicOnly;
-	private Spinner mSpinnerType;
-	private EditText mInputDateFrom;
-	private EditText mInputDateTo;
-	
+
+	private ViewGroup mFilterLayout;
+
 	private OnSearchListener mOnSearchListener;
 
-	
+	private List<SearchFilter> mFilters;
+
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
 	}
 
-	
 	public void setOnSearchListener(OnSearchListener onSearchListener) {
 		mOnSearchListener = onSearchListener;
 	}
 
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,7 +66,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		MenuItem itemSearch = menu.add(1, MENU_SEARCH, 1, "Vyhledat");
 		itemSearch.setIcon(android.R.drawable.ic_menu_send);
 		if (isTablet()) {
-			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		} else {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
@@ -84,16 +89,12 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		if (config.smallestScreenWidthDp < 720) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}
-		mSpinnerType = (Spinner) view.findViewById(R.id.search_spinner_type);
-		mSpinnerType.setSelection(0);
-		mAdvanced = (Button) view.findViewById(R.id.search_advanced);
-		mAdvanced.setOnClickListener(this);
-		mInputTitle = (EditText) view.findViewById(R.id.search_input_title);
-		mInputAuthor = (EditText) view.findViewById(R.id.search_input_author);
-		mInputDateFrom = (EditText) view.findViewById(R.id.search_date_from);
-		mInputDateTo = (EditText) view.findViewById(R.id.search_date_to);
+		mFilters = new ArrayList<SearchFilter>();
+		mAddFilter = (Button) view.findViewById(R.id.search_addFilter);
+		mAddFilter.setOnClickListener(this);
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
-
+		mFilterLayout = (ViewGroup) view.findViewById(R.id.search_filters);
+		mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.TITLE, getString(R.string.search_filter_name)));
 		return view;
 	}
 
@@ -110,79 +111,70 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		if (view != null) {
 			inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		}
-		String title = mInputTitle.getText().toString().toLowerCase();
-		String author = mInputAuthor.getText().toString().toLowerCase();
-		
-		
-		
-		
-		
 		String policy = null;
 		if (mCheckPublicOnly.isChecked()) {
 			policy = "public";
 		}
+		SearchQuery query = new SearchQuery().add(SearchQuery.POLICY, policy);
 
-		int typePosition = mSpinnerType.getSelectedItemPosition();
-		String type = null;
-		switch (typePosition) {
-		case 0:
-			type = ModelUtil.MONOGRAPH;
-			break;
-		case 1:
-			type = ModelUtil.PERIODICAL;
-			break;
-		case 2:
-			type = ModelUtil.MANUSCRIPT;
-			break;
-		case 3:
-			type = ModelUtil.MAP;
-			break;
-		case 4:
-			type = ModelUtil.GRAPHIC;
-			break;
-		case 5:
-			type = ModelUtil.SHEET_MUSIC;
-			break;
-		case 6:
-			type = ModelUtil.ARCHIVE;
-			break;
-		case 7:
-			type = ModelUtil.SOUND_RECORDING;
-			break;
+		for (SearchFilter filter : mFilters) {
+			filter.addToQuery(query);
 		}
-
-		SearchQuery query = new SearchQuery().add(SearchQuery.TITLE, title).add(SearchQuery.AUTHOR, author)
-				.add(SearchQuery.POLICY, policy);
-		
-		if (type != null) {
-			query.add(SearchQuery.MODEL, type, false);			
-		}
-		String dateFrom = mInputDateFrom.getText().toString();
-		String dateTo = mInputDateTo.getText().toString();
-		try {
-			int begin = Integer.valueOf(dateFrom);
-			int end = Integer.valueOf(dateTo);
-			query.date(begin, end);			
-		} catch (NumberFormatException ex) {
-			
-		}
-		
-		
-		Analytics.sendEvent(getActivity(), "search", "query", query.build());
-		
-		if (type == null) {
-			query.allModels();
-		} 
+		String queryString = query.build();
+		Analytics.sendEvent(getActivity(), "search", "query", queryString);
+		Log.d(TAG, "query:" + queryString);
 		if (mOnSearchListener != null) {
-			mOnSearchListener.onSearchQuery(query.build());
+			mOnSearchListener.onSearchQuery(queryString);
 		}
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v == mAdvanced) {
+		if (v == mAddFilter) {
+			showFilterDialog();
 		}
+	}
 
+	private void showFilterDialog() {
+		String[] allItems = getResources().getStringArray(R.array.search_filter_entries);
+		final List<String> itemList = new ArrayList<String>(Arrays.asList(allItems));
+		for (SearchFilter filter : mFilters) {
+			itemList.remove(filter.getName());
+		}
+		String[] items = new String[allItems.length - mFilters.size()];
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setItems(itemList.toArray(items), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				onAddFilter(itemList.get(which));
+				// onAddFilter(getResources().getStringArray(R.array.search_filter_entries)[which]);
+			}
+		});
+		builder.create().show();
+	}
+
+	private void onAddFilter(String name) {
+		if (name.equals(getResources().getString(R.string.search_filter_name))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.TITLE, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_author))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.AUTHOR, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_issn))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.ISSN, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_ddt))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.DDT, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_mdt))) {
+			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.MDT, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
+			mFilters.add(new SearchDoctypeFilter(getActivity(), mFilterLayout, this, SearchQuery.MODEL, name));
+		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
+			mFilters.add(new SearchDateFilter(getActivity(), mFilterLayout, this, SearchQuery.DATE_BEGIN, name));
+		}
+	}
+
+	@Override
+	public void onFilterDeleted(SearchFilter filter) {
+		mFilters.remove(filter);
+		mFilterLayout.removeView(filter.getView());
 	}
 
 }

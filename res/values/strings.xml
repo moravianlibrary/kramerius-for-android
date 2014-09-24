@@ -129,6 +129,16 @@
    
    <string name="metadata_open_parent">Otevřít</string>
    
+   
+   <string name="search_filter_name">Název</string>
+   <string name="search_filter_author">Autor</string>
+   <string name="search_filter_doctype">Typ dokumentu</string>
+   <string name="search_filter_year">Rok vydání</string>
+   <string name="search_filter_issn">ISSN</string>
+   <string name="search_filter_isbn">ISBN</string>
+   <string name="search_filter_ddt">DDT</string>
+   <string name="search_filter_mdt">MDT</string>
+   
     
     
      

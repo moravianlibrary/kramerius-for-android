@@ -13,7 +13,6 @@
         <item name="3">Align Center</item>
         <item name="4">Align Horizontal Center</item>
     </string-array>
-    
     <string-array name="viewer_bg_color_values">
         <item name="1">black</item>
         <item name="2">white</item>
@@ -21,9 +20,7 @@
     <string-array name="viewer_bg_color_entries">
         <item name="1">Černá</item>
         <item name="2">Bílá</item>
-    </string-array>    
-    
-    
+    </string-array>
     <string-array name="search_doctype_entries">
         <item name="0">@string/document_monograph</item>
         <item name="1">@string/document_periodical</item>
@@ -35,6 +32,14 @@
         <item name="7">@string/document_sound_recording</item>
         <item name="8">@string/document_all</item>
     </string-array>
-    
+    <string-array name="search_filter_entries">
+        <item name="name">@string/search_filter_name</item>
+        <item name="author">@string/search_filter_author</item>
+        <item name="doctype">@string/search_filter_doctype</item>
+        <item name="year">@string/search_filter_year</item>
+        <item name="issn">@string/search_filter_issn</item>
+        <item name="ddt">@string/search_filter_ddt</item>
+        <item name="mdt">@string/search_filter_mdt</item>
+    </string-array>
 
 </resources>

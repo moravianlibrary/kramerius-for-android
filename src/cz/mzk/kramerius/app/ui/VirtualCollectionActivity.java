@@ -26,7 +26,7 @@ public class VirtualCollectionActivity extends BaseActivity implements OnItemSel
 		}
 		String title = getIntent().getStringExtra(EXTRA_TITLE);
 
-		SearchQuery query = new SearchQuery().virtualCollection(pid).allModels();
+		SearchQuery query = new SearchQuery().virtualCollection(pid);
 
 		SearchResultFragment fragment = SearchResultFragment.newInstance(query.build());
 		fragment.setOnItemSelectedListener(this);
