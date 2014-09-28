@@ -80,6 +80,17 @@ public interface IPageViewerFragment {
 		 */
 		public void onReady();
 
+		public void onAccessDenied();
+
+		/**
+		 * 
+		 * @param statusCode
+		 *            http response status code. Can be null.
+		 */
+		public void onNetworkError(Integer statusCode);
+
+		public void onInvalidDataError(String errorMessage);
+
 		/**
 		 * Called after single tap that has not been used internally by
 		 * fragment.

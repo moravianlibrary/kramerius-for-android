@@ -15,17 +15,16 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
-import cz.mzk.androidzoomifyviewer.viewer.Utils;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHandler;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
+import cz.mzk.androidzoomifyviewer.viewer.Utils;
 import cz.mzk.kramerius.app.R;
 
 /**
@@ -48,16 +47,10 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	private List<String> mPagePids;
 	private int mCurrentPageIndex;
 
+	private View mContainer;
+	private View mProgressView;
 	private TiledImageView mTiledImageView;
 	private ImageView mImageView;
-
-	// Views to reflect image states
-	private View mProgressView;
-	private View mErrorView;
-	private TextView mErrorTitle;
-	private TextView mErrorDescription;
-	private TextView mErrorResourceUrl;
-	private View mViewNoAccessRights;
 
 	private GestureDetector mGestureDetector;
 	private EventListener mEventListener;
@@ -81,21 +74,16 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_page_viewer, container, false);
+		mContainer = view.findViewById(R.id.container);
+		mContainer.setOnTouchListener(this);
 		mProgressView = view.findViewById(R.id.progressView);
 		mProgressView.setOnTouchListener(this);
-		mErrorView = view.findViewById(R.id.errorView);
-		mErrorView.setOnTouchListener(this);
-		mErrorTitle = (TextView) view.findViewById(R.id.errorTitle);
-		mErrorResourceUrl = (TextView) view.findViewById(R.id.errorResourceUrl);
-		mErrorDescription = (TextView) view.findViewById(R.id.errorDescription);
 		mTiledImageView = (TiledImageView) view.findViewById(R.id.tiledImageView);
 		mTiledImageView.setImageInitializationHandler(this);
 		// mTiledImageView.setTileDownloadHandler(this);
 		mTiledImageView.setSingleTapListener(this);
 		mImageView = (ImageView) view.findViewById(R.id.imageView);
 		mImageView.setOnTouchListener(this);
-		mViewNoAccessRights = view.findViewById(R.id.viewNoAccessRights);
-		mViewNoAccessRights.setOnTouchListener(this);
 		return view;
 	}
 
@@ -205,8 +193,6 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	private void hideViews() {
 		mProgressView.setVisibility(View.INVISIBLE);
-		mViewNoAccessRights.setVisibility(View.INVISIBLE);
-		mErrorView.setVisibility(View.INVISIBLE);
 		mTiledImageView.setVisibility(View.INVISIBLE);
 		mImageView.setVisibility(View.INVISIBLE);
 	}
@@ -220,11 +206,11 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {
-		// Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError");
+		Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError, code: " + responseCode);
 		hideViews();
 		switch (responseCode) {
 		case 403: // FORBIDDEN
-			mViewNoAccessRights.setVisibility(View.VISIBLE);
+			mEventListener.onAccessDenied();
 			break;
 		// TODO: remove this temporary hack
 		// @see https://github.com/ceskaexpedice/kramerius/issues/110
@@ -235,11 +221,9 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 			break;
 		case 401:// UNAUTHORIZED
 			// TODO: urge user to log in
+			mEventListener.onAccessDenied();
 		default:
-			mErrorView.setVisibility(View.VISIBLE);
-			mErrorTitle.setText("Cannot process server resource");
-			mErrorResourceUrl.setText(imagePropertiesUrl);
-			mErrorDescription.setText("HTTP code: " + responseCode);
+			mEventListener.onNetworkError(responseCode);
 		}
 
 	}
@@ -256,10 +240,13 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 			}
 		}, 0, 0, null, new Response.ErrorListener() {
 			public void onErrorResponse(VolleyError error) {
-				mErrorView.setVisibility(View.VISIBLE);
-				mErrorTitle.setText("Cannot process server resource");
-				mErrorResourceUrl.setText(url);
-				mErrorDescription.setText(error.getMessage());
+				hideViews();
+				int statusCode = error.networkResponse.statusCode;
+				if (statusCode == 403 || statusCode == 401) {
+					mEventListener.onAccessDenied();
+				} else {
+					mEventListener.onNetworkError(statusCode);
+				}
 			}
 		});
 		VolleyRequestManager.addToRequestQueue(mImageRequest);
@@ -287,30 +274,21 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	public void onImagePropertiesRedirectionLoopError(String imagePropertiesUrl, int redirections) {
 		// Log.d(TAG, "onImagePropertiesRedirectionLoopError");
 		hideViews();
-		mErrorView.setVisibility(View.VISIBLE);
-		mErrorTitle.setText("Redirection loop");
-		mErrorResourceUrl.setText(imagePropertiesUrl);
-		mErrorDescription.setText("Too many redirections: " + redirections);
+		mEventListener.onNetworkError(null);
 	}
 
 	@Override
 	public void onImagePropertiesDataTransferError(String imagePropertiesUrl, String errorMessage) {
 		// Log.d(TAG, "onImagePropertiesDataTransferError");
 		hideViews();
-		mErrorView.setVisibility(View.VISIBLE);
-		mErrorTitle.setText("Data transfer error");
-		mErrorResourceUrl.setText(imagePropertiesUrl);
-		mErrorDescription.setText(errorMessage);
+		mEventListener.onNetworkError(null);
 	}
 
 	@Override
 	public void onImagePropertiesInvalidDataError(String imagePropertiesUrl, String errorMessage) {
 		// Log.d(TAG, "onImagePropertiesInvalidDataError");
 		hideViews();
-		mErrorView.setVisibility(View.VISIBLE);
-		mErrorTitle.setText("Invalid content in ImageProperties.xml");
-		mErrorResourceUrl.setText(imagePropertiesUrl);
-		mErrorDescription.setText(errorMessage);
+		mEventListener.onInvalidDataError("imageProperties.xml: " + errorMessage);
 	}
 
 	@Override

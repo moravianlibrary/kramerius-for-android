@@ -1,11 +1,9 @@
 package cz.mzk.kramerius.app.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,8 +15,8 @@ import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -26,13 +24,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.BaseActivity;
-import cz.mzk.kramerius.app.ItemByTitleComparator;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
@@ -251,7 +249,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 	}
 
-
 	private void nextPage() {
 		if (mPageList == null) {
 			return;
@@ -448,8 +445,38 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	public void onReady() {
-		// mPageViewerFragment.showPage(mCurrentPage);
 		loadPage();
+	}
+
+	@Override
+	public void onAccessDenied() {
+		// TODO: implement properly just as for pdf viewer
+		Toast.makeText(this, R.string.viewer_no_access_rights, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onNetworkError(Integer statusCode) {
+		Toast.makeText(this, R.string.viewer_network_error, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onInvalidDataError(String errorMessage) {
+		Toast.makeText(this, R.string.viewer_invalid_data_error, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onSingleTap(float x, float y) {
+		float w = x / mContainer.getWidth();
+		float h = y / mContainer.getHeight();
+		Log.d(LOG_TAG, "onTap - w:" + w + ", h:" + h);
+		if (w < 0.15 || h < 0.15) {
+			previousPage();
+		} else if (w > 0.85 || h > 0.85) {
+			nextPage();
+		} else {
+			mFullscreen = !mFullscreen;
+			setFullscreen(mFullscreen);
+		}
 	}
 
 	private void setFullscreen(boolean fullscreen) {
@@ -465,21 +492,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			mBottomPanel.setVisibility(View.VISIBLE);
 			mTopPanel.setVisibility(View.VISIBLE);
 			mSystemBarTintManager.setStatusBarTintEnabled(true);
-		}
-	}
-
-	@Override
-	public void onSingleTap(float x, float y) {
-		float w = x/mContainer.getWidth();
-		float h = y/mContainer.getHeight();
-		Log.d(LOG_TAG, "onTap - w:" + w + ", h:" + h);
-		if (w < 0.15 || h < 0.15) {
-			previousPage();
-		} else if (w > 0.85 || h > 0.85) {
-			nextPage();
-		} else {
-			mFullscreen = !mFullscreen;
-			setFullscreen(mFullscreen);
 		}
 	}
 

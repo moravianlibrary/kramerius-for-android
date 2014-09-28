@@ -200,7 +200,9 @@
     <string name="pref_protocol_default" translatable="false">http</string>
     <string name="pref_protocol_key" translatable="false">p_protocol</string>
     
-    <string name="viewer_no_access_rights">Dokument je v souladu s autorským zákonem přístupný jen v budově knihovny.</string>
+	<string name="viewer_no_access_rights">Dokument není veřejně přístupný.</string>
+    <string name="viewer_network_error">Chyba v přenosu dat.</string>
+    <string name="viewer_invalid_data_error">Chyba v datech.</string>
     
     
 </resources>
