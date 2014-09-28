@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
+import cz.mzk.androidzoomifyviewer.viewer.Utils;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHandler;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
@@ -40,6 +41,8 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	public static final String KEY_PAGE_PIDS = PageViewerFragment.class.getSimpleName() + "_pagePids";
 	public static final String KEY_CURRENT_PAGE_INDEX = PageViewerFragment.class.getSimpleName() + "_pageIndex";
 	public static final String KEY_POPULATED = PageViewerFragment.class.getSimpleName() + ":_populated";
+	private static final int MAX_IMG_FULL_HEIGHT = 1000;
+	private static final int IMG_FULL_SCALE_QUOTIENT = 100;
 
 	private String mDomain;
 	private List<String> mPagePids;
@@ -140,7 +143,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void populate(String domain, List<String> pagePids) {
-		Log.d(TAG, "populating");
+		// Log.d(TAG, "populating");
 		this.mDomain = domain;
 		this.mPagePids = pagePids;
 		this.mCurrentPageIndex = 0;
@@ -210,14 +213,14 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void onImagePropertiesProcessed() {
-		Log.d(TAG, "onImagePropertiesProcessed");
+		// Log.d(TAG, "onImagePropertiesProcessed");
 		hideViews();
 		mTiledImageView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {
-		Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError");
+		// Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError");
 		hideViews();
 		switch (responseCode) {
 		case 403: // FORBIDDEN
@@ -243,10 +246,8 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	private void loadPageImageFromDatastream() {
 		String pid = mPagePids.get(mCurrentPageIndex);
-		int height = mImageView.getHeight();
-		// int height = 500;
-		final String url = buildScaledImageDatastreamUrl(pid, height);
-		Log.d(TAG, "url: " + url);
+		final String url = buildScaledImageDatastreamUrl(pid);
+		Log.d(TAG, "Url: " + url);
 		mImageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
 			@Override
 			public void onResponse(Bitmap bitmap) {
@@ -264,17 +265,27 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		VolleyRequestManager.addToRequestQueue(mImageRequest);
 	}
 
-	private String buildScaledImageDatastreamUrl(String pid, int height) {
+	private String buildScaledImageDatastreamUrl(String pid) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("http://").append(mDomain);
 		builder.append("/search/img?pid=").append(pid);
-		builder.append("&stream=IMG_FULL&action=SCALE&scaledHeight=").append(height);
+		builder.append("&stream=IMG_FULL&action=SCALE");
+		builder.append("&scaledHeight=").append(determineHeightForScaledImageFromDatastream());
 		return builder.toString();
+	}
+
+	private int determineHeightForScaledImageFromDatastream() {
+		int heightPx = mImageView.getHeight();
+		int heightDp = Utils.pxToDp(heightPx);
+		int result = heightDp > MAX_IMG_FULL_HEIGHT ? MAX_IMG_FULL_HEIGHT : (heightDp / IMG_FULL_SCALE_QUOTIENT + 1)
+				* IMG_FULL_SCALE_QUOTIENT;
+		Log.d(TAG, "View height: " + heightDp + " dp (" + heightPx + " px); scaling image to: " + result + " px");
+		return result;
 	}
 
 	@Override
 	public void onImagePropertiesRedirectionLoopError(String imagePropertiesUrl, int redirections) {
-		Log.d(TAG, "onImagePropertiesRedirectionLoopError");
+		// Log.d(TAG, "onImagePropertiesRedirectionLoopError");
 		hideViews();
 		mErrorView.setVisibility(View.VISIBLE);
 		mErrorTitle.setText("Redirection loop");
@@ -284,7 +295,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void onImagePropertiesDataTransferError(String imagePropertiesUrl, String errorMessage) {
-		Log.d(TAG, "onImagePropertiesDataTransferError");
+		// Log.d(TAG, "onImagePropertiesDataTransferError");
 		hideViews();
 		mErrorView.setVisibility(View.VISIBLE);
 		mErrorTitle.setText("Data transfer error");
@@ -294,7 +305,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void onImagePropertiesInvalidDataError(String imagePropertiesUrl, String errorMessage) {
-		Log.d(TAG, "onImagePropertiesInvalidDataError");
+		// Log.d(TAG, "onImagePropertiesInvalidDataError");
 		hideViews();
 		mErrorView.setVisibility(View.VISIBLE);
 		mErrorTitle.setText("Invalid content in ImageProperties.xml");
