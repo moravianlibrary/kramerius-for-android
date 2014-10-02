@@ -39,8 +39,7 @@
         <item name="year">@string/search_filter_year</item>
         <item name="issn">@string/search_filter_issn</item>
         <item name="isbn">@string/search_filter_isbn</item>
-        <item name="ddt">@string/search_filter_ddt</item>
-        <item name="mdt">@string/search_filter_mdt</item>
+        <item name="keyword">@string/search_filter_keyword</item>        
         <item name="signature">@string/search_filter_signature</item>
         <item name="sysno">@string/search_filter_sysno</item>
     </string-array>

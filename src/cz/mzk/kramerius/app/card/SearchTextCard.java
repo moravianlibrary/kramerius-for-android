@@ -26,7 +26,6 @@ public class SearchTextCard extends Card implements SearchFilter {
 
 	public SearchTextCard(Context context, String key, String name, boolean withIdentifier, int type) {
 		super(context, R.layout.view_card_search_text);
-		Log.d("aaaa", "search card create: " + name);
 		mContext = context;
 		mType = type;
 		mKey = key;
@@ -42,7 +41,6 @@ public class SearchTextCard extends Card implements SearchFilter {
 
 	private void init() {
 		SearchCardHeader header = new SearchCardHeader(getContext());
-		// header.setButtonOverflowVisible(true);
 		header.setTitle(mName);
 		addCardHeader(header);
 		setSwipeable(true);
@@ -51,8 +49,6 @@ public class SearchTextCard extends Card implements SearchFilter {
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
 		mInput = (EditText) view.findViewById(R.id.search_text_input);
-		Log.d("aaaa", "search card setup: " + mName);
-
 		initInputs();
 	}
 

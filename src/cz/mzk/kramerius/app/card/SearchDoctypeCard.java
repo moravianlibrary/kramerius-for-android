@@ -4,6 +4,7 @@ import it.gmariotti.cardslib.library.internal.Card;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.search.SearchFilter;
@@ -15,12 +16,15 @@ public class SearchDoctypeCard extends Card implements SearchFilter {
 	private String mName;
 	private String mKey;
 	private Spinner mSpinner;
+	private int mPosition;
+	private int mType;
 
-	public SearchDoctypeCard(Context context, String key, String name) {
+	public SearchDoctypeCard(Context context, String key, String name, int type) {
 		super(context, R.layout.view_card_search_doctype);
 		mContext = context;
 		mKey = key;
 		mName = name;
+		mType = type;
 		init();
 	}
 
@@ -29,13 +33,31 @@ public class SearchDoctypeCard extends Card implements SearchFilter {
 		header.setTitle(mName);
 		addCardHeader(header);
 		setSwipeable(true);
+		mPosition = 0;
 	}
+	
+	@Override
+	public int getType() {
+		return mType;
+	}	
 
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
 		mSpinner = (Spinner) view.findViewById(R.id.search_doctype_spinner);
+		initInputs();
+		mSpinner.setSelection(mPosition);
 	}
 
+	private void initInputs() {
+		mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+				mPosition = i;
+			}
+
+			public void onNothingSelected(AdapterView<?> adapterView) {
+			}
+		});
+	}
 
 	@Override
 	public String getKey() {
@@ -74,7 +96,6 @@ public class SearchDoctypeCard extends Card implements SearchFilter {
 		return type;
 	}
 
-	
 	@Override
 	public int validate() {
 		return 0;

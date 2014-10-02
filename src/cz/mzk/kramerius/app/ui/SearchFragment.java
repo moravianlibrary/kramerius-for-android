@@ -100,7 +100,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		mAddFilter = (Button) view.findViewById(R.id.search_addFilter);
 		mAddFilter.setOnClickListener(this);
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
-		mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, getResources().getString(R.string.search_filter_name), false, 0));
+		mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, getResources().getString(
+				R.string.search_filter_name), false, 0));
 		return view;
 	}
 
@@ -164,7 +165,6 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		}
 	}
 
-
 	private void showFilterDialog() {
 		String[] allItems = getResources().getStringArray(R.array.search_filter_entries);
 		final List<String> itemList = new ArrayList<String>(Arrays.asList(allItems));
@@ -177,7 +177,6 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		builder.setItems(itemList.toArray(items), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				onAddFilter(itemList.get(which));
-				// onAddFilter(getResources().getStringArray(R.array.search_filter_entries)[which]);
 			}
 		});
 		builder.create().show();
@@ -195,11 +194,13 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		} else if (name.equals(getResources().getString(R.string.search_filter_mdt))) {
 			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.MDT, name, false, 4));
 		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
-			mAdapter.add(new SearchDoctypeCard(getActivity(), SearchQuery.MODEL, name));
+			mAdapter.add(new SearchDoctypeCard(getActivity(), SearchQuery.MODEL, name, 10));
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
-			mAdapter.add(new SearchDateCard(getActivity(), SearchQuery.DATE_BEGIN, name));
+			mAdapter.add(new SearchDateCard(getActivity(), SearchQuery.DATE_BEGIN, name, 9));
 		} else if (name.equals(getResources().getString(R.string.search_filter_isbn))) {
 			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.ISBN, name, true, 5));
+		} else if (name.equals(getResources().getString(R.string.search_filter_keyword))) {
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.KEYWORDS, name, false, 8));
 		} else if (name.equals(getResources().getString(R.string.search_filter_signature))) {
 			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SIGNATURE, name, true, 6));
 		} else if (name.equals(getResources().getString(R.string.search_filter_sysno))) {

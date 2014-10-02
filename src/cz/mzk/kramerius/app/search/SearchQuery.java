@@ -1,5 +1,6 @@
 package cz.mzk.kramerius.app.search;
 
+import android.util.Log;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class SearchQuery {
@@ -19,6 +20,7 @@ public class SearchQuery {
 	public static final String IDENTIFIER = "dc.identifier";
 	public static final String SYSNO = "sysno";
 	public static final String SIGNATURE = "signature";
+	public static final String KEYWORDS = "keywords";
 	
 
 	private String mQuery;
@@ -51,10 +53,20 @@ public class SearchQuery {
 	public SearchQuery add(String key, String value) {
 		return add(key, value, true);
 	}
-	
+
+	public SearchQuery neg(String key, String value, boolean substring) {
+		return add("-" + key, value, substring);
+	}	
+
+	public SearchQuery neg(String key, String value) {
+		return neg(key, value, true);
+	}		
 	
 	public SearchQuery date(int begin, int end) {		
 		String value = "[" + begin + " TO " + end + "]";
+		if(begin < 1) {
+			neg(DATE_BEGIN, "0", false);
+		}
 		return add(DATE_BEGIN, value, false);
 	}	
 	
@@ -97,6 +109,7 @@ public class SearchQuery {
 		if (mQuery.isEmpty()) {
 			return "*:*";
 		}
+		Log.d("aaa", "que:" + mQuery);
 		return mQuery;
 	}
 
