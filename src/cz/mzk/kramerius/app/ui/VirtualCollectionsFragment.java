@@ -1,8 +1,13 @@
 package cz.mzk.kramerius.app.ui;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -10,34 +15,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.VirtualCollectionsArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.VirtualCollectionCard;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class VirtualCollectionsFragment extends BaseFragment {
 
 	private static final String TAG = VirtualCollectionsFragment.class.getName();
 
-	private ListView mListView;
 	private OnVirtualCollectionListener mOnVirtualCollectionListener;
-	private VirtualCollectionsArrayAdapter mAdapter;
-	
+
+	private CardGridView mCardGridView;
+	private CardGridArrayAdapter mAdapter;
 
 	public static VirtualCollectionsFragment newInstance() {
 		VirtualCollectionsFragment f = new VirtualCollectionsFragment();
-		// Bundle args = new Bundle();
-		// args.putInt(EXTRA_TYPE, type);
-		// f.setArguments(args);
 		return f;
 	}
-	
+
 	public void setOnVirtualCollectionListener(OnVirtualCollectionListener listener) {
 		mOnVirtualCollectionListener = listener;
 	}
@@ -45,40 +45,30 @@ public class VirtualCollectionsFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// mType = getArguments().getInt(EXTRA_TYPE, K5Connector.TYPE_NEWEST);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+
 		View view = inflater.inflate(R.layout.fragment_virtual_collections, container, false);
 		Configuration config = getResources().getConfiguration();
 		if (config.smallestScreenWidthDp < 720) {
 			ScreenUtil.setInsets(getActivity(), view);
-		}				
-		mListView = (ListView) view.findViewById(R.id.listview);
-		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {				
-				if(mAdapter == null) {
-					return;
-				}
-				onVirtualCollectionSelected(mAdapter.getItem(position));
-			}
-		});
+		}
+		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 
 		inflateLoader((ViewGroup) view, inflater);
-		
+
 		new GetVirtualCollectionsTask(getActivity()).execute();
 		return view;
 	}
-	
+
 	public interface OnVirtualCollectionListener {
 		public void onVirtualCollectionSelected(Item vc);
 	}
-	
+
 	private void onVirtualCollectionSelected(Item vc) {
-		if(mOnVirtualCollectionListener != null) {
+		if (mOnVirtualCollectionListener != null) {
 			mOnVirtualCollectionListener.onVirtualCollectionSelected(vc);
 		}
 	}
@@ -103,12 +93,25 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 		@Override
 		protected void onPostExecute(List<Item> result) {
-			if(tContext == null) {
+			stopLoaderAnimation();
+			if (tContext == null) {
 				return;
 			}
-			stopLoaderAnimation();
-			mAdapter = new VirtualCollectionsArrayAdapter(tContext, result);
-			mListView.setAdapter(mAdapter);
+			ArrayList<Card> cards = new ArrayList<Card>();
+			for (Item item : result) {
+				VirtualCollectionCard card = new VirtualCollectionCard(tContext, item);
+				card.setOnClickListener(new OnCardClickListener() {
+					@Override
+					public void onClick(Card card, View view) {
+						onVirtualCollectionSelected(((VirtualCollectionCard) card).getItem());
+					}
+				});
+				
+				cards.add(card);
+			}
+			mAdapter = new CardGridArrayAdapter(tContext, cards);
+			CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
+			//mCardGridView.setAdapter(mAdapter);
 
 		}
 
@@ -116,11 +119,11 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		protected void onProgressUpdate(Void... values) {
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_virtual_collections);
+		super.onStart();
+		Analytics.sendScreenView(getActivity(), R.string.ga_appview_virtual_collections);
 	}
 
 }

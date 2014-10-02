@@ -1,5 +1,9 @@
 package cz.mzk.kramerius.app.ui;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardListView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,16 +26,16 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.search.OnFilterDeletedListener;
-import cz.mzk.kramerius.app.search.SearchDateFilter;
-import cz.mzk.kramerius.app.search.SearchDoctypeFilter;
+import cz.mzk.kramerius.app.card.SearchDateCard;
+import cz.mzk.kramerius.app.card.SearchDoctypeCard;
+import cz.mzk.kramerius.app.card.SearchTextCard;
 import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
-import cz.mzk.kramerius.app.search.SearchTextFilter;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class SearchFragment extends BaseFragment implements OnClickListener, OnFilterDeletedListener {
+public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	private static final int MENU_SEARCH = 101;
 
@@ -40,11 +44,10 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 	private Button mAddFilter;
 	private CheckBox mCheckPublicOnly;
 
-	private ViewGroup mFilterLayout;
+	private CardListView mSearchListView;
+	private CardArrayAdapter mAdapter;
 
 	private OnSearchListener mOnSearchListener;
-
-	private List<SearchFilter> mFilters;
 
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
@@ -89,12 +92,15 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 		if (config.smallestScreenWidthDp < 720) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}
-		mFilters = new ArrayList<SearchFilter>();
+		mSearchListView = (CardListView) view.findViewById(R.id.card_list);
+		List<Card> list = new ArrayList<Card>();
+		mAdapter = new CardArrayAdapter(getActivity(), list);
+		mAdapter.setInnerViewTypeCount(15);
+		CardUtils.setAnimationAdapter(mAdapter, mSearchListView, CardUtils.ANIM_SWING_RIGHT);
 		mAddFilter = (Button) view.findViewById(R.id.search_addFilter);
 		mAddFilter.setOnClickListener(this);
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
-		mFilterLayout = (ViewGroup) view.findViewById(R.id.search_filters);
-		mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.TITLE, getString(R.string.search_filter_name)));
+		mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, getResources().getString(R.string.search_filter_name), false, 0));
 		return view;
 	}
 
@@ -106,14 +112,15 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 
 	private void search() {
 		// validate filters
-		for (SearchFilter filter : mFilters) {
+		for (int i = 0; i < mAdapter.getCount(); i++) {
+			SearchFilter filter = (SearchFilter) mAdapter.getItem(i);
 			int v = filter.validate();
-			if(v != 0) {
+			if (v != 0) {
 				showInvalidFilterDialog(v);
 				return;
 			}
 		}
-				
+
 		InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
 				Context.INPUT_METHOD_SERVICE);
 		View view = getActivity().getCurrentFocus();
@@ -126,7 +133,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 		}
 		SearchQuery query = new SearchQuery().add(SearchQuery.POLICY, policy);
 
-		for (SearchFilter filter : mFilters) {
+		for (int i = 0; i < mAdapter.getCount(); i++) {
+			SearchFilter filter = (SearchFilter) mAdapter.getItem(i);
 			filter.addToQuery(query);
 		}
 		String queryString = query.build();
@@ -136,15 +144,14 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 			mOnSearchListener.onSearchQuery(queryString);
 		}
 	}
-	
+
 	private void showInvalidFilterDialog(int res) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(res).setPositiveButton(R.string.gen_ok, new DialogInterface.OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
-				
 			}
 		});
 		builder.create().show();
@@ -157,14 +164,15 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 		}
 	}
 
+
 	private void showFilterDialog() {
 		String[] allItems = getResources().getStringArray(R.array.search_filter_entries);
 		final List<String> itemList = new ArrayList<String>(Arrays.asList(allItems));
-		for (SearchFilter filter : mFilters) {
+		for (int i = 0; i < mAdapter.getCount(); i++) {
+			SearchFilter filter = (SearchFilter) mAdapter.getItem(i);
 			itemList.remove(filter.getName());
 		}
-		String[] items = new String[allItems.length - mFilters.size()];
-
+		String[] items = new String[allItems.length - mAdapter.getCount()];
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setItems(itemList.toArray(items), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -177,32 +185,26 @@ public class SearchFragment extends BaseFragment implements OnClickListener, OnF
 
 	private void onAddFilter(String name) {
 		if (name.equals(getResources().getString(R.string.search_filter_name))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.TITLE, name));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, name, false, 0));
 		} else if (name.equals(getResources().getString(R.string.search_filter_author))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.AUTHOR, name));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.AUTHOR, name, false, 1));
 		} else if (name.equals(getResources().getString(R.string.search_filter_issn))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.ISSN, name));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.ISSN, name, false, 2));
 		} else if (name.equals(getResources().getString(R.string.search_filter_ddt))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.DDT, name));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.DDT, name, false, 3));
 		} else if (name.equals(getResources().getString(R.string.search_filter_mdt))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.MDT, name));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.MDT, name, false, 4));
 		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
-			mFilters.add(new SearchDoctypeFilter(getActivity(), mFilterLayout, this, SearchQuery.MODEL, name));
+			mAdapter.add(new SearchDoctypeCard(getActivity(), SearchQuery.MODEL, name));
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
-			mFilters.add(new SearchDateFilter(getActivity(), mFilterLayout, this, SearchQuery.DATE_BEGIN, name));
+			mAdapter.add(new SearchDateCard(getActivity(), SearchQuery.DATE_BEGIN, name));
 		} else if (name.equals(getResources().getString(R.string.search_filter_isbn))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.ISBN, name, true));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.ISBN, name, true, 5));
 		} else if (name.equals(getResources().getString(R.string.search_filter_signature))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.SIGNATURE, name, true));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SIGNATURE, name, true, 6));
 		} else if (name.equals(getResources().getString(R.string.search_filter_sysno))) {
-			mFilters.add(new SearchTextFilter(getActivity(), mFilterLayout, this, SearchQuery.SYSNO, name, true));
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SYSNO, name, true, 7));
 		}
-	}
-
-	@Override
-	public void onFilterDeleted(SearchFilter filter) {
-		mFilters.remove(filter);
-		mFilterLayout.removeView(filter.getView());
 	}
 
 }

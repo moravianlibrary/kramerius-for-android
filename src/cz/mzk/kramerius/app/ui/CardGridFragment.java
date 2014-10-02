@@ -1,41 +1,48 @@
 package cz.mzk.kramerius.app.ui;
 
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
+
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.GridItemAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class FeaturedFragment extends BaseFragment implements OnOpenDetailListener {
+public class CardGridFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 
 	private static final String EXTRA_TYPE = "extra_type";
 
-	private static final String TAG = FeaturedFragment.class.getSimpleName();
+	private static final String TAG = CardGridFragment.class.getSimpleName();
 
-	private GridView mGridview;
 	private int mType;
-	private GridItemAdapter mAdapter;
 	private OnItemSelectedListener mOnItemSelectedListener;
 
-	public static FeaturedFragment newInstance(int type) {
-		FeaturedFragment f = new FeaturedFragment();
+	private CardGridView mCardGridView;
+	private CardGridArrayAdapter mAdapter;
+
+	private DisplayImageOptions mOptions;
+
+	public static CardGridFragment newInstance(int type) {
+		CardGridFragment f = new CardGridFragment();
 		Bundle args = new Bundle();
 		args.putInt(EXTRA_TYPE, type);
 		f.setArguments(args);
@@ -53,33 +60,21 @@ public class FeaturedFragment extends BaseFragment implements OnOpenDetailListen
 	}
 
 	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mOptions = CardUtils.initUniversalImageLoaderLibrary(getActivity());
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_featured, container, false);
-		Configuration config = getResources().getConfiguration();
+		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		if (isPhone()) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}
-		mGridview = (GridView) view.findViewById(R.id.gridview);
-
-		mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				if (mAdapter == null) {
-					return;
-				}
-				final Item item = mAdapter.getGridItem(position);
-				onItemSelected(item);
-			}
-		});
 		inflateLoader(container, inflater);
+		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		new GetFeaturedTask(getActivity()).execute(mType);
 		return view;
-	}
-
-	private void onItemSelected(Item item) {
-		if (mOnItemSelectedListener != null) {
-			mOnItemSelectedListener.onItemSelected(item);
-		}
 	}
 
 	@Override
@@ -125,21 +120,42 @@ public class FeaturedFragment extends BaseFragment implements OnOpenDetailListen
 
 		@Override
 		protected void onPostExecute(List<Item> result) {
-			if (tContext == null) {
-				return;
-			}
-			mAdapter = new GridItemAdapter(tContext, result, FeaturedFragment.this);
 			stopLoaderAnimation();
-			mGridview.setAdapter(mAdapter);
+			if (tContext == null || result == null) {
+				return;
+			}					
+			populateGrid(result);
 		}
-
 	}
 
-	@Override
+	private void populateGrid(List<Item> items) {
+		mAdapter = CardUtils.createAdapter(getActivity(), items, mOnItemSelectedListener, this, mOptions);
+		CardUtils.setAnimationAdapter(mAdapter, mCardGridView);		
+	}
+
 	public void onOpenDetail(String pid) {
 		Intent intent = new Intent(getActivity(), MetadataActivity.class);
 		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
 		startActivity(intent);
+	}
+
+	
+	@Override
+	public void onPopupOpenSelectd(Item item) {
+		if(mOnItemSelectedListener != null) {
+			mOnItemSelectedListener.onItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onPopupDetailsSelectd(Item item) {
+		onOpenDetail(item.getPid());		
+	}
+
+	@Override
+	public void onPopupShareSelectd(Item item) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

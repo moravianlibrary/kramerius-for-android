@@ -12,16 +12,16 @@
             android:id="@+id/card_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:columnWidth="180dp"
             android:gravity="center"
-            android:horizontalSpacing="2dp"
+            android:horizontalSpacing="3dp"
             android:listSelector="@android:color/transparent"
-            android:numColumns="1"
-            android:padding="8dp"
+            android:numColumns="auto_fit"
             android:stretchMode="columnWidth"
             android:verticalSpacing="3dp"
             card:list_card_layout_resourceID="@layout/list_card" />
 
-        
         <ImageView
             android:id="@+id/loader"
             android:layout_width="100dp"

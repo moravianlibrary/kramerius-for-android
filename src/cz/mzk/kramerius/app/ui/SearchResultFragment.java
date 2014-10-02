@@ -1,10 +1,15 @@
 package cz.mzk.kramerius.app.ui;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
@@ -13,32 +18,38 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.TextView;
+
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.ScaleInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingLeftInAnimationAdapter;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.GridItemAdapter;
-import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.GridCard;
+import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
-import cz.mzk.kramerius.app.util.ScreenUtil;
+import cz.mzk.kramerius.app.util.CardUtils;
 
-public class SearchResultFragment extends BaseFragment implements OnOpenDetailListener, OnScrollListener {
+public class SearchResultFragment extends BaseFragment implements OnOpenDetailListener, OnScrollListener,
+		OnPopupMenuSelectedListener {
 
 	private static final String EXTRA_QUERY = "extra_query";
 
 	private static final String TAG = SearchResultFragment.class.getSimpleName();
 
-	private GridView mGridview;
 	private String mSearchQuery;
-	private GridItemAdapter mAdapter;
 	private OnItemSelectedListener mOnItemSelectedListener;
 
 	private boolean mLoading;
@@ -46,8 +57,13 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	private int mStart = 0;
 	private int mNumFound = -1;
 	private boolean mFirst = true;
-	
+
 	private TextView mMessage;
+
+	private CardGridView mCardGridView;
+	private CardGridArrayAdapter mAdapter;
+
+	private DisplayImageOptions mOptions;
 
 	public static SearchResultFragment newInstance(String query) {
 		SearchResultFragment f = new SearchResultFragment();
@@ -68,36 +84,31 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	}
 
 	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mOptions = CardUtils.initUniversalImageLoaderLibrary(getActivity());
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_featured, container, false);
-		Configuration config = getResources().getConfiguration();
+		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		if (isPhone()) {
 			// ScreenUtil.setInsets(getActivity(), view);
 		}
-		mGridview = (GridView) view.findViewById(R.id.gridview);
-		mGridview.setOnScrollListener(this);
-		mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				if (mAdapter == null) {
-					return;
-				}
-				final Item item = mAdapter.getGridItem(position);
-				onItemSelected(item);
-			}
-		});
+		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
+		mCardGridView.setOnScrollListener(this);
 		mMessage = new TextView(getActivity());
 		mMessage.setText("Nebyly nalezeny žádné výsledky.");
 		mMessage.setTextColor(getResources().getColor(R.color.dark_grey));
 		mMessage.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-		mMessage.setVisibility(View.GONE);		
+		mMessage.setVisibility(View.GONE);
 		container.addView(mMessage);
 		ViewGroup.LayoutParams params = mMessage.getLayoutParams();
 		params.height = ViewGroup.LayoutParams.MATCH_PARENT;
 		params.width = ViewGroup.LayoutParams.MATCH_PARENT;
 		mMessage.setLayoutParams(params);
 		mMessage.setGravity(Gravity.CENTER);
-		
+
 		inflateLoader(container, inflater);
 		mLoading = true;
 		new GetResultTask(getActivity()).execute(mSearchQuery);
@@ -126,7 +137,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 		@Override
 		protected void onPreExecute() {
-			if(mFirst) {
+			if (mFirst) {
 				startLoaderAnimation();
 			}
 		}
@@ -144,30 +155,50 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			}
 			if (result.second == 0) {
 				mMessage.setVisibility(View.VISIBLE);
-			//	return;
+				// return;
 			}
 			mNumFound = result.second;
-			if (mAdapter == null) {
-				mAdapter = new GridItemAdapter(tContext, result.first, SearchResultFragment.this);
-			} else {
-
-				int index = mGridview.getFirstVisiblePosition();
-				mAdapter.addAll(result.first);
-				mGridview.setSelection(index);
-			}
-			if(mFirst) {
+			populateGrid(result.first);
+			if (mFirst) {
 				stopLoaderAnimation();
 			}
-			mGridview.setAdapter(mAdapter);
 			mLoading = false;
 			mFirst = false;
 			int shownNum = mStart + mRows;
-			if(shownNum > mNumFound) {
+			if (shownNum > mNumFound) {
 				shownNum = mNumFound;
 			}
 			getActivity().getActionBar().setSubtitle(shownNum + " z " + mNumFound);
 		}
+	}
 
+	private void populateGrid(List<Item> items) {
+
+		ArrayList<Card> cards = new ArrayList<Card>();
+		for (Item item : items) {
+
+			GridCard card = new GridCard(getActivity(), item, mOptions);
+			card.setOnPopupMenuSelectedListener(this);
+			card.setOnClickListener(new OnCardClickListener() {
+				@Override
+				public void onClick(Card card, View view) {
+					if (mOnItemSelectedListener != null) {
+						mOnItemSelectedListener.onItemSelected(((GridCard) card).getItem());
+					}
+				}
+			});
+			cards.add(card);
+		}
+
+		if (mAdapter == null) {
+			mAdapter = CardUtils.createAdapter(getActivity(), items, mOnItemSelectedListener, this, mOptions);
+			CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
+		} else {
+			int index = mCardGridView.getFirstVisiblePosition();
+			mAdapter.addAll(cards);
+			mCardGridView.setSelection(index);
+		}
+		
 	}
 
 	@Override
@@ -193,6 +224,21 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onPopupOpenSelectd(Item item) {
+		onItemSelected(item);
+	}
+
+	@Override
+	public void onPopupDetailsSelectd(Item item) {
+		onOpenDetail(item.getPid());
+	}
+
+	@Override
+	public void onPopupShareSelectd(Item item) {
 		// TODO Auto-generated method stub
 
 	}

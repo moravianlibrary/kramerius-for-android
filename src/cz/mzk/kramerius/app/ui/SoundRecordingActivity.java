@@ -1,8 +1,12 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.util.List;
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,61 +14,63 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.SoundUnitArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.GridCard;
+import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
+import cz.mzk.kramerius.app.card.SoundUnitCard;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
+import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 
-public class SoundRecordingActivity extends BaseActivity {
+public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuSelectedListener {
 
 	public static final String TAG = SoundRecordingActivity.class.getName();
 
-	private ListView mList;
+	private CardGridView mCardGrid;
+	private CardGridArrayAdapter mAdapter;
 
-	private SoundUnitArrayAdapter mAdapter;
+	private DisplayImageOptions mOptions;
+
+	private Animation mLoaderAnimation;
+	private View mLoader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sound_recording);
-
-		
-		
 		getActionBar().setDisplayUseLogoEnabled(false);
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle("K5 - Digitální knihovna");
-
-		mList = (ListView) findViewById(R.id.soundrecording_list);
-
-		mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long i) {
-				if (mAdapter == null) {
-					return;
-				}
-				onSoundUnitSelected(position);
-			}
-		});
+		mCardGrid = (CardGridView) findViewById(R.id.card_grid);
 		String pid = getIntent().getStringExtra(EXTRA_PID);
+		mLoader = findViewById(R.id.loader);
+		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
+		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
+		mOptions = CardUtils.initUniversalImageLoaderLibrary(this);
 		new GetSoundUnitsTask(this).execute(pid);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch(item.getItemId()) {
-	    case android.R.id.home:
-	        finish();
-	    	return true;
-	    default:
-	        return super.onOptionsItemSelected(item);
-	    }
-	}	
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 	class GetSoundUnitsTask extends AsyncTask<String, Void, ParentChildrenPair> {
 
@@ -76,13 +82,14 @@ public class SoundRecordingActivity extends BaseActivity {
 
 		@Override
 		protected void onPreExecute() {
-
+			mLoader.setVisibility(View.VISIBLE);
+			mLoader.startAnimation(mLoaderAnimation);
 		}
 
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
 			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
-			if(item == null) {
+			if (item == null) {
 				return null;
 			}
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
@@ -90,6 +97,8 @@ public class SoundRecordingActivity extends BaseActivity {
 
 		@Override
 		protected void onPostExecute(ParentChildrenPair result) {
+			mLoader.clearAnimation();
+			mLoader.setVisibility(View.GONE);
 			if (tContext == null || result.getParent() == null) {
 				return;
 			}
@@ -99,23 +108,36 @@ public class SoundRecordingActivity extends BaseActivity {
 			if (children == null) {
 				return;
 			}
-			mAdapter = new SoundUnitArrayAdapter(tContext, children);
-			mList.setAdapter(mAdapter);
+			populateGrid(children);
 		}
 	}
 
-	private void onSoundUnitSelected(int position) {
-		if (mAdapter == null || mAdapter.getCount() < position + 1) {
-			return;
+	private void populateGrid(List<Item> items) {
+		ArrayList<Card> cards = new ArrayList<Card>();
+		for (Item item : items) {
+			SoundUnitCard card = new SoundUnitCard(this, item, mOptions);
+			card.setOnPopupMenuSelectedListener(this);
+			card.setOnClickListener(new OnCardClickListener() {
+				@Override
+				public void onClick(Card card, View view) {
+					openSoundUnit(((GridCard) card).getItem());
+				}
+			});
+			cards.add(card);
 		}
-		Item item = mAdapter.getItem(position);
+		mAdapter = new CardGridArrayAdapter(this, cards);
+		CardUtils.setAnimationAdapter(mAdapter, mCardGrid);
+
+	}
+
+	private void openSoundUnit(Item item) {
 		if (ModelUtil.SOUND_UNIT.equals(item.getModel())) {
 			Intent intent = new Intent(SoundRecordingActivity.this, SoundUnitActivity.class);
 			intent.putExtra(EXTRA_PID, item.getPid());
 			startActivity(intent);
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -126,6 +148,28 @@ public class SoundRecordingActivity extends BaseActivity {
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
-	}	
+	}
+
+	public void onOpenDetail(String pid) {
+		Intent intent = new Intent(SoundRecordingActivity.this, MetadataActivity.class);
+		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onPopupOpenSelectd(Item item) {
+		openSoundUnit(item);
+	}
+
+	@Override
+	public void onPopupDetailsSelectd(Item item) {
+		onOpenDetail(item.getPid());
+	}
+
+	@Override
+	public void onPopupShareSelectd(Item item) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

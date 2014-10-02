@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_card_detail"
+        android:title="Podrobnosti"/>
+    <item
+        android:id="@+id/menu_card_open"
+        android:title="Otevřít"/>
+    <item
+        android:id="@+id/menu_card_share"
+        android:title="Sdílet"/>
+
+</menu>

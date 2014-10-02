@@ -1,61 +1,69 @@
 package cz.mzk.kramerius.app.ui;
 
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.view.CardGridView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListAdapter;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.GridItemAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class MainFeaturedFragment extends BaseFragment implements OnClickListener, OnOpenDetailListener {
+public class MainFeaturedFragment extends BaseFragment implements OnClickListener, OnOpenDetailListener,
+		OnPopupMenuSelectedListener {
 
 	private static final int FEATURED_PHONE_LIMIT = 4;
 	private static final int FEATURED_TABLET_LIMIT = 5;
 
 	private static final String TAG = MainFeaturedFragment.class.getSimpleName();
 
-	private GridView mSelectedGridView;
-	private GridItemAdapter mSelectedAdapter;
-	private List<Item> mSelectedList;
-	private View mSelectedExpandButton;
-	private GridView mMostDesirableGridView;
-	private GridItemAdapter mMostDesirableAdapter;
+	// private GridView mSelectedGridView;
+	// private GridItemAdapter mSelectedAdapter;
+	// private List<Item> mSelectedList;
+	// private View mSelectedExpandButton;
+	// private View mLoaderSelected;
+
+	private CardGridView mMostDesirableGridView;
+	private CardGridArrayAdapter mMostDesirableAdapter;
 	private List<Item> mMostDesirableList;
 	private View mMostDesirableExpandButton;
-	private GridView mNewestGridView;
-	private GridItemAdapter mNewestAdapter;
+	// private GridView mNewestGridView;
+	// private GridItemAdapter mNewestAdapter;
+	private CardGridView mNewestGridView;
+	private CardGridArrayAdapter mNewestAdapter;
+
 	private List<Item> mNewestList;
 	private View mNewestExpandButton;
 	private OnFeaturedListener mCallback;
 	private OnItemSelectedListener mOnItemSelectedListener;
-	private View mLoaderSelected;
 	private View mLoaderNewest;
 	private View mLoaderMostDesirable;
 
 	private int mFeaturedLimit;
+
+	private DisplayImageOptions mOptions;
 
 	public interface OnFeaturedListener {
 		public void onFeatured(int type);
@@ -81,51 +89,30 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		if (isPhone()) {
 			ScreenUtil.setInsets(getActivity(), view);
 		}
-		// TextView tt = (TextView) view.findViewById(R.id.test);
-		// tt.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),
-		// "Roboto-Thin.ttf"));
-		mLoaderSelected = view.findViewById(R.id.featured_selected_loader);
+		// mLoaderSelected = view.findViewById(R.id.featured_selected_loader);
 		mLoaderNewest = view.findViewById(R.id.featured_newest_loader);
 		mLoaderMostDesirable = view.findViewById(R.id.featured_mostdesirable_loader);
-		mSelectedGridView = (GridView) view.findViewById(R.id.featured_selected);
-		mNewestGridView = (GridView) view.findViewById(R.id.featured_newest);
-		mMostDesirableGridView = (GridView) view.findViewById(R.id.featured_mostdesirable);
+		// mSelectedGridView = (GridView)
+		// view.findViewById(R.id.featured_selected);
+		mNewestGridView = (CardGridView) view.findViewById(R.id.featured_newest);
+		mMostDesirableGridView = (CardGridView) view.findViewById(R.id.featured_mostdesirable);
 
-		mSelectedGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				if (mSelectedAdapter == null) {
-					return;
-				}
-				final Item item = mSelectedAdapter.getGridItem(position);
-				onItemSelected(item);
-			}
-		});
+		// mSelectedGridView.setOnItemClickListener(new
+		// AdapterView.OnItemClickListener() {
+		// @Override
+		// public void onItemClick(AdapterView<?> a, View v, int position, long
+		// id) {
+		// if (mSelectedAdapter == null) {
+		// return;
+		// }
+		// final Item item = mSelectedAdapter.getGridItem(position);
+		// onItemSelected(item);
+		// }
+		// });
 
-		mNewestGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				if (mNewestAdapter == null) {
-					return;
-				}
-				final Item item = mNewestAdapter.getGridItem(position);
-				onItemSelected(item);
-			}
-		});
-
-		mMostDesirableGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				if (mMostDesirableAdapter == null) {
-					return;
-				}
-				final Item item = mMostDesirableAdapter.getGridItem(position);
-				onItemSelected(item);
-			}
-		});
-
-		mSelectedExpandButton = view.findViewById(R.id.featured_selected_expand);
-		mSelectedExpandButton.setOnClickListener(this);
+		// mSelectedExpandButton =
+		// view.findViewById(R.id.featured_selected_expand);
+		// mSelectedExpandButton.setOnClickListener(this);
 		mNewestExpandButton = view.findViewById(R.id.featured_newest_expand);
 		mNewestExpandButton.setOnClickListener(this);
 		mMostDesirableExpandButton = view.findViewById(R.id.featured_mostdesirable_expand);
@@ -139,14 +126,17 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		// populateGrid(K5Api.FEED_SELECTED);
 		// }
 
-		if (mMostDesirableList == null) {
-			mMostDesirableExpandButton.setVisibility(View.GONE);
-			startLoaderAnimation(mLoaderMostDesirable);
-			new GetFeaturedTask(getActivity(), K5Api.FEED_MOST_DESIRABLE).execute();
-		} else {
-			populateGrid(K5Api.FEED_MOST_DESIRABLE);
-		}
+		String domain = K5Api.getDomain(getActivity());
+		if (!"krameriusndktest.mzk.cz".equals(domain) && !"kramerius.mzk.cz".equals(domain)) {
 
+			if (mMostDesirableList == null) {
+				mMostDesirableExpandButton.setVisibility(View.GONE);
+				startLoaderAnimation(mLoaderMostDesirable);
+				new GetFeaturedTask(getActivity(), K5Api.FEED_MOST_DESIRABLE).execute();
+			} else {
+				populateGrid(K5Api.FEED_MOST_DESIRABLE);
+			}
+		}
 		if (mNewestList == null) {
 			mNewestExpandButton.setVisibility(View.GONE);
 			startLoaderAnimation(mLoaderNewest);
@@ -157,11 +147,22 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 		return view;
 	}
+	
+	@Override
+	public void onResume() {	
+		super.onResume();
+	}
 
 	private void onItemSelected(Item item) {
 		if (mOnItemSelectedListener != null) {
 			mOnItemSelectedListener.onItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mOptions = CardUtils.initUniversalImageLoaderLibrary(getActivity());
 	}
 
 	class GetFeaturedTask extends AsyncTask<Void, Void, List<Item>> {
@@ -197,10 +198,10 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 				return;
 			}
 			if (tType == K5Api.FEED_SELECTED) {
-				stopLoaderAnimation(mLoaderSelected);
-				mSelectedExpandButton.setVisibility(View.VISIBLE);
-				mSelectedList = new ArrayList<Item>();
-				fillList(result, mSelectedList);
+				// stopLoaderAnimation(mLoaderSelected);
+				// mSelectedExpandButton.setVisibility(View.VISIBLE);
+				// mSelectedList = new ArrayList<Item>();
+				// fillList(result, mSelectedList);
 			} else if (tType == K5Api.FEED_NEWEST) {
 				stopLoaderAnimation(mLoaderNewest);
 				mNewestExpandButton.setVisibility(View.VISIBLE);
@@ -229,16 +230,20 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			return;
 		}
 		if (type == K5Api.FEED_SELECTED) {
-			mSelectedAdapter = new GridItemAdapter(getActivity(), mSelectedList, this);
-			mSelectedGridView.setAdapter(mSelectedAdapter);
-			setGridViewHeightBasedOnChildren(mSelectedGridView, mFeaturedLimit);
+			// mSelectedAdapter = new GridItemAdapter(getActivity(),
+			// mSelectedList, this);
+			// mSelectedGridView.setAdapter(mSelectedAdapter);
+			// setGridViewHeightBasedOnChildren(mSelectedGridView,
+			// mFeaturedLimit);
 		} else if (type == K5Api.FEED_NEWEST) {
-			mNewestAdapter = new GridItemAdapter(getActivity(), mNewestList, this);
-			mNewestGridView.setAdapter(mNewestAdapter);
+			mNewestAdapter = CardUtils.createAdapter(getActivity(), mNewestList, mOnItemSelectedListener, this,
+					mOptions);
+			CardUtils.setAnimationAdapter(mNewestAdapter, mNewestGridView);
 			setGridViewHeightBasedOnChildren(mNewestGridView, mFeaturedLimit);
 		} else if (type == K5Api.FEED_MOST_DESIRABLE) {
-			mMostDesirableAdapter = new GridItemAdapter(getActivity(), mMostDesirableList, this);
-			mMostDesirableGridView.setAdapter(mMostDesirableAdapter);
+			mMostDesirableAdapter = CardUtils.createAdapter(getActivity(), mMostDesirableList, mOnItemSelectedListener,
+					this, mOptions);
+			CardUtils.setAnimationAdapter(mMostDesirableAdapter, mMostDesirableGridView);
 			setGridViewHeightBasedOnChildren(mMostDesirableGridView, mFeaturedLimit);
 		}
 	}
@@ -256,7 +261,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			totalHeight = listItem.getMeasuredHeight();
 			if (isPhone()) {
 				int c = Math.min(items, count);
-				totalHeight = totalHeight * c;
+				totalHeight = totalHeight * c + (int) (getResources().getDisplayMetrics().density * 10);
 			} else {
 				totalHeight += getResources().getDisplayMetrics().density * 10;
 			}
@@ -273,13 +278,14 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		if (mCallback == null) {
 			return;
 		}
-		if (v == mSelectedExpandButton) {
-			mCallback.onFeatured(K5Api.FEED_SELECTED);
-		} else if (v == mNewestExpandButton) {
+		if (v == mNewestExpandButton) {
 			mCallback.onFeatured(K5Api.FEED_NEWEST);
 		} else if (v == mMostDesirableExpandButton) {
 			mCallback.onFeatured(K5Api.FEED_MOST_DESIRABLE);
 		}
+		// else if (v == mSelectedExpandButton) {
+		// mCallback.onFeatured(K5Api.FEED_SELECTED);
+		// }
 	}
 
 	@Override
@@ -293,6 +299,24 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		Intent intent = new Intent(getActivity(), MetadataActivity.class);
 		intent.putExtra(MetadataActivity.EXTRA_PID, pid);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onPopupOpenSelectd(Item item) {
+		if (mOnItemSelectedListener != null) {
+			mOnItemSelectedListener.onItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onPopupDetailsSelectd(Item item) {
+		onOpenDetail(item.getPid());
+	}
+
+	@Override
+	public void onPopupShareSelectd(Item item) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

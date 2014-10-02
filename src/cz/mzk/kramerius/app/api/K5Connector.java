@@ -361,8 +361,7 @@ public class K5Connector {
 	public List<Item> getVirtualCollctions(Context context) {
 		List<Item> list = new ArrayList<Item>();
 		try {
-			String requst = K5Api.getVirtualCollectionsPath(context);
-			HttpGet request = new HttpGet(requst);
+			HttpGet request = new HttpGet(K5Api.getVirtualCollectionsPath(context));
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONArray data = (JSONArray) new JSONTokener(jsonString).nextValue();

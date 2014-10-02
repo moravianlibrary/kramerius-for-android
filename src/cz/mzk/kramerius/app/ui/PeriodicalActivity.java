@@ -1,9 +1,6 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.util.Collections;
 import java.util.List;
-
-import com.google.analytics.tracking.android.EasyTracker;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import cz.mzk.kramerius.app.BaseActivity;
-import cz.mzk.kramerius.app.ItemByTitleComparator;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.PeriodicalArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
@@ -78,7 +76,7 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
 			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
-			if(item == null) {
+			if (item == null) {
 				return null;
 			}
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
@@ -95,17 +93,17 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 			getActionBar().setTitle(title);
 			String subtitle = "";
 			List<Item> items = result.getChildren();
-			int type = PeriodicalArrayAdapter.TYPE_ITEM;
+			// int type = PeriodicalArrayAdapter.TYPE_ITEM;
 			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
-				type = PeriodicalArrayAdapter.TYPE_VOLUME;				
+				// type = PeriodicalArrayAdapter.TYPE_VOLUME;
 			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
-				type = PeriodicalArrayAdapter.TYPE_ITEM;
+				// type = PeriodicalArrayAdapter.TYPE_ITEM;
 				subtitle = "Ročník " + result.getParent().getVolumeTitle();
-				getActionBar().setSubtitle(subtitle);				
-			}						
-			
+				getActionBar().setSubtitle(subtitle);
+			}
+
 			if (items != null) {
-				mPeriodicalFragment.setItems(items, type);
+				mPeriodicalFragment.setItems(items);
 			}
 		}
 	}
@@ -113,10 +111,10 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 	@Override
 	public void onItemSelected(Item item) {
 		Intent intent = null;
-		if(ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
-			 intent = new Intent(PeriodicalActivity.this, PeriodicalActivity.class);
-		} else 		if(ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
-			 intent = new Intent(PeriodicalActivity.this, PageActivity.class);
+		if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
+			intent = new Intent(PeriodicalActivity.this, PeriodicalActivity.class);
+		} else if (ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
+			intent = new Intent(PeriodicalActivity.this, PageActivity.class);
 		} else {
 			return;
 		}
@@ -124,7 +122,7 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 		startActivity(intent);
 
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
