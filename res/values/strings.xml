@@ -44,7 +44,7 @@
     <string name="main_menu_help">Nápověda</string>
     <string name="main_menu_feedback">Zpětná vazba</string>
     <string name="main_menu_settings">Nastavení</string>    
-    
+    <string name="main_menu_recent">Nedávno otevřené</string>
     
     <string name="featured_selected">Mohlo by se vám líbit</string>
     <string name="featured_newest">Nejnovější</string>
@@ -61,6 +61,8 @@
     <string name="about_app_version">v0.2.5/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
+    
+    <string name="recent_title">Nedávno otevřené</string>
     
     <string name="search_title">Hledání</string>
     
@@ -155,6 +157,7 @@
     <string name="ga_appview_selected" translatable="false">Selected</string>
     <string name="ga_appview_newest" translatable="false">Newest</string>
     <string name="ga_appview_most_desirable" translatable="false">Most Desirable</string>
+    <string name="ga_appview_history" translatable="false">History</string>
     <string name="ga_appview_login" translatable="false">Login</string>
     <string name="ga_appview_page_selection" translatable="false">Page Selection</string>
     <string name="ga_appview_user_info" translatable="false">User Info</string>

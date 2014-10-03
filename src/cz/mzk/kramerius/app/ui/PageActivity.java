@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
@@ -66,7 +69,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private List<Item> mPageList;
 	// private List<String> mPidList;
 	private int mCurrentPage;
-	private String mDomain;
 
 	private boolean mFullscreen = true;
 	private View mBottomPanel;
@@ -154,7 +156,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mMetadataButton = findViewById(R.id.page_metadata);
 		mMetadataButton.setOnClickListener(this);
 
-		mDomain = K5Api.getDomain(this);
 		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
 		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
 
@@ -333,6 +334,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			}
 
 			mParentPid = result.getParent().getPid();
+			
+			String domain = K5Api.getDomain(PageActivity.this);
+			Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI, new String[] { HistoryEntry.COLUMN_PID },
+					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+					new String[] { domain, mParentPid }, null);
+			if(c.moveToFirst()) {
+				String pid = c.getString(0);
+				int index = getIndexFromPid(pid);
+				if(index > -1 && mCurrentPage < mPageList.size()) {
+					mCurrentPage = index;
+				}
+			}
+			
 			init();
 		}
 	}
@@ -343,7 +357,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			mTitle2View.setText(mSubtitle);
 			mComplextTitleView.setVisibility(View.VISIBLE);
 			mTitleView.setVisibility(View.GONE);
-
 		} else {
 			mTitleView.setText(mTitle);
 			mComplextTitleView.setVisibility(View.GONE);
@@ -355,7 +368,25 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		initPageViewrFragment();
 		mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
 		mPageSelectionFragment.assignItems(mPageList);
-
+	}
+	
+	private int getIndexFromPid(String pid) {
+		if(mPageList == null || pid == null) {
+			return -1;
+		}
+		int index = 0;
+		boolean match = false;
+		for(Item item : mPageList) {
+			if(item.getPid().equals(pid)) {
+				match = true;
+				break;
+			}
+			index ++;
+		}
+		if(match) {
+			return index;
+		}
+		return -1;
 	}
 
 	private void initPageViewrFragment() {
@@ -367,6 +398,45 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 				mPageViewerFragment.populate(domain, itemsToPids());
 			}
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		putToHistory();
+		super.onPause();
+	}
+
+	private void putToHistory() {
+		if (mParentPid == null || mPageList == null) {
+			return;
+		}
+		String domain = K5Api.getDomain(this);
+		Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI, new String[] { HistoryEntry._ID },
+				HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+				new String[] { domain, mParentPid }, null);
+		boolean insert = true;
+		if (c.moveToFirst()) {
+			insert = false;
+		}
+		c.close();
+		if (insert) {
+			ContentValues cv = new ContentValues();
+			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
+			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
+			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+			getContentResolver().insert(HistoryEntry.CONTENT_URI, cv);
+		} else {
+			ContentValues cv = new ContentValues();
+			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
+			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
+			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+			getContentResolver().update(HistoryEntry.CONTENT_URI, cv,
+					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+					new String[] { domain, mParentPid });
+		}
+
 	}
 
 	@Override

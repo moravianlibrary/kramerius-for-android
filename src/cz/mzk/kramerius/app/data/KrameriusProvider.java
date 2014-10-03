@@ -4,13 +4,16 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 
 public class KrameriusProvider extends ContentProvider {
 
 	private static final int INSTITUTION = 100;
 	private static final int LANGUAGE = 110;
 	private static final int RELATOR = 120;
+	private static final int HISTORY = 130;
 
 	private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -22,6 +25,7 @@ public class KrameriusProvider extends ContentProvider {
 		matcher.addURI(authority, KrameriusContract.PATH_INSTITUTION, INSTITUTION);
 		matcher.addURI(authority, KrameriusContract.PATH_LANGUAGE, LANGUAGE);
 		matcher.addURI(authority, KrameriusContract.PATH_RELATOR, RELATOR);
+		matcher.addURI(authority, KrameriusContract.PATH_HISTORY, HISTORY);
 		return matcher;
 	}
 
@@ -39,7 +43,9 @@ public class KrameriusProvider extends ContentProvider {
 		case LANGUAGE:
 			return KrameriusContract.LanguageEntry.CONTENT_TYPE;
 		case RELATOR:
-			return KrameriusContract.LanguageEntry.CONTENT_TYPE;
+			return KrameriusContract.RelatorEntry.CONTENT_TYPE;
+		case HISTORY:
+			return KrameriusContract.HistoryEntry.CONTENT_TYPE;
 		default:
 			throw new UnsupportedOperationException("Unknown uri:" + uri);
 		}
@@ -47,7 +53,23 @@ public class KrameriusProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		throw new UnsupportedOperationException("Unknown uri: " + uri);
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		final int match = sUriMatcher.match(uri);
+		Uri returnUri;
+		switch (match) {
+		case HISTORY: {
+			long id = db.insert(HistoryEntry.TABLE_NAME, null, values);
+			if (id > 0) {
+				returnUri = HistoryEntry.buildHistoryUri(id);
+			} else {
+				throw new android.database.SQLException("Failed to insert row into " + uri);
+			}
+			break;
+		}
+		default:
+			throw new UnsupportedOperationException("Unknown uri: " + uri);
+		}
+		return returnUri;
 	}
 
 	@Override
@@ -72,6 +94,10 @@ public class KrameriusProvider extends ContentProvider {
 			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.RelatorEntry.TABLE_NAME, projection,
 					selection, selectionArgs, null, null, sortOrder);
 			break;
+		case HISTORY:
+			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.HistoryEntry.TABLE_NAME, projection,
+					selection, selectionArgs, null, null, sortOrder);
+			break;
 		default:
 			throw new UnsupportedOperationException("Unknown uri: " + uri);
 		}
@@ -81,7 +107,19 @@ public class KrameriusProvider extends ContentProvider {
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-		throw new UnsupportedOperationException("Unknown uri: " + uri);
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		final int match = sUriMatcher.match(uri);
+		int rowsUpdated;
+		switch (match) {
+		case HISTORY:
+			rowsUpdated = db.update(HistoryEntry.TABLE_NAME, values, selection, selectionArgs);
+			break;
+		default:
+			throw new UnsupportedOperationException("Unknown uri: " + uri);
+		}
+		if (rowsUpdated != 0) {
+			getContext().getContentResolver().notifyChange(uri, null);
+		}
+		return rowsUpdated;
 	}
-
 }

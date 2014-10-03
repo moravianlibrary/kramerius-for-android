@@ -1,5 +1,6 @@
 package cz.mzk.kramerius.app.data;
 
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -12,6 +13,7 @@ public class KrameriusContract {
 	public static final String PATH_INSTITUTION = "institution";
 	public static final String PATH_LANGUAGE = "language";
 	public static final String PATH_RELATOR = "relator";
+	public static final String PATH_HISTORY = "history";
 
 	public static final class InstitutuinEntry implements BaseColumns {
 
@@ -42,7 +44,7 @@ public class KrameriusContract {
 		public static final String COLUMN_CODE = "lang_code";
 		public static final String COLUMN_NAME = "name";
 	}
-	
+
 	public static final class RelatorEntry implements BaseColumns {
 
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RELATOR).build();
@@ -55,6 +57,30 @@ public class KrameriusContract {
 
 		public static final String COLUMN_CODE = "relator_code";
 		public static final String COLUMN_NAME = "name";
-	}	
+	}
+
+	public static final class HistoryEntry implements BaseColumns {
+
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_HISTORY).build();
+
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY_URI + "/" + PATH_HISTORY;
+
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY_URI + "/" + PATH_HISTORY;
+
+		public static final String TABLE_NAME = "history";
+
+		public static final String COLUMN_DOMAIN = "domain";
+		public static final String COLUMN_PID = "pid";
+		public static final String COLUMN_PARENT_PID = "parent_pid";
+		public static final String COLUMN_TIMESTAMP = "timestamp";
+
+		public static Uri buildHistoryUri(long id) {
+			return ContentUris.withAppendedId(CONTENT_URI, id);
+		}
+
+		public static long getId(Uri uri) {
+			return Long.parseLong(uri.getPathSegments().get(1));
+		}
+	}
 
 }

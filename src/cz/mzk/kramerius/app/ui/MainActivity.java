@@ -363,6 +363,13 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		}
 	}
 
+	@Override
+	public void onRecent() {
+		HistoryFragment fragment = new HistoryFragment();
+		fragment.setOnItemSelectedListener(this);
+		changeFragment(fragment, false, R.string.recent_title);	
+	}
+
 	
 
 }

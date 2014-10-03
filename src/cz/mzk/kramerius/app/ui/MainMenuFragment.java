@@ -25,10 +25,11 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	public static final int MENU_HOME = 0;
 	public static final int MENU_VIRTUAL_COLLECTION = 1;
 	public static final int MENU_SEARCH = 2;
-	public static final int MENU_ABOUT = 3;
-	public static final int MENU_HELP = 4;
-	public static final int MENU_FEEDBACK = 5;
-	public static final int MENU_SETTINGS = 6;
+	public static final int MENU_RECENT = 3;
+	public static final int MENU_ABOUT = 4;
+	public static final int MENU_HELP = 5;
+	public static final int MENU_FEEDBACK = 6;
+	public static final int MENU_SETTINGS = 7;
 
 	private TextView mUser;
 	private MainMenuListener mCallback;
@@ -65,6 +66,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 				R.drawable.ic_group_green));
 		list.add(new MenuListItem(getString(R.string.main_menu_search), R.drawable.ic_search_grey,
 				R.drawable.ic_search_green));
+		list.add(new MenuListItem(getString(R.string.main_menu_recent), R.drawable.ic_recent_grey,
+				R.drawable.ic_recent_green));
 		list.add(new MenuListItem(getString(R.string.main_menu_about), R.drawable.ic_about_grey,
 				R.drawable.ic_about_green));
 		list.add(new MenuListItem(getString(R.string.main_menu_help), R.drawable.ic_help_grey, R.drawable.ic_help_green));
@@ -113,7 +116,12 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		case MENU_FEEDBACK:
 			mCallback.onFeedback();
 			break;			
-		}
+		case MENU_RECENT:
+			mMenuAdapter.setSelection(index);
+			mCallback.onRecent();
+			break;			
+		}			
+		
 	}
 
 	public void setActiveMenuItem(int index) {
@@ -145,6 +153,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		public void onFeedback();
 
 		public void onAbout();
+		
+		public void onRecent();
 
 	}
 

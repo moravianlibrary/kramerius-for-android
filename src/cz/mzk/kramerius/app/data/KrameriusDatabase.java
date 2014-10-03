@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
@@ -21,17 +22,18 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION_INITIAL = 1;
 	private static final int DATABASE_VERSION_RELATORS = 2;
+	private static final int DATABASE_VERSION_HISTORY = 3;
 
-	private static final int DATABASE_VERSION = DATABASE_VERSION_RELATORS;
+	private static final int DATABASE_VERSION = DATABASE_VERSION_HISTORY;
 
 	private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
 	private static final String DATABASE_NAME_EXTERNAL = Environment
-			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius.db";
+			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius2.db";
 
 	private Context mContext;
 
 	public KrameriusDatabase(Context context) {
-		super(context, DATABASE_NAME_INTERNAL, null, DATABASE_VERSION);
+		super(context, DATABASE_NAME_EXTERNAL, null, DATABASE_VERSION);
 		mContext = context;
 	}
 
@@ -61,6 +63,14 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 		final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
 				+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
 
+		
+		final String SQL_CREATE_HISTORY_TABLE = "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" + HistoryEntry._ID
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
+		
+		
 		db.execSQL(SQL_CREATE_INSTITUTION_TABLE);
 		db.execSQL(SQL_CREATE_INSTITUTION_SIGLA_INDEX);
 
@@ -70,6 +80,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_RELATOR_TABLE);
 		db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
 
+		db.execSQL(SQL_CREATE_HISTORY_TABLE);
+		
 		populateFrom(db, R.raw.institution);
 		populateFrom(db, R.raw.languages);
 		populateFrom(db, R.raw.relators);
@@ -92,6 +104,16 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			populateFrom(db, R.raw.relators);
 
 			version = DATABASE_VERSION_RELATORS;
+		
+		case DATABASE_VERSION_RELATORS:
+			final String SQL_CREATE_HISTORY_TABLE = "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" + HistoryEntry._ID
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
+			db.execSQL(SQL_CREATE_HISTORY_TABLE);
+
+			version = DATABASE_VERSION_HISTORY;
 		}
 	}
 

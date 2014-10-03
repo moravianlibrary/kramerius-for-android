@@ -51,7 +51,12 @@ public class GridCard extends Card {
 	private void init(DisplayImageOptions options) {
 		MainCardHeader header = new MainCardHeader(getContext(), 2);
 		header.setButtonOverflowVisible(true);
-		header.setTitle(mItem.getTitle());
+		if(ModelUtil.PAGE.equals(mItem.getModel())) {
+			header.setTitle(mItem.getRootTitle());
+		} else {
+			header.setTitle(mItem.getTitle());
+		}
+		
 		header.setPopupMenu(R.menu.card_popup, new CardHeader.OnClickCardHeaderPopupMenuListener() {
 			@Override
 			public void onMenuItemClick(BaseCard card, MenuItem item) {

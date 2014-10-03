@@ -270,9 +270,10 @@ public class K5Connector {
 		
 	
 
-	public Item getItem(Context context, String pid) {
+	public Item getItem(Context context, String pid, String domain) {
 		try {
 			String requst = K5Api.getItemPath(context, pid);
+			requst.replace(K5Api.getDomain(context), domain);
 			HttpGet request = new HttpGet(requst);
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
@@ -315,6 +316,10 @@ public class K5Connector {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Item getItem(Context context, String pid) {
+		return getItem(context, pid, K5Api.getDomain(context));
 	}
 
 	public List<Item> getChildren(Context context, String pid) {
