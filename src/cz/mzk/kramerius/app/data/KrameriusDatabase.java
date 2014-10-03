@@ -33,7 +33,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	private Context mContext;
 
 	public KrameriusDatabase(Context context) {
-		super(context, DATABASE_NAME_EXTERNAL, null, DATABASE_VERSION);
+		super(context, DATABASE_NAME_INTERNAL, null, DATABASE_VERSION);
 		mContext = context;
 	}
 
@@ -68,6 +68,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
 				+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
 				+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_TITLE + " TEXT, "
+				+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "
 				+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
 		
 		
@@ -110,6 +112,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
 				+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
 				+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
+				+ HistoryEntry.COLUMN_TITLE + " TEXT, "
+				+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "				
 				+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
 			db.execSQL(SQL_CREATE_HISTORY_TABLE);
 

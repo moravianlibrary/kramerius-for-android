@@ -53,7 +53,6 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 		super.onCreate(savedInstanceState);
 	}
 
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -96,11 +95,27 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 			int limit = params[0];
 			String domain = K5Api.getDomain(tContext);
 			Cursor c = tContext.getContentResolver().query(HistoryEntry.CONTENT_URI,
-					new String[] { HistoryEntry.COLUMN_PID }, HistoryEntry.COLUMN_DOMAIN + "=?",
-					new String[] { domain }, HistoryEntry.COLUMN_TIMESTAMP + " DESC LIMIT " + limit);
+					new String[] { HistoryEntry.COLUMN_PID, HistoryEntry.COLUMN_TITLE, HistoryEntry.COLUMN_SUBTITLE },
+					HistoryEntry.COLUMN_DOMAIN + "=?", new String[] { domain },
+					HistoryEntry.COLUMN_TIMESTAMP + " DESC LIMIT " + limit);
 			List<Item> items = new ArrayList<Item>();
 			while (c.moveToNext()) {
 				Item item = K5Connector.getInstance().getItem(tContext, c.getString(0));
+				if(item == null) {
+					continue;
+				}
+				String title = c.getString(1);
+				String subtitle = c.getString(2);
+				if(title == null) {
+					item.setRootTitle("");
+				} else {
+					item.setRootTitle(title);
+				}
+				if(subtitle == null) {
+					item.setTitle("");
+				} else {
+					item.setTitle(subtitle);
+				}
 				items.add(item);
 			}
 			c.close();

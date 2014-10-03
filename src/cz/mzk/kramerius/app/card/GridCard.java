@@ -81,7 +81,11 @@ public class GridCard extends Card {
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
 		TextView author = (TextView) view.findViewById(R.id.grid_item_author);
-		author.setText(mItem.getAuthor());
+		if(ModelUtil.PAGE.equals(mItem.getModel())) {
+			author.setText(mItem.getTitle());
+		} else {
+			author.setText(mItem.getAuthor());
+		}				
 		View lock = view.findViewById(R.id.grid_item_lockIcon);
 		if (mItem.isPrivate()) {
 			lock.setVisibility(View.VISIBLE);

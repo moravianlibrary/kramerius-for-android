@@ -295,6 +295,20 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			if (item == null) {
 				return null;
 			}
+			if (ModelUtil.PAGE.equals(item.getModel())) {
+				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
+				Log.d("aaa", "abc:size:" + hierarchy.size());
+				if (hierarchy.size() > 1) {					
+					String parentPid = hierarchy.get(hierarchy.size() - 2).first;
+					Log.d("aaa", "abc:parentPid:" + parentPid);
+					Item parentItem = K5Connector.getInstance().getItem(tContext, parentPid);
+					Log.d("aaa", "abc:parentItem:" + parentItem);
+					if (parentItem != null) {
+						parentItem.setSelectedChild(item.getPid());
+						item = parentItem;
+					}
+				}
+			}
 			if (ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
 				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
 				for (int i = 0; i < hierarchy.size(); i++) {
@@ -334,19 +348,24 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			}
 
 			mParentPid = result.getParent().getPid();
-			
-			String domain = K5Api.getDomain(PageActivity.this);
-			Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI, new String[] { HistoryEntry.COLUMN_PID },
-					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
-					new String[] { domain, mParentPid }, null);
-			if(c.moveToFirst()) {
-				String pid = c.getString(0);
-				int index = getIndexFromPid(pid);
-				if(index > -1 && mCurrentPage < mPageList.size()) {
+			String selectedPid = result.getParent().getSelectedChild();
+			if (selectedPid == null) {
+				String domain = K5Api.getDomain(PageActivity.this);
+				Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI,
+						new String[] { HistoryEntry.COLUMN_PID },
+						HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+						new String[] { domain, mParentPid }, null);
+				if (c.moveToFirst()) {
+					selectedPid = c.getString(0);
+				}
+			}
+			if (selectedPid != null) {
+				int index = getIndexFromPid(selectedPid);
+				if (index > -1 && mCurrentPage < mPageList.size()) {
 					mCurrentPage = index;
 				}
 			}
-			
+
 			init();
 		}
 	}
@@ -369,21 +388,21 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
 		mPageSelectionFragment.assignItems(mPageList);
 	}
-	
+
 	private int getIndexFromPid(String pid) {
-		if(mPageList == null || pid == null) {
+		if (mPageList == null || pid == null) {
 			return -1;
 		}
 		int index = 0;
 		boolean match = false;
-		for(Item item : mPageList) {
-			if(item.getPid().equals(pid)) {
+		for (Item item : mPageList) {
+			if (item.getPid().equals(pid)) {
 				match = true;
 				break;
 			}
-			index ++;
+			index++;
 		}
-		if(match) {
+		if (match) {
 			return index;
 		}
 		return -1;
@@ -420,17 +439,23 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 		c.close();
 		if (insert) {
+			Log.d("aaa", "recent insert, parent:" + mParentPid);
 			ContentValues cv = new ContentValues();
 			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
 			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
 			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
+			cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
 			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
 			getContentResolver().insert(HistoryEntry.CONTENT_URI, cv);
 		} else {
+			Log.d("aaa", "recent update, parent:" + mParentPid);
 			ContentValues cv = new ContentValues();
 			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
 			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
 			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
+			cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
 			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
 			getContentResolver().update(HistoryEntry.CONTENT_URI, cv,
 					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",

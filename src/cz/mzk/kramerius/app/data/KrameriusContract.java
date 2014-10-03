@@ -72,6 +72,8 @@ public class KrameriusContract {
 		public static final String COLUMN_DOMAIN = "domain";
 		public static final String COLUMN_PID = "pid";
 		public static final String COLUMN_PARENT_PID = "parent_pid";
+		public static final String COLUMN_TITLE = "title";
+		public static final String COLUMN_SUBTITLE = "subtitle";
 		public static final String COLUMN_TIMESTAMP = "timestamp";
 
 		public static Uri buildHistoryUri(long id) {

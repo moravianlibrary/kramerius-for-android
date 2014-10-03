@@ -28,6 +28,8 @@ public class Item implements Parcelable {
 	private String periodicalItemDate;
 	private String partNumber;
 	
+	private String selectedChild;
+	
 	public Item() {
 
 	}
@@ -49,6 +51,16 @@ public class Item implements Parcelable {
 		periodicalItemDate = in.readString();
 		partNumber = in.readString();
 		policyPrivate = in.readByte() != 0;
+	}
+
+	
+	
+	public String getSelectedChild() {
+		return selectedChild;
+	}
+
+	public void setSelectedChild(String selectedChild) {
+		this.selectedChild = selectedChild;
 	}
 
 	public String getPid() {
