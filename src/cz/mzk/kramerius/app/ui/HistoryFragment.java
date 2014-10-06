@@ -1,6 +1,8 @@
 package cz.mzk.kramerius.app.ui;
 
+import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
+import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
 import java.util.ArrayList;
@@ -22,7 +24,9 @@ import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
+import cz.mzk.kramerius.app.card.RecentCard;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
@@ -77,7 +81,7 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 		Analytics.sendScreenView(getActivity(), R.string.ga_appview_history);
 	}
 
-	class GetHistoryTask extends AsyncTask<Integer, Void, List<Item>> {
+	class GetHistoryTask extends AsyncTask<Integer, Void, List<Card>> {
 
 		private Context tContext;
 
@@ -87,44 +91,46 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 
 		@Override
 		protected void onPreExecute() {
-			startLoaderAnimation();
+		//	startLoaderAnimation();
 		}
 
 		@Override
-		protected List<Item> doInBackground(Integer... params) {
+		protected List<Card> doInBackground(Integer... params) {
 			int limit = params[0];
 			String domain = K5Api.getDomain(tContext);
-			Cursor c = tContext.getContentResolver().query(HistoryEntry.CONTENT_URI,
-					new String[] { HistoryEntry.COLUMN_PID, HistoryEntry.COLUMN_TITLE, HistoryEntry.COLUMN_SUBTITLE },
+			Cursor c = tContext.getContentResolver().query(HistoryEntry.CONTENT_URI, HistoryEntry.PROJECTION,
 					HistoryEntry.COLUMN_DOMAIN + "=?", new String[] { domain },
 					HistoryEntry.COLUMN_TIMESTAMP + " DESC LIMIT " + limit);
-			List<Item> items = new ArrayList<Item>();
+			List<Card> cards = new ArrayList<Card>();
 			while (c.moveToNext()) {
-				Item item = K5Connector.getInstance().getItem(tContext, c.getString(0));
-				if(item == null) {
-					continue;
-				}
-				String title = c.getString(1);
-				String subtitle = c.getString(2);
-				if(title == null) {
-					item.setRootTitle("");
-				} else {
-					item.setRootTitle(title);
-				}
-				if(subtitle == null) {
-					item.setTitle("");
-				} else {
-					item.setTitle(subtitle);
-				}
-				items.add(item);
+				RecentCard card = new RecentCard(tContext)
+						.title(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_TITLE)))
+						.subtitle(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_SUBTITLE)))
+						.pid(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_PID)))
+						.parentPid(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_PARENT_PID)))
+						.timestamp(c.getLong(c.getColumnIndex(HistoryEntry.COLUMN_TIMESTAMP)))
+						.popupListener(HistoryFragment.this)
+						.build(mOptions);
+
+				// card.setOnPopupMenuSelectedListener(popupListener);
+				card.setOnClickListener(new OnCardClickListener() {
+					@Override
+					public void onClick(Card card, View view) {
+						if (mOnItemSelectedListener != null) {
+							mOnItemSelectedListener.onItemSelected(((RecentCard) card).getItem());
+						}
+					}
+				});
+				cards.add(card);
+
 			}
 			c.close();
-			return items;
+			return cards;
 		}
 
 		@Override
-		protected void onPostExecute(List<Item> result) {
-			stopLoaderAnimation();
+		protected void onPostExecute(List<Card> result) {
+			//stopLoaderAnimation();
 			if (tContext == null || result == null) {
 				return;
 			}
@@ -132,8 +138,8 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 		}
 	}
 
-	private void populateGrid(List<Item> items) {
-		mAdapter = CardUtils.createAdapter(getActivity(), items, mOnItemSelectedListener, this, mOptions);
+	private void populateGrid(List<Card> cards) {
+		mAdapter = new CardGridArrayAdapter(getActivity(), cards);
 		CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
 	}
 

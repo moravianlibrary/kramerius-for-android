@@ -83,6 +83,15 @@ public class KrameriusContract {
 		public static long getId(Uri uri) {
 			return Long.parseLong(uri.getPathSegments().get(1));
 		}
+		
+		
+		
+		public static final String[] PROJECTION = {
+			COLUMN_DOMAIN, COLUMN_PID, COLUMN_PARENT_PID, COLUMN_TITLE,
+			COLUMN_SUBTITLE, COLUMN_TIMESTAMP
+		};
+		
+		
 	}
 
 }
