@@ -32,19 +32,20 @@ public class SearchQuery {
 
 
 	public SearchQuery identifier(String key, String value) {
-		String iv =  key + "\\:" + value;
+		String iv =  key + "\\:" + value.trim();
 		return add(IDENTIFIER, iv, false);
 	}
 	
 	public SearchQuery add(String key, String value, boolean substring) {
-		if (value != null && !value.isEmpty()) {
+		if (value != null && !value.trim().isEmpty()) {
+			String v = value.trim();
 			if (!mQuery.isEmpty()) {
 				mQuery = mQuery + " AND ";
 			}			
 			if(MODEL.equals(key)) {
 				hasModel = true;
 			}
-			mQuery = mQuery + key + ":" + (substring ? "*" : "") + value + (substring ? "*" : "");
+			mQuery = mQuery + key + ":" + (substring ? "*" : "") + v + (substring ? "*" : "");
 		}
 		return this;
 	}
