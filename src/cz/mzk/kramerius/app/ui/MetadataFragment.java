@@ -590,7 +590,7 @@ public class MetadataFragment extends BaseFragment {
 
 		@Override
 		protected void onPostExecute(List<Pair<Metadata, String>> hierachyMetadata) {
-			if (hierachyMetadata != null) {
+			if (hierachyMetadata != null && getActivity() != null) {
 				populateHierarchy(hierachyMetadata);
 			}
 			stopLoaderAnimation();

@@ -16,19 +16,15 @@ public class MetadataActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_metadata);
-
 		getActionBar().setDisplayUseLogoEnabled(false);
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 		MetadataFragment metadataFragment = (MetadataFragment) getFragmentManager().findFragmentById(
 				id.metadata_metadataFragment);
 		String pid = getIntent().getStringExtra(EXTRA_PID);
 		metadataFragment.assignPid(pid);
 	}
-	
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -38,8 +34,8 @@ public class MetadataActivity extends BaseActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}	
-	
+	}
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -50,6 +46,6 @@ public class MetadataActivity extends BaseActivity {
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
-	}	
+	}
 
 }

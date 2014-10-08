@@ -3,8 +3,6 @@
 
     
     <string name="app_name">Kramerius</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
 
     <string name="document_periodical">Noviny a časopisy</string>
     <string name="document_periodical_volume">Ročník periodika</string>
