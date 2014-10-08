@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -208,7 +209,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 				setFullscreen(false);
 			}
 		}
-
 		if (mPageList == null) {
 			new LoadPagesTask(this).execute(pid);
 		} else {
@@ -688,6 +688,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void onOrientationLock(boolean locked) {
+		if(locked) {			
+			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);	
+			} else {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			}			
+		} else {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		}
 	}
 
 }

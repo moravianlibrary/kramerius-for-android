@@ -11,10 +11,10 @@
 
         <LinearLayout
             android:id="@+id/menu_home"
-            android:clickable="true" 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
+            android:clickable="true"
             android:orientation="horizontal"
             android:paddingBottom="12dp"
             android:paddingLeft="5dp"
@@ -23,26 +23,26 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:scaleType="fitXY"
-                android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_home_grey" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Domů"
                 android:layout_gravity="center_vertical"
+                android:text="Domů"
                 android:textColor="#555555"
                 android:textSize="17dp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/menu_settings"
-            android:clickable="true" 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
+            android:clickable="true"
             android:orientation="horizontal"
             android:paddingBottom="12dp"
             android:paddingLeft="5dp"
@@ -51,19 +51,47 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:scaleType="fitXY"
-                android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_settings_grey" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nastavení"
                 android:layout_gravity="center_vertical"
+                android:text="Nastavení"
                 android:textColor="#555555"
                 android:textSize="17dp" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/menu_orientation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:paddingBottom="12dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="12dp" >
+
+            <ImageView
+                android:id="@+id/menu_orientation_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/img_switch_off" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Neotáčet obrazovku"
+                android:textColor="#555555"
+                android:textSize="17dp" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="match_parent"

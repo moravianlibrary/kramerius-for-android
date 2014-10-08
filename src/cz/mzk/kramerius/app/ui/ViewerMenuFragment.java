@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.ViewerMenuArrayAdapter;
@@ -33,7 +34,11 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	private ListView mListView;
 	private View mSettings;
 	private View mHome;
-
+	private View mOrientation;
+	private ImageView mOrientationIcon;
+	private boolean mOrientationLock = false;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,8 +59,11 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		mSettings.setOnClickListener(this);
 		mHome = view.findViewById(R.id.menu_home);
 		mHome.setOnClickListener(this);
+		mOrientation = view.findViewById(R.id.menu_orientation);
+		mOrientation.setOnClickListener(this);
+		mOrientationIcon = (ImageView) view.findViewById(R.id.menu_orientation_icon);
 		mListView = (ListView) view.findViewById(R.id.menu_list);
-		//populateMenuList();
+		populateMenuList();
 		return view;
 	}
 
@@ -99,6 +107,8 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		public void onHome();
 
 		public void onSettings();
+		
+		public void onOrientationLock(boolean locked);
 
 		public void onRecent(String pid);
 
@@ -114,8 +124,25 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 			if (mCallback != null) {
 				mCallback.onHome();
 			}
+		}  else if (v == mOrientation) {
+			setOrientationLock(!mOrientationLock);
 		}
-
 	}
+	
+	private void setOrientationLock(boolean lock) {
+		mOrientationLock = lock;
+		if(mOrientationLock) {
+			mOrientationIcon.setImageResource(R.drawable.img_switch_on);			
+		} else {
+			mOrientationIcon.setImageResource(R.drawable.img_switch_off);
+		}
+		if(mCallback != null) {
+			mCallback.onOrientationLock(mOrientationLock);
+		}
+	}
+	
+	
+	
+	
 
 }
