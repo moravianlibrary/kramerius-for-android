@@ -7,12 +7,13 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -40,13 +42,15 @@ import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
+import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
 public class PageActivity extends Activity implements OnClickListener, OnSeekBarChangeListener, OnPageNumberSelected,
-		EventListener {
+		ViewerMenuListener, EventListener {
 
 	private static final String EXTRA_TITLE = "extra_title";
 	private static final String EXTRA_SUBTITLE = "extra_subtitle";
@@ -98,6 +102,13 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private IPageViewerFragment mPageViewerFragment;
 	private ViewGroup mContainer;
 
+	private ViewerMenuFragment mMenuFragment;
+
+	private FrameLayout mMenuContainer;
+	private DrawerLayout mDrawerLayout;
+	
+	private FrameLayout mViewerWrapper;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -115,7 +126,16 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);
 
 		setContentView(R.layout.activity_page);
+
+		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
+		
 		mContainer = (ViewGroup) findViewById(R.id.page_container);
+		mMenuFragment = new ViewerMenuFragment();
+		mMenuFragment.setCallback(this);
+		getFragmentManager().beginTransaction().replace(R.id.viewer_menu, mMenuFragment).commit();
+
 		setBackgroundColor();
 		String pid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
 		mIndex = (TextView) findViewById(R.id.page_index);
@@ -188,6 +208,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 				setFullscreen(false);
 			}
 		}
+
 		if (mPageList == null) {
 			new LoadPagesTask(this).execute(pid);
 		} else {
@@ -204,6 +225,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 		return pids;
 	}
+	
 
 	private void setBackgroundColor() {
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
@@ -285,6 +307,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 		@Override
 		protected void onPreExecute() {
+			mDrawerLayout.setActivated(false);
+			mViewerWrapper.setVisibility(View.INVISIBLE);
 			mLoader.setVisibility(View.VISIBLE);
 			mLoader.startAnimation(mLoaderAnimation);
 		}
@@ -297,12 +321,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			}
 			if (ModelUtil.PAGE.equals(item.getModel())) {
 				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
-				Log.d("aaa", "abc:size:" + hierarchy.size());
-				if (hierarchy.size() > 1) {					
+				if (hierarchy.size() > 1) {
 					String parentPid = hierarchy.get(hierarchy.size() - 2).first;
-					Log.d("aaa", "abc:parentPid:" + parentPid);
 					Item parentItem = K5Connector.getInstance().getItem(tContext, parentPid);
-					Log.d("aaa", "abc:parentItem:" + parentItem);
 					if (parentItem != null) {
 						parentItem.setSelectedChild(item.getPid());
 						item = parentItem;
@@ -345,6 +366,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 				mSubtitle = result.getParent().getTitle();
 			} else {
 				mComplexTitle = false;
+				mSubtitle = null;
 			}
 
 			mParentPid = result.getParent().getPid();
@@ -365,7 +387,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 					mCurrentPage = index;
 				}
 			}
-
+			mMenuFragment.refreshRecent();
+			mDrawerLayout.setActivated(true);
+			mViewerWrapper.setVisibility(View.VISIBLE);
 			init();
 		}
 	}
@@ -381,7 +405,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			mComplextTitleView.setVisibility(View.GONE);
 			mTitleView.setVisibility(View.VISIBLE);
 		}
-
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		initPageViewrFragment();
@@ -411,11 +434,11 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private void initPageViewrFragment() {
 		String domain = K5Api.getDomain(this);
 		if (mPageViewerFragment != null) {
-			if (mPageViewerFragment.isPopulated()) {
-				onReady();
-			} else {
+			//if (mPageViewerFragment.isPopulated()) {
+			//	onReady();
+			//} else {
 				mPageViewerFragment.populate(domain, itemsToPids());
-			}
+			//}
 		}
 	}
 
@@ -439,7 +462,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 		c.close();
 		if (insert) {
-			Log.d("aaa", "recent insert, parent:" + mParentPid);
 			ContentValues cv = new ContentValues();
 			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
 			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
@@ -449,7 +471,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
 			getContentResolver().insert(HistoryEntry.CONTENT_URI, cv);
 		} else {
-			Log.d("aaa", "recent update, parent:" + mParentPid);
 			ContentValues cv = new ContentValues();
 			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
 			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
@@ -563,7 +584,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	public void onSingleTap(float x, float y) {
 		float w = x / mContainer.getWidth();
 		float h = y / mContainer.getHeight();
-		Log.d(LOG_TAG, "onTap - w:" + w + ", h:" + h);
 		if (w < 0.15 || h < 0.15) {
 			previousPage();
 		} else if (w > 0.85 || h > 0.85) {
@@ -582,11 +602,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			mBottomPanel.setVisibility(View.GONE);
 			mTopPanel.setVisibility(View.GONE);
 			mSystemBarTintManager.setStatusBarTintEnabled(false);
+			Configuration config = getResources().getConfiguration();
+			if (config.smallestScreenWidthDp < 720) {
+				ScreenUtil.fullscreenInsets(this, mContainer);
+			}
 		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mBottomPanel.setVisibility(View.VISIBLE);
 			mTopPanel.setVisibility(View.VISIBLE);
 			mSystemBarTintManager.setStatusBarTintEnabled(true);
+			Configuration config = getResources().getConfiguration();
+			if (config.smallestScreenWidthDp < 720) {
+				ScreenUtil.setInsets(this, mContainer, false);
+			}
 		}
 	}
 
@@ -596,10 +624,45 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		EasyTracker.getInstance(this).activityStart(this);
 	}
 
+	
 	@Override
 	public void onStop() {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
 	}
 
+	@Override
+	public void onHome() {
+		Intent intent = new Intent(PageActivity.this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onSettings() {
+		closeSlidingMenu();
+		Intent intent = new Intent(PageActivity.this, SettingsActivity.class);
+		startActivity(intent);
+		
+	}
+
+	@Override
+	public void onRecent(String pid) {				
+		closeSlidingMenu();
+		if (!mFullscreen) {
+			setFullscreen(true);
+		}
+		putToHistory();
+		new LoadPagesTask(this).execute(pid);
+	}
+
+	
+	private boolean closeSlidingMenu() {
+		if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+			mDrawerLayout.closeDrawer(mMenuContainer);
+			return true;
+		}
+		return false;
+	}
+	
 }

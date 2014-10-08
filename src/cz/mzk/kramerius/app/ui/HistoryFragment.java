@@ -70,9 +70,14 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 			ScreenUtil.setInsets(getActivity(), view);
 		}
 		inflateLoader(container, inflater);
-		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
-		new GetHistoryTask(getActivity()).execute(10);
+		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);		
 		return view;
+	}
+	
+	@Override
+	public void onResume() {	
+		super.onResume();
+		new GetHistoryTask(getActivity()).execute(10);
 	}
 
 	@Override

@@ -125,7 +125,7 @@ public class RecentCard extends Card {
 		TimestampView.setText(dt.format(date));
 
 		ImageView icon = (ImageView) view.findViewById(R.id.grid_item_modeIcon);
-		icon.setImageResource(R.drawable.ic_recent_green);
+		icon.setImageResource(R.drawable.ic_recent2_green);
 	}
 
 }

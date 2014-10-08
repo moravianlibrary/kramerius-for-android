@@ -28,6 +28,9 @@
 
     <color name="card_line">#d5d5d5</color>
     
+    <color name="button_menu_normal">#ffffff</color>
+    <color name="button_menu_pressed">#aaaaaa</color>
+    
     
     <color name="metadata_title">@color/dark_grey</color>
     <color name="metadata_subtitle">@color/dark_grey</color>
