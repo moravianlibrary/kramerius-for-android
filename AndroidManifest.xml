@@ -20,9 +20,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="cz.mzk.kramerius.app.ui.MainActivity"
-            android:label="@string/app_name" 
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -87,6 +86,10 @@
         <activity
             android:name="cz.mzk.kramerius.app.ui.SearchResultActivity"
             android:label="@string/search_result_title" >
+        </activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.SettingsActivity"
+            android:label="@string/settings_title" >
         </activity>
 
         <provider

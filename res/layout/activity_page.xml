@@ -66,11 +66,11 @@
                 android:paddingRight="8dp" >
 
                 <ImageView
-                    android:id="@+id/page_back"
+                    android:id="@+id/page_drawer_icon"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginRight="0dp"
-                    android:src="@drawable/ic_ab_back" />
+                    android:src="@drawable/ic_navigation_drawer" />
 
                 <TextView
                     android:id="@+id/page_title"

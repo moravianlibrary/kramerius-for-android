@@ -187,7 +187,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 			@Override
 			public void onClick(View v) {
-				finish();
+				toggleSlidingMenu();
 			}
 		});
 
@@ -664,5 +664,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 		return false;
 	}
+
+	private boolean toggleSlidingMenu() {
+		if (mDrawerLayout == null) {
+			return false;						
+		}
+		if(mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+			mDrawerLayout.closeDrawer(mMenuContainer);
+			return true;
+		} else if(!mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+			mDrawerLayout.openDrawer(mMenuContainer);
+			return true;
+		}
+		return false;
+	}	
 	
 }
