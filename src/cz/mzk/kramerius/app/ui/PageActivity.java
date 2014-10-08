@@ -106,9 +106,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	private FrameLayout mMenuContainer;
 	private DrawerLayout mDrawerLayout;
-	
+
 	private FrameLayout mViewerWrapper;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -130,7 +130,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
-		
+
 		mContainer = (ViewGroup) findViewById(R.id.page_container);
 		mMenuFragment = new ViewerMenuFragment();
 		mMenuFragment.setCallback(this);
@@ -225,7 +225,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		}
 		return pids;
 	}
-	
 
 	private void setBackgroundColor() {
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
@@ -434,11 +433,11 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private void initPageViewrFragment() {
 		String domain = K5Api.getDomain(this);
 		if (mPageViewerFragment != null) {
-			//if (mPageViewerFragment.isPopulated()) {
-			//	onReady();
-			//} else {
-				mPageViewerFragment.populate(domain, itemsToPids());
-			//}
+			// if (mPageViewerFragment.isPopulated()) {
+			// onReady();
+			// } else {
+			mPageViewerFragment.populate(domain, itemsToPids());
+			// }
 		}
 	}
 
@@ -624,7 +623,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		EasyTracker.getInstance(this).activityStart(this);
 	}
 
-	
 	@Override
 	public void onStop() {
 		super.onStop();
@@ -643,11 +641,25 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		closeSlidingMenu();
 		Intent intent = new Intent(PageActivity.this, SettingsActivity.class);
 		startActivity(intent);
-		
+
 	}
 
 	@Override
-	public void onRecent(String pid) {				
+	public void onBackPressed() {
+		if (mListShown) {
+			getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
+			mListShown = false;
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public void onRecent(String pid) {
+		if (mListShown) {
+			getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
+			mListShown = false;
+		}
 		closeSlidingMenu();
 		if (!mFullscreen) {
 			setFullscreen(true);
@@ -656,7 +668,6 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		new LoadPagesTask(this).execute(pid);
 	}
 
-	
 	private boolean closeSlidingMenu() {
 		if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mMenuContainer)) {
 			mDrawerLayout.closeDrawer(mMenuContainer);
@@ -667,16 +678,16 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	private boolean toggleSlidingMenu() {
 		if (mDrawerLayout == null) {
-			return false;						
+			return false;
 		}
-		if(mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+		if (mDrawerLayout.isDrawerOpen(mMenuContainer)) {
 			mDrawerLayout.closeDrawer(mMenuContainer);
 			return true;
-		} else if(!mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+		} else if (!mDrawerLayout.isDrawerOpen(mMenuContainer)) {
 			mDrawerLayout.openDrawer(mMenuContainer);
 			return true;
 		}
 		return false;
-	}	
-	
+	}
+
 }

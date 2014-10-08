@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app.search;
 
-import android.util.Log;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class SearchQuery {
@@ -110,7 +109,6 @@ public class SearchQuery {
 		if (mQuery.isEmpty()) {
 			return "*:*";
 		}
-		Log.d("aaa", "que:" + mQuery);
 		return mQuery;
 	}
 
