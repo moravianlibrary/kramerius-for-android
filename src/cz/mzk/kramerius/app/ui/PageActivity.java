@@ -15,7 +15,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
@@ -44,6 +47,8 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
+import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.GetVirtualCollectionsTask;
+import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
@@ -109,6 +114,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	private DrawerLayout mDrawerLayout;
 
 	private FrameLayout mViewerWrapper;
+	private FrameLayout mMessageContainer;
+
+	private String mPid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,14 +139,16 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
+		mMessageContainer = (FrameLayout) findViewById(R.id.page_message_container);
 
+		mViewerWrapper.setVisibility(View.INVISIBLE);
 		mContainer = (ViewGroup) findViewById(R.id.page_container);
+
 		mMenuFragment = new ViewerMenuFragment();
 		mMenuFragment.setCallback(this);
 		getFragmentManager().beginTransaction().replace(R.id.viewer_menu, mMenuFragment).commit();
 
-		setBackgroundColor();
-		String pid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
+		mPid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
 		mIndex = (TextView) findViewById(R.id.page_index);
 
 		mPageViewerFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(R.id.fragmentViewer);
@@ -159,6 +169,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		// mPageViewer = (PageViewer) findViewById(R.id.pageView);
 		// PageViewer.setViewMode(ViewMode.NO_FREE_SPACE);
 		// mPageViewer.setPageViewListener(this);
+		setBackgroundColor();
+
 		mLoader = findViewById(R.id.page_loader);
 		mBottomPanel = findViewById(R.id.page_bottomPanel);
 		mBottomPanel.setVisibility(View.GONE);
@@ -210,7 +222,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			}
 		}
 		if (mPageList == null) {
-			new LoadPagesTask(this).execute(pid);
+			new LoadPagesTask(this).execute(mPid);
 		} else {
 			init();
 		}
@@ -230,9 +242,9 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_viewer_bg_color_key), getString(R.string.pref_viewer_bg_color_default));
 		if ("white".equals(bgColorValue)) {
-			mContainer.setBackgroundColor(Color.WHITE);
+			mPageViewerFragment.setBackgroundColor(Color.WHITE);
 		} else if ("black".equals(bgColorValue)) {
-			mContainer.setBackgroundColor(Color.BLACK);
+			mPageViewerFragment.setBackgroundColor(Color.BLACK);
 		}
 	}
 
@@ -282,9 +294,11 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	}
 
 	private void loadPage() {
-		if (mPageViewerFragment == null || !mPageViewerFragment.isPopulated()) {
+		if (mPageViewerFragment == null || !mPageViewerFragment.isPopulated() || mPageList == null
+				|| mPageList.isEmpty()) {
 			return;
 		}
+		clearMessages();
 		mPageViewerFragment.showPage(mCurrentPage);
 		mIndex.setText((mCurrentPage + 1) + "/" + mPageList.size());
 		mSeekBar.setProgress(mCurrentPage);
@@ -306,7 +320,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 		@Override
 		protected void onPreExecute() {
-			mDrawerLayout.setActivated(false);
+			clearMessages();
+			// mDrawerLayout.setActivated(false);
 			mViewerWrapper.setVisibility(View.INVISIBLE);
 			mLoader.setVisibility(View.VISIBLE);
 			mLoader.startAnimation(mLoaderAnimation);
@@ -348,9 +363,20 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		protected void onPostExecute(ParentChildrenPair result) {
 			mLoader.clearAnimation();
 			mLoader.setVisibility(View.GONE);
-			if (tContext == null || result == null || result.getParent() == null) {
+			if (tContext == null) {
 				return;
 			}
+			if (result == null || result.getParent() == null) {
+				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+
+					@Override
+					public void onWarningButtonClicked() {
+						new LoadPagesTask(PageActivity.this).execute(mPid);
+					}
+				});
+				return;
+			}
+
 			mPageList = new ArrayList<Item>();
 			if (result.getChildren() == null || result.getChildren().isEmpty()) {
 				mPageList.add(result.getParent());
@@ -387,13 +413,13 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 				}
 			}
 			mMenuFragment.refreshRecent();
-			mDrawerLayout.setActivated(true);
-			mViewerWrapper.setVisibility(View.VISIBLE);
 			init();
 		}
 	}
 
 	private void init() {
+		// mDrawerLayout.setActivated(true);
+		mViewerWrapper.setVisibility(View.VISIBLE);
 		if (mComplexTitle) {
 			mTitle1View.setText(mTitle);
 			mTitle2View.setText(mSubtitle);
@@ -558,6 +584,17 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		loadPage();
 	}
 
+	private void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback) {
+		mMessageContainer.removeAllViews();
+		mMessageContainer.setVisibility(View.VISIBLE);
+		MessageUtils.inflateMessage(this, mMessageContainer, message, buttonText, callback);
+	}
+
+	private void clearMessages() {
+		mMessageContainer.removeAllViews();
+		mMessageContainer.setVisibility(View.GONE);
+	}
+
 	@Override
 	public void onReady() {
 		loadPage();
@@ -565,18 +602,37 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	public void onAccessDenied() {
-		// TODO: implement properly just as for pdf viewer
-		Toast.makeText(this, R.string.viewer_no_access_rights, Toast.LENGTH_SHORT).show();
+		showWarningMessage("Stránka dokumentu není veřejně přístupná.", "Více informací", new onWarningButtonClickedListener() {
+
+			@Override
+			public void onWarningButtonClicked() {
+				// TODO
+			}
+		});
 	}
 
 	@Override
 	public void onNetworkError(Integer statusCode) {
-		Toast.makeText(this, R.string.viewer_network_error, Toast.LENGTH_SHORT).show();
+		showWarningMessage("Nepodařilo se načíst stránku.", "Opakovat", new onWarningButtonClickedListener() {
+
+			@Override
+			public void onWarningButtonClicked() {
+				loadPage();
+			}
+		});
+		return;
 	}
 
 	@Override
 	public void onInvalidDataError(String errorMessage) {
-		Toast.makeText(this, R.string.viewer_invalid_data_error, Toast.LENGTH_SHORT).show();
+		showWarningMessage("Nepodařilo se načíst stránku.", "Opakovat", new onWarningButtonClickedListener() {
+
+			@Override
+			public void onWarningButtonClicked() {
+				loadPage();
+			}
+		});
+		return;
 	}
 
 	@Override
@@ -676,6 +732,15 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		return false;
 	}
 
+//	private boolean openSlidingMenu() {
+//		if (mDrawerLayout != null) {
+//			mMenuContainer.setVisibility(View.VISIBLE);
+//			mDrawerLayout.openDrawer(mMenuContainer);
+//			return true;
+//		}
+//		return false;
+//	}
+
 	private boolean toggleSlidingMenu() {
 		if (mDrawerLayout == null) {
 			return false;
@@ -683,7 +748,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		if (mDrawerLayout.isDrawerOpen(mMenuContainer)) {
 			mDrawerLayout.closeDrawer(mMenuContainer);
 			return true;
-		} else if (!mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+		}
+		if (!mDrawerLayout.isDrawerOpen(mMenuContainer)) {
 			mDrawerLayout.openDrawer(mMenuContainer);
 			return true;
 		}
@@ -692,12 +758,12 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	public void onOrientationLock(boolean locked) {
-		if(locked) {			
-			if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);	
+		if (locked) {
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			} else {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			}			
+			}
 		} else {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}

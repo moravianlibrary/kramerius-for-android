@@ -203,6 +203,13 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		hideViews();
 		mTiledImageView.setVisibility(View.VISIBLE);
 	}
+	
+	@Override	
+	public void setBackgroundColor(int color) {
+		mTiledImageView.setBackgroundColor(color);
+		mImageView.setBackgroundColor(color);
+		mProgressView.setBackgroundColor(color);
+	}
 
 	@Override
 	public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {

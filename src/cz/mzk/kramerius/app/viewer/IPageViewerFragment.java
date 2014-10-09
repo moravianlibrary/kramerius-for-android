@@ -74,6 +74,16 @@ public interface IPageViewerFragment {
 	 */
 	public void setViewMode(ViewMode mode);
 
+	
+	
+	/**
+	 * Sets background color.
+	 * 
+	 * @param color
+	 */
+	public abstract void setBackgroundColor(int color);
+	
+	
 	public interface EventListener {
 		/**
 		 * Called after fragment populated by populate().

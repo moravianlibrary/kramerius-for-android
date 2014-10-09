@@ -11,6 +11,7 @@
         android:id="@+id/page_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:padding="0dp" >
 
         <FrameLayout
@@ -23,6 +24,12 @@
                 android:name="cz.mzk.kramerius.app.viewer.PageViewerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/page_message_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
         </FrameLayout>
 
         <ImageView
@@ -175,6 +182,7 @@
         android:id="@+id/viewer_menu"
         android:layout_width="300dp"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:layout_gravity="start" />
 
 </android.support.v4.widget.DrawerLayout>

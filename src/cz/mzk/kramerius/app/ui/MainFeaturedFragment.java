@@ -194,7 +194,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 		@Override
 		protected void onPostExecute(List<Item> result) {
-			if (tContext == null || result == null) {
+			if (tContext == null) {
 				return;
 			}
 			if (tType == K5Api.FEED_SELECTED) {
@@ -204,14 +204,22 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 				// fillList(result, mSelectedList);
 			} else if (tType == K5Api.FEED_NEWEST) {
 				stopLoaderAnimation(mLoaderNewest);
-				mNewestExpandButton.setVisibility(View.VISIBLE);
-				mNewestList = new ArrayList<Item>();
-				fillList(result, mNewestList);
+				if(result !=null) {
+					mNewestExpandButton.setVisibility(View.VISIBLE);
+					mNewestList = new ArrayList<Item>();
+					fillList(result, mNewestList);
+				} else {
+					return;
+				}
 			} else if (tType == K5Api.FEED_MOST_DESIRABLE) {
 				stopLoaderAnimation(mLoaderMostDesirable);
-				mMostDesirableExpandButton.setVisibility(View.VISIBLE);
-				mMostDesirableList = new ArrayList<Item>();
-				fillList(result, mMostDesirableList);
+				if(result !=null) {				
+					mMostDesirableExpandButton.setVisibility(View.VISIBLE);
+					mMostDesirableList = new ArrayList<Item>();
+					fillList(result, mMostDesirableList);
+				} else {
+					return;
+				}
 			}
 			populateGrid(tType);
 		}

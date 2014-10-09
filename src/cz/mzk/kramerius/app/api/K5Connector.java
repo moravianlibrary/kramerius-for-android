@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -34,7 +35,7 @@ public class K5Connector {
 	public static final String TAG = K5Connector.class.getName();
 
 	public static final int CONNECTION_TIMEOUT = 5;
-	public static final int SOCKET_TIMEOUT = 7;
+	public static final int SOCKET_TIMEOUT = 6;
 
 	public static K5Connector INSTANCE;
 
@@ -43,6 +44,12 @@ public class K5Connector {
 	private K5Connector() {
 
 	}
+	
+//	public void stopExecution() {
+//		if(mClient != null) {
+//			mClient.getConnectionManager().shutdown();
+//		}
+//	}
 
 	public static K5Connector getInstance() {
 		if (INSTANCE == null) {

@@ -59,7 +59,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 		inflateLoader((ViewGroup) view, inflater);
 
-		new GetVirtualCollectionsTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		new GetVirtualCollectionsTask(getActivity()).execute();//OnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		return view;
 	}
 
@@ -73,6 +73,8 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		}
 	}
 
+
+	
 	class GetVirtualCollectionsTask extends AsyncTask<Void, Void, List<Item>> {
 
 		private Context tContext;
@@ -135,6 +137,10 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		protected void onProgressUpdate(Void... values) {
 		}
 	}
+	
+	
+	
+	
 
 	@Override
 	public void onStart() {
