@@ -10,6 +10,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -32,6 +34,9 @@ public class K5Connector {
 
 	public static final String TAG = K5Connector.class.getName();
 
+	public static final int CONNECTION_TIMEOUT = 5;
+	public static final int SOCKET_TIMEOUT = 10;
+
 	public static K5Connector INSTANCE;
 
 	private DefaultHttpClient mClient;
@@ -50,6 +55,10 @@ public class K5Connector {
 	private DefaultHttpClient getClient() {
 		if (mClient == null) {
 			mClient = new DefaultHttpClient();
+			final HttpParams httpParameters = mClient.getParams();
+
+			HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT * 1000);
+			HttpConnectionParams.setSoTimeout(httpParameters, SOCKET_TIMEOUT * 1000);
 		}
 		return mClient;
 	}
@@ -193,11 +202,11 @@ public class K5Connector {
 				item.setDate(jsonItem.optString("date"));
 				item.setTitle(jsonItem.optString("title"));
 				JSONArray authors = jsonItem.optJSONArray("autor");
-				if(authors != null && authors.length() > 0) {
+				if (authors != null && authors.length() > 0) {
 					item.setAuthor(authors.optString(0));
-				}				
+				}
 				item.setRootTitle(jsonItem.optString("root_title"));
-				item.setRootPid(jsonItem.optString("root_pid"));				
+				item.setRootPid(jsonItem.optString("root_pid"));
 				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
 				list.add(item);
 			}
@@ -229,8 +238,7 @@ public class K5Connector {
 		}
 		return list;
 	}
-	
-	
+
 	public List<Pair<String, String>> getHierarychy(Context context, String pid) {
 		try {
 			String requst = K5Api.getItemPath(context, pid);
@@ -238,18 +246,18 @@ public class K5Connector {
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
-			List<Pair<String, String>> hierarchy = new ArrayList<Pair<String,String>>();
-			
+			List<Pair<String, String>> hierarchy = new ArrayList<Pair<String, String>>();
+
 			JSONArray a = jsonItem.optJSONArray("context");
-			if(a == null) {
-				hierarchy.add(new Pair<String, String>(jsonItem.optString("pid"), jsonItem.optString("model")));				
+			if (a == null) {
+				hierarchy.add(new Pair<String, String>(jsonItem.optString("pid"), jsonItem.optString("model")));
 			} else {
-				if(a.length() == 1 && a.get(0) instanceof JSONArray) {
+				if (a.length() == 1 && a.get(0) instanceof JSONArray) {
 					a = (JSONArray) a.get(0);
 				}
-				for(int i = 0; i < a.length(); i++) {
+				for (int i = 0; i < a.length(); i++) {
 					JSONObject c = a.getJSONObject(i);
-					if(c != null) {
+					if (c != null) {
 						hierarchy.add(new Pair<String, String>(c.optString("pid"), c.optString("model")));
 					}
 				}
@@ -265,10 +273,7 @@ public class K5Connector {
 			e.printStackTrace();
 		}
 		return null;
-	}	
-	
-		
-	
+	}
 
 	public Item getItem(Context context, String pid, String domain) {
 		try {
@@ -303,8 +308,7 @@ public class K5Connector {
 				item.setPeriodicalItemDate(details.optString("date"));
 				item.setPartNumber(details.optString("partNumber"));
 			}
-			
-			
+
 			return item;
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -317,7 +321,7 @@ public class K5Connector {
 		}
 		return null;
 	}
-	
+
 	public Item getItem(Context context, String pid) {
 		return getItem(context, pid, K5Api.getDomain(context));
 	}
@@ -430,36 +434,29 @@ public class K5Connector {
 		return null;
 	}
 
-	
-	
-	
-	
-	
-	
 	public Pair<List<Item>, Integer> getSearchResult(Context context, String query, int start, int rows) {
 		try {
 			String requestPath = K5Api.getSearchPath(context, query, start, rows);
-			HttpGet request = new HttpGet(requestPath);									
+			HttpGet request = new HttpGet(requestPath);
 			Log.d(TAG, "query:" + requestPath);
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
-			
-			//Log.d(TAG, "result:" + jsonString);
-			
-			
+
+			// Log.d(TAG, "result:" + jsonString);
+
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
-			if(responseJson == null) {
+			if (responseJson == null) {
 				return null;
 			}
 			int numFound = responseJson.optInt("numFound");
-			JSONArray itemArray = responseJson.optJSONArray("docs");			
-			if(itemArray == null) {
+			JSONArray itemArray = responseJson.optJSONArray("docs");
+			if (itemArray == null) {
 				return null;
 			}
 			List<Item> items = new ArrayList<Item>();
-			for(int i = 0; i < itemArray.length(); i++) {
+			for (int i = 0; i < itemArray.length(); i++) {
 				JSONObject itemJson = itemArray.getJSONObject(i);
 				Item item = new Item();
 				item.setPid(itemJson.optString("PID"));
@@ -467,34 +464,28 @@ public class K5Connector {
 				item.setRootTitle(itemJson.optString("root_title"));
 				item.setRootPid(itemJson.optString("root_pid"));
 				item.setRootPid(itemJson.optString("root_pid"));
-				
-				if("application/pdf".equals(itemJson.optString("img_full_mime"))) {
+
+				if ("application/pdf".equals(itemJson.optString("img_full_mime"))) {
 					item.setPdf(K5Api.getPdfPath(context, item.getPid()));
 				}
-				
-				
-				
+
 				JSONArray authors = itemJson.optJSONArray("dc.creator");
-				if(authors != null && authors.length() > 0) {
+				if (authors != null && authors.length() > 0) {
 					item.setAuthor(authors.optString(0));
 				}
 				item.setPolicyPrivate("private".equals(itemJson.optString("dostupnost")));
-				//item.setModel(ModelUtil.MONOGRAPH);
-				
-				
+				// item.setModel(ModelUtil.MONOGRAPH);
+
 				JSONArray models = itemJson.optJSONArray("document_type");
-				if(models != null && models.length() > 0) {
+				if (models != null && models.length() > 0) {
 					item.setModel(models.optString(0));
 				}
-				
-				
+
 				items.add(item);
 			}
-			
+
 			return new Pair<List<Item>, Integer>(items, numFound);
-			
-			
-			
+
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -507,25 +498,21 @@ public class K5Connector {
 		return null;
 	}
 
-	
-	
-	
-	
 	public int getDoctypeCount(Context context, String type) {
 		try {
 			String requestPath = K5Api.getDoctypeCountPath(context, type);
-			HttpGet request = new HttpGet(requestPath);									
+			HttpGet request = new HttpGet(requestPath);
 			Log.d(TAG, "query:" + requestPath);
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
-			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);			
-			//Log.d(TAG, "result:" + jsonString);
+			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			// Log.d(TAG, "result:" + jsonString);
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
-			if(responseJson == null) {
+			if (responseJson == null) {
 				return 0;
 			}
-			return responseJson.optInt("numFound");			
+			return responseJson.optInt("numFound");
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -538,16 +525,6 @@ public class K5Connector {
 		return 0;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public Map<String, Boolean> getUserRights(Context context) {
 		String userName = K5Api.getUser(context);
 		String password = K5Api.getPassword(context);
@@ -621,7 +598,7 @@ public class K5Connector {
 	public Metadata getModsMetadata(Context context, String pid) {
 		String url = K5Api.getModsStreamPath(context, pid);
 		Metadata metadata = ModsParser.getMetadata(url);
-		if(metadata != null) {
+		if (metadata != null) {
 			metadata.setPid(pid);
 		}
 		return metadata;
