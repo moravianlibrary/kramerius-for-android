@@ -1,32 +1,19 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.util.List;
-
-import android.content.Context;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.util.ModelUtil;
-import cz.mzk.kramerius.app.util.TextUtil;
 
 public class PeriodicalActivity extends BaseActivity implements OnItemSelectedListener {
-
-	private View mLoader;
-	private Animation mLoaderAnimation;
-	private PeriodicalFragment mPeriodicalFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +25,14 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setTitle("K5 - Digitální knihovna");
 
-		mPeriodicalFragment = (PeriodicalFragment) getFragmentManager().findFragmentById(R.id.periodical_fragment);
-		mPeriodicalFragment.setOnItemSelectedListener(this);
 		String pid = getIntent().getExtras().getString(EXTRA_PID);
-		mLoader = findViewById(R.id.loader);
-		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
-		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
 
-		new GetPeriodicalVolumesTask(this).execute(pid);
+		PeriodicalFragment fragment = PeriodicalFragment.newInstance(pid);
+		fragment.setOnItemSelectedListener(this);
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.periodical_fragment_container, fragment).commit();
+		fragment.setOnItemSelectedListener(this);
+
 	}
 
 	@Override
@@ -56,55 +43,6 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	class GetPeriodicalVolumesTask extends AsyncTask<String, Void, ParentChildrenPair> {
-
-		private Context tContext;
-
-		public GetPeriodicalVolumesTask(Context context) {
-			tContext = context;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			mLoader.setVisibility(View.VISIBLE);
-			mLoader.startAnimation(mLoaderAnimation);
-		}
-
-		@Override
-		protected ParentChildrenPair doInBackground(String... params) {
-			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
-			if (item == null) {
-				return null;
-			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
-		}
-
-		@Override
-		protected void onPostExecute(ParentChildrenPair result) {
-			mLoader.clearAnimation();
-			mLoader.setVisibility(View.GONE);
-			if (tContext == null || result == null || result.getParent() == null) {
-				return;
-			}
-			String title = TextUtil.parseTitle(result.getParent().getRootTitle());
-			getActionBar().setTitle(title);
-			String subtitle = "";
-			List<Item> items = result.getChildren();
-			// int type = PeriodicalArrayAdapter.TYPE_ITEM;
-			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
-				// type = PeriodicalArrayAdapter.TYPE_VOLUME;
-			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
-				// type = PeriodicalArrayAdapter.TYPE_ITEM;
-				subtitle = "Ročník " + result.getParent().getVolumeTitle();
-				getActionBar().setSubtitle(subtitle);
-			}
-
-			if (items != null) {
-				mPeriodicalFragment.setItems(items);
-			}
 		}
 	}
 

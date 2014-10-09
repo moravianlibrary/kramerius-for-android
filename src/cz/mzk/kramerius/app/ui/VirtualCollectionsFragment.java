@@ -59,7 +59,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 		inflateLoader((ViewGroup) view, inflater);
 
-		new GetVirtualCollectionsTask(getActivity()).execute();
+		new GetVirtualCollectionsTask(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		return view;
 	}
 
@@ -97,6 +97,21 @@ public class VirtualCollectionsFragment extends BaseFragment {
 			if (tContext == null) {
 				return;
 			}
+			if (result == null) {
+				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+
+					@Override
+					public void onWarningButtonClicked() {
+						new GetVirtualCollectionsTask(getActivity()).execute();
+					}
+				});
+				return;
+			}
+			if (result.isEmpty()) {
+				showWarningMessage("Digitální knihovna neobsahuje žádné virtuální sbirky.", null, null);
+				return;
+			}
+
 			ArrayList<Card> cards = new ArrayList<Card>();
 			for (Item item : result) {
 				VirtualCollectionCard card = new VirtualCollectionCard(tContext, item);
@@ -106,12 +121,13 @@ public class VirtualCollectionsFragment extends BaseFragment {
 						onVirtualCollectionSelected(((VirtualCollectionCard) card).getItem());
 					}
 				});
-				
+
 				cards.add(card);
 			}
+
 			mAdapter = new CardGridArrayAdapter(tContext, cards);
 			CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
-			//mCardGridView.setAdapter(mAdapter);
+			// mCardGridView.setAdapter(mAdapter);
 
 		}
 

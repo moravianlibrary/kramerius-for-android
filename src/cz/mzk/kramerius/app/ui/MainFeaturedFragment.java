@@ -183,11 +183,11 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		@Override
 		protected List<Item> doInBackground(Void... params) {
 			if (tType == K5Api.FEED_NEWEST) {
-				return K5Connector.getInstance().getNewest(tContext, true, mFeaturedLimit);
+				return K5Connector.getInstance().getNewest(tContext, mFeaturedLimit);
 			} else if (tType == K5Api.FEED_SELECTED) {
 				return K5Connector.getInstance().getSelected(tContext, true, mFeaturedLimit);
 			} else if (tType == K5Api.FEED_MOST_DESIRABLE) {
-				return K5Connector.getInstance().getMostDesirable(tContext, true, mFeaturedLimit);
+				return K5Connector.getInstance().getMostDesirable(tContext, mFeaturedLimit);
 			}
 			return null;
 		}

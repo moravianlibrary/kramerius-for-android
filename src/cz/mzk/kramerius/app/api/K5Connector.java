@@ -27,7 +27,6 @@ import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
-import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
 public class K5Connector {
@@ -35,7 +34,7 @@ public class K5Connector {
 	public static final String TAG = K5Connector.class.getName();
 
 	public static final int CONNECTION_TIMEOUT = 5;
-	public static final int SOCKET_TIMEOUT = 10;
+	public static final int SOCKET_TIMEOUT = 7;
 
 	public static K5Connector INSTANCE;
 
@@ -54,25 +53,29 @@ public class K5Connector {
 
 	private DefaultHttpClient getClient() {
 		if (mClient == null) {
-			mClient = new DefaultHttpClient();
-			final HttpParams httpParameters = mClient.getParams();
-
-			HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT * 1000);
-			HttpConnectionParams.setSoTimeout(httpParameters, SOCKET_TIMEOUT * 1000);
+			mClient = createClient();
 		}
 		return mClient;
 	}
 
+	private DefaultHttpClient createClient() {
+		DefaultHttpClient client = new DefaultHttpClient();
+		final HttpParams httpParameters = client.getParams();
+		HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT * 1000);
+		HttpConnectionParams.setSoTimeout(httpParameters, SOCKET_TIMEOUT * 1000);
+		return client;
+	}
+
 	public void restart() {
-		mClient = new DefaultHttpClient();
+		mClient = createClient();
 	}
 
-	public List<Item> getNewest(Context context, boolean extended, int limit) {
-		return getFeatured(context, K5Api.FEED_NEWEST, false, limit);
+	public List<Item> getNewest(Context context, int limit) {
+		return getFeatured(context, K5Api.FEED_NEWEST, limit);
 	}
 
-	public List<Item> getMostDesirable(Context context, boolean extended, int limit) {
-		return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, false, limit);
+	public List<Item> getMostDesirable(Context context, int limit) {
+		return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, limit);
 	}
 
 	// API doesn't support feed/selected. This is a temporary solution for
@@ -184,10 +187,15 @@ public class K5Connector {
 		return item;
 	}
 
-	private List<Item> getFeatured(Context context, int feed, boolean extended, int limit) {
-		List<Item> list = new ArrayList<Item>();
+	private List<Item> getFeatured(Context context, int feed, int limit) {
 		try {
-			String requst = K5Api.getFeedPath(context, feed);
+			List<Item> list = new ArrayList<Item>();
+			String requst = null;
+			if (limit > -1) {
+				requst = K5Api.getFeedPath(context, feed, limit);
+			} else {
+				requst = K5Api.getFeedPath(context, feed);
+			}
 			HttpGet request = new HttpGet(requst);
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
@@ -210,6 +218,7 @@ public class K5Connector {
 				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
 				list.add(item);
 			}
+			return list;
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -221,22 +230,7 @@ public class K5Connector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		if (limit > -1 && list.size() > limit) {
-			list = list.subList(0, limit);
-		}
-		if (extended) {
-			for (Item o : list) {
-				Metadata metadata = getModsMetadata(context, o.getRootPid());
-				if (metadata != null && !metadata.getAuthors().isEmpty()) {
-					Author author = metadata.getAuthors().get(0);
-					if (author != null && author.getName() != null) {
-						o.setAuthor(author.getName());
-					}
-				}
-			}
-		}
-		return list;
+		return null;
 	}
 
 	public List<Pair<String, String>> getHierarychy(Context context, String pid) {
@@ -270,6 +264,8 @@ public class K5Connector {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -318,6 +314,8 @@ public class K5Connector {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -327,8 +325,8 @@ public class K5Connector {
 	}
 
 	public List<Item> getChildren(Context context, String pid) {
-		List<Item> list = new ArrayList<Item>();
 		try {
+			List<Item> list = new ArrayList<Item>();
 			String requst = K5Api.getChildrenPath(context, pid);
 			HttpGet request = new HttpGet(requst);
 			HttpResponse response = getClient().execute(request);
@@ -355,6 +353,7 @@ public class K5Connector {
 				}
 				list.add(item);
 			}
+			return list;
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -363,13 +362,15 @@ public class K5Connector {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return list;
+		return null;
 	}
 
 	public List<Item> getVirtualCollctions(Context context) {
-		List<Item> list = new ArrayList<Item>();
 		try {
+			List<Item> list = new ArrayList<Item>();
 			HttpGet request = new HttpGet(K5Api.getVirtualCollectionsPath(context));
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
@@ -381,6 +382,7 @@ public class K5Connector {
 				item.setTitle(jsonItem.getJSONObject("descs").optString("cs"));
 				list.add(item);
 			}
+			return list;
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -389,8 +391,10 @@ public class K5Connector {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		return list;
+		return null;
 	}
 
 	public User getUserInfo(Context context) {
@@ -429,6 +433,8 @@ public class K5Connector {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -494,6 +500,8 @@ public class K5Connector {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -520,6 +528,8 @@ public class K5Connector {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return 0;
@@ -556,6 +566,8 @@ public class K5Connector {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return rights;

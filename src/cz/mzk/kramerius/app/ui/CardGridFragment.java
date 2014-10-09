@@ -110,9 +110,9 @@ public class CardGridFragment extends BaseFragment implements OnPopupMenuSelecte
 		@Override
 		protected List<Item> doInBackground(Integer... params) {
 			if (params[0] == K5Api.FEED_NEWEST) {
-				return K5Connector.getInstance().getNewest(tContext, true, -1);
+				return K5Connector.getInstance().getNewest(tContext, -1);
 			} else if (params[0] == K5Api.FEED_MOST_DESIRABLE) {
-				return K5Connector.getInstance().getMostDesirable(tContext, true, -1);
+				return K5Connector.getInstance().getMostDesirable(tContext, -1);
 			} else {
 				return K5Connector.getInstance().getSelected(tContext, true, -1);
 			}

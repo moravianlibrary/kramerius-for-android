@@ -43,7 +43,6 @@ public class K5Api {
 		return new Uri.Builder().scheme(getProtocol(context)).authority(getDomain(context)).appendPath(PATH_SEARCH)
 				.build();
 	}
-	
 
 	public static Uri getApiUri(Context context) {
 		return getBaseUri(context).buildUpon().appendPath(PATH_API).appendPath(PATH_API_VERSION).build();
@@ -99,12 +98,12 @@ public class K5Api {
 
 	public static Uri getVirtualCollectionsUri(Context context) {
 		return getApiUri(context).buildUpon().appendPath(PATH_VC).build();
-	}	
+	}
 
 	public static String getVirtualCollectionsPath(Context context) {
 		return getVirtualCollectionsUri(context).toString();
-	}	
-	
+	}
+
 	public static String getFeedPath(Context context, int feed) {
 		switch (feed) {
 		case FEED_NEWEST:
@@ -112,6 +111,21 @@ public class K5Api {
 		case FEED_MOST_DESIRABLE:
 			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_MOST_DESIRABLE).build()
 					.toString();
+		case FEED_SELECTED:
+			// TODO: add support for feed/selected
+			return null;
+		}
+		return null;
+	}
+
+	public static String getFeedPath(Context context, int feed, int limit) {
+		switch (feed) {
+		case FEED_NEWEST:
+			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_NEWEST)
+					.appendQueryParameter("limit", String.valueOf(limit)).build().toString();
+		case FEED_MOST_DESIRABLE:
+			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_MOST_DESIRABLE)
+					.appendQueryParameter("limit", String.valueOf(limit)).build().toString();
 		case FEED_SELECTED:
 			// TODO: add support for feed/selected
 			return null;
@@ -142,31 +156,27 @@ public class K5Api {
 	public static String getMp3StreamPath(Context context, String pid) {
 		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MP3).build().toString();
 	}
-	
+
 	public static String getSearchPath(Context context, String query, int start, int rows) {
 		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", query)
 				.appendQueryParameter("start", String.valueOf(start))
 				.appendQueryParameter("rows", String.valueOf(rows)).build().toString();
 	}
-	
+
 	public static String getPersistentUrl(Context context, String pid) {
 		return getBaseUri(context).buildUpon().appendPath(PATH_HANDLE).appendPath(pid).toString();
 	}
-	
+
 	public static String getDoctypeCountPath(Context context, String type) {
-		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH).appendQueryParameter("q", "document_type:" + type).appendQueryParameter("rows", "0").build().toString();
+		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH)
+				.appendQueryParameter("q", "document_type:" + type).appendQueryParameter("rows", "0").build()
+				.toString();
 	}
-	
-	
+
 	public static String getPdfPath(Context context, String pid) {
 		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("pid", pid)
-					.appendQueryParameter("stream", PATH_IMG_FULL)
-					.appendQueryParameter("action", "GETRAW")
-					.build().toString();
+				.appendQueryParameter("stream", PATH_IMG_FULL).appendQueryParameter("action", "GETRAW").build()
+				.toString();
 	}
-	
-	
-	
-	
-	
+
 }

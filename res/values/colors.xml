@@ -31,6 +31,10 @@
     <color name="button_menu_normal">#ffffff</color>
     <color name="button_menu_pressed">#aaaaaa</color>
     
+    <color name="button_main_normal">@color/green</color>
+    <color name="button_main_pressed">#00a7b7</color>
+    
+    
     
     <color name="metadata_title">@color/dark_grey</color>
     <color name="metadata_subtitle">@color/dark_grey</color>

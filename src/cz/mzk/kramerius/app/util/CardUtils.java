@@ -81,8 +81,10 @@ public class CardUtils {
 	public static DisplayImageOptions initUniversalImageLoaderLibrary(Context context) {
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context.getApplicationContext()).build();
 		DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.img_empty_loader)
-				.displayer(new FadeInBitmapDisplayer(500, true, false, false)).cacheInMemory(true).cacheOnDisk(true)
-				.showImageForEmptyUri(R.drawable.img_empty).showImageOnFail(R.drawable.img_empty).build();
+				// .displayer(new FadeInBitmapDisplayer(500, true, false,
+				// false))
+				.cacheInMemory(true).cacheOnDisk(true).showImageForEmptyUri(R.drawable.img_empty)
+				.showImageOnFail(R.drawable.img_empty).build();
 		ImageLoader.getInstance().init(config);
 		return options;
 	}

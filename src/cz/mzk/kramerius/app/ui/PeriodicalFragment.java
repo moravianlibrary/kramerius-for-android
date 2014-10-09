@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,17 +23,24 @@ import android.widget.SearchView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import cz.mzk.kramerius.app.BaseActivity;
+import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
+import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.model.ParentChildrenPair;
+import cz.mzk.kramerius.app.ui.SearchResultFragment.GetResultTask;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.TextUtil;
 
-public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener,
-		OnOpenDetailListener, OnPopupMenuSelectedListener {
+public class PeriodicalFragment extends BaseFragment implements SearchView.OnQueryTextListener,
+		SearchView.OnCloseListener, OnOpenDetailListener, OnPopupMenuSelectedListener {
 
 	public static final String TAG = PeriodicalFragment.class.getName();
 
@@ -43,18 +52,30 @@ public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTe
 	private DisplayImageOptions mOptions;
 
 	private List<Item> mItems;
+	private String mPid;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
+		inflateLoader(container, inflater);
+		new GetPeriodicalVolumesTask(getActivity()).execute(mPid);
 		return view;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mPid = getArguments().getString(BaseActivity.EXTRA_PID, "");
 		setHasOptionsMenu(true);
+	}
+
+	public static PeriodicalFragment newInstance(String pid) {
+		PeriodicalFragment f = new PeriodicalFragment();
+		Bundle args = new Bundle();
+		args.putString(BaseActivity.EXTRA_PID, pid);
+		f.setArguments(args);
+		return f;
 	}
 
 	@Override
@@ -85,22 +106,66 @@ public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTe
 		mCallback = callback;
 	}
 
-	// private void onPeriodicalVolumeSelected(int position) {
-	// if (mAdapter == null || mAdapter.getCount() < position + 1) {
-	// return;
-	// }
-	// Item item = mAdapter.getItem(position);
-	// if (mCallback != null) {
-	// mCallback.onItemSelected(item);
-	// }
-	// }
+	class GetPeriodicalVolumesTask extends AsyncTask<String, Void, ParentChildrenPair> {
+
+		private Context tContext;
+
+		public GetPeriodicalVolumesTask(Context context) {
+			tContext = context;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			startLoaderAnimation();
+		}
+
+		@Override
+		protected ParentChildrenPair doInBackground(String... params) {
+			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			if (item == null) {
+				return null;
+			}
+			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
+		}
+
+		@Override
+		protected void onPostExecute(ParentChildrenPair result) {
+			stopLoaderAnimation();
+			if (tContext == null) {
+				return;
+			}
+			if (result == null || result.getParent() == null || result.getChildren() == null) {
+				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+					@Override
+					public void onWarningButtonClicked() {
+						new GetPeriodicalVolumesTask(getActivity()).execute(mPid);
+					}
+				});
+				return;
+			}
+			String title = TextUtil.parseTitle(result.getParent().getRootTitle());
+			getActivity().getActionBar().setTitle(title);
+			String subtitle = "";
+			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
+			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
+				subtitle = "Ročník " + result.getParent().getVolumeTitle();
+				getActivity().getActionBar().setSubtitle(subtitle);
+			}
+			if (result.getChildren().isEmpty()) {
+				showWarningMessage("Nebyly nalezeny žádné výsledky.", null, null);
+				return;
+			} else {
+				setItems(result.getChildren());
+			}
+		}
+	}
 
 	private void filterItems(String prefix) {
 		if (mAdapter == null || mItems == null) {
 			return;
 		}
-		if(prefix == null) {
-			if(mItems.size() > mAdapter.getCount()) {
+		if (prefix == null) {
+			if (mItems.size() > mAdapter.getCount()) {
 				populate(mItems);
 			}
 			return;
@@ -121,9 +186,9 @@ public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTe
 				}
 			}
 		}
-		populate(items);		
+		populate(items);
 	}
-	
+
 	private void populate(List<Item> items) {
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for (Item item : items) {
@@ -142,7 +207,7 @@ public class PeriodicalFragment extends Fragment implements SearchView.OnQueryTe
 		}
 		mAdapter = new CardGridArrayAdapter(getActivity(), cards);
 		CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
-	}	
+	}
 
 	@Override
 	public boolean onQueryTextChange(String query) {

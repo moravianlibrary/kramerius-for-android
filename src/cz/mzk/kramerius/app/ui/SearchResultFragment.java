@@ -35,10 +35,12 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.GetVirtualCollectionsTask;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
 
@@ -57,8 +59,6 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	private int mStart = 0;
 	private int mNumFound = -1;
 	private boolean mFirst = true;
-
-	private TextView mMessage;
 
 	private CardGridView mCardGridView;
 	private CardGridArrayAdapter mAdapter;
@@ -97,17 +97,6 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		}
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		mCardGridView.setOnScrollListener(this);
-		mMessage = new TextView(getActivity());
-		mMessage.setText("Nebyly nalezeny žádné výsledky.");
-		mMessage.setTextColor(getResources().getColor(R.color.dark_grey));
-		mMessage.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-		mMessage.setVisibility(View.GONE);
-		container.addView(mMessage);
-		ViewGroup.LayoutParams params = mMessage.getLayoutParams();
-		params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-		params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-		mMessage.setLayoutParams(params);
-		mMessage.setGravity(Gravity.CENTER);
 
 		inflateLoader(container, inflater);
 		mLoading = true;
@@ -150,19 +139,32 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 		@Override
 		protected void onPostExecute(Pair<List<Item>, Integer> result) {
-			if (tContext == null || result == null || result.first == null) {
+			if (tContext == null) {
 				return;
 			}
-			if (result.second == 0) {
-				mMessage.setVisibility(View.VISIBLE);
-				// return;
-			}
-			mNumFound = result.second;
-			populateGrid(result.first);
 			if (mFirst) {
 				stopLoaderAnimation();
 			}
 			mLoading = false;
+			if (result == null || result.first == null) {
+				if (mFirst) {
+
+					showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+
+						@Override
+						public void onWarningButtonClicked() {
+							new GetResultTask(getActivity()).execute(mSearchQuery);
+						}
+					});
+				}
+				return;
+			}
+			if (result.second == 0) {
+				showWarningMessage("Nebyly nalezeny žádné výsledky.", null, null);
+				return;
+			}
+			mNumFound = result.second;
+			populateGrid(result.first);
 			mFirst = false;
 			int shownNum = mStart + mRows;
 			if (shownNum > mNumFound) {
@@ -198,7 +200,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			mAdapter.addAll(cards);
 			mCardGridView.setSelection(index);
 		}
-		
+
 	}
 
 	@Override
