@@ -107,6 +107,7 @@ public class MetadataFragment extends BaseFragment {
 	private void populateTopLevelMetadata(Metadata metadata, String model, boolean expandable) {
 		if (metadata.getTitleInfo().getTitle() != null) {
 			TextView mainTitle = new TextView(getActivity());
+			mainTitle.setTextIsSelectable(true);
 			mainTitle.setText(metadata.getTitleInfo().getTitle());
 			mainTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_title));
 			mainTitle.setTextColor(getResources().getColor(R.color.metadata_title));
@@ -449,6 +450,7 @@ public class MetadataFragment extends BaseFragment {
 
 	private View createSubtitleView(String subtitle) {
 		TextView view = new TextView(getActivity());
+		view.setTextIsSelectable(true);
 		view.setText(subtitle);
 		view.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_subtitle));
 		view.setTextColor(getResources().getColor(R.color.metadata_subtitle));
@@ -474,6 +476,7 @@ public class MetadataFragment extends BaseFragment {
 				getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_bottom));
 
 		TextView textView = new TextView(getActivity());
+		textView.setTextIsSelectable(true);
 		textView.setText(title);
 		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_subtitle));
 		textView.setTextColor(getResources().getColor(R.color.metadata_subtitle));
@@ -519,11 +522,13 @@ public class MetadataFragment extends BaseFragment {
 		lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.metadata_value_margin_bottom);
 		ll.setLayoutParams(lp);
 		TextView keyView = new TextView(getActivity());
+		keyView.setTextIsSelectable(true);
 		keyView.setText(key + ":");
 		keyView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_key));
 		keyView.setTextColor(getResources().getColor(R.color.metadata_key));
 		ll.addView(keyView);
 		TextView valueView = new TextView(getActivity());
+		valueView.setTextIsSelectable(true);
 		valueView.setText(value);
 		valueView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_value));
 		valueView.setTextColor(getResources().getColor(R.color.metadata_value));
@@ -537,6 +542,7 @@ public class MetadataFragment extends BaseFragment {
 
 	private View createValueView(String value) {
 		TextView valueView = new TextView(getActivity());
+		valueView.setTextIsSelectable(true);
 		valueView.setText(value);
 		valueView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_value));
 		valueView.setTextColor(getResources().getColor(R.color.metadata_value));
