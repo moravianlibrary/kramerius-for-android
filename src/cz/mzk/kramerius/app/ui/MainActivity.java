@@ -209,7 +209,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onFeatured(int type) {
-		CardGridFragment fragment = CardGridFragment.newInstance(type);
+		FeaturedFragment fragment = FeaturedFragment.newInstance(type);
 		fragment.setOnItemSelectedListener(this);
 		mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_NONE);
 		switch (type) {

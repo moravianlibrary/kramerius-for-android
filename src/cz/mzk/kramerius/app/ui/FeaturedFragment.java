@@ -19,19 +19,21 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.ui.PeriodicalFragment.GetPeriodicalVolumesTask;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
-public class CardGridFragment extends BaseFragment implements OnPopupMenuSelectedListener {
+public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 
 	private static final String EXTRA_TYPE = "extra_type";
 
-	private static final String TAG = CardGridFragment.class.getSimpleName();
+	private static final String TAG = FeaturedFragment.class.getSimpleName();
 
 	private int mType;
 	private OnItemSelectedListener mOnItemSelectedListener;
@@ -41,8 +43,8 @@ public class CardGridFragment extends BaseFragment implements OnPopupMenuSelecte
 
 	private DisplayImageOptions mOptions;
 
-	public static CardGridFragment newInstance(int type) {
-		CardGridFragment f = new CardGridFragment();
+	public static FeaturedFragment newInstance(int type) {
+		FeaturedFragment f = new FeaturedFragment();
 		Bundle args = new Bundle();
 		args.putInt(EXTRA_TYPE, type);
 		f.setArguments(args);
@@ -122,8 +124,14 @@ public class CardGridFragment extends BaseFragment implements OnPopupMenuSelecte
 		protected void onPostExecute(List<Item> result) {
 			stopLoaderAnimation();
 			if (tContext == null || result == null) {
+				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+					@Override
+					public void onWarningButtonClicked() {
+						new GetFeaturedTask(getActivity()).execute(mType);
+					}
+				});
 				return;
-			}					
+			}			
 			populateGrid(result);
 		}
 	}

@@ -74,6 +74,7 @@
                 android:layout_marginTop="10dp" >
 
                 <TextView
+                    android:id="@+id/featured_newest_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -105,6 +106,15 @@
                     android:src="@drawable/img_loader"
                     android:visibility="gone" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/featured_newest_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Nepodařilo se načíst data"
+                android:textColor="@color/grey"
+                android:visibility="gone" />
 
             <it.gmariotti.cardslib.library.view.CardGridView
                 android:id="@+id/featured_newest"
@@ -157,6 +167,15 @@
                     android:src="@drawable/img_loader"
                     android:visibility="gone" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/featured_mostdesirable_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Nepodařilo se načíst data"
+                android:textColor="@color/grey"
+                android:visibility="gone" />
 
             <it.gmariotti.cardslib.library.view.CardGridView
                 android:id="@+id/featured_mostdesirable"

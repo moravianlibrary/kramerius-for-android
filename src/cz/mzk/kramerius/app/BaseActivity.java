@@ -23,7 +23,7 @@ public class BaseActivity extends Activity {
 		Configuration config = getResources().getConfiguration();
 		if (config.smallestScreenWidthDp >= 720) {
 			mDevice = TABLET;
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		} else {
 			mDevice = PHONE;
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

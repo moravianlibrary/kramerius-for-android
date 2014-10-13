@@ -759,10 +759,11 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	@Override
 	public void onOrientationLock(boolean locked) {
 		if (locked) {
+			Log.d(LOG_TAG, "orientation: " + getResources().getConfiguration().orientation);
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			} else {
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 			}
 		} else {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);

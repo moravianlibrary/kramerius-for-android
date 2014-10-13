@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -23,12 +24,15 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.ui.PageActivity.LoadPagesTask;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
+import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class MainFeaturedFragment extends BaseFragment implements OnClickListener, OnOpenDetailListener,
@@ -64,6 +68,12 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	private int mFeaturedLimit;
 
 	private DisplayImageOptions mOptions;
+
+	private TextView mNewestWarning;
+	private TextView mMostDesirableWarning;
+
+	private View mMostDesirableAgainButton;
+	private View mNewestAgainButton;
 
 	public interface OnFeaturedListener {
 		public void onFeatured(int type);
@@ -117,6 +127,13 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		mNewestExpandButton.setOnClickListener(this);
 		mMostDesirableExpandButton = view.findViewById(R.id.featured_mostdesirable_expand);
 		mMostDesirableExpandButton.setOnClickListener(this);
+		mNewestAgainButton = view.findViewById(R.id.featured_newest_again);
+		mNewestAgainButton.setOnClickListener(this);
+		mMostDesirableAgainButton = view.findViewById(R.id.featured_mostdesirable_again);
+		mMostDesirableAgainButton.setOnClickListener(this);
+
+		mNewestWarning = (TextView) view.findViewById(R.id.featured_newest_warning);
+		mMostDesirableWarning = (TextView) view.findViewById(R.id.featured_mostdesirable_warning);
 
 		// if (mSelectedList == null) {
 		// mSelectedExpandButton.setVisibility(View.GONE);
@@ -127,29 +144,29 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		// }
 
 		String domain = K5Api.getDomain(getActivity());
-		if (!"krameriusndktest.mzk.cz".equals(domain) && !"kramerius.mzk.cz".equals(domain)) {
 
-			if (mMostDesirableList == null) {
-				mMostDesirableExpandButton.setVisibility(View.GONE);
-				startLoaderAnimation(mLoaderMostDesirable);
-				new GetFeaturedTask(getActivity(), K5Api.FEED_MOST_DESIRABLE).execute();
-			} else {
-				populateGrid(K5Api.FEED_MOST_DESIRABLE);
-			}
-		}
+		mNewestExpandButton.setVisibility(View.GONE);
+		mMostDesirableExpandButton.setVisibility(View.GONE);
 		if (mNewestList == null) {
-			mNewestExpandButton.setVisibility(View.GONE);
-			startLoaderAnimation(mLoaderNewest);
 			new GetFeaturedTask(getActivity(), K5Api.FEED_NEWEST).execute();
 		} else {
 			populateGrid(K5Api.FEED_NEWEST);
 		}
 
+		if (!"krameriusndktest.mzk.cz".equals(domain) && !"kramerius.mzk.cz".equals(domain)) {
+
+			if (mMostDesirableList == null) {
+				new GetFeaturedTask(getActivity(), K5Api.FEED_MOST_DESIRABLE).execute();
+			} else {
+				populateGrid(K5Api.FEED_MOST_DESIRABLE);
+			}
+		}
+
 		return view;
 	}
-	
+
 	@Override
-	public void onResume() {	
+	public void onResume() {
 		super.onResume();
 	}
 
@@ -178,6 +195,20 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 		@Override
 		protected void onPreExecute() {
+			if (tType == K5Api.FEED_NEWEST) {
+				startLoaderAnimation(mLoaderNewest);
+				mNewestExpandButton.setVisibility(View.GONE);
+				mNewestAgainButton.setVisibility(View.GONE);
+				mNewestWarning.setVisibility(View.GONE);
+			} else if (tType == K5Api.FEED_SELECTED) {
+			} else if (tType == K5Api.FEED_MOST_DESIRABLE) {
+				startLoaderAnimation(mLoaderMostDesirable);
+				mMostDesirableExpandButton.setVisibility(View.GONE);
+				mMostDesirableAgainButton.setVisibility(View.GONE);
+				mMostDesirableWarning.setVisibility(View.GONE);
+
+			}
+
 		}
 
 		@Override
@@ -194,9 +225,6 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 		@Override
 		protected void onPostExecute(List<Item> result) {
-			if (tContext == null) {
-				return;
-			}
 			if (tType == K5Api.FEED_SELECTED) {
 				// stopLoaderAnimation(mLoaderSelected);
 				// mSelectedExpandButton.setVisibility(View.VISIBLE);
@@ -204,22 +232,24 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 				// fillList(result, mSelectedList);
 			} else if (tType == K5Api.FEED_NEWEST) {
 				stopLoaderAnimation(mLoaderNewest);
-				if(result !=null) {
-					mNewestExpandButton.setVisibility(View.VISIBLE);
-					mNewestList = new ArrayList<Item>();
-					fillList(result, mNewestList);
-				} else {
+				if (tContext == null || result == null) {
+					mNewestAgainButton.setVisibility(View.VISIBLE);
+					mNewestWarning.setVisibility(View.VISIBLE);
 					return;
 				}
+				mNewestExpandButton.setVisibility(View.VISIBLE);
+				mNewestList = new ArrayList<Item>();
+				fillList(result, mNewestList);
 			} else if (tType == K5Api.FEED_MOST_DESIRABLE) {
 				stopLoaderAnimation(mLoaderMostDesirable);
-				if(result !=null) {				
-					mMostDesirableExpandButton.setVisibility(View.VISIBLE);
-					mMostDesirableList = new ArrayList<Item>();
-					fillList(result, mMostDesirableList);
-				} else {
+				if (tContext == null || result == null) {
+					mMostDesirableAgainButton.setVisibility(View.VISIBLE);
+					mMostDesirableWarning.setVisibility(View.VISIBLE);
 					return;
 				}
+				mMostDesirableExpandButton.setVisibility(View.VISIBLE);
+				mMostDesirableList = new ArrayList<Item>();
+				fillList(result, mMostDesirableList);
 			}
 			populateGrid(tType);
 		}
@@ -290,7 +320,12 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			mCallback.onFeatured(K5Api.FEED_NEWEST);
 		} else if (v == mMostDesirableExpandButton) {
 			mCallback.onFeatured(K5Api.FEED_MOST_DESIRABLE);
+		} else if (v == mNewestAgainButton) {
+			new GetFeaturedTask(getActivity(), K5Api.FEED_NEWEST).execute();
+		} else if (v == mMostDesirableAgainButton) {
+			new GetFeaturedTask(getActivity(), K5Api.FEED_MOST_DESIRABLE).execute();
 		}
+
 		// else if (v == mSelectedExpandButton) {
 		// mCallback.onFeatured(K5Api.FEED_SELECTED);
 		// }
