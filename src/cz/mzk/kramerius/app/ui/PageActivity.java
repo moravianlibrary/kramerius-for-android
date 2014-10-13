@@ -660,19 +660,16 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			mBottomPanel.setVisibility(View.GONE);
 			mTopPanel.setVisibility(View.GONE);
 			mSystemBarTintManager.setStatusBarTintEnabled(false);
-			Configuration config = getResources().getConfiguration();
-			if (config.smallestScreenWidthDp < 720) {
-				ScreenUtil.fullscreenInsets(this, mContainer);
-			}
+			ScreenUtil.fullscreenInsets(this, mMenuContainer);
+			ScreenUtil.fullscreenInsets(this, mContainer);
 		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mBottomPanel.setVisibility(View.VISIBLE);
 			mTopPanel.setVisibility(View.VISIBLE);
 			mSystemBarTintManager.setStatusBarTintEnabled(true);
-			Configuration config = getResources().getConfiguration();
-			if (config.smallestScreenWidthDp < 720) {
-				ScreenUtil.setInsets(this, mContainer, false);
-			}
+			//Configuration config = getResources().getConfiguration();
+			ScreenUtil.setInsets(this, mMenuContainer, false);
+			ScreenUtil.setInsets(this, mContainer, false);
 		}
 	}
 

@@ -48,13 +48,6 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_viewer_menu, container, false);
-		Configuration config = getResources().getConfiguration();
-		if (config.smallestScreenWidthDp >= 720) {
-			// mDevice = TABLET;
-			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		} else {
-			ScreenUtil.setInsets(getActivity(), view, false);
-		}
 		mSettings = view.findViewById(R.id.menu_settings);
 		mSettings.setOnClickListener(this);
 		mHome = view.findViewById(R.id.menu_home);
@@ -141,8 +134,6 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		}
 	}
 	
-	
-	
-	
+
 
 }

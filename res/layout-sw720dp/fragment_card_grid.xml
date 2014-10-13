@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,4 +18,4 @@
         android:verticalSpacing="3dp"
         card:list_card_layout_resourceID="@layout/list_card" />
 
-</LinearLayout>
+</RelativeLayout>
