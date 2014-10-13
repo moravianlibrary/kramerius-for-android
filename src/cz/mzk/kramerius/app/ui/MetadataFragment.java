@@ -25,6 +25,7 @@ import android.widget.TextView;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract;
@@ -38,6 +39,7 @@ import cz.mzk.kramerius.app.metadata.Part;
 import cz.mzk.kramerius.app.metadata.PhysicalDescription;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
+import cz.mzk.kramerius.app.ui.FeaturedFragment.GetFeaturedTask;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 
@@ -101,7 +103,7 @@ public class MetadataFragment extends BaseFragment {
 
 	public void assignPid(String pid) {
 		mPid = pid;
-		new getMetadataTask(getActivity()).execute(pid);
+		new getMetadataTask(getActivity()).execute(mPid);
 	}
 
 	private void populateTopLevelMetadata(Metadata metadata, String model, boolean expandable) {
@@ -596,11 +598,18 @@ public class MetadataFragment extends BaseFragment {
 
 		@Override
 		protected void onPostExecute(List<Pair<Metadata, String>> hierachyMetadata) {
-			if (hierachyMetadata != null && getActivity() != null) {
-				populateHierarchy(hierachyMetadata);
-			}
 			stopLoaderAnimation();
+			if (hierachyMetadata == null || getActivity() == null) {
+				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+					@Override
+					public void onWarningButtonClicked() {
+						new getMetadataTask(getActivity()).execute(mPid);
+					}
+				});
+				return;
+			}
 			mContainer.setVisibility(View.VISIBLE);
+			populateHierarchy(hierachyMetadata);
 		}
 	}
 
