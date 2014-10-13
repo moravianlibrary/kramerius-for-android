@@ -13,7 +13,7 @@ import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 public class MessageUtils {
 
 	public static void inflateMessage(Context context, final ViewGroup vg, String message, String buttonText,
-			final onWarningButtonClickedListener callback) {
+			final onWarningButtonClickedListener callback, final boolean hideAfterClick) {
 		if (vg == null || context == null) {
 			return;
 		}
@@ -30,7 +30,9 @@ public class MessageUtils {
 
 				@Override
 				public void onClick(View v) {
-					vg.removeView(view);
+					if(hideAfterClick) {
+						vg.removeView(view);
+					}
 					callback.onWarningButtonClicked();
 				}
 			});

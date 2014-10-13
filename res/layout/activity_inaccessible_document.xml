@@ -1,0 +1,72 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"            
+            android:text="Tento dokument není veřejně přístupný."
+            android:textColor="@color/dark_grey"
+            android:textSize="19dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Proč je dokument neveřejný?"
+            android:textColor="@color/dark_grey"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"            
+            android:layout_marginBottom="5dp"
+            android:text="Tento dokument si nemůžete volně prohlížet kvůli autorským právům. Autorský zákon připouští zpřístupnění děl 70 let po smrti všech autorů (včetně překladatele, ilustrátora atd.) a 50 let od vydání díla."
+            android:textColor="@color/grey"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Jak se k dokumentu dostat?"
+            android:textColor="@color/dark_grey"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"            
+            android:layout_marginBottom="5dp"
+            android:text="Tady bude nějaký vhodný text, který nebude závislý na konkrétním Krameriovi. Asi si pro každého Kraméria držet název instituce a uživatele pak nasměrovat do této instituce."
+            android:textColor="@color/grey"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Myslíte si, že by dokument měl být veřejně přístupný?"
+            android:textColor="@color/dark_grey"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Pokud se Vám zdá, že by dokument měl být přístupný nebo máte jakýkoliv jiný dotaz, ......... až to bude podporovat API, tak tlačitko &apos;Požádat o zpřístupnění&apos;. Do té doby si budem držet pro každého Kraméria kontaktní email, užívatel pak bude přesměrován do mailoveho klienta s předvypněným emailem."
+            android:textColor="@color/grey"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+</ScrollView>

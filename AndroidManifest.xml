@@ -91,6 +91,10 @@
             android:name="cz.mzk.kramerius.app.ui.SettingsActivity"
             android:label="@string/settings_title" >
         </activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.InaccessibleDocumentActivity"
+            android:label="@string/inaccessible_document_title" >
+        </activity>
 
         <provider
             android:name=".data.KrameriusProvider"

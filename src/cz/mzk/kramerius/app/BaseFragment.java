@@ -43,13 +43,18 @@ public abstract class BaseFragment extends Fragment {
 		root.addView(mLoaderContainer);
 	}
 
-	protected void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback) {
+	protected void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback,
+			boolean hideAfterClick) {
 		final ViewGroup vg = (ViewGroup) getView();
 		Context c = getActivity();
 		if (vg == null || c == null) {
 			return;
 		}
-		MessageUtils.inflateMessage(c, vg, message, buttonText, callback);
+		MessageUtils.inflateMessage(c, vg, message, buttonText, callback, hideAfterClick);
+	}
+
+	protected void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback) {
+		showWarningMessage(message, buttonText, callback, true);
 	}
 
 	public interface onWarningButtonClickedListener {

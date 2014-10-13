@@ -60,6 +60,9 @@
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
     
+    
+    <string name="inaccessible_document_title">Veřejně nepřístupný dokument</string>
+    
     <string name="recent_title">Nedávno otevřené</string>
     
     <string name="search_title">Hledání</string>

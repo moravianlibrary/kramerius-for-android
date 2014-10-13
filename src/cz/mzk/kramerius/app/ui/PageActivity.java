@@ -17,7 +17,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,15 +30,14 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.BaseActivity;
-import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
+import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
@@ -47,7 +45,6 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
-import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.GetVirtualCollectionsTask;
 import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
@@ -373,7 +370,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 					public void onWarningButtonClicked() {
 						new LoadPagesTask(PageActivity.this).execute(mPid);
 					}
-				});
+				}, true);
 				return;
 			}
 
@@ -584,10 +581,10 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		loadPage();
 	}
 
-	private void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback) {
+	private void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback, boolean hideAfterClick) {
 		mMessageContainer.removeAllViews();
 		mMessageContainer.setVisibility(View.VISIBLE);
-		MessageUtils.inflateMessage(this, mMessageContainer, message, buttonText, callback);
+		MessageUtils.inflateMessage(this, mMessageContainer, message, buttonText, callback, hideAfterClick);
 	}
 
 	private void clearMessages() {
@@ -602,13 +599,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	public void onAccessDenied() {
-		showWarningMessage("Stránka dokumentu není veřejně přístupná.", "Více informací", new onWarningButtonClickedListener() {
+		showWarningMessage("Stránka dokumentu není veřejně přístupná.", "Více informací",
+				new onWarningButtonClickedListener() {
 
 			@Override
 			public void onWarningButtonClicked() {
-				// TODO
+				showInaccessibleDocumentActivity();
 			}
-		});
+		}, false);
+	}
+	
+	private void showInaccessibleDocumentActivity() {
+		Intent intent = new Intent(PageActivity.this, InaccessibleDocumentActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
@@ -619,7 +622,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			public void onWarningButtonClicked() {
 				loadPage();
 			}
-		});
+		}, true);
 		return;
 	}
 
@@ -631,7 +634,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			public void onWarningButtonClicked() {
 				loadPage();
 			}
-		});
+		}, true);
 		return;
 	}
 
