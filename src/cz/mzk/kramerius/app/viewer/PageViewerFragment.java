@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -98,7 +99,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 			@Override
 			public boolean onSingleTapConfirmed(MotionEvent e) {
-				mEventListener.onSingleTap(e.getX(), e.getY());
+				mEventListener.onSingleTap(e.getX(), e.getY(), null);
 				return true;
 			}
 		});
@@ -203,8 +204,8 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		hideViews();
 		mTiledImageView.setVisibility(View.VISIBLE);
 	}
-	
-	@Override	
+
+	@Override
 	public void setBackgroundColor(int color) {
 		mTiledImageView.setBackgroundColor(color);
 		mImageView.setBackgroundColor(color);
@@ -299,9 +300,9 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	}
 
 	@Override
-	public void onSingleTap(float x, float y) {
+	public void onSingleTap(float x, float y, Rect boundingBox) {
 		if (mEventListener != null) {
-			mEventListener.onSingleTap(x, y);
+			mEventListener.onSingleTap(x, y, boundingBox);
 		}
 	}
 

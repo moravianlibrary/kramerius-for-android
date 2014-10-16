@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.viewer;
 
 import java.util.List;
 
+import android.graphics.Rect;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 
 /**
@@ -74,16 +75,13 @@ public interface IPageViewerFragment {
 	 */
 	public void setViewMode(ViewMode mode);
 
-	
-	
 	/**
 	 * Sets background color.
 	 * 
 	 * @param color
 	 */
 	public abstract void setBackgroundColor(int color);
-	
-	
+
 	public interface EventListener {
 		/**
 		 * Called after fragment populated by populate().
@@ -109,8 +107,10 @@ public interface IPageViewerFragment {
 		 *            X coordinates of tap.
 		 * @param y
 		 *            Y coordinates of tap.
+		 * @param boundingBox
+		 *            area containing the image or null
 		 */
-		public void onSingleTap(float x, float y);
+		public void onSingleTap(float x, float y, Rect boundingBox);
 
 	}
 

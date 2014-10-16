@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -581,7 +582,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		loadPage();
 	}
 
-	private void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback, boolean hideAfterClick) {
+	private void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback,
+			boolean hideAfterClick) {
 		mMessageContainer.removeAllViews();
 		mMessageContainer.setVisibility(View.VISIBLE);
 		MessageUtils.inflateMessage(this, mMessageContainer, message, buttonText, callback, hideAfterClick);
@@ -602,13 +604,13 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		showWarningMessage("Stránka dokumentu není veřejně přístupná.", "Více informací",
 				new onWarningButtonClickedListener() {
 
-			@Override
-			public void onWarningButtonClicked() {
-				showInaccessibleDocumentActivity();
-			}
-		}, false);
+					@Override
+					public void onWarningButtonClicked() {
+						showInaccessibleDocumentActivity();
+					}
+				}, false);
 	}
-	
+
 	private void showInaccessibleDocumentActivity() {
 		Intent intent = new Intent(PageActivity.this, InaccessibleDocumentActivity.class);
 		startActivity(intent);
@@ -639,16 +641,32 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 	}
 
 	@Override
-	public void onSingleTap(float x, float y) {
-		float w = x / mContainer.getWidth();
-		float h = y / mContainer.getHeight();
-		if (w < 0.15 || h < 0.15) {
-			previousPage();
-		} else if (w > 0.85 || h > 0.85) {
-			nextPage();
+	public void onSingleTap(float x, float y, Rect boundingBox) {
+		float borderRatio = 0.15f;
+		float openingBorderMax = borderRatio;
+		float closingBorderMin = 1.0f - borderRatio;
+		if (boundingBox != null) {
+			float w = (x - boundingBox.left) / boundingBox.width();
+			float h = (y - boundingBox.top) / boundingBox.height();
+			if (x < boundingBox.left || y < boundingBox.top || w < openingBorderMax || h < openingBorderMax) {
+				previousPage();
+			} else if (x > boundingBox.right || y > boundingBox.bottom || w > closingBorderMin || h > closingBorderMin) {
+				nextPage();
+			} else {
+				mFullscreen = !mFullscreen;
+				setFullscreen(mFullscreen);
+			}
 		} else {
-			mFullscreen = !mFullscreen;
-			setFullscreen(mFullscreen);
+			float w = x / mContainer.getWidth();
+			float h = y / mContainer.getHeight();
+			if (w < openingBorderMax || h < openingBorderMax) {
+				previousPage();
+			} else if (w > closingBorderMin || h > closingBorderMin) {
+				nextPage();
+			} else {
+				mFullscreen = !mFullscreen;
+				setFullscreen(mFullscreen);
+			}
 		}
 	}
 
@@ -667,7 +685,7 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			mBottomPanel.setVisibility(View.VISIBLE);
 			mTopPanel.setVisibility(View.VISIBLE);
 			mSystemBarTintManager.setStatusBarTintEnabled(true);
-			//Configuration config = getResources().getConfiguration();
+			// Configuration config = getResources().getConfiguration();
 			ScreenUtil.setInsets(this, mMenuContainer, false);
 			ScreenUtil.setInsets(this, mContainer, false);
 		}
@@ -732,14 +750,14 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		return false;
 	}
 
-//	private boolean openSlidingMenu() {
-//		if (mDrawerLayout != null) {
-//			mMenuContainer.setVisibility(View.VISIBLE);
-//			mDrawerLayout.openDrawer(mMenuContainer);
-//			return true;
-//		}
-//		return false;
-//	}
+	// private boolean openSlidingMenu() {
+	// if (mDrawerLayout != null) {
+	// mMenuContainer.setVisibility(View.VISIBLE);
+	// mDrawerLayout.openDrawer(mMenuContainer);
+	// return true;
+	// }
+	// return false;
+	// }
 
 	private boolean toggleSlidingMenu() {
 		if (mDrawerLayout == null) {
