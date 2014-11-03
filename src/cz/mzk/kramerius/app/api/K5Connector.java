@@ -44,12 +44,6 @@ public class K5Connector {
 	private K5Connector() {
 
 	}
-	
-//	public void stopExecution() {
-//		if(mClient != null) {
-//			mClient.getConnectionManager().shutdown();
-//		}
-//	}
 
 	public static K5Connector getInstance() {
 		if (INSTANCE == null) {
@@ -207,22 +201,22 @@ public class K5Connector {
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
-			JSONArray data = json.getJSONArray("data");
+			JSONArray data = json.getJSONArray(K5Constants.DATA);
 			for (int i = 0; i < data.length(); i++) {
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
-				item.setPid(jsonItem.optString("pid"));
-				item.setModel(jsonItem.optString("model"));
-				item.setIssn(jsonItem.optString("issn"));
-				item.setDate(jsonItem.optString("date"));
-				item.setTitle(jsonItem.optString("title"));
-				JSONArray authors = jsonItem.optJSONArray("autor");
+				item.setPid(jsonItem.optString(K5Constants.PID));
+				item.setModel(jsonItem.optString(K5Constants.MODEL));
+				item.setIssn(jsonItem.optString(K5Constants.ISSN));
+				item.setDate(jsonItem.optString(K5Constants.DATA));
+				item.setTitle(jsonItem.optString(K5Constants.TITLE));
+				JSONArray authors = jsonItem.optJSONArray(K5Constants.AUTHOR);
 				if (authors != null && authors.length() > 0) {
 					item.setAuthor(authors.optString(0));
 				}
-				item.setRootTitle(jsonItem.optString("root_title"));
-				item.setRootPid(jsonItem.optString("root_pid"));
-				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
+				item.setRootTitle(jsonItem.optString(K5Constants.ROOT_TITLE));
+				item.setRootPid(jsonItem.optString(K5Constants.ROOT_PID));
+				item.setPolicyPrivate(K5Constants.POLICY_PRIVATE.equals(jsonItem.optString(K5Constants.POLICY)));
 				list.add(item);
 			}
 			return list;
@@ -249,9 +243,10 @@ public class K5Connector {
 			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
 			List<Pair<String, String>> hierarchy = new ArrayList<Pair<String, String>>();
 
-			JSONArray a = jsonItem.optJSONArray("context");
+			JSONArray a = jsonItem.optJSONArray(K5Constants.CONTEXT);
 			if (a == null) {
-				hierarchy.add(new Pair<String, String>(jsonItem.optString("pid"), jsonItem.optString("model")));
+				hierarchy.add(new Pair<String, String>(jsonItem.optString(K5Constants.PID), jsonItem
+						.optString(K5Constants.MODEL)));
 			} else {
 				if (a.length() == 1 && a.get(0) instanceof JSONArray) {
 					a = (JSONArray) a.get(0);
@@ -259,7 +254,8 @@ public class K5Connector {
 				for (int i = 0; i < a.length(); i++) {
 					JSONObject c = a.getJSONObject(i);
 					if (c != null) {
-						hierarchy.add(new Pair<String, String>(c.optString("pid"), c.optString("model")));
+						hierarchy.add(new Pair<String, String>(c.optString(K5Constants.PID), c
+								.optString(K5Constants.MODEL)));
 					}
 				}
 			}
@@ -287,29 +283,29 @@ public class K5Connector {
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
 			Item item = new Item();
-			item.setPid(jsonItem.optString("pid"));
-			item.setModel(jsonItem.optString("model"));
-			item.setIssn(jsonItem.optString("issn"));
-			item.setDate(jsonItem.optString("date"));
-			item.setTitle(jsonItem.optString("title"));
-			item.setRootTitle(jsonItem.optString("root_title"));
-			JSONObject pdf = jsonItem.optJSONObject("pdf");
+			item.setPid(jsonItem.optString(K5Constants.PID));
+			item.setModel(jsonItem.optString(K5Constants.MODEL));
+			item.setIssn(jsonItem.optString(K5Constants.ISSN));
+			item.setDate(jsonItem.optString(K5Constants.DATE));
+			item.setTitle(jsonItem.optString(K5Constants.TITLE));
+			item.setRootTitle(jsonItem.optString(K5Constants.ROOT_TITLE));
+			JSONObject pdf = jsonItem.optJSONObject(K5Constants.PDF);
 			if (pdf != null) {
-				String pdfUrl = pdf.optString("url");
+				String pdfUrl = pdf.optString(K5Constants.PDF_URL);
 				if (pdfUrl != null) {
 					item.setPdf(pdfUrl);
 				}
 			}
-			item.setRootPid(jsonItem.optString("root_pid"));
-			item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
+			item.setRootPid(jsonItem.optString(K5Constants.ROOT_PID));
+			item.setPolicyPrivate(K5Constants.POLICY_PRIVATE.equals(jsonItem.optString(K5Constants.POLICY)));
 
-			JSONObject details = jsonItem.optJSONObject("details");
+			JSONObject details = jsonItem.optJSONObject(K5Constants.DETAILS);
 			if (details != null) {
-				item.setYear(details.optString("year"));
-				item.setVolumeNumber(details.optString("volumeNumber"));
-				item.setIssueNumber(details.optString("issueNumber"));
-				item.setPeriodicalItemDate(details.optString("date"));
-				item.setPartNumber(details.optString("partNumber"));
+				item.setYear(details.optString(K5Constants.DETAILS_YEAR));
+				item.setVolumeNumber(details.optString(K5Constants.DETAILS_VOLUME_NUMBER));
+				item.setIssueNumber(details.optString(K5Constants.DETAILS_ISSUE_NUMBER));
+				item.setPeriodicalItemDate(details.optString(K5Constants.DETAILS_DATE));
+				item.setPartNumber(details.optString(K5Constants.DETAILS_PART_NUMBER));
 			}
 
 			return item;
@@ -342,21 +338,21 @@ public class K5Connector {
 			for (int i = 0; i < data.length(); i++) {
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
-				item.setPid(jsonItem.optString("pid"));
-				item.setModel(jsonItem.optString("model"));
-				item.setIssn(jsonItem.optString("issn"));
-				item.setDate(jsonItem.optString("date"));
-				item.setTitle(jsonItem.optString("title"));
-				item.setRootTitle(jsonItem.optString("root_title"));
-				item.setRootPid(jsonItem.optString("root_pid"));
-				item.setPolicyPrivate("private".equals(jsonItem.optString("policy")));
-				JSONObject details = jsonItem.optJSONObject("details");
+				item.setPid(jsonItem.optString(K5Constants.PID));
+				item.setModel(jsonItem.optString(K5Constants.MODEL));
+				item.setIssn(jsonItem.optString(K5Constants.ISSN));
+				item.setDate(jsonItem.optString(K5Constants.DATE));
+				item.setTitle(jsonItem.optString(K5Constants.TITLE));
+				item.setRootTitle(jsonItem.optString(K5Constants.ROOT_TITLE));
+				item.setRootPid(jsonItem.optString(K5Constants.ROOT_PID));
+				item.setPolicyPrivate(K5Constants.POLICY_PRIVATE.equals(jsonItem.optString(K5Constants.POLICY)));
+				JSONObject details = jsonItem.optJSONObject(K5Constants.DETAILS);
 				if (details != null) {
-					item.setYear(details.optString("year"));
-					item.setVolumeNumber(details.optString("volumeNumber"));
-					item.setIssueNumber(details.optString("issueNumber"));
-					item.setPeriodicalItemDate(details.optString("date"));
-					item.setPartNumber(details.optString("partNumber"));
+					item.setYear(details.optString(K5Constants.DETAILS_YEAR));
+					item.setVolumeNumber(details.optString(K5Constants.DETAILS_VOLUME_NUMBER));
+					item.setIssueNumber(details.optString(K5Constants.DETAILS_ISSUE_NUMBER));
+					item.setPeriodicalItemDate(details.optString(K5Constants.DETAILS_DATE));
+					item.setPartNumber(details.optString(K5Constants.DETAILS_PART_NUMBER));
 				}
 				list.add(item);
 			}
@@ -385,8 +381,8 @@ public class K5Connector {
 			for (int i = 0; i < data.length(); i++) {
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
-				item.setPid(jsonItem.optString("pid"));
-				item.setTitle(jsonItem.getJSONObject("descs").optString("cs"));
+				item.setPid(jsonItem.optString(K5Constants.PID));
+				item.setTitle(jsonItem.getJSONObject(K5Constants.VC_DESCS).optString(K5Constants.LANG_CS));
 				list.add(item);
 			}
 			return list;
@@ -451,13 +447,10 @@ public class K5Connector {
 		try {
 			String requestPath = K5Api.getSearchPath(context, query, start, rows);
 			HttpGet request = new HttpGet(requestPath);
-			Log.d(TAG, "query:" + requestPath);
+			// Log.d(TAG, "query:" + requestPath);
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
-
-			// Log.d(TAG, "result:" + jsonString);
-
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
 			if (responseJson == null) {
@@ -487,8 +480,6 @@ public class K5Connector {
 					item.setAuthor(authors.optString(0));
 				}
 				item.setPolicyPrivate("private".equals(itemJson.optString("dostupnost")));
-				// item.setModel(ModelUtil.MONOGRAPH);
-
 				JSONArray models = itemJson.optJSONArray("document_type");
 				if (models != null && models.length() > 0) {
 					item.setModel(models.optString(0));

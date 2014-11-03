@@ -55,6 +55,8 @@
                 android:background="?attr/colorPrimary"
                 android:gravity="center_vertical"
                 android:minHeight="@dimen/toolbar_height"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:titleTextAppearance="@style/ActionBar.TitleText" />
 
             <!--
@@ -197,10 +199,10 @@
 
         <FrameLayout
             android:id="@+id/viewer_menu"
-                android:layout_marginTop="50dp"
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:layout_marginTop="50dp"
             android:visibility="visible" />
     </android.support.v4.widget.DrawerLayout>
 
