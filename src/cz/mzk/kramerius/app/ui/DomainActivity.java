@@ -11,6 +11,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -37,10 +38,13 @@ public class DomainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_domain);
 
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setTitle("Zdroj dat");
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setTitle(R.string.domain_title);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		
 		mList = (CardListView) findViewById(R.id.card_list);
 		populate();
 	}
@@ -90,9 +94,9 @@ public class DomainActivity extends BaseActivity {
 		// list.add(new Domain("Knihovna Akademie věd ČR",
 		// "Digitální knihovna KNAV", "http", "cdk-test.lib.cas.cz",
 		// R.drawable.logo_knav));
-		// list.add(new Domain("Národní technická knihovna",
-		// "Digitální knihovna NTK", "http", "kramerius.ntk.cz",
-		// R.drawable.logo_ntk));
+		 list.add(new Domain("Národní technická knihovna",
+		 "Digitální knihovna NTK", "http", "kramerius.techlib.cz",
+		 R.drawable.logo_ntk));
 		list.add(new Domain("Moravská zemská knihovna", "Docker MZK", "http", "docker.mzk.cz", R.drawable.logo_mzk));
 		// list.add(new Domain("Moravská zemská knihovna", "Test MZK", "http",
 		// "krameriustest.mzk.cz", R.drawable.logo_mzk));

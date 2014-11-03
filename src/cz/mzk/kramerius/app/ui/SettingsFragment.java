@@ -29,7 +29,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		if (view != null) {
 			Configuration config = getResources().getConfiguration();
 			if (config.smallestScreenWidthDp < 720) {
-				ScreenUtil.setInsets(getActivity(), view);
+		//		ScreenUtil.setInsets(getActivity(), view);
 			}			
 		}
 

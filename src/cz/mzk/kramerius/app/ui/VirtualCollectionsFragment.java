@@ -53,7 +53,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_virtual_collections, container, false);
 		Configuration config = getResources().getConfiguration();
 		if (config.smallestScreenWidthDp < 720) {
-			ScreenUtil.setInsets(getActivity(), view);
+	//	ScreenUtil.setInsets(getActivity(), view);
 		}
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 

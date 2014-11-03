@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -48,10 +49,13 @@ public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuS
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sound_recording);
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setTitle("K5 - Digitální knihovna");
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		
 		mCardGrid = (CardGridView) findViewById(R.id.card_grid);
 		String pid = getIntent().getStringExtra(EXTRA_PID);
 		mLoader = findViewById(R.id.loader);
@@ -104,7 +108,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuS
 			}
 			Item parent = result.getParent();
 			List<Item> children = result.getChildren();
-			getActionBar().setTitle(TextUtil.shortenforActionBar(parent.getTitle()));
+			getSupportActionBar().setTitle(TextUtil.shortenforActionBar(parent.getTitle()));
 			if (children == null) {
 				return;
 			}
@@ -120,7 +124,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuS
 			card.setOnClickListener(new OnCardClickListener() {
 				@Override
 				public void onClick(Card card, View view) {
-					openSoundUnit(((GridCard) card).getItem());
+					openSoundUnit(((SoundUnitCard) card).getItem());
 				}
 			});
 			cards.add(card);

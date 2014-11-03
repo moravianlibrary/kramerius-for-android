@@ -44,7 +44,7 @@ public class LoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
-		ScreenUtil.setInsets(getActivity(), view);
+	//	ScreenUtil.setInsets(getActivity(), view);
 		mLogin = (EditText) view.findViewById(R.id.login_userName);
 		mPassword = (EditText) view.findViewById(R.id.login_userPassword);
 		mConfirm = (Button) view.findViewById(R.id.login_confirm);

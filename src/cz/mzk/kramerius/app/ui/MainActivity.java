@@ -9,8 +9,11 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +50,8 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	private int mDrawerTitle;
 	private String mTitle;
 	private MainFeaturedFragment mMainFragment;
-	
+
+	private Toolbar mToolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,36 +77,50 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 		mTitle = getString(R.string.main_title);
 		mDrawerTitle = R.string.main_menu_title;
-		getActionBar().setHomeButtonEnabled(true);
 
 		mMenuFragment = new MainMenuFragment();
 		mMenuFragment.setCallback(this);
 		getFragmentManager().beginTransaction().replace(R.id.main_menu, mMenuFragment).commit();
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
+
+		mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+		setSupportActionBar(mToolbar);
+		getSupportActionBar().setTitle("Digitální knihovna");
+
 		if (getDevice() == TABLET) {
-			getActionBar().setDisplayHomeAsUpEnabled(false);
+			//
 		} else {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
 			mMenuContainer = (FrameLayout) findViewById(R.id.main_menu);
 			mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer,
-					R.string.drawer_open, R.string.drawer_close) {
+
+			mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+
+					if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+						mDrawerLayout.closeDrawer(Gravity.START);
+
+					} else {
+						mDrawerLayout.openDrawer(Gravity.START);
+					}
+				}
+			});
+
+			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
 				public void onDrawerClosed(View view) {
-					super.onDrawerClosed(view);
-					getActionBar().setTitle(mTitle);
-					invalidateOptionsMenu();
+					getSupportActionBar().setTitle(mTitle);
+					supportInvalidateOptionsMenu();
 				}
 
 				public void onDrawerOpened(View drawerView) {
-					super.onDrawerOpened(drawerView);
-					getActionBar().setTitle(mDrawerTitle);
-					invalidateOptionsMenu();
+					getSupportActionBar().setTitle(mDrawerTitle);
+					supportInvalidateOptionsMenu();
+
 				}
 			};
+
 			mDrawerLayout.setDrawerListener(mDrawerToggle);
-			mDrawerLayout.setDrawerListener(mDrawerToggle);
+
 		}
 
 		onHome();
@@ -120,7 +138,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	private void refreshTitle(String title) {
 		mTitle = title;
-		getActionBar().setTitle(title);
+		mToolbar.setTitle(title);
 	}
 
 	@Override
@@ -194,18 +212,17 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	private void changeFragment(Fragment fragment, boolean main, int titleRes) {
 		changeFragment(fragment, main, getString(titleRes));
 	}
-	
+
 	private void changeFragment(Fragment fragment, boolean main, String title) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (isTablet()) {
 			ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_left);
 		}
 		ft.replace(R.id.main_content, fragment).commit();
-		mMainFragmentActive = main;		
+		mMainFragmentActive = main;
 		refreshTitle(title);
 		closeSlidingMenu();
-	}	
-	
+	}
 
 	@Override
 	public void onFeatured(int type) {
@@ -213,10 +230,10 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		fragment.setOnItemSelectedListener(this);
 		mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_NONE);
 		switch (type) {
-		case K5Api.FEED_MOST_DESIRABLE:		
+		case K5Api.FEED_MOST_DESIRABLE:
 			changeFragment(fragment, false, R.string.most_desirable_title);
 			break;
-		case K5Api.FEED_NEWEST:			
+		case K5Api.FEED_NEWEST:
 			changeFragment(fragment, false, R.string.newest_title);
 			break;
 		case K5Api.FEED_SELECTED:
@@ -229,7 +246,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	public void onBackPressed() {
 		if (closeSlidingMenu()) {
 			return;
-		}		
+		}
 		if (!mMainFragmentActive) {
 			onHome();
 			mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_HOME);
@@ -284,7 +301,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	public void onSearch() {
 		SearchFragment fragment = new SearchFragment();
 		fragment.setOnSearchListener(this);
-		changeFragment(fragment, false, R.string.search_title);			
+		changeFragment(fragment, false, R.string.search_title);
 	}
 
 	@Override
@@ -315,9 +332,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -358,8 +373,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		try {
 			startActivity(Intent.createChooser(i, getString(R.string.feedback_chooseEmailClient)));
 		} catch (android.content.ActivityNotFoundException ex) {
-			Toast.makeText(MainActivity.this, getString(R.string.feedback_noEmailClient), Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(MainActivity.this, getString(R.string.feedback_noEmailClient), Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -367,9 +381,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	public void onRecent() {
 		HistoryFragment fragment = new HistoryFragment();
 		fragment.setOnItemSelectedListener(this);
-		changeFragment(fragment, false, R.string.recent_title);	
+		changeFragment(fragment, false, R.string.recent_title);
 	}
-
-	
 
 }

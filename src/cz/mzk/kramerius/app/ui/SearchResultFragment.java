@@ -170,15 +170,14 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			if (shownNum > mNumFound) {
 				shownNum = mNumFound;
 			}
-			getActivity().getActionBar().setSubtitle(shownNum + " z " + mNumFound);
+			
+			getSupportActionBar().setSubtitle(shownNum + " z " + mNumFound);
 		}
 	}
 
 	private void populateGrid(List<Item> items) {
-
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for (Item item : items) {
-
 			GridCard card = new GridCard(getActivity(), item, mOptions);
 			card.setOnPopupMenuSelectedListener(this);
 			card.setOnClickListener(new OnCardClickListener() {
@@ -200,7 +199,6 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			mAdapter.addAll(cards);
 			mCardGridView.setSelection(index);
 		}
-
 	}
 
 	@Override
@@ -242,7 +240,6 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	@Override
 	public void onPopupShareSelectd(Item item) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

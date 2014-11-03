@@ -48,7 +48,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 			// mDevice = TABLET;
 			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		} else {
-			ScreenUtil.setInsets(getActivity(), view);
+		//	ScreenUtil.setInsets(getActivity(), view);
 		}
 		mUser = (TextView) view.findViewById(R.id.menu_user);
 		mUser.setOnClickListener(this);

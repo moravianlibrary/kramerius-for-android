@@ -13,6 +13,7 @@
         android:gravity="center_vertical"
         android:padding="10dp" >
 
+        
         <CheckBox
             android:id="@+id/search_check_public"
             android:layout_width="wrap_content"
@@ -30,16 +31,31 @@
             android:gravity="center"
             android:text="Přidat filtr"
             android:textColor="@color/white"
-            android:textSize="17dp" />
+            android:textSize="17dp"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <it.gmariotti.cardslib.library.view.CardListView
         android:id="@+id/card_list"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/search_bottomPanel"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="15dp"
         android:listSelector="@android:color/transparent"
         card:list_card_layout_resourceID="@layout/list_card_search" />
+
+    <ImageView
+        android:id="@+id/search_go"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/img_hub"
+        android:padding="25dp"
+        android:src="@drawable/img_search" />
 
 </RelativeLayout>

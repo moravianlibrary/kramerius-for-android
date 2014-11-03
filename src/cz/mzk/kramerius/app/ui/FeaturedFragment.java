@@ -71,7 +71,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		if (isPhone()) {
-			ScreenUtil.setInsets(getActivity(), view);
+	//		ScreenUtil.setInsets(getActivity(), view);
 		}
 		inflateLoader(container, inflater);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);

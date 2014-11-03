@@ -3,7 +3,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="TypographyDashes">
   <!--Replace placeholder ID with your tracking ID-->
-  <string name="ga_trackingId">UA-54422702-1</string>
+  <string name="ga_trackingId">UA-54422702-2</string>
 
   <!--Enable automatic activity tracking-->
   <bool name="ga_autoActivityTracking">true</bool>
@@ -20,7 +20,6 @@
   <string name="cz.mzk.kramerius.app.ui.PeriodicalActivity">Periodical</string>
   <string name="cz.mzk.kramerius.app.ui.SoundRecordingActivity">Sound Recording</string>
   <string name="cz.mzk.kramerius.app.ui.SoundUnitActivity">Sound Unit</string>
-  
   
   
   

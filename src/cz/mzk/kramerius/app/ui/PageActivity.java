@@ -16,8 +16,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,7 +57,7 @@ import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
-public class PageActivity extends Activity implements OnClickListener, OnSeekBarChangeListener, OnPageNumberSelected,
+public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener, OnPageNumberSelected,
 		ViewerMenuListener, EventListener {
 
 	private static final String EXTRA_TITLE = "extra_title";
@@ -80,11 +84,11 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	private boolean mFullscreen = true;
 	private View mBottomPanel;
-	private View mTopPanel;
-	private TextView mTitleView;
-	private TextView mTitle1View;
-	private TextView mTitle2View;
-	private View mComplextTitleView;
+//	private View mTopPanel;
+//	private TextView mTitleView;
+//	private TextView mTitle1View;
+//	private TextView mTitle2View;
+//	private View mComplextTitleView;
 
 	private SeekBar mSeekBar;
 	private int mLastProgress;
@@ -110,6 +114,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	private FrameLayout mMenuContainer;
 	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private Toolbar mToolbar;
 
 	private FrameLayout mViewerWrapper;
 	private FrameLayout mMessageContainer;
@@ -118,8 +124,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+	//	supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+		super.onCreate(savedInstanceState);		
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		boolean keepScreenOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				getString(R.string.pref_keep_screen_on_key),
@@ -134,8 +140,8 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 		setContentView(R.layout.activity_page);
 
-		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+//		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
+//		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
 		mMessageContainer = (FrameLayout) findViewById(R.id.page_message_container);
 
@@ -172,20 +178,20 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		mLoader = findViewById(R.id.page_loader);
 		mBottomPanel = findViewById(R.id.page_bottomPanel);
 		mBottomPanel.setVisibility(View.GONE);
-		mTopPanel = findViewById(R.id.page_topPanel);
-		mTopPanel.setVisibility(View.GONE);
-		mTitleView = (TextView) findViewById(R.id.page_title);
-		mTitle1View = (TextView) findViewById(R.id.page_complex_title1);
-		mTitle2View = (TextView) findViewById(R.id.page_complex_title2);
-		mComplextTitleView = findViewById(R.id.page_complex_title);
+//		mTopPanel = findViewById(R.id.page_topPanel);
+//		mTopPanel.setVisibility(View.GONE);
+//		mTitleView = (TextView) findViewById(R.id.page_title);
+//		mTitle1View = (TextView) findViewById(R.id.page_complex_title1);
+//		mTitle2View = (TextView) findViewById(R.id.page_complex_title2);
+//		mComplextTitleView = findViewById(R.id.page_complex_title);
 		mSeekPosition = (TextView) findViewById(R.id.page_seek_position);
 		mSeekPosition.setVisibility(View.GONE);
 		mSeekBar = (SeekBar) findViewById(R.id.page_seekBar);
 		mSeekBar.setOnSeekBarChangeListener(this);
 		mListButton = findViewById(R.id.page_list);
 		mListButton.setOnClickListener(this);
-		mMetadataButton = findViewById(R.id.page_metadata);
-		mMetadataButton.setOnClickListener(this);
+//		mMetadataButton = findViewById(R.id.page_metadata);
+		//mMetadataButton.setOnClickListener(this);
 
 		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
 		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
@@ -194,14 +200,61 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
 		mListShown = false;
 
-		findViewById(R.id.page_title_container).setOnClickListener(new View.OnClickListener() {
+//		findViewById(R.id.page_title_container).setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				toggleSlidingMenu();
+//			}
+//		});
 
+		
+		
+		
+		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		mToolbar.setVisibility(View.GONE);
+		setSupportActionBar(mToolbar);
+		mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				toggleSlidingMenu();
+			public void onClick(View view) {
+
+//				if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+//					mDrawerLayout.closeDrawer(Gravity.START);
+//
+//				} else {
+//					mDrawerLayout.openDrawer(Gravity.START);
+//				}
+				if (mDrawerLayout.isDrawerOpen(mMenuContainer)) {
+					mDrawerLayout.closeDrawer(mMenuContainer);
+
+				} else {
+					mDrawerLayout.openDrawer(mMenuContainer);
+				}				
 			}
 		});
 
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+
+			public void onDrawerClosed(View view) {
+				supportInvalidateOptionsMenu();
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				supportInvalidateOptionsMenu();
+
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		
+		
+		
+		
+		
 		mCurrentPage = 0;
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(EXTRA_CURRENT_PAGE)) {
@@ -419,14 +472,17 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		// mDrawerLayout.setActivated(true);
 		mViewerWrapper.setVisibility(View.VISIBLE);
 		if (mComplexTitle) {
-			mTitle1View.setText(mTitle);
-			mTitle2View.setText(mSubtitle);
-			mComplextTitleView.setVisibility(View.VISIBLE);
-			mTitleView.setVisibility(View.GONE);
+			mToolbar.setTitle(mTitle);
+			mToolbar.setSubtitle(mSubtitle);
+//			mTitle1View.setText(mTitle);
+//			mTitle2View.setText(mSubtitle);
+//			mComplextTitleView.setVisibility(View.VISIBLE);
+//			mTitleView.setVisibility(View.GONE);
 		} else {
-			mTitleView.setText(mTitle);
-			mComplextTitleView.setVisibility(View.GONE);
-			mTitleView.setVisibility(View.VISIBLE);
+//			mTitleView.setText(mTitle);
+			mToolbar.setTitle(mTitle);			
+//			mComplextTitleView.setVisibility(View.GONE);
+//			mTitleView.setVisibility(View.VISIBLE);
 		}
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
@@ -676,18 +732,20 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 			getWindow()
 					.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mBottomPanel.setVisibility(View.GONE);
-			mTopPanel.setVisibility(View.GONE);
+			//mTopPanel.setVisibility(View.GONE);
+			mToolbar.setVisibility(View.GONE);
 			mSystemBarTintManager.setStatusBarTintEnabled(false);
 			ScreenUtil.fullscreenInsets(this, mMenuContainer);
 			ScreenUtil.fullscreenInsets(this, mContainer);
 		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mBottomPanel.setVisibility(View.VISIBLE);
-			mTopPanel.setVisibility(View.VISIBLE);
+			//mTopPanel.setVisibility(View.VISIBLE);
+			mToolbar.setVisibility(View.VISIBLE);
 			mSystemBarTintManager.setStatusBarTintEnabled(true);
 			// Configuration config = getResources().getConfiguration();
-			ScreenUtil.setInsets(this, mMenuContainer, false);
-			ScreenUtil.setInsets(this, mContainer, false);
+//			ScreenUtil.setInsets(this, mMenuContainer, false);
+//			ScreenUtil.setInsets(this, mContainer, false);
 		}
 	}
 
@@ -720,13 +778,16 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 
 	@Override
 	public void onBackPressed() {
-		if (mListShown) {
+		if(closeSlidingMenu()) {
+			return;
+		} else if (mListShown) {
 			getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
 			mListShown = false;
 		} else {
 			super.onBackPressed();
 		}
 	}
+	
 
 	@Override
 	public void onRecent(String pid) {
@@ -750,6 +811,19 @@ public class PageActivity extends Activity implements OnClickListener, OnSeekBar
 		return false;
 	}
 
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}	
+	
+	
 	// private boolean openSlidingMenu() {
 	// if (mDrawerLayout != null) {
 	// mMenuContainer.setVisibility(View.VISIBLE);

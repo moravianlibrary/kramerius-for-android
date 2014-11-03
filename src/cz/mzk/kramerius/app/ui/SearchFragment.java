@@ -11,7 +11,6 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,11 +32,10 @@ import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class SearchFragment extends BaseFragment implements OnClickListener {
 
-	private static final int MENU_SEARCH = 101;
+	private static final int MENU_ADD_FILTER = 101;
 
 	private static final String TAG = SearchFragment.class.getName();
 
@@ -48,6 +46,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	private CardArrayAdapter mAdapter;
 
 	private OnSearchListener mOnSearchListener;
+
+	private View mGoButton;
 
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
@@ -66,8 +66,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		MenuItem itemSearch = menu.add(1, MENU_SEARCH, 1, "Vyhledat");
-		itemSearch.setIcon(android.R.drawable.ic_menu_send);
+		MenuItem itemSearch = menu.add(1, MENU_ADD_FILTER, 1, "Přidat filtr");
+		itemSearch.setIcon(R.drawable.ic_action_plus);
 		if (isTablet()) {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		} else {
@@ -78,8 +78,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_SEARCH:
-			search();
+		case MENU_ADD_FILTER:
+			showFilterDialog();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -88,10 +88,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_search, container, false);
-		Configuration config = getResources().getConfiguration();
-		if (config.smallestScreenWidthDp < 720) {
-			ScreenUtil.setInsets(getActivity(), view);
-		}
+		mGoButton = view.findViewById(R.id.search_go);
+		mGoButton.setOnClickListener(this);
 		mSearchListView = (CardListView) view.findViewById(R.id.card_list);
 		List<Card> list = new ArrayList<Card>();
 		mAdapter = new CardArrayAdapter(getActivity(), list);
@@ -160,8 +158,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v == mAddFilter) {
-			showFilterDialog();
+		if (v == mGoButton) {
+			search();
 		}
 	}
 

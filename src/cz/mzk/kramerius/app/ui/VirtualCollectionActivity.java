@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
@@ -16,9 +17,12 @@ public class VirtualCollectionActivity extends BaseActivity implements OnItemSel
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_virtual_collection);
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		String pid = getIntent().getStringExtra(EXTRA_PID);
 		if (pid == null) {
 			finish();
@@ -33,8 +37,7 @@ public class VirtualCollectionActivity extends BaseActivity implements OnItemSel
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.vc_container, fragment).commit();
 
-		
-		getActionBar().setTitle(title);
+		getSupportActionBar().setTitle(title);
 	}
 
 	@Override

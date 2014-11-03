@@ -33,6 +33,7 @@
     <string name="settings_title">Nastavení</string>
     <string name="help_title">Nápověda</string>
     <string name="metadata_title">Podrobnosti</string>
+    <string name="domain_title">Zdroj dat</string>
     
     
     <string name="main_menu_home">Domů</string>
@@ -56,7 +57,7 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.2.5/DEV</string>
+    <string name="about_app_version">v0.2.9/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     
     
@@ -183,8 +184,8 @@
     
     <string name="pref_hardware_buttons_default" translatable="false">true</string>
     <string name="pref_hardware_buttons_key" translatable="false">p_hardware_buttons</string>
-    <string name="pref_hardware_buttons_title">Použítvat harwarová tlačítka</string>
-    <string name="pref_hardware_buttons_summary">Použítvat harwarová tlačítka pro otáčení stránek</string>
+    <string name="pref_hardware_buttons_title">Použítvat hardwarová tlačítka</string>
+    <string name="pref_hardware_buttons_summary">Použítvat hardwarová tlačítka pro otáčení stránek</string>
       
     <string name="pref_view_mode_default" translatable="false">4</string>
     <string name="pref_view_mode_key" translatable="false">p_view_mode</string>

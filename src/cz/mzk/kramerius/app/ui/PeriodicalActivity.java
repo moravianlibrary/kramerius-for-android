@@ -3,6 +3,7 @@ package cz.mzk.kramerius.app.ui;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -19,20 +20,18 @@ public class PeriodicalActivity extends BaseActivity implements OnItemSelectedLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_periodical);
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setIcon(android.R.color.transparent);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setTitle("K5 - Digitální knihovna");
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setTitle(R.string.app_name);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		String pid = getIntent().getExtras().getString(EXTRA_PID);
-
 		PeriodicalFragment fragment = PeriodicalFragment.newInstance(pid);
 		fragment.setOnItemSelectedListener(this);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.periodical_fragment_container, fragment).commit();
-		fragment.setOnItemSelectedListener(this);
-
 	}
 
 	@Override

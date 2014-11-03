@@ -1,6 +1,7 @@
 package cz.mzk.kramerius.app.ui;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -14,10 +15,11 @@ public class InaccessibleDocumentActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_inaccessible_document);
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setIcon(android.R.color.transparent);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setTitle(R.string.inaccessible_document_title);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override

@@ -1,13 +1,13 @@
 package cz.mzk.kramerius.app;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends ActionBarActivity {
 
 	public static final String EXTRA_PID = "extra_pid";
 	public static final String EXTRA_TITLE = "extra_title";

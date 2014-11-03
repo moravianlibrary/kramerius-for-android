@@ -8,18 +8,18 @@ import it.gmariotti.cardslib.library.view.CardGridView;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -28,13 +28,11 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
-import cz.mzk.kramerius.app.ui.SearchResultFragment.GetResultTask;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
@@ -82,10 +80,37 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.search, menu);
-		MenuItem item = menu.findItem(R.id.search);
-		SearchView searchView = (SearchView) item.getActionView();
+		// MenuItem item = menu.findItem(R.id.search);
+		// SearchView searchView = (SearchView) item.getActionView();
+		// searchView.setOnQueryTextListener(this);
+		// searchView.setOnCloseListener(this);
+		//
+		//
+
+		MenuItem searchItem = menu.findItem(R.id.search);
+
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnCloseListener(this);
+
+		//
+		// MenuInflater inflater = getActivity().getMenuInflater();
+		// inflater.inflate(R.menu.icon_menu, menu);
+		// MenuItem searchItem = menu.findItem(R.id.search);
+		//
+		// SearchManager searchManager = (SearchManager)
+		// getActivity().getSystemService(Context.SEARCH_SERVICE);
+		//
+		// SearchView searchView = null;
+		// if (searchItem != null) {
+		// searchView = (SearchView) searchItem.getActionView();
+		// }
+		// if (searchView != null) {
+		// searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+		// }
+
+		// searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
 	};
 
 	@Override
@@ -144,12 +169,12 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 				return;
 			}
 			String title = TextUtil.parseTitle(result.getParent().getRootTitle());
-			getActivity().getActionBar().setTitle(title);
+			getSupportActionBar().setTitle(title);
 			String subtitle = "";
 			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
 			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
 				subtitle = "Ročník " + result.getParent().getVolumeTitle();
-				getActivity().getActionBar().setSubtitle(subtitle);
+				getSupportActionBar().setSubtitle(subtitle);
 			}
 			if (result.getChildren().isEmpty()) {
 				showWarningMessage("Nebyly nalezeny žádné výsledky.", null, null);

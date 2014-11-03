@@ -5,6 +5,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,10 +47,10 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).build();
 		ImageLoader.getInstance().init(config);
 
-		getActionBar().setDisplayUseLogoEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setTitle("K5 - Digitální knihovna");
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mList = (ListView) findViewById(R.id.soundunit_list);
 		mSoundUnitImage = (ImageView) findViewById(R.id.soundunit_image);
@@ -112,19 +113,26 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 			List<Item> children = result.getChildren();
 			mSoundRecordingTitle.setText(parent.getRootTitle());
 			String title = TextUtil.shortenforActionBar(parent.getTitle());
-			getActionBar().setTitle(title);
+			getSupportActionBar().setTitle(title);
+
 			mSoundUnitTitle.setText(title);
 			ImageLoader.getInstance().displayImage(K5Api.getThumbnailPath(tContext, parent.getPid()), mSoundUnitImage);
 			if (children == null) {
 				return;
 			}
 
-//			addFakeTrack(children, "Losing My Religion", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-//			addFakeTrack(children, "Shiny Happy People", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-//			addFakeTrack(children, "Everybody Hurts", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-//			addFakeTrack(children, "Man On The Moon", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-//			addFakeTrack(children, "Bad Day", "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-//			addFakeTrack(children, "Leaving New Your", "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
+			// addFakeTrack(children, "Losing My Religion",
+			// "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
+			// addFakeTrack(children, "Shiny Happy People",
+			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
+			// addFakeTrack(children, "Everybody Hurts",
+			// "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
+			// addFakeTrack(children, "Man On The Moon",
+			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
+			// addFakeTrack(children, "Bad Day",
+			// "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
+			// addFakeTrack(children, "Leaving New Your",
+			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
 
 			mSoundUnitInfo.setText("Skladby: " + children.size());
 			mAdapter = new TrackArrayAdapter(tContext, children);
@@ -221,13 +229,13 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
 	}
-	
+
 	@Override
 	protected void onPause() {
-		if(mPlayerFragment != null) {
+		if (mPlayerFragment != null) {
 			mPlayerFragment.pause();
 		}
-		if(mAdapter != null) {
+		if (mAdapter != null) {
 			mAdapter.setPlaying(false);
 		}
 		super.onPause();

@@ -49,7 +49,7 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_user_info, container, false);
-		ScreenUtil.setInsets(getActivity(), view);
+		//ScreenUtil.setInsets(getActivity(), view);
 		mUserName = (TextView) view.findViewById(R.id.userInfo_userName);
 		mName = (TextView) view.findViewById(R.id.userInfo_name);
 		mRoles = (LinearLayout) view.findViewById(R.id.userInfo_roles);

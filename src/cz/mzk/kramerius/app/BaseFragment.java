@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,6 +96,11 @@ public abstract class BaseFragment extends Fragment {
 
 	public boolean isTablet() {
 		return mDevice == BaseActivity.TABLET;
+	}
+	
+	
+	protected ActionBar getSupportActionBar() {
+		return ((ActionBarActivity) getActivity()).getSupportActionBar();
 	}
 
 }

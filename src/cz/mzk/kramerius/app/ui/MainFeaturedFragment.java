@@ -10,12 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -74,6 +76,8 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 	private View mMostDesirableAgainButton;
 	private View mNewestAgainButton;
+	
+	private ScrollView mScrollView;
 
 	public interface OnFeaturedListener {
 		public void onFeatured(int type);
@@ -97,9 +101,10 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_featured_main, container, false);
 		if (isPhone()) {
-			ScreenUtil.setInsets(getActivity(), view);
+			//ScreenUtil.setInsets(getActivity(), view);
 		}
 		// mLoaderSelected = view.findViewById(R.id.featured_selected_loader);
+		mScrollView = (ScrollView) view.findViewById(R.id.featured_scrollview);
 		mLoaderNewest = view.findViewById(R.id.featured_newest_loader);
 		mLoaderMostDesirable = view.findViewById(R.id.featured_mostdesirable_loader);
 		// mSelectedGridView = (GridView)
@@ -166,7 +171,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	}
 
 	@Override
-	public void onResume() {
+	public void onResume() {		
 		super.onResume();
 	}
 
@@ -237,7 +242,6 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 					mNewestWarning.setVisibility(View.VISIBLE);
 					return;
 				}
-				mNewestExpandButton.setVisibility(View.VISIBLE);
 				mNewestList = new ArrayList<Item>();
 				fillList(result, mNewestList);
 			} else if (tType == K5Api.FEED_MOST_DESIRABLE) {
@@ -247,7 +251,6 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 					mMostDesirableWarning.setVisibility(View.VISIBLE);
 					return;
 				}
-				mMostDesirableExpandButton.setVisibility(View.VISIBLE);
 				mMostDesirableList = new ArrayList<Item>();
 				fillList(result, mMostDesirableList);
 			}
@@ -274,11 +277,13 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			// setGridViewHeightBasedOnChildren(mSelectedGridView,
 			// mFeaturedLimit);
 		} else if (type == K5Api.FEED_NEWEST) {
+			mNewestExpandButton.setVisibility(View.VISIBLE);
 			mNewestAdapter = CardUtils.createAdapter(getActivity(), mNewestList, mOnItemSelectedListener, this,
 					mOptions);
 			CardUtils.setAnimationAdapter(mNewestAdapter, mNewestGridView);
 			setGridViewHeightBasedOnChildren(mNewestGridView, mFeaturedLimit);
 		} else if (type == K5Api.FEED_MOST_DESIRABLE) {
+			mMostDesirableExpandButton.setVisibility(View.VISIBLE);
 			mMostDesirableAdapter = CardUtils.createAdapter(getActivity(), mMostDesirableList, mOnItemSelectedListener,
 					this, mOptions);
 			CardUtils.setAnimationAdapter(mMostDesirableAdapter, mMostDesirableGridView);
@@ -308,7 +313,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		ViewGroup.LayoutParams params = gridView.getLayoutParams();
 		params.height = totalHeight;
 		gridView.setLayoutParams(params);
-
+		mScrollView.scrollTo(0,0);
 	}
 
 	@Override
@@ -359,7 +364,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 	@Override
 	public void onPopupShareSelectd(Item item) {
 		// TODO Auto-generated method stub
-
+		mScrollView.scrollTo(0,0);
 	}
 
 }
