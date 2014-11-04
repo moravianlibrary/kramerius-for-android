@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -236,7 +235,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		case K5Api.FEED_NEWEST:
 			changeFragment(fragment, false, R.string.newest_title);
 			break;
-		case K5Api.FEED_SELECTED:
+		case K5Api.FEED_CUSTOM:
 			changeFragment(fragment, false, R.string.selected_title);
 			break;
 		}

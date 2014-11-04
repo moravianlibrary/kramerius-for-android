@@ -4,14 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;

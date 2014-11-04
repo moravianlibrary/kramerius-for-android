@@ -1,14 +1,13 @@
 package cz.mzk.kramerius.app.util;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
+import cz.mzk.kramerius.app.R;
 
 public class MessageUtils {
 

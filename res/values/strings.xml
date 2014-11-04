@@ -45,7 +45,7 @@
     <string name="main_menu_settings">Nastavení</string>    
     <string name="main_menu_recent">Naposledy otevřené</string>
     
-    <string name="featured_selected">Mohlo by se vám líbit</string>
+    <string name="featured_custom">Mohlo by se vám líbit</string>
     <string name="featured_newest">Nejnovější</string>
     <string name="featured_most_desirable">Nejžádanější</string>
     <string name="featured_show_all">ZOBRAZIT VŠE</string>

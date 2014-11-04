@@ -1,8 +1,8 @@
 package cz.mzk.kramerius.app.ui;
 
 import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
 import java.util.ArrayList;
@@ -23,15 +23,12 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
-import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.RecentCard;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class HistoryFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 

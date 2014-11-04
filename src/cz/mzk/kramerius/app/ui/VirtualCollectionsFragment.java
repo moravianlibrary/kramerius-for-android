@@ -22,7 +22,6 @@ import cz.mzk.kramerius.app.card.VirtualCollectionCard;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class VirtualCollectionsFragment extends BaseFragment {
 

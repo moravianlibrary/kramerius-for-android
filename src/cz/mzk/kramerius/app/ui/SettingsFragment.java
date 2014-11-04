@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -11,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.util.Analytics;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 

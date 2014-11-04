@@ -29,36 +29,18 @@ public class DomainUtil {
 
 		}
 	};
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public static List<Domain> getDomains() {
 		return DOMAINS;
 	}
-	
-	
+
 	public static Domain getDomain(String domain) {
-		for(Domain d : DOMAINS) {
-			if(d.getDomain().equals(domain)) {
+		for (Domain d : DOMAINS) {
+			if (d.getDomain().equals(domain)) {
 				return d;
 			}
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

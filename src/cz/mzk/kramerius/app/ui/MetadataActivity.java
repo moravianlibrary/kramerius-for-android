@@ -1,10 +1,11 @@
 package cz.mzk.kramerius.app.ui;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.R.id;

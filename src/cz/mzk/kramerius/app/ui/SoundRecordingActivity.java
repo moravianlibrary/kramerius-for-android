@@ -24,7 +24,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
-import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.SoundUnitCard;
 import cz.mzk.kramerius.app.model.Item;

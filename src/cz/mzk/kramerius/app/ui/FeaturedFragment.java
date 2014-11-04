@@ -17,17 +17,13 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
-import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.ui.PeriodicalFragment.GetPeriodicalVolumesTask;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 
@@ -71,7 +67,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		if (isPhone()) {
-	//		ScreenUtil.setInsets(getActivity(), view);
+			// ScreenUtil.setInsets(getActivity(), view);
 		}
 		inflateLoader(container, inflater);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
@@ -86,7 +82,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 		case K5Api.FEED_NEWEST:
 			Analytics.sendScreenView(getActivity(), R.string.ga_appview_newest);
 			break;
-		case K5Api.FEED_SELECTED:
+		case K5Api.FEED_CUSTOM:
 			Analytics.sendScreenView(getActivity(), R.string.ga_appview_selected);
 			break;
 		case K5Api.FEED_MOST_DESIRABLE:
@@ -111,13 +107,8 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 
 		@Override
 		protected List<Item> doInBackground(Integer... params) {
-			if (params[0] == K5Api.FEED_NEWEST) {
-				return K5Connector.getInstance().getNewest(tContext, -1);
-			} else if (params[0] == K5Api.FEED_MOST_DESIRABLE) {
-				return K5Connector.getInstance().getMostDesirable(tContext, -1);
-			} else {
-				return K5Connector.getInstance().getSelected(tContext, true, -1);
-			}
+			int type = params[0];
+			return K5Connector.getInstance().getFeatured(tContext, type, K5Api.FEED_NO_LIMIT, "public", null);
 		}
 
 		@Override
@@ -131,14 +122,14 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 					}
 				});
 				return;
-			}			
+			}
 			populateGrid(result);
 		}
 	}
 
 	private void populateGrid(List<Item> items) {
 		mAdapter = CardUtils.createAdapter(getActivity(), items, mOnItemSelectedListener, this, mOptions);
-		CardUtils.setAnimationAdapter(mAdapter, mCardGridView);		
+		CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
 	}
 
 	public void onOpenDetail(String pid) {
@@ -147,23 +138,22 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 		startActivity(intent);
 	}
 
-	
 	@Override
 	public void onPopupOpenSelectd(Item item) {
-		if(mOnItemSelectedListener != null) {
+		if (mOnItemSelectedListener != null) {
 			mOnItemSelectedListener.onItemSelected(item);
 		}
 	}
 
 	@Override
 	public void onPopupDetailsSelectd(Item item) {
-		onOpenDetail(item.getPid());		
+		onOpenDetail(item.getPid());
 	}
 
 	@Override
 	public void onPopupShareSelectd(Item item) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

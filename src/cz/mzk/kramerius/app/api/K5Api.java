@@ -2,14 +2,17 @@ package cz.mzk.kramerius.app.api;
 
 import android.content.Context;
 import android.net.Uri;
+import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
 import cz.mzk.kramerius.app.R;
 
 public class K5Api {
 
+	public static final int FEED_NO_LIMIT = -1;
+
 	public static final int FEED_NEWEST = 0;
 	public static final int FEED_MOST_DESIRABLE = 1;
-	public static final int FEED_SELECTED = 2;
+	public static final int FEED_CUSTOM = 2;
 
 	private static final String PATH_API = "api";
 	private static final String PATH_SEARCH = "search";
@@ -19,6 +22,7 @@ public class K5Api {
 	private static final String PATH_FEED = "feed";
 	private static final String PATH_MOST_DESIRABLE = "mostdesirable";
 	private static final String PATH_NEWEST = "newest";
+	private static final String PATH_CUSTOM = "custom";
 	private static final String PATH_USER = "user";
 	private static final String PATH_RIGHTS = "rights";
 	private static final String PATH_VC = "vc";
@@ -28,6 +32,10 @@ public class K5Api {
 	private static final String PATH_MODS = "BIBLIO_MODS";
 	private static final String PATH_MP3 = "MP3";
 	private static final String PATH_IMG_FULL = "IMG_FULL";
+
+	private static final String PARAM_LIMIT = "limit";
+	private static final String PARAM_MODEL = "type";
+	private static final String PARAM_POLICY = "policy";
 
 	public static String getDomain(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(
@@ -104,33 +112,32 @@ public class K5Api {
 		return getVirtualCollectionsUri(context).toString();
 	}
 
-	public static String getFeedPath(Context context, int feed) {
+	public static String getFeedPath(Context context, int feed, int limit, String policy, String model) {
+		String feedType = "";
 		switch (feed) {
 		case FEED_NEWEST:
-			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_NEWEST).build().toString();
+			feedType = PATH_NEWEST;
+			break;
 		case FEED_MOST_DESIRABLE:
-			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_MOST_DESIRABLE).build()
-					.toString();
-		case FEED_SELECTED:
-			// TODO: add support for feed/selected
-			return null;
+			feedType = PATH_MOST_DESIRABLE;
+			break;
+		case FEED_CUSTOM:
+			feedType = PATH_CUSTOM;
+			break;
 		}
-		return null;
-	}
 
-	public static String getFeedPath(Context context, int feed, int limit) {
-		switch (feed) {
-		case FEED_NEWEST:
-			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_NEWEST)
-					.appendQueryParameter("limit", String.valueOf(limit)).build().toString();
-		case FEED_MOST_DESIRABLE:
-			return getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(PATH_MOST_DESIRABLE)
-					.appendQueryParameter("limit", String.valueOf(limit)).build().toString();
-		case FEED_SELECTED:
-			// TODO: add support for feed/selected
-			return null;
+		Builder builder = getApiUri(context).buildUpon().appendPath(PATH_FEED).appendPath(feedType);
+		if (limit != FEED_NO_LIMIT) {
+			builder = builder.appendQueryParameter(PARAM_LIMIT, String.valueOf(limit));
 		}
-		return null;
+		if (policy != null) {
+			builder = builder.appendQueryParameter(PARAM_POLICY, policy);
+		}
+		if (model != null) {
+			builder = builder.appendQueryParameter(PARAM_MODEL, model);
+		}
+		return builder.build().toString();
+
 	}
 
 	public static String getItemPath(Context context, String pid) {

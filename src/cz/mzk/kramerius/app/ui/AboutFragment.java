@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.util.Analytics;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class AboutFragment extends Fragment {
 

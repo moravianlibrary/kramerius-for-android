@@ -19,7 +19,6 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.util.Analytics;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class UserInfoFragment extends Fragment implements OnClickListener {
 

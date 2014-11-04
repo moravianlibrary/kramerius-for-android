@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app;
 
-import android.view.View;
 
 public interface OnOpenDetailListener {
 

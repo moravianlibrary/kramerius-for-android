@@ -6,8 +6,6 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 
-import cz.mzk.kramerius.app.R;
-
 public class Analytics {
 
 	public static void sendEvent(Context context, String category, String action, String label, Long value) {

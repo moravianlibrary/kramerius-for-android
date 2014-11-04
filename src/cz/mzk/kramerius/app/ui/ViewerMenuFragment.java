@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
-import android.content.ClipData.Item;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +18,6 @@ import cz.mzk.kramerius.app.adapter.ViewerMenuArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.RecentMenuItem;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class ViewerMenuFragment extends Fragment implements OnClickListener {
 

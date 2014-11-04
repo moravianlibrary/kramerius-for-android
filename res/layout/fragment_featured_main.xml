@@ -4,35 +4,34 @@
     android:layout_height="match_parent" >
 
     <ScrollView
-		android:id="@+id/featured_scrollview"
+        android:id="@+id/featured_scrollview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"  >
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:orientation="vertical"
             android:paddingBottom="10dp"
-            android:orientation="vertical" >
+            android:paddingTop="10dp" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone" >
+                android:layout_marginTop="10dp" >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/featured_selected"
+                    android:text="@string/featured_custom"
                     android:textColor="@color/dark_grey"
                     android:textSize="19dp" />
 
                 <Button
-                    android:id="@+id/featured_selected_expand"
+                    android:id="@+id/featured_custom_expand"
                     android:layout_width="100dp"
                     android:layout_height="20dp"
                     android:layout_alignParentRight="true"
@@ -41,10 +40,24 @@
                     android:gravity="center"
                     android:text="@string/featured_show_all"
                     android:textColor="@color/white"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/featured_custom_again"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/green"
+                    android:gravity="center"
+                    android:text="Načíst znovu"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/featured_selected_loader"
+                    android:id="@+id/featured_custom_loader"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
@@ -55,17 +68,27 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <GridView
-                android:id="@+id/featured_selected"
+            <TextView
+                android:id="@+id/featured_custom_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Nepodařilo se načíst data"
+                android:textColor="@color/grey"
+                android:visibility="gone" />
+
+            <it.gmariotti.cardslib.library.view.CardGridView
+                android:id="@+id/featured_custom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:horizontalSpacing="5dp"
-                android:isScrollContainer="false"
+                android:horizontalSpacing="2dp"
+                android:listSelector="@android:color/transparent"
                 android:numColumns="1"
                 android:stretchMode="columnWidth"
-                android:visibility="gone" />
+                android:verticalSpacing="3dp"
+                card:list_card_layout_resourceID="@layout/list_card" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -129,96 +152,8 @@
                 android:textColor="@color/grey"
                 android:visibility="gone" />
 
-            <!--
-            <GridView
-                android:id="@+id/featured_newest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:horizontalSpacing="5dp"
-                android:isScrollContainer="false"
-                android:numColumns="1"
-                android:stretchMode="columnWidth" />
-            -->
-
             <it.gmariotti.cardslib.library.view.CardGridView
                 android:id="@+id/featured_newest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:horizontalSpacing="2dp"
-                android:listSelector="@android:color/transparent"
-                android:numColumns="1"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="3dp"
-                card:list_card_layout_resourceID="@layout/list_card" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/featured_most_desirable"
-                    android:textColor="@color/dark_grey"
-                    android:textSize="19dp" />
-
-                <Button
-                    android:id="@+id/featured_mostdesirable_expand"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@color/green"
-                    android:gravity="center"
-                    android:text="@string/featured_show_all"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/featured_mostdesirable_again"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@color/green"
-                    android:gravity="center"
-                    android:text="Načíst znovu"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/featured_mostdesirable_loader"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_horizontal"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/img_loader"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/featured_mostdesirable_warning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Nepodařilo se načíst data"
-                android:textColor="@color/grey"
-                android:visibility="gone" />
-
-            <it.gmariotti.cardslib.library.view.CardGridView
-                android:id="@+id/featured_mostdesirable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"

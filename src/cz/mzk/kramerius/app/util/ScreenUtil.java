@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.Build;
 import android.view.View;
 
-import com.readystatesoftware.systembartint.SystemBarTintManager;
-
 public class ScreenUtil {
 
 //	public static void setInsets(Activity context, View view, boolean withActionbar) {

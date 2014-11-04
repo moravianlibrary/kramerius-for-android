@@ -13,7 +13,6 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ModelUtil;
-import cz.mzk.kramerius.app.util.ScreenUtil;
 
 public class HelpFragment extends Fragment {
 

@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -28,6 +27,7 @@ import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
 public class K5Connector {
@@ -71,111 +71,17 @@ public class K5Connector {
 		mClient = createClient();
 	}
 
-	public List<Item> getNewest(Context context, int limit) {
-		return getFeatured(context, K5Api.FEED_NEWEST, limit);
-	}
-
-	public List<Item> getMostDesirable(Context context, int limit) {
-		return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, limit);
-	}
-
-	// API doesn't support feed/selected. This is a temporary solution for
-	// creating a list with selected documents.
-	public List<Item> getSelected(Context context, boolean extended, int limit) {
-		List<Item> list = new ArrayList<Item>();
-
-		addItemToList(list, "uuid:530719f5-ee95-4449-8ce7-12b0f4cadb22", "monograph", "Když slunéčko svítí");
-		addItemToList(list, "uuid:e044d220-b0c1-4f15-95a0-0fd86747cc24", "monograph", "Dvanáct pohádek");
-		addItemToList(list, "uuid:33b0c420-e25f-49cf-ab8d-c9471c927167", "monograph", "Kožuchy");
-		addItemToList(list, "uuid:f1c7c08d-8f64-4b66-be28-5f209c2c7021", "periodical", "Rovnost");
-		addItemToList(list, "uuid:c4d321f6-53b6-4a43-a80f-6a73138500f0", "monograph",
-				"Král Myška a princ Junák : příhody statečných trpaslíků");
-
-		addItemToList(list, "uuid:59e708b6-c462-4610-90c5-ac5ca030050a", "soundrecording", "Oh, Kay!. Clap yo' hands");
-
-		addItemToList(list, "uuid:2fa33e93-7bb8-441c-aa5a-0f63bd565b93", "graphic",
-				"Der steinere Saal bei Adamsthal [Kostelik]");
-
-		addItemToList(list, "uuid:4873e8c7-5967-4003-8544-96f64ca55da7", "monograph", "Symbiotické zemědělství")
-				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:4873e8c7-5967-4003-8544-96f64ca55da7&stream=IMG_FULL&action=GETRAW");
-
-		// addItemToList(list, "uuid:cf35b628-18ac-4bb6-9999-d55ff17a068b",
-		// "monograph",
-		// "Diagnostika předškoláka : správný vývoj řeči dítěte");
-
-		// addItemToList(
-		// list,
-		// "uuid:3e6bd08f-db89-4916-8ad0-cf24985e1e83",
-		// "monograph",
-		// "I. souborná výstava akademického malíře Josefa Jambora: spořádaná u příležitosti 70. narozenin Mistra v místnostech osmileté střední školy v Tišnově v době od 26. října do 17.listopadu 1957");
-
-		addItemToList(list, "uuid:bdc405b0-e5f9-11dc-bfb2-000d606f5dc6", "periodical", "Lidové noviny");
-
-		addItemToList(list, "uuid:ae876087-435d-11dd-b505-00145e5790ea", "periodical", "Národní listy");
-		addItemToList(list, "uuid:13f650ad-6447-11e0-8ad7-0050569d679d", "periodical", "Duha");
-		addItemToList(list, "uuid:0d9d0820-0ba3-4a47-ba36-f271fdac4779", "map", "Europa");
-		addItemToList(list, "uuid:06b2a42d-5ffa-46f7-ac38-19d3f8002ebb", "manuscript", "Snář");
-
-		addItemToList(list, "uuid:de6a6d0e-70a0-4132-ac3a-82faf89d30bf", "map",
-				"Beide Himmels-Halbkugeln in Stereographischer Polarprojection");
-		addItemToList(list, "uuid:36e7c070-4bd3-4bc4-b991-3b66fe16f936", "manuscript",
-				"Thajský rukopis na palmových listech");
-
-		// addItemToList(list, "uuid:f1c7c08d-8f64-4b66-be28-5f209c2c7021",
-		// "periodical", "Rovnost");
-		addItemToList(list, "uuid:ba632b35-45d3-4a1e-8357-3eb866f9d00e", "soundrecording",
-				"Le veau d'or Vous qui faites l'endormie");
-		// addItemToList(list, "uuid:9f2fec5f-076b-424f-9b8d-d3a0aed4f0b1",
-		// "soundrecording", "Nocturne Es-dur");
-		// addItemToList(list, "uuid:86943124-5a4a-4679-a887-787ae0006b26",
-		// "soundrecording", "Zločin a trest");
-		// addItemToList(list, "uuid:206aac01-e915-4806-a828-324d3d8ee525",
-		// "soundrecording",
-		// "Pohřeb presidenta osvoboditele v ČS rozhlase 21.IX. 1937");
-
-		addItemToList(list, "uuid:f40df848-b2d3-4334-a898-ed2c9aae6cb1", "periodical", "Tisk, noviny a novináři");
-		addItemToList(
-				list,
-				"uuid:717063f8-a047-4622-9f54-bee2c5269452",
-				"periodical",
-				"Noviny : list vydavatelů časopisů a novinářů československých : věstník Ústř. svazu vydav. a nakl. časopisů a periodických spisů v Praze a Jednoty čsl. novinářů v Praze");
-
-		// addItemToList(list, "uuid:d65f964d-60e2-411b-99a3-907783d419e4",
-		// "monograph",
-		// "Pazourek - nejstarší kulturní nerost, aneb, Kámen všech kamenů")
-		// .setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:d65f964d-60e2-411b-99a3-907783d419e4&stream=IMG_FULL&action=GETRAW");
-		//
-		// addItemToList(list, "uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8",
-		// "monograph",
-		// "Lidský kapitál a investice do vzdělání (16. ročník, 2013)")
-		// .setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:0823498e-bd85-4a98-b649-42ee5d43f5d8&stream=IMG_FULL&action=GETRAW");
-
-		addItemToList(list, "uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8", "monograph", "Philosophy of Balance")
-				.setPdf("http://kramerius.mzk.cz/search/img?pid=uuid:6fa2a1ab-3cce-4f9b-a6ca-4cfd04cf60a8&stream=IMG_FULL&action=GETRAW");
-
-		// addItemToList(list, "uuid:bdc405b0-e5f9-11dc-bfb2-000d606f5dc6",
-		// "periodical",
-		// "Lidové noviny");
-
-		if (limit > -1 && list.size() > limit) {
-			list = list.subList(0, limit);
-		}
-
-		if (extended) {
-			for (Item o : list) {
-				Metadata metadata = getModsMetadata(context, o.getRootPid());
-				if (metadata != null && !metadata.getAuthors().isEmpty()) {
-					Author author = metadata.getAuthors().get(0);
-					if (author != null && author.getName() != null) {
-						o.setAuthor(author.getName());
-					}
-				}
-			}
-		}
-
-		return list;
-
-	}
+	// public List<Item> getNewest(Context context, int limit) {
+	// return getFeatured(context, K5Api.FEED_NEWEST, limit);
+	// }
+	//
+	// public List<Item> getMostDesirable(Context context, int limit) {
+	// return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, limit);
+	// }
+	//
+	// public List<Item> getCustom(Context context, int limit) {
+	// return getFeatured(context, K5Api.FEED_CUSTOM, limit);
+	// }
 
 	private Item addItemToList(List<Item> list, String pid, String model, String title) {
 		Item item = new Item();
@@ -188,28 +94,33 @@ public class K5Connector {
 		return item;
 	}
 
-	private List<Item> getFeatured(Context context, int feed, int limit) {
+	public List<Item> getFeatured(Context context, int feed, int limit, String policy, String model) {
 		try {
 			List<Item> list = new ArrayList<Item>();
 			String requst = null;
-			if (limit > -1) {
-				requst = K5Api.getFeedPath(context, feed, limit);
-			} else {
-				requst = K5Api.getFeedPath(context, feed);
-			}
+			requst = K5Api.getFeedPath(context, feed, limit, policy, model);
+			Log.d(TAG, "request:" + requst + ", " + feed);
 			HttpGet request = new HttpGet(requst);
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONArray data = json.getJSONArray(K5Constants.DATA);
 			for (int i = 0; i < data.length(); i++) {
-				Item item = new Item();
+				Item item = new Item();				
 				JSONObject jsonItem = data.getJSONObject(i);
-				item.setPid(jsonItem.optString(K5Constants.PID));
-				item.setModel(jsonItem.optString(K5Constants.MODEL));
+				String m = jsonItem.optString(K5Constants.MODEL);
+				if(ModelUtil.PAGE.equals(m)) {
+					item.setPid(jsonItem.optString(K5Constants.ROOT_PID));
+					item.setModel(ModelUtil.MONOGRAPH);
+					item.setTitle(jsonItem.optString(K5Constants.ROOT_TITLE));					
+				} else {
+					item.setPid(jsonItem.optString(K5Constants.PID));
+					item.setModel(jsonItem.optString(K5Constants.MODEL));
+					item.setTitle(jsonItem.optString(K5Constants.TITLE));
+				}
 				item.setIssn(jsonItem.optString(K5Constants.ISSN));
-				item.setDate(jsonItem.optString(K5Constants.DATA));
-				item.setTitle(jsonItem.optString(K5Constants.TITLE));
+				item.setDate(jsonItem.optString(K5Constants.DATE));
+
 				JSONArray authors = jsonItem.optJSONArray(K5Constants.AUTHOR);
 				if (authors != null && authors.length() > 0) {
 					item.setAuthor(authors.optString(0));

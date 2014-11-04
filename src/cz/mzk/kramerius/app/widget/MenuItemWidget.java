@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app.widget;
 
-import cz.mzk.kramerius.app.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -8,6 +7,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cz.mzk.kramerius.app.R;
 
 public class MenuItemWidget extends LinearLayout {
 	private TextView mTitleView;
