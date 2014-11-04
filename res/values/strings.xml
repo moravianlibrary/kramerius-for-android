@@ -43,7 +43,7 @@
     <string name="main_menu_help">Nápověda</string>
     <string name="main_menu_feedback">Zpětná vazba</string>
     <string name="main_menu_settings">Nastavení</string>    
-    <string name="main_menu_recent">Nedávno otevřené</string>
+    <string name="main_menu_recent">Naposledy otevřené</string>
     
     <string name="featured_selected">Mohlo by se vám líbit</string>
     <string name="featured_newest">Nejnovější</string>

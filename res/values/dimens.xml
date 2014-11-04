@@ -11,6 +11,14 @@
     <dimen name="toolbar_title">19dp</dimen>
 
     
+    
+    
+    <dimen name="menu_item_height">45dp</dimen>
+    <dimen name="menu_item_title">16dp</dimen>
+    <dimen name="menu_item_icon_margin_left">15dp</dimen>
+    <dimen name="menu_item_icon_margin_right">25dp</dimen>
+    <dimen name="menu_item_icon">20dp</dimen>    
+    
     <dimen name="metadata_title">22dp</dimen>
     <dimen name="metadata_subtitle">18dp</dimen>
     <dimen name="metadata_key">16dp</dimen>

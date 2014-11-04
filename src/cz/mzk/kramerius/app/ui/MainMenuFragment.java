@@ -4,20 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import cz.mzk.kramerius.app.MenuListItem;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.MainMenuArrayAdapter;
-import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.util.ScreenUtil;
+import cz.mzk.kramerius.app.widget.MenuItemWidget;
 
 public class MainMenuFragment extends Fragment implements OnClickListener {
 
@@ -31,9 +24,15 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	public static final int MENU_FEEDBACK = 6;
 	public static final int MENU_SETTINGS = 7;
 
-	private TextView mUser;
 	private MainMenuListener mCallback;
-	private MainMenuArrayAdapter mMenuAdapter;
+
+	private MenuItemWidget mMenuHome;
+	private MenuItemWidget mMenuVirtual;
+	private MenuItemWidget mMenuRecent;
+	private MenuItemWidget mMenuSearch;
+	private MenuItemWidget mMenuHelp;
+	private MenuItemWidget mMenuSettings;
+	private List<MenuItemWidget> mMenuItems;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,92 +42,57 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
-		Configuration config = getResources().getConfiguration();
-		if (config.smallestScreenWidthDp >= 720) {
-			// mDevice = TABLET;
-			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		} else {
-		//	ScreenUtil.setInsets(getActivity(), view);
-		}
-		mUser = (TextView) view.findViewById(R.id.menu_user);
-		mUser.setOnClickListener(this);
+		mMenuItems = new ArrayList<MenuItemWidget>();
+		mMenuHome = (MenuItemWidget) view.findViewById(R.id.menu_home);
+		mMenuHome.setOnClickListener(this);
+		mMenuVirtual = (MenuItemWidget) view.findViewById(R.id.menu_virtual);
+		mMenuVirtual.setOnClickListener(this);
+		mMenuSearch = (MenuItemWidget) view.findViewById(R.id.menu_search);
+		mMenuSearch.setOnClickListener(this);
+		mMenuRecent = (MenuItemWidget) view.findViewById(R.id.menu_recent);
+		mMenuRecent.setOnClickListener(this);
+		mMenuHelp = (MenuItemWidget) view.findViewById(R.id.menu_help);
+		mMenuHelp.setOnClickListener(this);
+		mMenuSettings = (MenuItemWidget) view.findViewById(R.id.menu_settings);
+		mMenuSettings.setOnClickListener(this);
 
-		refreshUser();
-		ListView listView = (ListView) view.findViewById(R.id.menu_item_list);
-		populateMenuList(listView);
+		mMenuItems.add(mMenuHome);
+		mMenuItems.add(mMenuVirtual);
+		mMenuItems.add(mMenuSearch);
+		mMenuItems.add(mMenuRecent);
+		mMenuItems.add(mMenuSettings);
+		mMenuItems.add(mMenuHelp);
+
 		return view;
 	}
 
-	private void populateMenuList(ListView listView) {
-		List<MenuListItem> list = new ArrayList<MenuListItem>();
-		list.add(new MenuListItem(getString(R.string.main_menu_home), R.drawable.ic_home_grey, R.drawable.ic_home_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_virtual_colections), R.drawable.ic_group_grey,
-				R.drawable.ic_group_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_search), R.drawable.ic_search_grey,
-				R.drawable.ic_search_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_recent), R.drawable.ic_recent_grey,
-				R.drawable.ic_recent_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_about), R.drawable.ic_about_grey,
-				R.drawable.ic_about_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_help), R.drawable.ic_help_grey, R.drawable.ic_help_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_feedback), R.drawable.ic_attach_grey, R.drawable.ic_attach_green));
-		list.add(new MenuListItem(getString(R.string.main_menu_settings), R.drawable.ic_settings_grey,
-				R.drawable.ic_settings_green));
-
-		mMenuAdapter = new MainMenuArrayAdapter(getActivity(), list);
-		listView.setAdapter(mMenuAdapter);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long i) {
-				onMenuItemSelected(position);
-			}
-		});
-	}
-
-	public void onMenuItemSelected(int index) {
-		if (mCallback == null) {
-			return;
-		}		
-		switch (index) {
-		case MENU_HOME:
-			mMenuAdapter.setSelection(index);
-			mCallback.onHome();
-			break;
-		case MENU_VIRTUAL_COLLECTION:
-			mMenuAdapter.setSelection(index);
-			mCallback.onVirtualCollections();
-			break;
-		case MENU_SEARCH:
-			mMenuAdapter.setSelection(index);
-			mCallback.onSearch();
-			break;
-		case MENU_ABOUT:
-			mMenuAdapter.setSelection(index);
-			mCallback.onAbout();
-			break;
-		case MENU_HELP:
-			mMenuAdapter.setSelection(index);
-			mCallback.onHelp();
-			break;
-		case MENU_SETTINGS:
-			mMenuAdapter.setSelection(index);
-			mCallback.onSettings();
-			break;
-		case MENU_FEEDBACK:
-			mCallback.onFeedback();
-			break;			
-		case MENU_RECENT:
-			mMenuAdapter.setSelection(index);
-			mCallback.onRecent();
-			break;			
-		}			
-		
+	private void selectItem(View selectedItem) {
+		for (MenuItemWidget item : mMenuItems) {
+			item.setSelected(item == selectedItem);
+		}
 	}
 
 	public void setActiveMenuItem(int index) {
-		if (mMenuAdapter == null) {
-			return;
+		selectItem(getItem(index));
+	}
+
+	private MenuItemWidget getItem(int index) {
+		switch (index) {
+		case MENU_HELP:
+			return mMenuHelp;
+		case MENU_HOME:
+			return mMenuHome;
+		case MENU_RECENT:
+			return mMenuRecent;
+		case MENU_SEARCH:
+			return mMenuSearch;
+		case MENU_SETTINGS:
+			return mMenuSettings;
+		case MENU_VIRTUAL_COLLECTION:
+			return mMenuVirtual;
+		default:
+			return null;
 		}
-		mMenuAdapter.setSelection(index);
 	}
 
 	public void setCallback(MainMenuListener callback) {
@@ -149,22 +113,13 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		public void onSearch();
 
 		public void onHelp();
-		
+
 		public void onFeedback();
 
 		public void onAbout();
-		
+
 		public void onRecent();
 
-	}
-
-	public void refreshUser() {
-		String user = K5Api.getUser(getActivity());
-		if (user == null) {
-			mUser.setText("Nepřihlášen");
-		} else {
-			mUser.setText(user);
-		}
 	}
 
 	@Override
@@ -172,10 +127,19 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		if (mCallback == null) {
 			return;
 		}
-
-		if (v == mUser) {
-			setActiveMenuItem(MENU_NONE);
-			mCallback.onLogin();
+		selectItem(v);
+		if (v == mMenuHome) {
+			mCallback.onHome();
+		} else if (v == mMenuHelp) {
+			mCallback.onHelp();
+		} else if (v == mMenuRecent) {
+			mCallback.onRecent();
+		} else if (v == mMenuSearch) {
+			mCallback.onSearch();
+		} else if (v == mMenuSettings) {
+			mCallback.onSettings();
+		} else if (v == mMenuVirtual) {
+			mCallback.onVirtualCollections();
 		}
 	}
 

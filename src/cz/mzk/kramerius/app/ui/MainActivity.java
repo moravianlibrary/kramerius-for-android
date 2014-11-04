@@ -178,7 +178,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onLoginSuccess() {
-		mMenuFragment.refreshUser();
+		//mMenuFragment.refreshUser();
 		showUserInfo();
 	}
 
@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	@Override
 	public void onLogOut() {
 		K5Api.logOut(this);
-		mMenuFragment.refreshUser();
+		//mMenuFragment.refreshUser();
 		showLogin();
 	}
 

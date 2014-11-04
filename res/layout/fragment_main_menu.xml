@@ -1,49 +1,104 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:kramerius="http://schemas.android.com/apk/res/cz.mzk.kramerius.app"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white" >
 
     <LinearLayout
+        android:id="@+id/menu_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/menu_bottom_divider" />
+
+        <cz.mzk.kramerius.app.widget.MenuItemWidget
+            android:id="@+id/menu_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_menu"
+            kramerius:menuIcon="@drawable/ic_settings_grey"
+            kramerius:menuIconSelected="@drawable/ic_settings_green"
+            kramerius:menuTitle="Nastavení" />
+
+        <cz.mzk.kramerius.app.widget.MenuItemWidget
+            android:id="@+id/menu_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_menu"
+            kramerius:menuIcon="@drawable/ic_help_grey"
+            kramerius:menuIconSelected="@drawable/ic_home_green"
+            kramerius:menuTitle="Nápověda a zpětná vazba" />
+    </LinearLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_above="@id/menu_bottom"
+        android:layout_alignParentTop="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:visibility="gone"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:paddingLeft="15dp" >
+            android:orientation="vertical" >
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_user_grey" />
-
-            <TextView
-                android:id="@+id/menu_user"
+            <cz.mzk.kramerius.app.widget.MenuItemWidget
+                android:id="@+id/menu_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Jan Rychtář"
-                android:textColor="#555555"
-                android:textSize="17dp" />
-           
-        </LinearLayout>
+                android:background="@drawable/button_menu"
+                kramerius:menuIcon="@drawable/ic_home_grey"
+                kramerius:menuIconSelected="@drawable/ic_home_green"
+                kramerius:menuTitle="@string/main_menu_home" />
 
-        <ListView
-            android:id="@+id/menu_item_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="#ffffff"
-            android:layout_marginTop="15dp"
-            android:dividerHeight="0dp" >
-        </ListView>
-    </LinearLayout>
+            <cz.mzk.kramerius.app.widget.MenuItemWidget
+                android:id="@+id/menu_virtual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_menu"
+                kramerius:menuIcon="@drawable/ic_group_grey"
+                kramerius:menuIconSelected="@drawable/ic_group_green"
+                kramerius:menuTitle="@string/main_menu_virtual_colections" />
+
+            <cz.mzk.kramerius.app.widget.MenuItemWidget
+                android:id="@+id/menu_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_menu"
+                kramerius:menuIcon="@drawable/ic_search_grey"
+                kramerius:menuIconSelected="@drawable/ic_search_green"
+                kramerius:menuTitle="@string/main_menu_search" />
+
+            <cz.mzk.kramerius.app.widget.MenuItemWidget
+                android:id="@+id/menu_recent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_menu"
+                kramerius:menuIcon="@drawable/ic_recent_grey"
+                kramerius:menuIconSelected="@drawable/ic_recent_green"
+                kramerius:menuTitle="@string/main_menu_recent" />
+
+            <ListView
+                android:id="@+id/menu_item_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:divider="#ffffff"
+                android:dividerHeight="0dp"
+                android:visibility="gone" >
+            </ListView>
+
+            <LinearLayout
+                android:id="@+id/menu_item_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

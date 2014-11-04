@@ -30,6 +30,8 @@
     
     
     
+    <color name="menu_item_noraml">#656565</color>
+    <color name="menu_bottom_divider">#f4f4f4</color>
     
     <color name="bg">#e3e3e3</color>    
     <color name="card_pressed">#f9f9f9</color>
@@ -48,7 +50,7 @@
     <color name="card_line">#d5d5d5</color>
     
     <color name="button_menu_normal">#ffffff</color>
-    <color name="button_menu_pressed">#aaaaaa</color>
+    <color name="button_menu_pressed">#eeeeee</color>
     
     <color name="button_main_normal">@color/green</color>
     <color name="button_main_pressed">#00a7b7</color>
