@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:background="@color/white" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_primary_dark" />
+
     <LinearLayout
         android:id="@+id/menu_bottom"
         android:layout_width="match_parent"
@@ -46,10 +51,66 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <LinearLayout
+                android:id="@+id/menu_domain_container"                
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_menu_domain"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp" >
+
+                <ImageView
+                    android:id="@+id/menu_domain_logo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_circle"
+                    android:padding="10dp"
+                    android:src="@drawable/logo_nkp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="15dp" >
+
+                    <TextView
+                        android:id="@+id/menu_domain_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Moravská zemská knihovna"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="10dp"
+                        android:textStyle="bold"
+                        android:textColor="#fff"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/menu_domain_url"
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_height="wrap_content"
+                        android:text="kramerius.mzk.cz"
+                        android:textColor="#eee"
+                        android:textSize="13dp" />
+                    
+                    <ImageView 
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/img_dropdown_white"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
             <cz.mzk.kramerius.app.widget.MenuItemWidget
                 android:id="@+id/menu_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/button_menu"
                 kramerius:menuIcon="@drawable/ic_home_grey"
                 kramerius:menuIconSelected="@drawable/ic_home_green"
@@ -82,16 +143,6 @@
                 kramerius:menuIconSelected="@drawable/ic_recent_green"
                 kramerius:menuTitle="@string/main_menu_recent" />
 
-            <ListView
-                android:id="@+id/menu_item_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:divider="#ffffff"
-                android:dividerHeight="0dp"
-                android:visibility="gone" >
-            </ListView>
-
             <LinearLayout
                 android:id="@+id/menu_item_container"
                 android:layout_width="match_parent"
@@ -100,5 +151,11 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/color_primary_dark" />
 
 </RelativeLayout>

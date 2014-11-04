@@ -33,18 +33,20 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 			}			
 		}
 
-		Preference domainButton = (Preference) findPreference(getString(R.string.pref_select_domain_key));
-		
-		String domain = K5Api.getDomain(getActivity());
-		domainButton.setSummary(domain);
-		domainButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) {
-				Intent intent = new Intent(getActivity(), DomainActivity.class);
-				startActivity(intent);
-				return true;
-			}
-		});
+		// Preference domainButton = (Preference)
+		// findPreference(getString(R.string.pref_select_domain_key));
+		//
+		// String domain = K5Api.getDomain(getActivity());
+		// domainButton.setSummary(domain);
+		// domainButton.setOnPreferenceClickListener(new
+		// Preference.OnPreferenceClickListener() {
+		// @Override
+		// public boolean onPreferenceClick(Preference arg0) {
+		// Intent intent = new Intent(getActivity(), DomainActivity.class);
+		// startActivity(intent);
+		// return true;
+		// }
+		// });
 
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_viewer_bg_color_key)));

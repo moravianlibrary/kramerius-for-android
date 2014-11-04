@@ -30,11 +30,5 @@
         
     </PreferenceCategory>
    
-    <PreferenceCategory android:title="@string/pref_category_data" >
-        <Preference
-            android:key="@string/pref_select_domain_key"
-            android:title="@string/pref_select_domain_title" >
-        </Preference>
-    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -60,4 +60,8 @@ public class Domain {
 		this.logo = logo;
 	}
 
+	public String getUrl() {
+		return getProtocol() + "//" + getDomain();
+	}
+	
 }

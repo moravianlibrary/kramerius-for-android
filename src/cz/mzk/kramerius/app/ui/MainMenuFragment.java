@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.api.K5Api;
+import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.widget.MenuItemWidget;
 
 public class MainMenuFragment extends Fragment implements OnClickListener {
@@ -33,6 +39,11 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	private MenuItemWidget mMenuHelp;
 	private MenuItemWidget mMenuSettings;
 	private List<MenuItemWidget> mMenuItems;
+
+	private TextView mDomainTitle;
+	private TextView mDomainUrl;
+	private ImageView mDomainLogo;
+	private View mDomainContainer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +74,24 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		mMenuItems.add(mMenuSettings);
 		mMenuItems.add(mMenuHelp);
 
+		mDomainTitle = (TextView) view.findViewById(R.id.menu_domain_title);
+		mDomainUrl = (TextView) view.findViewById(R.id.menu_domain_url);
+		mDomainLogo = (ImageView) view.findViewById(R.id.menu_domain_logo);
+		mDomainContainer = view.findViewById(R.id.menu_domain_container);
+		mDomainContainer.setOnClickListener(this);
+		fillDomain();
 		return view;
+	}
+
+	private void fillDomain() {
+		Domain domain = DomainUtil.getDomain(K5Api.getDomain(getActivity()));
+		if (domain == null) {
+			return;
+		}
+		mDomainTitle.setText(domain.getTitle());
+		mDomainUrl.setText(domain.getDomain());
+		mDomainLogo.setImageResource(domain.getLogo());
+
 	}
 
 	private void selectItem(View selectedItem) {
@@ -140,7 +168,14 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 			mCallback.onSettings();
 		} else if (v == mMenuVirtual) {
 			mCallback.onVirtualCollections();
+		} else if (v == mDomainContainer) {
+			onSelectDomain();
 		}
+	}
+
+	private void onSelectDomain() {
+		Intent intent = new Intent(getActivity(), DomainActivity.class);
+		startActivity(intent);
 	}
 
 }
