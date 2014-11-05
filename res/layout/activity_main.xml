@@ -21,17 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg" >
-
         
-        <!-- The main content view -->
-
         <FrameLayout
             android:id="@+id/main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </FrameLayout>
-
-        <!-- The navigation drawer -->
 
         <FrameLayout
             android:id="@+id/main_menu"
