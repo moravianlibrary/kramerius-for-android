@@ -17,6 +17,7 @@ public class K5Constants {
 	public static final String CONTEXT = "context";
 	public static final String PDF = "pdf";
 	public static final String PDF_URL = "url";
+	public static final String MIME_TYPE = "mime";
 
 	public static final String DETAILS = "details";
 	public static final String DETAILS_YEAR = "year";
@@ -27,5 +28,8 @@ public class K5Constants {
 	
 	public static final String VC_DESCS = "descs";
 	public static final String LANG_CS = "cs";
+	
+	
+	public static final String MIME_TYPE_PDF = "application/pdf";
 	
 }

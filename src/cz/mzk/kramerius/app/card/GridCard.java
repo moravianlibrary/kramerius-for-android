@@ -48,12 +48,12 @@ public class GridCard extends Card {
 	private void init(DisplayImageOptions options) {
 		MainCardHeader header = new MainCardHeader(getContext(), 2);
 		header.setButtonOverflowVisible(true);
-		if(ModelUtil.PAGE.equals(mItem.getModel())) {
+		if (ModelUtil.PAGE.equals(mItem.getModel())) {
 			header.setTitle(mItem.getRootTitle());
 		} else {
 			header.setTitle(mItem.getTitle());
 		}
-		
+
 		header.setPopupMenu(R.menu.card_popup, new CardHeader.OnClickCardHeaderPopupMenuListener() {
 			@Override
 			public void onMenuItemClick(BaseCard card, MenuItem item) {
@@ -78,11 +78,11 @@ public class GridCard extends Card {
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
 		TextView author = (TextView) view.findViewById(R.id.grid_item_author);
-		if(ModelUtil.PAGE.equals(mItem.getModel())) {
+		if (ModelUtil.PAGE.equals(mItem.getModel())) {
 			author.setText(mItem.getTitle());
 		} else {
 			author.setText(mItem.getAuthor());
-		}				
+		}
 		View lock = view.findViewById(R.id.grid_item_lockIcon);
 		if (mItem.isPrivate()) {
 			lock.setVisibility(View.VISIBLE);
@@ -90,7 +90,11 @@ public class GridCard extends Card {
 			lock.setVisibility(View.GONE);
 		}
 		TextView type = (TextView) view.findViewById(R.id.grid_item_type);
-		type.setText(mContext.getString(ModelUtil.getLabel(mItem.getModel())));
+		String typeString = mContext.getString(ModelUtil.getLabel(mItem.getModel()));
+		if (mItem.getPdf() != null && !mItem.getPdf().isEmpty()) {
+			typeString = typeString + "/PDF";
+		}
+		type.setText(typeString);
 		ImageView modelIcon = (ImageView) view.findViewById(R.id.grid_item_modeIcon);
 		int modelIconRes = ModelUtil.getIcon(mItem.getModel());
 		modelIcon.setImageResource(modelIconRes);

@@ -31,11 +31,18 @@ public class K5Api {
 	private static final String PATH_STREAM = "streams";
 	private static final String PATH_MODS = "BIBLIO_MODS";
 	private static final String PATH_MP3 = "MP3";
-	private static final String PATH_IMG_FULL = "IMG_FULL";
+	private static final String PATH_IMG = "img";
 
 	private static final String PARAM_LIMIT = "limit";
 	private static final String PARAM_MODEL = "type";
 	private static final String PARAM_POLICY = "policy";
+	private static final String PARAM_PID = "pid";
+	private static final String PARAM_STREAM = "stream";
+	private static final String PARAM_ACTION = "action";
+
+	private static final String STREAM_IMG_FULL = "IMG_FULL";
+
+	private static final String ACTION_RAW = "GETRAW";
 
 	public static String getDomain(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(
@@ -181,9 +188,9 @@ public class K5Api {
 	}
 
 	public static String getPdfPath(Context context, String pid) {
-		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("pid", pid)
-				.appendQueryParameter("stream", PATH_IMG_FULL).appendQueryParameter("action", "GETRAW").build()
-				.toString();
+		return getBaseUri(context).buildUpon().appendPath(PATH_IMG).appendQueryParameter(PARAM_PID, pid)
+				.appendQueryParameter(PARAM_STREAM, STREAM_IMG_FULL).appendQueryParameter(PARAM_ACTION, ACTION_RAW)
+				.build().toString();
 	}
 
 }

@@ -71,18 +71,6 @@ public class K5Connector {
 		mClient = createClient();
 	}
 
-	// public List<Item> getNewest(Context context, int limit) {
-	// return getFeatured(context, K5Api.FEED_NEWEST, limit);
-	// }
-	//
-	// public List<Item> getMostDesirable(Context context, int limit) {
-	// return getFeatured(context, K5Api.FEED_MOST_DESIRABLE, limit);
-	// }
-	//
-	// public List<Item> getCustom(Context context, int limit) {
-	// return getFeatured(context, K5Api.FEED_CUSTOM, limit);
-	// }
-
 	private Item addItemToList(List<Item> list, String pid, String model, String title) {
 		Item item = new Item();
 		item.setModel(model);
@@ -106,20 +94,28 @@ public class K5Connector {
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONArray data = json.getJSONArray(K5Constants.DATA);
 			for (int i = 0; i < data.length(); i++) {
-				Item item = new Item();				
+				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
-				String m = jsonItem.optString(K5Constants.MODEL);
-				if(ModelUtil.PAGE.equals(m)) {
-					item.setPid(jsonItem.optString(K5Constants.ROOT_PID));
-					item.setModel(ModelUtil.MONOGRAPH);
-					item.setTitle(jsonItem.optString(K5Constants.ROOT_TITLE));					
-				} else {
-					item.setPid(jsonItem.optString(K5Constants.PID));
-					item.setModel(jsonItem.optString(K5Constants.MODEL));
-					item.setTitle(jsonItem.optString(K5Constants.TITLE));
-				}
+				// String m = jsonItem.optString(K5Constants.MODEL);
+				// if(ModelUtil.PAGE.equals(m)) {
+				// item.setPid(jsonItem.optString(K5Constants.ROOT_PID));
+				// item.setModel(ModelUtil.MONOGRAPH);
+				// item.setTitle(jsonItem.optString(K5Constants.ROOT_TITLE));
+				// } else {
+				// item.setPid(jsonItem.optString(K5Constants.PID));
+				// item.setModel(jsonItem.optString(K5Constants.MODEL));
+				// item.setTitle(jsonItem.optString(K5Constants.TITLE));
+				// }
+				item.setPid(jsonItem.optString(K5Constants.PID));
+				item.setModel(jsonItem.optString(K5Constants.MODEL));
+				item.setTitle(jsonItem.optString(K5Constants.TITLE));
+
 				item.setIssn(jsonItem.optString(K5Constants.ISSN));
 				item.setDate(jsonItem.optString(K5Constants.DATE));
+
+				if (K5Constants.MIME_TYPE_PDF.equals(jsonItem.optString(K5Constants.MIME_TYPE))) {
+					item.setPdf(K5Api.getPdfPath(context, item.getPid()));
+				}
 
 				JSONArray authors = jsonItem.optJSONArray(K5Constants.AUTHOR);
 				if (authors != null && authors.length() > 0) {
