@@ -10,6 +10,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.PrefUtils;
 
 public class VirtualCollectionActivity extends BaseActivity implements OnItemSelectedListener {
 
@@ -31,7 +32,11 @@ public class VirtualCollectionActivity extends BaseActivity implements OnItemSel
 		String title = getIntent().getStringExtra(EXTRA_TITLE);
 
 		SearchQuery query = new SearchQuery().virtualCollection(pid);
-
+		String policy = PrefUtils.getPolicy(this);
+		if(policy != null) {
+			query.add(SearchQuery.POLICY, policy);
+		}
+		
 		SearchResultFragment fragment = SearchResultFragment.newInstance(query.build());
 		fragment.setOnItemSelectedListener(this);
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
