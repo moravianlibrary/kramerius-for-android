@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -23,32 +22,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		if (view != null) {
-			Configuration config = getResources().getConfiguration();
-			if (config.smallestScreenWidthDp < 720) {
-		//		ScreenUtil.setInsets(getActivity(), view);
-			}			
-		}
-
-		// Preference domainButton = (Preference)
-		// findPreference(getString(R.string.pref_select_domain_key));
-		//
-		// String domain = K5Api.getDomain(getActivity());
-		// domainButton.setSummary(domain);
-		// domainButton.setOnPreferenceClickListener(new
-		// Preference.OnPreferenceClickListener() {
-		// @Override
-		// public boolean onPreferenceClick(Preference arg0) {
-		// Intent intent = new Intent(getActivity(), DomainActivity.class);
-		// startActivity(intent);
-		// return true;
-		// }
-		// });
-
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_viewer_bg_color_key)));
-		// bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_hardware_buttons_key)));
-
 		return view;
 	}
 

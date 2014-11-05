@@ -1,5 +1,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    
+   <PreferenceCategory android:title="@string/pref_category_basic" >
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_public_only_default"
+            android:key="@string/pref_public_only_key"
+            android:summary="@string/pref_public_only_summary"
+            android:title="@string/pref_public_only_title" />
+        
+    </PreferenceCategory>
+       
+    
+    
     <PreferenceCategory android:title="@string/pref_category_viewer" >
         <CheckBoxPreference
             android:defaultValue="@string/pref_hardware_buttons_default"

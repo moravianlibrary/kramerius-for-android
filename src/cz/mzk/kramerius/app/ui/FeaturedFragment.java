@@ -24,6 +24,7 @@ import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
+import cz.mzk.kramerius.app.util.PrefUtils;
 
 public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 
@@ -94,10 +95,12 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 
 	class GetFeaturedTask extends AsyncTask<Integer, Void, List<Item>> {
 
-		private Context tContext;
+		private Context tContext; 
+		private String tPolicy;
 
 		public GetFeaturedTask(Context context) {
 			tContext = context;
+			tPolicy = PrefUtils.getPolicy(context);
 		}
 
 		@Override
@@ -108,7 +111,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 		@Override
 		protected List<Item> doInBackground(Integer... params) {
 			int type = params[0];
-			return K5Connector.getInstance().getFeatured(tContext, type, K5Api.FEED_NO_LIMIT, "public", null);
+			return K5Connector.getInstance().getFeatured(tContext, type, K5Api.FEED_NO_LIMIT, tPolicy, null);
 		}
 
 		@Override
