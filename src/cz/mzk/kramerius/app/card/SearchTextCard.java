@@ -94,6 +94,8 @@ public class SearchTextCard extends Card implements SearchFilter {
 	public void addToQuery(SearchQuery query) {
 		if (mWithIdentifier) {
 			query.identifier(mKey, getValue());
+		} else if(SearchQuery.OCR.equals(mKey)){
+			query.fulltext(getValue());
 		} else {
 			query.add(mKey, getValue());
 		}

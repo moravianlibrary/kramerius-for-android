@@ -145,6 +145,7 @@
    <string name="search_filter_signature">Signatura</string>
    <string name="search_filter_sysno">Systémové číslo</string>
    <string name="search_filter_keyword">Klíčové slovo</string>
+   <string name="search_filter_fulltext">Fulltext</string>
    
 	<string name="search_filter_date_invalid_nan">Rok vydání nemá format celého čísla</string>    
 	<string name="search_filter_date_invalid_tltf">Rok vydání "do" musí být větší nebo roven "od"</string>

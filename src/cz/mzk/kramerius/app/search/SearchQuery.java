@@ -20,11 +20,13 @@ public class SearchQuery {
 	public static final String SYSNO = "sysno";
 	public static final String SIGNATURE = "signature";
 	public static final String KEYWORDS = "keywords";
+	public static final String OCR = "text_ocr";
 	
 
 	private String mQuery;
 	boolean hasModel = false;
-
+	boolean hasFulltext = false;
+	
 	public SearchQuery() {
 		mQuery = "";
 	}
@@ -49,6 +51,10 @@ public class SearchQuery {
 		return this;
 	}
 
+	public SearchQuery fulltext(String value) {
+		hasFulltext = true;
+		return add(OCR, value, false);
+	}
 	
 	public SearchQuery add(String key, String value) {
 		return add(key, value, true);
@@ -94,6 +100,9 @@ public class SearchQuery {
 		sb.append("document_type:" + ModelUtil.MAP).append(" OR ");
 		sb.append("document_type:" + ModelUtil.SHEET_MUSIC).append(" OR ");
 		sb.append("document_type:" + ModelUtil.SOUND_RECORDING);
+		if(hasFulltext) {
+			sb.append(" OR ").append("document_type:" + ModelUtil.PAGE);
+		}
 		sb.append(")");
 
 		mQuery = mQuery + sb.toString();

@@ -186,6 +186,7 @@ public class K5Connector {
 			String requst = K5Api.getItemPath(context, pid);
 			requst.replace(K5Api.getDomain(context), domain);
 			HttpGet request = new HttpGet(requst);
+			//Log.d(TAG, "getItem: " + requst);
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();

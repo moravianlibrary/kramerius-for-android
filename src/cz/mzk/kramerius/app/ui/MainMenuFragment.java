@@ -56,6 +56,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		mMenuItems = new ArrayList<MenuItemWidget>();
 		mMenuHome = (MenuItemWidget) view.findViewById(R.id.menu_home);
 		mMenuHome.setOnClickListener(this);
+		mMenuHome.setSelected(true);
 		mMenuVirtual = (MenuItemWidget) view.findViewById(R.id.menu_virtual);
 		mMenuVirtual.setOnClickListener(this);
 		mMenuSearch = (MenuItemWidget) view.findViewById(R.id.menu_search);

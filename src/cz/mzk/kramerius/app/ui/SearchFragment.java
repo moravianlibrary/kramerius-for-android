@@ -203,6 +203,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SIGNATURE, name, true, 6));
 		} else if (name.equals(getResources().getString(R.string.search_filter_sysno))) {
 			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SYSNO, name, true, 7));
+		} else if (name.equals(getResources().getString(R.string.search_filter_fulltext))) {
+			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.OCR, name, false, 11));
 		}
 	}
 

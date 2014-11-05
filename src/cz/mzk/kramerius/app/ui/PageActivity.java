@@ -383,6 +383,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 			if (ModelUtil.PAGE.equals(item.getModel())) {
 				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
+				if(hierarchy == null) {
+					return null;
+				}
 				if (hierarchy.size() > 1) {
 					String parentPid = hierarchy.get(hierarchy.size() - 2).first;
 					Item parentItem = K5Connector.getInstance().getItem(tContext, parentPid);
