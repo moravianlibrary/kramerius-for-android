@@ -15,17 +15,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.ViewGroup.LayoutParams;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.polites.android.GestureImageView;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHandler;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
-import cz.mzk.androidzoomifyviewer.viewer.Utils;
 import cz.mzk.kramerius.app.R;
 
 /**
@@ -41,6 +41,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	public static final String KEY_PAGE_PIDS = PageViewerFragment.class.getSimpleName() + "_pagePids";
 	public static final String KEY_CURRENT_PAGE_INDEX = PageViewerFragment.class.getSimpleName() + "_pageIndex";
 	public static final String KEY_POPULATED = PageViewerFragment.class.getSimpleName() + ":_populated";
+	private static final int IMG_FULL_HEIGHT = 1200;
 	private static final int MAX_IMG_FULL_HEIGHT = 1000;
 	private static final int IMG_FULL_SCALE_QUOTIENT = 100;
 
@@ -51,7 +52,8 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	private View mContainer;
 	private View mProgressView;
 	private TiledImageView mTiledImageView;
-	private ImageView mImageView;
+	// private ImageViewTouch mImageView;
+	private ViewGroup mImageViewContainer;
 
 	private GestureDetector mGestureDetector;
 	private EventListener mEventListener;
@@ -83,8 +85,8 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		mTiledImageView.setImageInitializationHandler(this);
 		// mTiledImageView.setTileDownloadHandler(this);
 		mTiledImageView.setSingleTapListener(this);
-		mImageView = (ImageView) view.findViewById(R.id.imageView);
-		mImageView.setOnTouchListener(this);
+		mImageViewContainer = (ViewGroup) view.findViewById(R.id.imageContainer);
+		// mImageView.setOnTouchListener(this);
 		return view;
 	}
 
@@ -195,7 +197,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	private void hideViews() {
 		mProgressView.setVisibility(View.INVISIBLE);
 		mTiledImageView.setVisibility(View.INVISIBLE);
-		mImageView.setVisibility(View.INVISIBLE);
+		mImageViewContainer.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -208,7 +210,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	@Override
 	public void setBackgroundColor(int color) {
 		mTiledImageView.setBackgroundColor(color);
-		mImageView.setBackgroundColor(color);
+		mImageViewContainer.setBackgroundColor(color);
 		mProgressView.setBackgroundColor(color);
 	}
 
@@ -236,6 +238,22 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	}
 
+	private void inflateImage(Bitmap bitmap) {
+		if (getActivity() == null) {
+			return;
+		}
+		mImageViewContainer.removeAllViews();
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
+		GestureImageView view = new GestureImageView(getActivity());
+		view.setImageBitmap(bitmap);
+		view.setLayoutParams(params);
+		view.setOnTouchListener(this);
+
+		mImageViewContainer.addView(view);
+		mImageViewContainer.setVisibility(View.VISIBLE);
+	}
+
 	private void loadPageImageFromDatastream() {
 		String pid = mPagePids.get(mCurrentPageIndex);
 		final String url = buildScaledImageDatastreamUrl(pid);
@@ -243,8 +261,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		mImageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
 			@Override
 			public void onResponse(Bitmap bitmap) {
-				mImageView.setImageBitmap((Bitmap) bitmap);
-				mImageView.setVisibility(View.VISIBLE);
+				inflateImage(bitmap);
 			}
 		}, 0, 0, null, new Response.ErrorListener() {
 			public void onErrorResponse(VolleyError error) {
@@ -264,18 +281,21 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		StringBuilder builder = new StringBuilder();
 		builder.append("http://").append(mDomain);
 		builder.append("/search/img?pid=").append(pid);
-		builder.append("&stream=IMG_FULL&action=SCALE");
-		builder.append("&scaledHeight=").append(determineHeightForScaledImageFromDatastream());
+		builder.append("&stream=IMG_FULL");
+		builder.append("&action=SCALE&scaledHeight=").append(determineHeightForScaledImageFromDatastream());
 		return builder.toString();
 	}
 
 	private int determineHeightForScaledImageFromDatastream() {
-		int heightPx = mImageView.getHeight();
-		int heightDp = Utils.pxToDp(heightPx);
-		int result = heightDp > MAX_IMG_FULL_HEIGHT ? MAX_IMG_FULL_HEIGHT : (heightDp / IMG_FULL_SCALE_QUOTIENT + 1)
-				* IMG_FULL_SCALE_QUOTIENT;
-		Log.d(TAG, "View height: " + heightDp + " dp (" + heightPx + " px); scaling image to: " + result + " px");
-		return result;
+		// int heightPx = mImageViewContainer.getHeight();
+		// int heightDp = Utils.pxToDp(heightPx);
+		// int result = heightDp > MAX_IMG_FULL_HEIGHT ? MAX_IMG_FULL_HEIGHT :
+		// (heightDp / IMG_FULL_SCALE_QUOTIENT + 1)
+		// * IMG_FULL_SCALE_QUOTIENT;
+		// Log.d(TAG, "View height: " + heightDp + " dp (" + heightPx +
+		// " px); scaling image to: " + result + " px");
+		// return result;
+		return IMG_FULL_HEIGHT;
 	}
 
 	@Override

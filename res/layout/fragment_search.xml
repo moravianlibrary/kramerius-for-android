@@ -17,7 +17,7 @@
             android:id="@+id/search_check_public"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="false"
+            android:checked="true"
             android:text="Pouze veřejné"
             android:textColor="@color/grey" />
 
