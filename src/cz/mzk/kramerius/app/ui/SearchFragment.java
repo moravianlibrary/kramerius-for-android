@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.GridView;
+import android.widget.ListAdapter;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.card.SearchDateCard;
@@ -39,7 +41,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	private static final String TAG = SearchFragment.class.getName();
 
-	private Button mAddFilter;
+	// private Button mAddFilter;
 	private CheckBox mCheckPublicOnly;
 
 	private CardListView mSearchListView;
@@ -48,6 +50,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	private OnSearchListener mOnSearchListener;
 
 	private View mGoButton;
+	private View mAddFilterButton;
+	private View mFulltextButton;
 
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
@@ -63,43 +67,52 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		setHasOptionsMenu(true);
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		MenuItem itemSearch = menu.add(1, MENU_ADD_FILTER, 1, "Přidat filtr");
-		itemSearch.setIcon(R.drawable.ic_action_plus);
-		if (isTablet()) {
-			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		} else {
-			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_ADD_FILTER:
-			showFilterDialog();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+	// @Override
+	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	// super.onCreateOptionsMenu(menu, inflater);
+	// MenuItem itemSearch = menu.add(1, MENU_ADD_FILTER, 1, "Přidat filtr");
+	// itemSearch.setIcon(R.drawable.ic_action_plus);
+	// if (isTablet()) {
+	// itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
+	// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	// } else {
+	// itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+	// }
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// switch (item.getItemId()) {
+	// case MENU_ADD_FILTER:
+	// showFilterDialog();
+	// return true;
+	// }
+	// return super.onOptionsItemSelected(item);
+	// }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_search, container, false);
 		mGoButton = view.findViewById(R.id.search_go);
 		mGoButton.setOnClickListener(this);
+		mAddFilterButton = view.findViewById(R.id.search_add_filter);
+		mAddFilterButton.setOnClickListener(this);
+		mFulltextButton = view.findViewById(R.id.search_fulltext);
+		mFulltextButton.setOnClickListener(this);
+
 		mSearchListView = (CardListView) view.findViewById(R.id.card_list);
 		List<Card> list = new ArrayList<Card>();
 		mAdapter = new CardArrayAdapter(getActivity(), list);
 		mAdapter.setInnerViewTypeCount(15);
 		CardUtils.setAnimationAdapter(mAdapter, mSearchListView, CardUtils.ANIM_SWING_RIGHT);
-		mAddFilter = (Button) view.findViewById(R.id.search_addFilter);
-		mAddFilter.setOnClickListener(this);
+		// mAddFilter = (Button) view.findViewById(R.id.search_addFilter);
+		// mAddFilter.setOnClickListener(this);
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
+		mAdapter.add(new SearchDoctypeCard(getActivity(), SearchQuery.MODEL, getResources().getString(
+				R.string.search_filter_doctype), 10));
 		mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, getResources().getString(
 				R.string.search_filter_name), false, 0));
+
 		return view;
 	}
 
@@ -160,6 +173,10 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	public void onClick(View v) {
 		if (v == mGoButton) {
 			search();
+		} else if (v == mAddFilterButton) {
+			showFilterDialog();
+		} else if (v == mFulltextButton) {
+			// TODO:
 		}
 	}
 

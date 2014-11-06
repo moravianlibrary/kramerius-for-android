@@ -96,7 +96,10 @@ public class K5Connector {
 			for (int i = 0; i < data.length(); i++) {
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
-				// String m = jsonItem.optString(K5Constants.MODEL);
+				String m = jsonItem.optString(K5Constants.MODEL);
+				if(ModelUtil.PAGE.equals(m)) {
+					continue;
+				}
 				// if(ModelUtil.PAGE.equals(m)) {
 				// item.setPid(jsonItem.optString(K5Constants.ROOT_PID));
 				// item.setModel(ModelUtil.MONOGRAPH);

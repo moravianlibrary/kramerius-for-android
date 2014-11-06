@@ -13,7 +13,6 @@
         android:gravity="center_vertical"
         android:padding="10dp" >
 
-        
         <CheckBox
             android:id="@+id/search_check_public"
             android:layout_width="wrap_content"
@@ -35,14 +34,52 @@
             android:visibility="gone" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/search_top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/search_add_filter"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_raised"
+            android:gravity="center"
+            android:text="Přidat filtr"
+            android:textAllCaps="true"
+            android:textColor="#fff"
+            android:textSize="14dp" />
+
+        <Button
+            android:id="@+id/search_fulltext"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_white_raised"
+            android:gravity="center"
+            android:text="Fulltext"
+            android:textAllCaps="true"
+            android:textColor="#555"
+            android:textSize="14dp" />
+    </LinearLayout>
+
     <it.gmariotti.cardslib.library.view.CardListView
         android:id="@+id/card_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/search_bottomPanel"
+        android:layout_below="@id/search_top_panel"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:listSelector="@android:color/transparent"
         card:list_card_layout_resourceID="@layout/list_card_search" />
 
@@ -54,7 +91,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="5dp"
         android:layout_marginRight="5dp"
-        android:background="@drawable/img_hub"
+        android:background="@drawable/img_fab"
         android:padding="25dp"
         android:src="@drawable/img_search" />
 
