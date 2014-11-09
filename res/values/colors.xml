@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
-    
-    
-    
-        
+      
     <color name="color_primary">#0073b2</color>
     <color name="color_primary_dark">#005d93</color>
     
     <color name="status_bar">@color/color_primary_dark</color>
     
-    
-    
-    
-    <color name="status_bar3">#0073b2</color>
-    <color name="status_bar2">#006064</color>
     <color name="primary_highlight">#33a4b0</color>
-    
-    <color name="green">#0073b2</color>
-    <color name="green6">#0097a7</color>
-    <color name="green5">#004d40</color>
-    <color name="green4">#00bcd4</color>
-    <color name="green3">#00695c</color>
-    <color name="green2">#009688</color>
-    
     
     
     <color name="menu_item_noraml">#656565</color>
     <color name="menu_bottom_divider">#e6e6e6</color>
+    
+    <color name="button_normal">@color/color_primary</color>
+    <color name="button_pressed">@color/color_primary_dark</color>
+    <color name="button_text">@color/white</color>
+    
+    <color name="warning_message_text">@color/grey</color>
     
     <color name="bg">#e3e3e3</color>    
     <color name="card_pressed">#f9f9f9</color>
@@ -48,9 +37,6 @@
     
     <color name="button_menu_normal">#ffffff</color>
     <color name="button_menu_pressed">#eeeeee</color>
-    
-    <color name="button_main_normal">@color/green</color>
-    <color name="button_main_pressed">#00a7b7</color>
     
     
     <color name="search_card_title">@color/color_primary</color>

@@ -28,32 +28,22 @@
                     android:layout_centerVertical="true"
                     android:text="@string/featured_custom"
                     android:textColor="@color/dark_grey"
-                    android:textSize="19dp" />
+                    android:textSize="@dimen/main_featured_text" />
 
                 <Button
                     android:id="@+id/featured_custom_expand"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
+                    style="@style/MyButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/green"
-                    android:gravity="center"
                     android:text="@string/featured_show_all"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/featured_custom_again"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
+                    style="@style/MyButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/green"
-                    android:gravity="center"
                     android:text="@string/warn_load_again"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
                     android:visibility="gone" />
 
                 <ImageView
@@ -103,32 +93,22 @@
                     android:layout_centerVertical="true"
                     android:text="@string/featured_newest"
                     android:textColor="@color/dark_grey"
-                    android:textSize="19dp" />
+                    android:textSize="@dimen/main_featured_text" />
 
                 <Button
                     android:id="@+id/featured_newest_expand"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
+                    style="@style/MyButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/green"
-                    android:gravity="center"
                     android:text="@string/featured_show_all"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/featured_newest_again"
-                    android:layout_width="100dp"
-                    android:layout_height="20dp"
+                    style="@style/MyButton"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/green"
-                    android:gravity="center"
                     android:text="@string/warn_load_again"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
                     android:visibility="gone" />
 
                 <ImageView

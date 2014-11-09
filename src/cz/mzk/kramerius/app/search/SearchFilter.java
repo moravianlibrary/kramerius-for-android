@@ -105,7 +105,7 @@ public abstract class SearchFilter {
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					mParentView.removeView(mView);
-					mFilters.remove(this);
+					mFilters.remove(SearchFilter.this);
 				}
 			});
 

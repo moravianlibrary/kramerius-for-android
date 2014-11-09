@@ -75,7 +75,7 @@ public class LoginFragment extends Fragment {
 		if (incorrect) {
 			mMessage.setTextColor(getActivity().getResources().getColor(R.color.red));
 		} else {
-			mMessage.setTextColor(getActivity().getResources().getColor(R.color.green));
+			mMessage.setTextColor(getActivity().getResources().getColor(R.color.color_primary));
 		}
 	}
 

@@ -467,7 +467,7 @@ public class MetadataFragment extends BaseFragment {
 		if (expandable) {
 			Button button = new Button(getActivity());
 			button.setText(getString(R.string.metadata_open_parent));
-			button.setBackgroundColor(getResources().getColor(R.color.green));
+			button.setBackgroundColor(getResources().getColor(R.color.color_primary));
 			button.setTextColor(getResources().getColor(R.color.white));
 			button.setTextSize(TypedValue.COMPLEX_UNIT_PX,
 					getResources().getDimensionPixelSize(R.dimen.metadata_button_text_size));

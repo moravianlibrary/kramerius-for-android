@@ -57,7 +57,7 @@
             android:layout_toLeftOf="@id/grid_item_lockIcon"
             android:lines="1"
             android:paddingLeft="5dp"
-            android:textColor="@color/green"
+            android:textColor="@color/color_primary"
             android:textSize="15dp" />
     </RelativeLayout>
 

@@ -55,7 +55,7 @@
             android:layout_toRightOf="@id/grid_item_modeIcon"
             android:lines="1"
             android:paddingLeft="5dp"
-            android:textColor="@color/green"
+            android:textColor="@color/color_primary"
             android:textSize="15dp" />
     </RelativeLayout>
 

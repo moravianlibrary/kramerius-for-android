@@ -1,6 +1,5 @@
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="slidingmenu_offset">60dp</dimen>
@@ -11,6 +10,19 @@
     <dimen name="toolbar_title">19dp</dimen>
 
     
+    <dimen name="button_corner">2dp</dimen>
+    <dimen name="button_padding_left">10dp</dimen>
+    <dimen name="button_padding_right">10dp</dimen>
+    <dimen name="button_height">26dp</dimen>
+    <dimen name="button_text">13dp</dimen>
+
+    <dimen name="button_warning_height">36dp</dimen>
+    <dimen name="button_warning_text">17dp</dimen>    
+    <dimen name="button_warning_margin_top">10dp</dimen>
+    
+    <dimen name="warning_message_text">17dp</dimen>
+    
+    <dimen name="main_featured_text">19dp</dimen>
     
     <dimen name="search_card_elevation">2dp</dimen>
     <dimen name="search_card_corner">1dp</dimen>
