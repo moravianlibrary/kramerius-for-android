@@ -36,8 +36,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
             kramerius:menuIcon="@drawable/ic_help_grey"
-            kramerius:menuIconSelected="@drawable/ic_home_green"
-            kramerius:menuTitle="@string/main_menu_settings" />
+            kramerius:menuIconSelected="@drawable/ic_help_green"
+            kramerius:menuTitle="@string/main_menu_help" />
     </LinearLayout>
 
     <ScrollView

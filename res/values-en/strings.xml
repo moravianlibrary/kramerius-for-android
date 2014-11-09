@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    
+    <string name="app_name">Kramerius</string>
+
+    <string name="document_periodical">News &amp; Magazines</string>
+    <string name="document_periodical_volume">Periodical Volume</string>
+    <string name="document_periodical_item">Issue Number</string>
+    <string name="document_page">Page</string>
+    <string name="document_manuscript">Manuscript</string>
+    <string name="document_monograph">Book</string>
+    <string name="document_sound_recording">Sound Recording</string>
+    <string name="document_sound_unit">Sound Unit</string>
+    <string name="document_track">Track</string>
+    <string name="document_map">Map</string>
+    <string name="document_graphic">Graphic</string>
+    <string name="document_sheetmusic">Sheet Music</string>
+    <string name="document_archive">Archive</string>
+    <string name="document_unknown">Unknown Type</string>
+    <string name="document_all">All</string>
+    
+    <string name="main_title">Digital Library</string>
+    <string name="main_menu_title">Digital Library</string>
+    <string name="newest_title">Newest</string>
+    <string name="selected_title">Recommended</string>
+    <string name="most_desirable_title">Most Desirable</string>    
+    <string name="user_info_title">User Account</string>
+    <string name="login_title">Log In</string>
+    <string name="virtual_collections_title">Collections</string>
+    <string name="settings_title">Settings</string>
+    <string name="help_title">Help</string>
+    <string name="metadata_title">Details</string>
+    <string name="domain_title">Data Source</string>
+    
+    <string name="main_menu_home">Home</string>
+    <string name="main_menu_virtual_colections">Collections</string>
+    <string name="main_menu_search">Search</string>
+    <string name="main_menu_about">About</string>
+    <string name="main_menu_help">Help &amp; Feedback</string>
+    <string name="main_menu_feedback">Feedback</string>
+    <string name="main_menu_settings">Settings</string>    
+    <string name="main_menu_recent">Recent</string>
+    
+    <string name="featured_custom">Recommended for You</string>
+    <string name="featured_newest">Newest</string>
+    <string name="featured_most_desirable">Most Desirable</string>
+    <string name="featured_show_all">MORE</string>
+        
+    <string name="about_title">About</string>
+    <string name="about_app_title">Kramerius</string>
+    <string name="about_app_subtitle">Digital Library</string>
+    <string name="about_app_version">v0.2.9/DEV</string>
+    <string name="about_app_copyright">Copyright © 2014 Moravian library in Brno</string>
+    <string name="about_app_feedback_prefix">Feedback - Kramerius</string>
+    
+    
+    <string name="inaccessible_document_title">Publicly inaccessible document</string>
+    
+    <string name="recent_title">Recent</string>
+    
+    <string name="search_title">Search</string>
+    
+    <string name="search_result_title">Search Result</string>
+    
+    
+    <string name="feedback_email">jan.rychtar.dev@gmail.com</string>
+    <string name="feedback_chooseEmailClient">Select an e-mail client</string>
+	<string name="feedback_noEmailClient">You have no e-mail client installed.</string>
+    
+    
+    <string name="metadata_title_info_title">Title</string>
+    <string name="metadata_title_info_subtitle">Subtitle</string>
+    <string name="metadata_title_info_part_number">Part number</string>
+    <string name="metadata_title_info_part_name">Part title</string>
+    <string name="metadata_identifier_issn">ISSN</string>
+    <string name="metadata_identifier_isbn">ISBN</string>
+    <string name="metadata_identifier_ccnb">čČNB</string>
+    <string name="metadata_identifier_oclc">OCLC</string>
+    
+
+    <string name="metadata_language">Language</string>
+    <string name="metadata_languages">Languages</string>
+    <string name="metadata_keywords">Keywords</string>
+    <string name="metadata_abstract">Abstract</string>
+    <string name="metadata_physical_description">Physical description</string>
+    <string name="metadata_physical_description_scale">Size</string>
+    <string name="metadata_physical_description_extent">Extent</string>
+    <string name="metadata_cartographics">Cartographics</string>
+    <string name="metadata_cartographics_scale">Scale</string>
+    <string name="metadata_cartographics_coordinates">Coordinates</string>
+    
+    <string name="metadata_author">Author</string>
+    <string name="metadata_authors">Authors</string>
+    <string name="metadata_author_name">Name</string>
+    <string name="metadata_author_date">Date</string>
+    <string name="metadata_author_unknown">Unknown</string>
+   
+    <string name="metadata_publisher">Publisher</string>
+    <string name="metadata_publishers">Publishers</string>
+    <string name="metadata_publisher_name">Publisher\'s name</string>
+    <string name="metadata_publisher_date">Date of Publication</string>
+    <string name="metadata_publisher_place">Place of Publication</string>
+    
+    <string name="metadata_location">Storage Place</string>
+    <string name="metadata_location_physical">Storage Place</string>
+    <string name="metadata_location_shelf">Shelf Number</string>
+     
+    <string name="metadata_notes">Notes</string>
+   
+    <string name="metadata_page">Page</string>
+    <string name="metadata_page_number">Page Number</string>
+    <string name="metadata_page_index">Page Index</string>
+    
+
+	<string name="metadata_periodical_volume">Volume</string>
+	<string name="metadata_periodical_volume_unknown">unknown</string>
+	<string name="metadata_periodical_volume_date">Year</string>
+	<string name="metadata_periodical_volume_date_unknown">unknown</string>
+	<string name="metadata_periodical_volume_open">Show Issues</string>
+	
+	<string name="metadata_periodical_item">Issue</string>
+	<string name="metadata_periodical_item_unknown">unknown</string>       
+	<string name="metadata_periodical_item_date">Date</string>
+	<string name="metadata_periodical_item_date_unknown">unknown</string>
+    <string name="metadata_periodical_item_open">Open</string>
+    
+   <string name="metadata_open_parent">Open</string>
+   <string name="metadata_share">Share</string>
+   
+   
+   <string name="sound_unit_tracks">Tracks:</string>
+   <string name="sound_unit_play">Play</string>
+   
+   
+   <string name="search_public_only">Public only</string>
+   <string name="search_add_filter">Add filter</string>
+   <string name="search_fulltext">Fulltext</string>
+   
+   
+   <string name="search_filter_name">Name</string>
+   <string name="search_filter_author">Author</string>
+   <string name="search_filter_doctype">Document Type</string>
+   <string name="search_filter_year">Year of Pubblication</string>
+   <string name="search_filter_issn">ISSN</string>
+   <string name="search_filter_isbn">ISBN</string>
+   <string name="search_filter_ddt">DDT</string>
+   <string name="search_filter_mdt">MDT</string>
+   <string name="search_filter_signature">Shelf Number</string>
+   <string name="search_filter_sysno">System Number</string>
+   <string name="search_filter_keyword">Keyword</string>
+   <string name="search_filter_fulltext">Fulltext</string>
+   
+	<string name="search_filter_date_invalid_nan">Year of Pubblication must be an integer.</string>    
+	<string name="search_filter_date_invalid_tltf">Year of Pubblication "to" must be greater or equal to "from"</string>
+   
+    <string name="search_filter_date_from">From</string>
+    <string name="search_filter_date_to">To</string>          	
+    
+    <string name="page_menu_home">Home</string>
+    <string name="page_menu_settings">Settings</string>    
+    <string name="page_menu_recent">Recent</string>
+    <string name="page_menu_orientation">Keep screen orientation</string>
+    
+    
+    <string name="inaccessible_document_header">Dokument není veřejně přístupný.</string>
+    <string name="inaccessible_document_why_title">Proč je dokument neveřejný?</string>
+    <string name="inaccessible_document_why_content">Tento dokument si nemůžete volně prohlížet kvůli autorským právům. Autorský zákon připouští zpřístupnění děl 70 let po smrti všech autorů (včetně překladatele, ilustrátora atd.) a 50 let od vydání díla.</string>
+    <string name="inaccessible_document_how_title">Jak se k dokumentu dostat?</string>
+    <string name="inaccessible_document_how_content">Tady bude nějaký vhodný text, který nebude závislý na konkrétním Krameriovi. Asi si pro každého Kraméria držet název instituce a uživatele pak nasměrovat do této instituce.</string>
+    <string name="inaccessible_document_report_title">Myslíte si, že by dokument měl být veřejně přístupný?</string>
+    <string name="inaccessible_document_report_content">Pokud se Vám zdá, že by dokument měl být přístupný nebo máte jakýkoliv jiný dotaz, ...</string>
+    
+    <string name="menu_search">Search</string>
+    <string name="popup_card_details">Details</string>
+    <string name="popup_card_open">Open</string>
+    <string name="popup_card_share">Share</string>
+    
+
+    <string name="gen_ok">Ok</string>
+    <string name="gen_yes">Yes</string>
+    <string name="gen_no">No</string>
+    <string name="gen_again">Again</string>
+    
+    <string name="warn_data_loading_failed">Failed to load data.</string>
+    <string name="warn_load_again">AGAIN</string>
+    <string name="warn_empty_result">No results found.</string>
+    <string name="warn_empty_history">There ate no recent documents yet.</string>
+    <string name="warn_empty_vc">The digital library doesn\'t contain any collection.</string>
+    <string name="warn_page_private_message">The page is publicly inaccessible</string>
+    <string name="warn_page_private_button">More information</string>
+    <string name="warn_page_loading_failed">Failed to load the page.</string>    
+    
+
+    <string name="pref_viewer_bg_color_white">White</string>
+    <string name="pref_viewer_bg_color_black">Black</string>
+    
+    
+    <string name="pref_viewer_mode_fit">Fit to Screen</string>
+    <string name="pref_viewer_mode_top_left">Align to the top-left edge</string>
+    <string name="pref_viewer_mode_center">Align to the center</string>
+    <string name="pref_viewer_mode_center_horizontal">Align to the horizontal center</string>
+    
+    
+    <string name="pref_category_viewer">Viewer</string>
+    <string name="pref_category_basic">Basic</string>
+    
+    <string name="pref_keep_screen_on_title">Keep the Screen On</string>
+    <string name="pref_keep_screen_on_summary">Keep the screen on while reading</string>
+    
+    <string name="pref_hardware_buttons_title">Use hardware buttons</string>
+    <string name="pref_hardware_buttons_summary">Enable the volume buttons to turn pages</string>
+      
+    <string name="pref_view_mode_title">Page Alignment</string>
+
+    <string name="pref_viewer_bg_color_title">Background color</string>
+    <string name="pref_viewer_bg_color_summary">Viewer background color</string>
+     
+    <string name="pref_public_only_title">Public documents only</string>
+    <string name="pref_public_only_summary">Show only the publicly available documents</string>
+    
+    
+</resources>

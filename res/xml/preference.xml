@@ -29,7 +29,6 @@
             android:entries="@array/view_mode_entries"
             android:entryValues="@array/view_mode_values"
             android:key="@string/pref_view_mode_key"
-            android:summary="@string/pref_view_mode_summary"
             android:title="@string/pref_view_mode_title" />
         
         <ListPreference

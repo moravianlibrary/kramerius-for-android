@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/menu_card_detail"
-        android:title="Podrobnosti"/>
+        android:title="@string/popup_card_details"/>
     <item
         android:id="@+id/menu_card_open"
-        android:title="Otevřít"/>
+        android:title="@string/popup_card_open"/>
     <item
         android:id="@+id/menu_card_share"
-        android:title="Sdílet"/>
+        android:title="@string/popup_card_share"/>
 
 </menu>

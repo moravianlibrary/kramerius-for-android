@@ -182,6 +182,12 @@
     <string name="inaccessible_document_report_content">Pokud se Vám zdá, že by dokument měl být přístupný nebo máte jakýkoliv jiný dotaz, ...</string>
     
     
+    <string name="menu_search">Hledat</string>
+    <string name="popup_card_details">Podrobnosti</string>
+    <string name="popup_card_open">Otevřít</string>
+    <string name="popup_card_share">Sdílet</string>
+
+    
     <string name="ga_appview_about" translatable="false">About</string>
     <string name="ga_appview_help" translatable="false">Help</string>
     <string name="ga_appview_search" translatable="false">Search</string>
@@ -240,7 +246,6 @@
     <string name="pref_view_mode_default" translatable="false">4</string>
     <string name="pref_view_mode_key" translatable="false">p_view_mode</string>
     <string name="pref_view_mode_title">Způsob zobrazení</string>
-    <string name="pref_view_mode_summary">Jakým způsobem zobrazit obrázek na obrazovce</string>
 
     <string name="pref_viewer_bg_color_default" translatable="false">black</string>
     <string name="pref_viewer_bg_color_key" translatable="false">p_viewer_bg_color</string>
