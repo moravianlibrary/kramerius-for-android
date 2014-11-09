@@ -1,9 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.view.CardListView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,26 +10,19 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.GridView;
-import android.widget.ListAdapter;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.card.SearchDateCard;
-import cz.mzk.kramerius.app.card.SearchDoctypeCard;
-import cz.mzk.kramerius.app.card.SearchTextCard;
+import cz.mzk.kramerius.app.search.DateSearchFilter;
+import cz.mzk.kramerius.app.search.DoctypeSearchFilter;
+import cz.mzk.kramerius.app.search.InputSearchFilter;
 import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
-import cz.mzk.kramerius.app.util.CardUtils;
 
 public class SearchFragment extends BaseFragment implements OnClickListener {
 
@@ -44,14 +33,15 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	// private Button mAddFilter;
 	private CheckBox mCheckPublicOnly;
 
-	private CardListView mSearchListView;
-	private CardArrayAdapter mAdapter;
-
 	private OnSearchListener mOnSearchListener;
 
 	private View mGoButton;
 	private View mAddFilterButton;
 	private View mFulltextButton;
+
+	private ViewGroup mFilterContainer;
+
+	private List<SearchFilter> mFilters;
 
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
@@ -67,32 +57,13 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		setHasOptionsMenu(true);
 	}
 
-	// @Override
-	// public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-	// super.onCreateOptionsMenu(menu, inflater);
-	// MenuItem itemSearch = menu.add(1, MENU_ADD_FILTER, 1, "Přidat filtr");
-	// itemSearch.setIcon(R.drawable.ic_action_plus);
-	// if (isTablet()) {
-	// itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS |
-	// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-	// } else {
-	// itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-	// }
-	// }
-	//
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case MENU_ADD_FILTER:
-	// showFilterDialog();
-	// return true;
-	// }
-	// return super.onOptionsItemSelected(item);
-	// }
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+		mFilters = new ArrayList<SearchFilter>();
+		mFilterContainer = (ViewGroup) view.findViewById(R.id.search_filter_container);
+
 		mGoButton = view.findViewById(R.id.search_go);
 		mGoButton.setOnClickListener(this);
 		mAddFilterButton = view.findViewById(R.id.search_add_filter);
@@ -100,18 +71,12 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		mFulltextButton = view.findViewById(R.id.search_fulltext);
 		mFulltextButton.setOnClickListener(this);
 
-		mSearchListView = (CardListView) view.findViewById(R.id.card_list);
-		List<Card> list = new ArrayList<Card>();
-		mAdapter = new CardArrayAdapter(getActivity(), list);
-		mAdapter.setInnerViewTypeCount(15);
-		CardUtils.setAnimationAdapter(mAdapter, mSearchListView, CardUtils.ANIM_SWING_RIGHT);
-		// mAddFilter = (Button) view.findViewById(R.id.search_addFilter);
-		// mAddFilter.setOnClickListener(this);
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
-		mAdapter.add(new SearchDoctypeCard(getActivity(), SearchQuery.MODEL, getResources().getString(
-				R.string.search_filter_doctype), 10));
-		mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, getResources().getString(
-				R.string.search_filter_name), false, 0));
+
+		new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.TITLE, getResources()
+				.getString(R.string.search_filter_name), false);
+		new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, getResources()
+				.getString(R.string.search_filter_doctype));
 
 		return view;
 	}
@@ -124,8 +89,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	private void search() {
 		// validate filters
-		for (int i = 0; i < mAdapter.getCount(); i++) {
-			SearchFilter filter = (SearchFilter) mAdapter.getItem(i);
+		for (SearchFilter filter : mFilters) {
 			int v = filter.validate();
 			if (v != 0) {
 				showInvalidFilterDialog(v);
@@ -145,8 +109,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		}
 		SearchQuery query = new SearchQuery().add(SearchQuery.POLICY, policy);
 
-		for (int i = 0; i < mAdapter.getCount(); i++) {
-			SearchFilter filter = (SearchFilter) mAdapter.getItem(i);
+		for (SearchFilter filter : mFilters) {
 			filter.addToQuery(query);
 		}
 		String queryString = query.build();
@@ -183,11 +146,10 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	private void showFilterDialog() {
 		String[] allItems = getResources().getStringArray(R.array.search_filter_entries);
 		final List<String> itemList = new ArrayList<String>(Arrays.asList(allItems));
-		for (int i = 0; i < mAdapter.getCount(); i++) {
-			SearchFilter filter = (SearchFilter) mAdapter.getItem(i);
+		for (SearchFilter filter : mFilters) {
 			itemList.remove(filter.getName());
 		}
-		String[] items = new String[allItems.length - mAdapter.getCount()];
+		String[] items = new String[allItems.length - mFilters.size()];
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setItems(itemList.toArray(items), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -199,29 +161,25 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	private void onAddFilter(String name) {
 		if (name.equals(getResources().getString(R.string.search_filter_name))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.TITLE, name, false, 0));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.TITLE, name, false);
 		} else if (name.equals(getResources().getString(R.string.search_filter_author))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.AUTHOR, name, false, 1));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.AUTHOR, name, false);
 		} else if (name.equals(getResources().getString(R.string.search_filter_issn))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.ISSN, name, false, 2));
-		} else if (name.equals(getResources().getString(R.string.search_filter_ddt))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.DDT, name, false, 3));
-		} else if (name.equals(getResources().getString(R.string.search_filter_mdt))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.MDT, name, false, 4));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.ISSN, name, false);
 		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
-			mAdapter.add(new SearchDoctypeCard(getActivity(), SearchQuery.MODEL, name, 10));
+			new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
-			mAdapter.add(new SearchDateCard(getActivity(), SearchQuery.DATE_BEGIN, name, 9));
+			new DateSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.DATE_BEGIN, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_isbn))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.ISBN, name, true, 5));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.ISBN, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_keyword))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.KEYWORDS, name, false, 8));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.KEYWORDS, name, false);
 		} else if (name.equals(getResources().getString(R.string.search_filter_signature))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SIGNATURE, name, true, 6));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.SIGNATURE, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_sysno))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.SYSNO, name, true, 7));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.SYSNO, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_fulltext))) {
-			mAdapter.add(new SearchTextCard(getActivity(), SearchQuery.OCR, name, false, 11));
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.OCR, name, false);
 		}
 	}
 

@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginBottom="3dp"
     android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
     app:cardElevation="2dp"
     card_view:cardCornerRadius="1dp" >
 
@@ -26,6 +26,7 @@
             android:padding="5dp"
             android:src="@drawable/ic_delete_grey" />
 
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -43,40 +44,13 @@
                 android:textColor="@color/green"
                 android:textSize="14dp" />
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/search_filter_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Od: " />
-
-                <EditText
-                    android:id="@+id/search_filter_date_from"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:lines="1"
-                    android:singleLine="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Do: " />
-
-                <EditText
-                    android:id="@+id/search_filter_date_to"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:lines="1"
-                    android:singleLine="true" />
-            </LinearLayout>
+                android:layout_marginTop="0dp"
+                android:lines="1"
+                android:singleLine="true" />
         </LinearLayout>
     </RelativeLayout>
 

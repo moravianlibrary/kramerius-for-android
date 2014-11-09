@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
@@ -10,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#d6d6d6"
         android:gravity="center_vertical"
         android:padding="10dp" >
 
@@ -20,18 +22,6 @@
             android:checked="true"
             android:text="Pouze veřejné"
             android:textColor="@color/grey" />
-
-        <Button
-            android:id="@+id/search_addFilter"
-            android:layout_width="110dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:background="@color/green"
-            android:gravity="center"
-            android:text="Přidat filtr"
-            android:textColor="@color/white"
-            android:textSize="17dp"
-            android:visibility="gone" />
     </RelativeLayout>
 
     <LinearLayout
@@ -71,17 +61,26 @@
             android:textSize="14dp" />
     </LinearLayout>
 
-    <it.gmariotti.cardslib.library.view.CardListView
-        android:id="@+id/card_list"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/search_bottomPanel"
         android:layout_below="@id/search_top_panel"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
-        android:listSelector="@android:color/transparent"
-        card:list_card_layout_resourceID="@layout/list_card_search" />
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:id="@+id/search_filter_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/search_bottomPanel"
+        android:background="#22000000" />
 
     <ImageView
         android:id="@+id/search_go"
@@ -89,9 +88,9 @@
         android:layout_height="75dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginRight="5dp"
-        android:background="@drawable/img_fab"
+        android:background="@drawable/fab_background"
         android:padding="25dp"
         android:src="@drawable/img_search" />
 
