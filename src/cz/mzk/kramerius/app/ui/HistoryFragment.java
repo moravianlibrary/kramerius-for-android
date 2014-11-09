@@ -30,6 +30,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.Constants;
+import cz.mzk.kramerius.app.util.ShareUtils;
 
 public class HistoryFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 
@@ -147,21 +148,20 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 	}
 
 	@Override
-	public void onPopupOpenSelectd(Item item) {
+	public void onPopupOpenSelected(Item item) {
 		if (mOnItemSelectedListener != null) {
 			mOnItemSelectedListener.onItemSelected(item);
 		}
 	}
 
 	@Override
-	public void onPopupDetailsSelectd(Item item) {
+	public void onPopupDetailsSelected(Item item) {
 		onOpenDetail(item.getPid());
 	}
 
 	@Override
-	public void onPopupShareSelectd(Item item) {
-		// TODO Auto-generated method stub
-
+	public void onPopupShareSelected(Item item) {
+		ShareUtils.openShareIntent(getActivity(), item.getPid());
 	}
 
 }

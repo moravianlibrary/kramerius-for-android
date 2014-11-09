@@ -6,7 +6,7 @@ import cz.mzk.kramerius.app.model.Item;
 public interface OnPopupMenuSelectedListener {
 
 	
-	public void onPopupOpenSelectd(Item item);
-	public void onPopupDetailsSelectd(Item item);
-	public void onPopupShareSelectd(Item item);
+	public void onPopupOpenSelected(Item item);
+	public void onPopupDetailsSelected(Item item);
+	public void onPopupShareSelected(Item item);
 }

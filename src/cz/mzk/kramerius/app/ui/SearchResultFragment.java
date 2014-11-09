@@ -31,6 +31,7 @@ import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
+import cz.mzk.kramerius.app.util.ShareUtils;
 
 public class SearchResultFragment extends BaseFragment implements OnOpenDetailListener, OnScrollListener,
 		OnPopupMenuSelectedListener {
@@ -213,18 +214,18 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	}
 
 	@Override
-	public void onPopupOpenSelectd(Item item) {
+	public void onPopupOpenSelected(Item item) {
 		onItemSelected(item);
 	}
 
 	@Override
-	public void onPopupDetailsSelectd(Item item) {
+	public void onPopupDetailsSelected(Item item) {
 		onOpenDetail(item.getPid());
 	}
 
 	@Override
-	public void onPopupShareSelectd(Item item) {
-		// TODO Auto-generated method stub
+	public void onPopupShareSelected(Item item) {
+		ShareUtils.openShareIntent(getActivity(), item.getPid());
 	}
 
 }

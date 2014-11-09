@@ -89,11 +89,11 @@ public class RecentCard extends Card {
 			public void onMenuItemClick(BaseCard card, MenuItem item) {
 				if (mOnPopupMenuSelectedListener != null) {
 					if (item.getItemId() == R.id.menu_card_detail) {
-						mOnPopupMenuSelectedListener.onPopupDetailsSelectd(getItem());
+						mOnPopupMenuSelectedListener.onPopupDetailsSelected(getItem());
 					} else if (item.getItemId() == R.id.menu_card_share) {
-						mOnPopupMenuSelectedListener.onPopupShareSelectd(getItem());
+						mOnPopupMenuSelectedListener.onPopupShareSelected(getItem());
 					} else if (item.getItemId() == R.id.menu_card_open) {
-						mOnPopupMenuSelectedListener.onPopupOpenSelectd(getItem());
+						mOnPopupMenuSelectedListener.onPopupOpenSelected(getItem());
 					}
 				}
 			}

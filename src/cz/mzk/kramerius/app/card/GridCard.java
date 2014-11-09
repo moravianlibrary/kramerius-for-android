@@ -59,11 +59,11 @@ public class GridCard extends Card {
 			public void onMenuItemClick(BaseCard card, MenuItem item) {
 				if (mOnPopupMenuSelectedListener != null) {
 					if (item.getItemId() == R.id.menu_card_detail) {
-						mOnPopupMenuSelectedListener.onPopupDetailsSelectd(mItem);
+						mOnPopupMenuSelectedListener.onPopupDetailsSelected(mItem);
 					} else if (item.getItemId() == R.id.menu_card_share) {
-						mOnPopupMenuSelectedListener.onPopupShareSelectd(mItem);
+						mOnPopupMenuSelectedListener.onPopupShareSelected(mItem);
 					} else if (item.getItemId() == R.id.menu_card_open) {
-						mOnPopupMenuSelectedListener.onPopupOpenSelectd(mItem);
+						mOnPopupMenuSelectedListener.onPopupOpenSelected(mItem);
 					}
 				}
 			}

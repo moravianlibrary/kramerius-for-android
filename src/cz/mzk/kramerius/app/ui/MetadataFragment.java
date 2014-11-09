@@ -37,6 +37,7 @@ import cz.mzk.kramerius.app.metadata.Part;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.ShareUtils;
 import cz.mzk.kramerius.app.util.TextUtil;
 
 public class MetadataFragment extends BaseFragment {
@@ -69,7 +70,7 @@ public class MetadataFragment extends BaseFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		MenuItem itemSearch = menu.add(1, MENU_SHARE, 1, R.string.metadata_share);
-		itemSearch.setIcon(android.R.drawable.ic_menu_share);
+		itemSearch.setIcon(R.drawable.ic_action_share);
 		if (isTablet()) {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		} else {
@@ -89,12 +90,7 @@ public class MetadataFragment extends BaseFragment {
 	}
 
 	private void shareDocument() {
-		String url = K5Api.getPersistentUrl(getActivity(), mPid);
-		Intent sendIntent = new Intent();
-		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, url);
-		sendIntent.setType("text/plain");
-		startActivity(sendIntent);
+		ShareUtils.openShareIntent(getActivity(), mPid);
 	}
 
 	public void assignPid(String pid) {

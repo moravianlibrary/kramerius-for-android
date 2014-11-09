@@ -30,6 +30,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.ShareUtils;
 import cz.mzk.kramerius.app.util.TextUtil;
 
 public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuSelectedListener {
@@ -160,19 +161,18 @@ public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuS
 	}
 
 	@Override
-	public void onPopupOpenSelectd(Item item) {
+	public void onPopupOpenSelected(Item item) {
 		openSoundUnit(item);
 	}
 
 	@Override
-	public void onPopupDetailsSelectd(Item item) {
+	public void onPopupDetailsSelected(Item item) {
 		onOpenDetail(item.getPid());
 	}
 
 	@Override
-	public void onPopupShareSelectd(Item item) {
-		// TODO Auto-generated method stub
-
+	public void onPopupShareSelected(Item item) {
+		ShareUtils.openShareIntent(this, item.getPid());
 	}
 
 }
