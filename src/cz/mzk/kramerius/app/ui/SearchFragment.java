@@ -26,11 +26,8 @@ import cz.mzk.kramerius.app.util.Analytics;
 
 public class SearchFragment extends BaseFragment implements OnClickListener {
 
-	private static final int MENU_ADD_FILTER = 101;
-
 	private static final String TAG = SearchFragment.class.getName();
 
-	// private Button mAddFilter;
 	private CheckBox mCheckPublicOnly;
 
 	private OnSearchListener mOnSearchListener;

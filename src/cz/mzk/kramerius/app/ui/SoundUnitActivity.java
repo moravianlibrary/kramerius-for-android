@@ -134,7 +134,7 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 			// addFakeTrack(children, "Leaving New Your",
 			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
 
-			mSoundUnitInfo.setText("Skladby: " + children.size());
+			mSoundUnitInfo.setText(getString(R.string.sound_unit_tracks) + " " + children.size());
 			mAdapter = new TrackArrayAdapter(tContext, children);
 			mList.setAdapter(mAdapter);
 			onTrackSelected(0, false);

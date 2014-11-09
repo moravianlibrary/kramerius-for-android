@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Pouze veřejné"
+            android:text="@string/search_public_only"
             android:textColor="@color/grey" />
     </RelativeLayout>
 
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_raised"
             android:gravity="center"
-            android:text="Přidat filtr"
+            android:text="@string/search_add_filter"
             android:textAllCaps="true"
             android:textColor="#fff"
             android:textSize="14dp" />
@@ -55,7 +55,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_white_raised"
             android:gravity="center"
-            android:text="Fulltext"
+            android:text="@string/search_fulltext"
             android:textAllCaps="true"
             android:textColor="#555"
             android:textSize="14dp" />

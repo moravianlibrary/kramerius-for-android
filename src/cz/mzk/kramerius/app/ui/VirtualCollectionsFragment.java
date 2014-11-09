@@ -48,16 +48,9 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		View view = inflater.inflate(R.layout.fragment_virtual_collections, container, false);
-		Configuration config = getResources().getConfiguration();
-		if (config.smallestScreenWidthDp < 720) {
-	//	ScreenUtil.setInsets(getActivity(), view);
-		}
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
-
 		inflateLoader((ViewGroup) view, inflater);
-
 		new GetVirtualCollectionsTask(getActivity()).execute();//OnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		return view;
 	}
@@ -99,7 +92,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 				return;
 			}
 			if (result == null) {
-				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 
 					@Override
 					public void onWarningButtonClicked() {
@@ -109,7 +102,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 				return;
 			}
 			if (result.isEmpty()) {
-				showWarningMessage("Digitální knihovna neobsahuje žádné virtuální sbirky.", null, null);
+				showWarningMessage(getString(R.string.warn_empty_vc), null, null);
 				return;
 			}
 
@@ -128,19 +121,10 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 			mAdapter = new CardGridArrayAdapter(tContext, cards);
 			CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
-			// mCardGridView.setAdapter(mAdapter);
-
 		}
 
-		@Override
-		protected void onProgressUpdate(Void... values) {
-		}
 	}
 	
-	
-	
-	
-
 	@Override
 	public void onStart() {
 		super.onStart();

@@ -43,36 +43,25 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 	private static final String TAG = MainFeaturedFragment.class.getSimpleName();
 
-	// private GridView mSelectedGridView;
-	// private GridItemAdapter mSelectedAdapter;
-	// private List<Item> mSelectedList;
-	// private View mSelectedExpandButton;
-	// private View mLoaderSelected;
-
-	private CardGridView mCustomGridView;
-	private CardGridArrayAdapter mCustomAdapter;
-	private List<Item> mCustomList;
-	private View mCustomExpandButton;
-	// private GridView mNewestGridView;
-	// private GridItemAdapter mNewestAdapter;
-	private CardGridView mNewestGridView;
-	private CardGridArrayAdapter mNewestAdapter;
-
-	private List<Item> mNewestList;
-	private View mNewestExpandButton;
-	private OnFeaturedListener mCallback;
 	private OnItemSelectedListener mOnItemSelectedListener;
-	private View mLoaderNewest;
-	private View mLoaderCustom;
-
+	private OnFeaturedListener mCallback;
 	private int mFeaturedLimit;
-
 	private DisplayImageOptions mOptions;
 
-	private TextView mNewestWarning;
+	private List<Item> mCustomList;
+	private CardGridView mCustomGridView;
+	private CardGridArrayAdapter mCustomAdapter;
+	private View mCustomExpandButton;
+	private View mLoaderCustom;
 	private TextView mCustomWarning;
-
 	private View mCustomAgainButton;
+
+	private List<Item> mNewestList;
+	private CardGridView mNewestGridView;
+	private CardGridArrayAdapter mNewestAdapter;
+	private View mNewestExpandButton;
+	private View mLoaderNewest;
+	private TextView mNewestWarning;
 	private View mNewestAgainButton;
 
 	private ScrollView mScrollView;
@@ -130,19 +119,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		} else {
 			populateGrid(K5Api.FEED_NEWEST);
 		}
-
 		return view;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	private void onItemSelected(Item item) {
-		if (mOnItemSelectedListener != null) {
-			mOnItemSelectedListener.onItemSelected(item);
-		}
 	}
 
 	@Override
@@ -259,7 +236,6 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 				totalHeight += getResources().getDisplayMetrics().density * 10;
 			}
 		}
-
 		ViewGroup.LayoutParams params = gridView.getLayoutParams();
 		params.height = totalHeight;
 		gridView.setLayoutParams(params);
@@ -309,8 +285,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 
 	@Override
 	public void onPopupShareSelectd(Item item) {
-		// TODO Auto-generated method stub
-		// mScrollView.scrollTo(0,0);
+
 	}
 
 }

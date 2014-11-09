@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Tento dokument není veřejně přístupný."
+                android:text="@string/inaccessible_document_header"
                 android:textColor="@color/dark_grey"
                 android:textSize="19dp" />
 
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:text="Proč je dokument neveřejný?"
+                android:text="@string/inaccessible_document_why_title"
                 android:textColor="@color/dark_grey"
                 android:textSize="16dp" />
 
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Tento dokument si nemůžete volně prohlížet kvůli autorským právům. Autorský zákon připouští zpřístupnění děl 70 let po smrti všech autorů (včetně překladatele, ilustrátora atd.) a 50 let od vydání díla."
+                android:text="@string/inaccessible_document_why_content"
                 android:textColor="@color/grey"
                 android:textSize="16dp" />
 
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:text="Jak se k dokumentu dostat?"
+                android:text="@string/inaccessible_document_how_title"
                 android:textColor="@color/dark_grey"
                 android:textSize="16dp" />
 
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Tady bude nějaký vhodný text, který nebude závislý na konkrétním Krameriovi. Asi si pro každého Kraméria držet název instituce a uživatele pak nasměrovat do této instituce."
+                android:text="@string/inaccessible_document_how_content"
                 android:textColor="@color/grey"
                 android:textSize="16dp" />
 
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:text="Myslíte si, že by dokument měl být veřejně přístupný?"
+                android:text="@string/inaccessible_document_report_title"
                 android:textColor="@color/dark_grey"
                 android:textSize="16dp" />
 
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Pokud se Vám zdá, že by dokument měl být přístupný nebo máte jakýkoliv jiný dotaz, ......... až to bude podporovat API, tak tlačitko &apos;Požádat o zpřístupnění&apos;. Do té doby si budem držet pro každého Kraméria kontaktní email, užívatel pak bude přesměrován do mailoveho klienta s předvypněným emailem."
+                android:text="@string/inaccessible_document_report_content"
                 android:textColor="@color/grey"
                 android:textSize="16dp" />
         </LinearLayout>

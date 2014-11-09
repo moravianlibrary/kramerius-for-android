@@ -28,7 +28,7 @@
             android:background="@drawable/button_menu"
             kramerius:menuIcon="@drawable/ic_settings_grey"
             kramerius:menuIconSelected="@drawable/ic_settings_green"
-            kramerius:menuTitle="Nastavení" />
+            kramerius:menuTitle="@string/main_menu_settings" />
 
         <cz.mzk.kramerius.app.widget.MenuItemWidget
             android:id="@+id/menu_help"
@@ -37,7 +37,7 @@
             android:background="@drawable/button_menu"
             kramerius:menuIcon="@drawable/ic_help_grey"
             kramerius:menuIconSelected="@drawable/ic_home_green"
-            kramerius:menuTitle="Nápověda a zpětná vazba" />
+            kramerius:menuTitle="@string/main_menu_settings" />
     </LinearLayout>
 
     <ScrollView
@@ -80,7 +80,7 @@
                         android:id="@+id/menu_domain_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Moravská zemská knihovna"
+                        android:text="-"
                         android:layout_centerVertical="true"
                         android:layout_marginBottom="10dp"
                         android:textStyle="bold"
@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_height="wrap_content"
-                        android:text="kramerius.mzk.cz"
+                        android:text="-"
                         android:textColor="#eee"
                         android:textSize="13dp" />
                     

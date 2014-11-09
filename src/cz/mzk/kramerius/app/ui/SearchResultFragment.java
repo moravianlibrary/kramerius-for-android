@@ -80,12 +80,8 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
-		if (isPhone()) {
-			// ScreenUtil.setInsets(getActivity(), view);
-		}
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		mCardGridView.setOnScrollListener(this);
-
 		inflateLoader(container, inflater);
 		mLoading = true;
 		new GetResultTask(getActivity()).execute(mSearchQuery);
@@ -137,18 +133,19 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			if (result == null || result.first == null) {
 				if (mFirst) {
 
-					showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+					showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again,
+							new onWarningButtonClickedListener() {
 
-						@Override
-						public void onWarningButtonClicked() {
-							new GetResultTask(getActivity()).execute(mSearchQuery);
-						}
-					});
+								@Override
+								public void onWarningButtonClicked() {
+									new GetResultTask(getActivity()).execute(mSearchQuery);
+								}
+							});
 				}
 				return;
 			}
 			if (result.second == 0) {
-				showWarningMessage("Nebyly nalezeny žádné výsledky.", null, null);
+				showWarningMessage(getString(R.string.warn_empty_result), null, null);
 				return;
 			}
 			mNumFound = result.second;
@@ -158,7 +155,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			if (shownNum > mNumFound) {
 				shownNum = mNumFound;
 			}
-			
+
 			getSupportActionBar().setSubtitle(shownNum + " z " + mNumFound);
 		}
 	}

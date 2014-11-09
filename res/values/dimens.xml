@@ -12,6 +12,16 @@
 
     
     
+    <dimen name="search_card_elevation">2dp</dimen>
+    <dimen name="search_card_corner">1dp</dimen>
+    <dimen name="search_card_padding">5dp</dimen>
+    <dimen name="search_card_content_padding">5dp</dimen>
+    <dimen name="search_card_margin_top">3dp</dimen>
+    <dimen name="search_card_margin_bottom">3dp</dimen>
+    <dimen name="search_card_remove_icon_size">28dp</dimen>
+    <dimen name="search_card_remove_icon_padding">5dp</dimen>
+    <dimen name="search_card_title_size">14dp</dimen>
+    <dimen name="search_card_filter_date_input_width">80dp</dimen>
     
     <dimen name="menu_item_height">45dp</dimen>
     <dimen name="menu_item_title">16dp</dimen>

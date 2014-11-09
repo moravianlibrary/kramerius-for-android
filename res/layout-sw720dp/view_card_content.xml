@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:lines="1"
-            android:text="Autor"
             android:textColor="@color/light_grey"
             android:textSize="14dp" />
     </RelativeLayout>
@@ -37,8 +36,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_centerVertical="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_music_green" />
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:id="@+id/grid_item_lockIcon"
@@ -59,7 +57,6 @@
             android:layout_toLeftOf="@id/grid_item_lockIcon"
             android:lines="1"
             android:paddingLeft="5dp"
-            android:text="Hudebnina"
             android:textColor="@color/green"
             android:textSize="15dp" />
     </RelativeLayout>

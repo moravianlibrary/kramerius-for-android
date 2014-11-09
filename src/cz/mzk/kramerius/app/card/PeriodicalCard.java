@@ -52,18 +52,18 @@ public class PeriodicalCard extends Card {
 		if (ModelUtil.PERIODICAL_VOLUME.equals(mItem.getModel())) {
 			String volumeNumber = mItem.getVolumeNumber();
 			if (volumeNumber == null || volumeNumber.isEmpty()) {
-				volumeNumber = "neuveden";
+				volumeNumber = mContext.getString(R.string.metadata_periodical_volume_unknown);
 			}
-			header.setTitle("Ročník " + volumeNumber);
+			header.setTitle(mContext.getString(R.string.metadata_periodical_volume) + " " + volumeNumber);
 		} else if (ModelUtil.PERIODICAL_ITEM.equals(mItem.getModel())) {
 			String number = mItem.getIssueNumber();
 			if (number == null || number.isEmpty()) {
 				number = mItem.getPartNumber();
 			}
 			if (number == null || number.isEmpty()) {
-				number = "neuvedeno";
+				number = mContext.getString(R.string.metadata_periodical_item_unknown);
 			}
-			header.setTitle("Číslo " + number);
+			header.setTitle(mContext.getString(R.string.metadata_periodical_item) + " " + number);
 		}
 
 		header.setPopupMenu(R.menu.card_popup, new CardHeader.OnClickCardHeaderPopupMenuListener() {
@@ -95,18 +95,18 @@ public class PeriodicalCard extends Card {
 		if (ModelUtil.PERIODICAL_VOLUME.equals(mItem.getModel())) {
 			String year = mItem.getYear();
 			if (year == null || year.isEmpty()) {
-				year = "neuveden";
+				year = mContext.getString(R.string.metadata_periodical_volume_date_unknown);
 			}
-			mainView.setText("ROK VYDÁNÍ: " + year);
-			labelView.setText("Zobrazit čísla");
+			mainView.setText(mContext.getString(R.string.metadata_periodical_volume_date).toUpperCase() + ": " + year);
+			labelView.setText(mContext.getString(R.string.metadata_periodical_volume_open));
 			iconView.setImageResource(R.drawable.ic_attach_green);
 		} else if (ModelUtil.PERIODICAL_ITEM.equals(mItem.getModel())) {
 			String date = mItem.getPeriodicalItemDate();
 			if (date == null || date.isEmpty()) {
-				date = "neuvedeno";
+				date = mContext.getString(R.string.metadata_periodical_item_date_unknown);
 			}
-			mainView.setText("DATUM VYDÁNÍ: " + date);
-			labelView.setText("Otevřít číslo");
+			mainView.setText(mContext.getString(R.string.metadata_periodical_item_date).toUpperCase() + ": " + date);
+			labelView.setText(mContext.getString(R.string.metadata_periodical_item_open));
 			iconView.setImageResource(R.drawable.ic_book_green);
 		}
 

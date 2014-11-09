@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 		mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
 		setSupportActionBar(mToolbar);
-		getSupportActionBar().setTitle("Digitální knihovna");
+		getSupportActionBar().setTitle(R.string.main_title);
 
 		if (getDevice() == TABLET) {
 			//
@@ -140,23 +140,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mToolbar.setTitle(title);
 	}
 
-	@Override
-	public void onSelectDomain() {
-		// final Context context = this;
-		// new AlertDialog.Builder(this).setTitle("Vyberte doménu")
-		// .setItems(K5Api.KRAMERIUS_DOMAINS, new
-		// DialogInterface.OnClickListener() {
-		//
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// PreferenceManager.getDefaultSharedPreferences(context).edit()
-		// .putString("domain", K5Api.KRAMERIUS_DOMAINS[which]).commit();
-		// K5Connector.getInstance().restart();
-		// mMenuFragment.onDomainChanged();
-		// closeSlidingMenu();
-		// }
-		// }).create().show();
-	}
 
 	private boolean closeSlidingMenu() {
 		if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mMenuContainer)) {
@@ -177,7 +160,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onLoginSuccess() {
-		//mMenuFragment.refreshUser();
 		showUserInfo();
 	}
 
@@ -192,7 +174,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	@Override
 	public void onLogOut() {
 		K5Api.logOut(this);
-		//mMenuFragment.refreshUser();
 		showLogin();
 	}
 
@@ -366,7 +347,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("message/rfc822");
 		i.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.feedback_email) });
-		String subject = "Feedback - Kramerius " + getString(R.string.about_app_version);
+		String subject = getString(R.string.about_app_feedback_prefix) + " " + getString(R.string.about_app_version);
 		i.putExtra(Intent.EXTRA_SUBJECT, subject);
 		i.putExtra(Intent.EXTRA_TEXT, "");
 		try {

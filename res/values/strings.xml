@@ -40,7 +40,7 @@
     <string name="main_menu_virtual_colections">Virtuální sbírky</string>
     <string name="main_menu_search">Hledat</string>
     <string name="main_menu_about">O aplikaci</string>
-    <string name="main_menu_help">Nápověda</string>
+    <string name="main_menu_help">Nápověda a zpětná vazba</string>
     <string name="main_menu_feedback">Zpětná vazba</string>
     <string name="main_menu_settings">Nastavení</string>    
     <string name="main_menu_recent">Naposledy otevřené</string>
@@ -48,7 +48,7 @@
     <string name="featured_custom">Mohlo by se vám líbit</string>
     <string name="featured_newest">Nejnovější</string>
     <string name="featured_most_desirable">Nejžádanější</string>
-    <string name="featured_show_all">ZOBRAZIT VŠE</string>
+    <string name="featured_show_all">DALŠÍ</string>
     
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -59,12 +59,12 @@
     <string name="about_app_subtitle">Digitální knihovna</string>
     <string name="about_app_version">v0.2.9/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
-    
+    <string name="about_app_feedback_prefix">Feedback - Kramerius</string>
     
     
     <string name="inaccessible_document_title">Veřejně nepřístupný dokument</string>
     
-    <string name="recent_title">Nedávno otevřené</string>
+    <string name="recent_title">Naposledy otevřené</string>
     
     <string name="search_title">Hledání</string>
     
@@ -117,21 +117,32 @@
    
     <string name="metadata_page">Stránka</string>
     <string name="metadata_page_number">Číslo stránky</string>
-	
-	<string name="metadata_page_index">Index stránky</string>
-    <string name="metadata_part_volume_number">Ročník</string>
-    <string name="metadata_part_issue_number">Číslo</string>
-    <string name="metadata_part_part_number">Číslo části</string>
-	
-        
-    <string name="metadata_part_volume_date">Rok vydání</string>
-    <string name="metadata_part_issue_date">Datum vydání</string>
-
+    <string name="metadata_page_index">Index stránky</string>
     
-   <string name="metadata_periodical_volume">Ročník</string>
-   <string name="metadata_periodical_item">Číslo</string>
-   
+
+	<string name="metadata_periodical_volume">Ročník</string>
+	<string name="metadata_periodical_volume_unknown">neuveden</string>
+	<string name="metadata_periodical_volume_date">Rok vydání</string>
+	<string name="metadata_periodical_volume_date_unknown">neuveden</string>
+	<string name="metadata_periodical_volume_open">Zobrazit čísla</string>
+	
+	<string name="metadata_periodical_item">Číslo</string>
+	<string name="metadata_periodical_item_unknown">neuvedeno</string>       
+	<string name="metadata_periodical_item_date">Datum vydání</string>
+	<string name="metadata_periodical_item_date_unknown">neuvedeno</string>
+    <string name="metadata_periodical_item_open">Otevřít číslo</string>
+    
    <string name="metadata_open_parent">Otevřít</string>
+   <string name="metadata_share">Sdílet</string>
+   
+   
+   <string name="sound_unit_tracks">Skladby:</string>
+   <string name="sound_unit_play">Přehrát</string>
+   
+   
+   <string name="search_public_only">Pouze veřejné</string>
+   <string name="search_add_filter">Přidat filtr</string>
+   <string name="search_fulltext">Fulltext</string>
    
    
    <string name="search_filter_name">Název</string>
@@ -150,8 +161,27 @@
 	<string name="search_filter_date_invalid_nan">Rok vydání nemá format celého čísla</string>    
 	<string name="search_filter_date_invalid_tltf">Rok vydání "do" musí být větší nebo roven "od"</string>
    
-    
+    <string name="search_filter_date_from">Od</string>
+    <string name="search_filter_date_to">Do</string>
      
+    
+ 
+    
+    <string name="page_menu_home">Domů</string>
+    <string name="page_menu_settings">Nastavení</string>    
+    <string name="page_menu_recent">Naposledy otevřené</string>
+    <string name="page_menu_orientation">Neotáčet obrazovku</string>
+    
+    
+    <string name="inaccessible_document_header">Dokument není veřejně přístupný.</string>
+    <string name="inaccessible_document_why_title">Proč je dokument neveřejný?</string>
+    <string name="inaccessible_document_why_content">Tento dokument si nemůžete volně prohlížet kvůli autorským právům. Autorský zákon připouští zpřístupnění děl 70 let po smrti všech autorů (včetně překladatele, ilustrátora atd.) a 50 let od vydání díla.</string>
+    <string name="inaccessible_document_how_title">Jak se k dokumentu dostat?</string>
+    <string name="inaccessible_document_how_content">Tady bude nějaký vhodný text, který nebude závislý na konkrétním Krameriovi. Asi si pro každého Kraméria držet název instituce a uživatele pak nasměrovat do této instituce.</string>
+    <string name="inaccessible_document_report_title">Myslíte si, že by dokument měl být veřejně přístupný?</string>
+    <string name="inaccessible_document_report_content">Pokud se Vám zdá, že by dokument měl být přístupný nebo máte jakýkoliv jiný dotaz, ...</string>
+    
+    
     <string name="ga_appview_about" translatable="false">About</string>
     <string name="ga_appview_help" translatable="false">Help</string>
     <string name="ga_appview_search" translatable="false">Search</string>
@@ -172,7 +202,26 @@
     <string name="gen_ok">Ok</string>
     <string name="gen_yes">Ano</string>
     <string name="gen_no">Ne</string>
+    <string name="gen_again">Opakovat</string>
     
+    <string name="warn_data_loading_failed">Nepodařilo se načíst data.</string>
+    <string name="warn_load_again">OPAKOVAT</string>
+    <string name="warn_empty_result">Nebyly nalezeny žádné výsledky.</string>
+    <string name="warn_empty_history">Zatím nemáte žádné otevřené dokumenty.</string>
+    <string name="warn_empty_vc">Digitální knihovna neobsahuje žádné virtuální sbirky.</string>
+    <string name="warn_page_private_message">Stránka dokumentu není veřejně přístupná.</string>
+    <string name="warn_page_private_button">Více informací</string>
+    <string name="warn_page_loading_failed">Nepodařilo se načíst stránku.</string>    
+    
+
+    <string name="pref_viewer_bg_color_white">Bílá</string>
+    <string name="pref_viewer_bg_color_black">Černá</string>
+    
+    
+    <string name="pref_viewer_mode_fit">Přizpůsobit obrazovce</string>
+    <string name="pref_viewer_mode_top_left">Zarovnat k levému hornímu okraji</string>
+    <string name="pref_viewer_mode_center">Zarovnat na střed</string>
+    <string name="pref_viewer_mode_center_horizontal">Zarovnat horizontálně</string>
     
     
     <string name="pref_category_viewer">Prohlížení dokumentů</string>

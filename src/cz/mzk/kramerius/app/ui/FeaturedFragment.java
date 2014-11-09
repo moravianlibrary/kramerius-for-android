@@ -67,9 +67,6 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
-		if (isPhone()) {
-			// ScreenUtil.setInsets(getActivity(), view);
-		}
 		inflateLoader(container, inflater);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		new GetFeaturedTask(getActivity()).execute(mType);
@@ -116,9 +113,12 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 
 		@Override
 		protected void onPostExecute(List<Item> result) {
-			stopLoaderAnimation();
-			if (tContext == null || result == null) {
-				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+			if(tContext == null) {
+				return;
+			}
+			stopLoaderAnimation();			
+			if (result == null) {
+				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 					@Override
 					public void onWarningButtonClicked() {
 						new GetFeaturedTask(getActivity()).execute(mType);

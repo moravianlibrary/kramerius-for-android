@@ -129,8 +129,6 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	}
 
 	public interface MainMenuListener {
-		public void onSelectDomain();
-
 		public void onLogin();
 
 		public void onHome();

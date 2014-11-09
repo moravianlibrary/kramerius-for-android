@@ -11,8 +11,6 @@
         android:layout_height="match_parent"
         android:background="@color/bg" >
 
-        <!-- The main content view -->
-
         <RelativeLayout
             android:id="@+id/page_container"
             android:layout_width="match_parent"
@@ -186,14 +184,15 @@
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 android:visibility="gone" />
-
-            <fragment
-                android:id="@+id/page_listFragment"
-                android:name="cz.mzk.kramerius.app.ui.PageSelectionFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/page_bottomPanel" />
         </RelativeLayout>
+
+        <fragment
+            android:id="@+id/page_listFragment"
+            android:name="cz.mzk.kramerius.app.ui.PageSelectionFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/page_bottomPanel"
+            android:layout_below="@id/toolbar" />
 
         <!-- The navigation drawer -->
 

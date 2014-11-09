@@ -24,6 +24,7 @@ import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.DomainCard;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.CardUtils;
+import cz.mzk.kramerius.app.util.DomainUtil;
 
 public class DomainActivity extends BaseActivity {
 
@@ -63,7 +64,7 @@ public class DomainActivity extends BaseActivity {
 	private void populate() {
 		String currentDomain = K5Api.getDomain(this); // TODO
 		ArrayList<Card> cards = new ArrayList<Card>();
-		for (Domain domain : getTestDomainList()) {
+		for (Domain domain : DomainUtil.getDomains()) {
 			DomainCard card = new DomainCard(this, domain);
 			card.setOnClickListener(new OnCardClickListener() {
 				@Override
@@ -77,34 +78,7 @@ public class DomainActivity extends BaseActivity {
 		CardUtils.setAnimationAdapter(mAdapter, mList);
 	}
 
-	private List<Domain> getTestDomainList() {
-		List<Domain> list = new ArrayList<Domain>();
-		list.add(new Domain("Moravská zemská knihovna", "Digitální knihovna MZK", "http", "kramerius.mzk.cz",
-				R.drawable.logo_mzk));
-		list.add(new Domain("Národní knihovna", "Digitální knihovna NKP", "http", "kramerius4.nkp.cz",
-				R.drawable.logo_nkp));
-		list.add(new Domain("Národní digitální knihovna", "Digitální knihovna NDK", "http", "krameriusndktest.mzk.cz",
-				R.drawable.logo_ndk));
-		list.add(new Domain("Knihovna Akademie věd ČR", "Digitální knihovna KNAV", "http", "kramerius.lib.cas.cz",
-				R.drawable.logo_knav));
-
-		 list.add(new Domain("Česká digitální knihovna",
-		 "Digitální knihovna ČDK", "http", "cdk-test.lib.cas.cz",
-		 R.drawable.logo_cdk));
-		// list.add(new Domain("Knihovna Akademie věd ČR",
-		// "Digitální knihovna KNAV", "http", "cdk-test.lib.cas.cz",
-		// R.drawable.logo_knav));
-		 list.add(new Domain("Národní technická knihovna",
-		 "Digitální knihovna NTK", "http", "kramerius.techlib.cz",
-		 R.drawable.logo_ntk));
-		list.add(new Domain("Moravská zemská knihovna", "Docker MZK", "http", "docker.mzk.cz", R.drawable.logo_mzk));
-		// list.add(new Domain("Moravská zemská knihovna", "Test MZK", "http",
-		// "krameriustest.mzk.cz", R.drawable.logo_mzk));
-		// list.add(new Domain("Moravská zemská knihovna", "Demo MZK", "http",
-		// "krameriusdemo.mzk.cz", R.drawable.logo_mzk));
-
-		return list;
-	}
+	
 
 	@Override
 	public void onStart() {

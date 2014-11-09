@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
-            android:clickable="true"
+            android:clickable="true"            
             android:orientation="horizontal"
             android:paddingBottom="12dp"
             android:paddingLeft="5dp"
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Domů"
+                android:text="@string/page_menu_home"
                 android:textColor="#555555"
                 android:textSize="17dp" />
         </LinearLayout>
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Nastavení"
+                android:text="@string/page_menu_settings"
                 android:textColor="#555555"
                 android:textSize="17dp" />
         </LinearLayout>
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Neotáčet obrazovku"
+                android:text="@string/page_menu_orientation"
                 android:textColor="#555555"
                 android:textSize="17dp" />
         </RelativeLayout>
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:background="#eeeeee"
             android:padding="5dp"
-            android:text="Naposledy otevřené"
+			android:text="@string/page_menu_recent"
             android:textColor="#555555"
             android:textSize="17dp" />
 

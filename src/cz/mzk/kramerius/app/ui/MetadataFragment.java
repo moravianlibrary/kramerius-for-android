@@ -68,7 +68,7 @@ public class MetadataFragment extends BaseFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		MenuItem itemSearch = menu.add(1, MENU_SHARE, 1, "Sdílet");
+		MenuItem itemSearch = menu.add(1, MENU_SHARE, 1, R.string.metadata_share);
 		itemSearch.setIcon(android.R.drawable.ic_menu_share);
 		if (isTablet()) {
 			itemSearch.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -165,8 +165,8 @@ public class MetadataFragment extends BaseFragment {
 		if (part == null) {
 			return;
 		}
-		addKeyValueView(getString(R.string.metadata_part_volume_number), part.getVolumeNumber());
-		addKeyValueView(getString(R.string.metadata_part_volume_date), part.getDate());
+		addKeyValueView(getString(R.string.metadata_periodical_volume), part.getVolumeNumber());
+		addKeyValueView(getString(R.string.metadata_periodical_volume_date), part.getDate());
 		addNotes(metadata);
 	}
 
@@ -182,7 +182,6 @@ public class MetadataFragment extends BaseFragment {
 		}
 		if (issue == null || issue.isEmpty()) {
 			issue = metadata.getTitleInfo().getPartName();
-			;
 		}
 
 		if (date == null || date.isEmpty()) {
@@ -191,8 +190,8 @@ public class MetadataFragment extends BaseFragment {
 			}
 		}
 
-		addKeyValueView(getString(R.string.metadata_part_issue_number), issue);
-		addKeyValueView(getString(R.string.metadata_part_issue_date), date);
+		addKeyValueView(getString(R.string.metadata_periodical_item), issue);
+		addKeyValueView(getString(R.string.metadata_periodical_item_date), date);
 		addNotes(metadata);
 	}
 
@@ -341,22 +340,6 @@ public class MetadataFragment extends BaseFragment {
 		}
 		addKeyValueView(title, languages);
 	}
-
-	// private void addPart(Metadata metadata) {
-	// if (metadata.getPart() == null) {
-	// return;
-	// }
-	// mContainer.addView(createSubtitleView(getString(R.string.metadata_location)));
-	// Location location = metadata.getLocation();
-	// if (location.getPhysicalLocation() != null) {
-	// mContainer.addView(createKeyValueView(getString(R.string.metadata_location_physical),
-	// location.getPhysicalLocation()));
-	// }
-	// for (String shelf : location.getShelfLocatons()) {
-	// mContainer.addView(createKeyValueView(getString(R.string.metadata_location_shelf),
-	// shelf));
-	// }
-	// }
 
 	private void addLocation(Metadata metadata) {
 		if (metadata.getLocation() == null) {
@@ -596,7 +579,7 @@ public class MetadataFragment extends BaseFragment {
 		protected void onPostExecute(List<Pair<Metadata, String>> hierachyMetadata) {
 			stopLoaderAnimation();
 			if (hierachyMetadata == null || getActivity() == null) {
-				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 					@Override
 					public void onWarningButtonClicked() {
 						new getMetadataTask(getActivity()).execute(mPid);

@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Nepodarilo se nacist data"
         android:textColor="@color/grey"
         android:textSize="17dp" />
 
@@ -26,7 +25,6 @@
         android:background="@drawable/button_main"
         android:gravity="center"
         android:textColor="@color/white"
-        android:text="Opakovat"
         android:textSize="17dp" />
 
 </LinearLayout>

@@ -54,8 +54,8 @@ import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
-public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener, OnPageNumberSelected,
-		ViewerMenuListener, EventListener {
+public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener,
+		OnPageNumberSelected, ViewerMenuListener, EventListener {
 
 	private static final String EXTRA_TITLE = "extra_title";
 	private static final String EXTRA_SUBTITLE = "extra_subtitle";
@@ -67,26 +67,16 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	private static final String LOG_TAG = PageActivity.class.getSimpleName();
 
-	// private PageViewer mPageViewer;
-
-	// private TiledImageView mTiledImageView;
 	private View mLoader;
 	private TextView mIndex;
 
 	private Animation mLoaderAnimation;
 
 	private List<Item> mPageList;
-	// private List<String> mPidList;
 	private int mCurrentPage;
 
 	private boolean mFullscreen = true;
 	private View mBottomPanel;
-//	private View mTopPanel;
-//	private TextView mTitleView;
-//	private TextView mTitle1View;
-//	private TextView mTitle2View;
-//	private View mComplextTitleView;
-
 	private SeekBar mSeekBar;
 	private int mLastProgress;
 	private TextView mSeekPosition;
@@ -121,8 +111,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-	//	supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		boolean keepScreenOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				getString(R.string.pref_keep_screen_on_key),
@@ -130,15 +119,12 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (keepScreenOn) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		}
-
 		mSystemBarTintManager = new SystemBarTintManager(this);
 		mSystemBarTintManager.setStatusBarTintEnabled(false);
 		mSystemBarTintManager.setStatusBarTintResource(R.color.status_bar);
 
 		setContentView(R.layout.activity_page);
 
-//		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
-//		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
 		mMessageContainer = (FrameLayout) findViewById(R.id.page_message_container);
 
@@ -167,28 +153,19 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else if (vms[3].equals(vm)) {
 			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP);
 		}
-		// mPageViewer = (PageViewer) findViewById(R.id.pageView);
-		// PageViewer.setViewMode(ViewMode.NO_FREE_SPACE);
-		// mPageViewer.setPageViewListener(this);
 		setBackgroundColor();
 
 		mLoader = findViewById(R.id.page_loader);
 		mBottomPanel = findViewById(R.id.page_bottomPanel);
 		mBottomPanel.setVisibility(View.GONE);
-//		mTopPanel = findViewById(R.id.page_topPanel);
-//		mTopPanel.setVisibility(View.GONE);
-//		mTitleView = (TextView) findViewById(R.id.page_title);
-//		mTitle1View = (TextView) findViewById(R.id.page_complex_title1);
-//		mTitle2View = (TextView) findViewById(R.id.page_complex_title2);
-//		mComplextTitleView = findViewById(R.id.page_complex_title);
 		mSeekPosition = (TextView) findViewById(R.id.page_seek_position);
 		mSeekPosition.setVisibility(View.GONE);
 		mSeekBar = (SeekBar) findViewById(R.id.page_seekBar);
 		mSeekBar.setOnSeekBarChangeListener(this);
 		mListButton = findViewById(R.id.page_list);
 		mListButton.setOnClickListener(this);
-//		mMetadataButton = findViewById(R.id.page_metadata);
-		//mMetadataButton.setOnClickListener(this);
+		// mMetadataButton = findViewById(R.id.page_metadata);
+		// mMetadataButton.setOnClickListener(this);
 
 		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
 		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
@@ -197,17 +174,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
 		mListShown = false;
 
-//		findViewById(R.id.page_title_container).setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				toggleSlidingMenu();
-//			}
-//		});
-
-		
-		
-		
 		mMenuContainer = (FrameLayout) findViewById(R.id.viewer_menu);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 
@@ -218,18 +184,12 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			@Override
 			public void onClick(View view) {
 
-//				if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
-//					mDrawerLayout.closeDrawer(Gravity.START);
-//
-//				} else {
-//					mDrawerLayout.openDrawer(Gravity.START);
-//				}
 				if (mDrawerLayout.isDrawerOpen(mMenuContainer)) {
 					mDrawerLayout.closeDrawer(mMenuContainer);
 
 				} else {
 					mDrawerLayout.openDrawer(mMenuContainer);
-				}				
+				}
 			}
 		});
 
@@ -246,12 +206,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		};
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		
-		
-		
-		
-		
-		
+
 		mCurrentPage = 0;
 		if (savedInstanceState != null) {
 			if (savedInstanceState.containsKey(EXTRA_CURRENT_PAGE)) {
@@ -383,7 +338,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 			if (ModelUtil.PAGE.equals(item.getModel())) {
 				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
-				if(hierarchy == null) {
+				if (hierarchy == null) {
 					return null;
 				}
 				if (hierarchy.size() > 1) {
@@ -401,7 +356,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					if (ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
 						Item parent = K5Connector.getInstance().getItem(tContext, hierarchy.get(i).first);
 						if (parent != null) {
-							item.setTitle("Ročník " + parent.getVolumeTitle() + ", Číslo " + item.getIssueTitle());
+							item.setTitle(getString(R.string.metadata_periodical_volume) + " "
+									+ parent.getVolumeTitle() + ", " + getString(R.string.metadata_periodical_item)
+									+ " " + item.getIssueTitle());
 						}
 					}
 				}
@@ -418,13 +375,14 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				return;
 			}
 			if (result == null || result.getParent() == null) {
-				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again,
+						new onWarningButtonClickedListener() {
 
-					@Override
-					public void onWarningButtonClicked() {
-						new LoadPagesTask(PageActivity.this).execute(mPid);
-					}
-				}, true);
+							@Override
+							public void onWarningButtonClicked() {
+								new LoadPagesTask(PageActivity.this).execute(mPid);
+							}
+						}, true);
 				return;
 			}
 
@@ -434,7 +392,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			} else {
 				mPageList = result.getChildren();
 			}
-			// Collections.sort(mPageList, new ItemByTitleComparator());
 			mCurrentPage = 0;
 			mTitle = TextUtil.parseTitle(result.getParent().getRootTitle());
 			if (ModelUtil.PERIODICAL_ITEM.equals(result.getParent().getModel())) {
@@ -474,15 +431,15 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
-//			mTitle1View.setText(mTitle);
-//			mTitle2View.setText(mSubtitle);
-//			mComplextTitleView.setVisibility(View.VISIBLE);
-//			mTitleView.setVisibility(View.GONE);
+			// mTitle1View.setText(mTitle);
+			// mTitle2View.setText(mSubtitle);
+			// mComplextTitleView.setVisibility(View.VISIBLE);
+			// mTitleView.setVisibility(View.GONE);
 		} else {
-//			mTitleView.setText(mTitle);
-			mToolbar.setTitle(mTitle);			
-//			mComplextTitleView.setVisibility(View.GONE);
-//			mTitleView.setVisibility(View.VISIBLE);
+			// mTitleView.setText(mTitle);
+			mToolbar.setTitle(mTitle);
+			// mComplextTitleView.setVisibility(View.GONE);
+			// mTitleView.setVisibility(View.VISIBLE);
 		}
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
@@ -513,11 +470,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private void initPageViewrFragment() {
 		String domain = K5Api.getDomain(this);
 		if (mPageViewerFragment != null) {
-			// if (mPageViewerFragment.isPopulated()) {
-			// onReady();
-			// } else {
 			mPageViewerFragment.populate(domain, itemsToPids());
-			// }
 		}
 	}
 
@@ -638,11 +591,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		loadPage();
 	}
 
-	private void showWarningMessage(String message, String buttonText, final onWarningButtonClickedListener callback,
+	private void showWarningMessage(int message, int buttonText, final onWarningButtonClickedListener callback,
 			boolean hideAfterClick) {
 		mMessageContainer.removeAllViews();
 		mMessageContainer.setVisibility(View.VISIBLE);
-		MessageUtils.inflateMessage(this, mMessageContainer, message, buttonText, callback, hideAfterClick);
+		MessageUtils.inflateMessage(this, mMessageContainer, getString(message), getString(buttonText), callback, hideAfterClick);
 	}
 
 	private void clearMessages() {
@@ -657,7 +610,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onAccessDenied() {
-		showWarningMessage("Stránka dokumentu není veřejně přístupná.", "Více informací",
+		showWarningMessage(R.string.warn_page_private_message, R.string.warn_page_private_button,
 				new onWarningButtonClickedListener() {
 
 					@Override
@@ -674,7 +627,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onNetworkError(Integer statusCode) {
-		showWarningMessage("Nepodařilo se načíst stránku.", "Opakovat", new onWarningButtonClickedListener() {
+		showWarningMessage(R.string.warn_page_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 
 			@Override
 			public void onWarningButtonClicked() {
@@ -686,7 +639,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onInvalidDataError(String errorMessage) {
-		showWarningMessage("Nepodařilo se načíst stránku.", "Opakovat", new onWarningButtonClickedListener() {
+		showWarningMessage(R.string.warn_page_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 
 			@Override
 			public void onWarningButtonClicked() {
@@ -732,7 +685,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			getWindow()
 					.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mBottomPanel.setVisibility(View.GONE);
-			//mTopPanel.setVisibility(View.GONE);
 			mToolbar.setVisibility(View.GONE);
 			mSystemBarTintManager.setStatusBarTintEnabled(false);
 			ScreenUtil.fullscreenInsets(this, mMenuContainer);
@@ -740,12 +692,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mBottomPanel.setVisibility(View.VISIBLE);
-			//mTopPanel.setVisibility(View.VISIBLE);
 			mToolbar.setVisibility(View.VISIBLE);
 			mSystemBarTintManager.setStatusBarTintEnabled(true);
-			// Configuration config = getResources().getConfiguration();
-//			ScreenUtil.setInsets(this, mMenuContainer, false);
-//			ScreenUtil.setInsets(this, mContainer, false);
 		}
 	}
 
@@ -778,7 +726,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onBackPressed() {
-		if(closeSlidingMenu()) {
+		if (closeSlidingMenu()) {
 			return;
 		} else if (mListShown) {
 			getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
@@ -787,7 +735,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			super.onBackPressed();
 		}
 	}
-	
 
 	@Override
 	public void onRecent(String pid) {
@@ -821,31 +768,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		mDrawerToggle.onConfigurationChanged(newConfig);
-	}	
-	
-	
-	// private boolean openSlidingMenu() {
-	// if (mDrawerLayout != null) {
-	// mMenuContainer.setVisibility(View.VISIBLE);
-	// mDrawerLayout.openDrawer(mMenuContainer);
-	// return true;
-	// }
-	// return false;
-	// }
-
-	private boolean toggleSlidingMenu() {
-		if (mDrawerLayout == null) {
-			return false;
-		}
-		if (mDrawerLayout.isDrawerOpen(mMenuContainer)) {
-			mDrawerLayout.closeDrawer(mMenuContainer);
-			return true;
-		}
-		if (!mDrawerLayout.isDrawerOpen(mMenuContainer)) {
-			mDrawerLayout.openDrawer(mMenuContainer);
-			return true;
-		}
-		return false;
 	}
 
 	@Override

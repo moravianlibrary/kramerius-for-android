@@ -72,7 +72,7 @@ public class SoundUnitCard extends Card {
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
 		TextView subtitle = (TextView) view.findViewById(R.id.grid_item_author);
-		subtitle.setText("SKLADBY: 1");
+		subtitle.setText(mContext.getString(R.string.sound_unit_tracks).toUpperCase() + " 1");
 		View lock = view.findViewById(R.id.grid_item_lockIcon);
 		if (mItem.isPrivate()) {
 			lock.setVisibility(View.VISIBLE);
@@ -80,7 +80,7 @@ public class SoundUnitCard extends Card {
 			lock.setVisibility(View.GONE);
 		}
 		TextView type = (TextView) view.findViewById(R.id.grid_item_type);
-		type.setText("Přehrát");
+		type.setText(mContext.getString(R.string.sound_unit_play));
 		ImageView modelIcon = (ImageView) view.findViewById(R.id.grid_item_modeIcon);
 		modelIcon.setImageResource(R.drawable.ic_play_green);
 

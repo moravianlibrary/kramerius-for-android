@@ -53,6 +53,8 @@
     <color name="button_main_pressed">#00a7b7</color>
     
     
+    <color name="search_card_title">@color/color_primary</color>
+    
     
     <color name="metadata_title">@color/dark_grey</color>
     <color name="metadata_subtitle">@color/dark_grey</color>

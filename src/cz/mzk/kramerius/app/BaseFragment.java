@@ -55,12 +55,16 @@ public abstract class BaseFragment extends Fragment {
 		showWarningMessage(message, buttonText, callback, true);
 	}
 
+	protected void showWarningMessage(int message, int buttonText, final onWarningButtonClickedListener callback) {
+		showWarningMessage(getString(message), getString(buttonText), callback, true);
+	}
+	
 	public interface onWarningButtonClickedListener {
 		public void onWarningButtonClicked();
 	}
 
 	protected void stopLoaderAnimation() {
-		if (mLoaderContainer == null) {
+		if (mLoaderContainer == null || mLoaderView == null) {
 			return;
 		}
 		mLoaderView.clearAnimation();

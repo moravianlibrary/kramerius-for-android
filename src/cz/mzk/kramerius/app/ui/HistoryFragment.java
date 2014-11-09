@@ -29,6 +29,7 @@ import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
+import cz.mzk.kramerius.app.util.Constants;
 
 public class HistoryFragment extends BaseFragment implements OnPopupMenuSelectedListener {
 
@@ -63,9 +64,6 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
-		if (isPhone()) {
-	//		ScreenUtil.setInsets(getActivity(), view);
-		}
 		inflateLoader(container, inflater);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);		
 		return view;
@@ -74,7 +72,7 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 	@Override
 	public void onResume() {	
 		super.onResume();
-		new GetHistoryTask(getActivity()).execute(10);
+		new GetHistoryTask(getActivity()).execute(Constants.HISTORY_LIMIT);
 	}
 
 	@Override
@@ -91,10 +89,6 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 			tContext = context;
 		}
 
-		@Override
-		protected void onPreExecute() {
-		//	startLoaderAnimation();
-		}
 
 		@Override
 		protected List<Card> doInBackground(Integer... params) {
@@ -114,7 +108,6 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 						.popupListener(HistoryFragment.this)
 						.build(mOptions);
 
-				// card.setOnPopupMenuSelectedListener(popupListener);
 				card.setOnClickListener(new OnCardClickListener() {
 					@Override
 					public void onClick(Card card, View view) {
@@ -132,9 +125,11 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 
 		@Override
 		protected void onPostExecute(List<Card> result) {
-			//stopLoaderAnimation();
-			if (tContext == null || result == null) {
+			if(tContext == null) {
 				return;
+			}
+			if (result.isEmpty() || result == null) {
+				showWarningMessage(getString(R.string.warn_empty_history), null, null);
 			}
 			populateGrid(result);
 		}

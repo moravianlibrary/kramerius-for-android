@@ -8,11 +8,11 @@
     <LinearLayout
         android:id="@+id/card_main_layout"
         style="@style/card.main_layout"
-            android:paddingTop="10dp"
-    android:paddingBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
         <it.gmariotti.cardslib.library.view.component.CardHeaderView
             android:id="@+id/card_header_layout"

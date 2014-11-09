@@ -8,18 +8,18 @@
         <item name="4">4</item>
     </string-array>
     <string-array name="view_mode_entries">
-        <item name="1">Fit to Screen</item>
-        <item name="2">Align Top Left</item>
-        <item name="3">Align Center</item>
-        <item name="4">Align Horizontal Center</item>
+        <item name="1">@string/pref_viewer_mode_fit</item>
+        <item name="2">@string/pref_viewer_mode_top_left</item>
+        <item name="3">@string/pref_viewer_mode_center</item>
+        <item name="4">@string/pref_viewer_mode_center_horizontal</item>
     </string-array>
     <string-array name="viewer_bg_color_values">
         <item name="1">black</item>
         <item name="2">white</item>
     </string-array>
     <string-array name="viewer_bg_color_entries">
-        <item name="1">Černá</item>
-        <item name="2">Bílá</item>
+        <item name="1">@string/pref_viewer_bg_color_black</item>
+        <item name="2">@string/pref_viewer_bg_color_white</item>
     </string-array>
     <string-array name="search_doctype_entries">
         <item name="0">@string/document_monograph</item>

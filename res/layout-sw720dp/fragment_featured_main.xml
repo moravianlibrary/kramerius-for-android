@@ -38,7 +38,7 @@
                     android:background="@color/green"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="ZOBRAZIT VŠE"
+                    android:text="@string/featured_show_all"
                     android:textColor="@color/white"
                     android:textSize="14dp"
                     android:visibility="gone" />
@@ -52,7 +52,7 @@
                     android:background="@color/green"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Načíst znovu"
+                    android:text="@string/warn_load_again"
                     android:textColor="@color/white"
                     android:textSize="14dp"
                     android:visibility="gone" />
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="Nepodařilo se načíst data"
+                android:text="@string/warn_data_loading_failed"
                 android:textColor="@color/grey"
                 android:visibility="gone" />
 
@@ -116,7 +116,7 @@
                     android:background="@color/green"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="ZOBRAZIT VŠE"
+                    android:text="@string/featured_show_all"
                     android:textColor="@color/white"
                     android:textSize="14dp"
                     android:visibility="gone" />
@@ -130,7 +130,7 @@
                     android:background="@color/green"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="Načíst znovu"
+                    android:text="@string/warn_load_again"
                     android:textColor="@color/white"
                     android:textSize="14dp"
                     android:visibility="gone" />
@@ -153,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="Nepodařilo se načíst data"
+                android:text="@string/warn_data_loading_failed"
                 android:textColor="@color/grey"
                 android:visibility="gone" />
 

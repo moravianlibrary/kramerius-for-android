@@ -80,36 +80,12 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.search, menu);
-		// MenuItem item = menu.findItem(R.id.search);
-		// SearchView searchView = (SearchView) item.getActionView();
-		// searchView.setOnQueryTextListener(this);
-		// searchView.setOnCloseListener(this);
-		//
-		//
 
 		MenuItem searchItem = menu.findItem(R.id.search);
 
 		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		searchView.setOnQueryTextListener(this);
 		searchView.setOnCloseListener(this);
-
-		//
-		// MenuInflater inflater = getActivity().getMenuInflater();
-		// inflater.inflate(R.menu.icon_menu, menu);
-		// MenuItem searchItem = menu.findItem(R.id.search);
-		//
-		// SearchManager searchManager = (SearchManager)
-		// getActivity().getSystemService(Context.SEARCH_SERVICE);
-		//
-		// SearchView searchView = null;
-		// if (searchItem != null) {
-		// searchView = (SearchView) searchItem.getActionView();
-		// }
-		// if (searchView != null) {
-		// searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-		// }
-
-		// searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
 	};
 
@@ -160,7 +136,7 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 				return;
 			}
 			if (result == null || result.getParent() == null || result.getChildren() == null) {
-				showWarningMessage("Nepodařilo se načíst data.", "Opakovat", new onWarningButtonClickedListener() {
+				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 					@Override
 					public void onWarningButtonClicked() {
 						new GetPeriodicalVolumesTask(getActivity()).execute(mPid);
@@ -173,11 +149,11 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 			String subtitle = "";
 			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
 			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
-				subtitle = "Ročník " + result.getParent().getVolumeTitle();
+				subtitle = getString(R.string.metadata_periodical_volume) + result.getParent().getVolumeTitle();
 				getSupportActionBar().setSubtitle(subtitle);
 			}
 			if (result.getChildren().isEmpty()) {
-				showWarningMessage("Nebyly nalezeny žádné výsledky.", null, null);
+				showWarningMessage(getString(R.string.warn_empty_result), null, null);
 				return;
 			} else {
 				setItems(result.getChildren());

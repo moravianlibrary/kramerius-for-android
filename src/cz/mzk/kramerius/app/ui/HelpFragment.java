@@ -22,10 +22,6 @@ public class HelpFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_help, container, false);
-		Configuration config = getResources().getConfiguration();
-		if (config.smallestScreenWidthDp < 720) {
-		//	ScreenUtil.setInsets(getActivity(), view);
-		}				
 		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_monograph)).execute(ModelUtil.MONOGRAPH);		
 		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_sound_recording)).execute(ModelUtil.SOUND_RECORDING);
 		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_map)).execute(ModelUtil.MAP);
