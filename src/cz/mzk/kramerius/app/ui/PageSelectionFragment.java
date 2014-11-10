@@ -2,8 +2,12 @@ package cz.mzk.kramerius.app.ui;
 
 import java.util.List;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,25 @@ public class PageSelectionFragment extends BaseFragment {
 	private GridView mGridview;
 	private PageSelectionAdapter mAdapter;
 	private OnPageNumberSelected mOnPageNumberSelected;
+
+	@Override
+	public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		float h = size.y;
+
+		Animator animator = null;
+		if (enter) {
+			animator = ObjectAnimator.ofFloat(this, "translationY", h, 0);
+		} else {
+			animator = ObjectAnimator.ofFloat(this, "translationY", 0, h);
+		}
+
+		animator.setDuration(500);
+		return animator;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,18 +80,17 @@ public class PageSelectionFragment extends BaseFragment {
 
 	public void assignItems(List<Item> items) {
 		Context c = getActivity();
-		if(c == null) {
+		if (c == null) {
 			return;
 		}
 		mAdapter = new PageSelectionAdapter(c, items);
 		mGridview.setAdapter(mAdapter);
 	}
-	
+
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_page_selection);
-	}		
-	
+		super.onStart();
+		Analytics.sendScreenView(getActivity(), R.string.ga_appview_page_selection);
+	}
 
 }

@@ -16,7 +16,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.DomainUtil;
-import cz.mzk.kramerius.app.widget.MenuItemWidget;
+import cz.mzk.kramerius.app.view.MenuItemWidget;
 
 public class MainMenuFragment extends Fragment implements OnClickListener {
 

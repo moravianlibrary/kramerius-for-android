@@ -1,4 +1,4 @@
-package cz.mzk.kramerius.app.widget;
+package cz.mzk.kramerius.app.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

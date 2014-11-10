@@ -171,6 +171,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
 
 		mPageSelectionFragment = (PageSelectionFragment) getFragmentManager().findFragmentById(R.id.page_listFragment);
+
 		getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
 		mListShown = false;
 
@@ -575,18 +576,36 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			showMetadata();
 		} else if (v == mListButton) {
 			if (mListShown) {
-				getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
+				hidePageSelection();
 			} else {
-				getFragmentManager().beginTransaction().show(mPageSelectionFragment).commit();
+				showPageSelection();
 			}
-			mListShown = !mListShown;
 		}
+	}
+
+	private void hidePageSelection() {
+		if (!mListShown) {
+			return;
+		}
+		getFragmentManager().beginTransaction()
+		// .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
+				.hide(mPageSelectionFragment).commit();
+		mListShown = false;
+	}
+
+	private void showPageSelection() {
+		if (mListShown) {
+			return;
+		}
+		getFragmentManager().beginTransaction()
+		// .setCustomAnimations(R.animator.slide_down, R.animator.slide_up)
+				.show(mPageSelectionFragment).commit();
+		mListShown = true;
 	}
 
 	@Override
 	public void onPageNumberSelected(int index) {
-		getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
-		mListShown = false;
+		hidePageSelection();
 		mCurrentPage = index;
 		loadPage();
 	}
@@ -595,7 +614,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			boolean hideAfterClick) {
 		mMessageContainer.removeAllViews();
 		mMessageContainer.setVisibility(View.VISIBLE);
-		MessageUtils.inflateMessage(this, mMessageContainer, getString(message), getString(buttonText), callback, hideAfterClick);
+		MessageUtils.inflateMessage(this, mMessageContainer, getString(message), getString(buttonText), callback,
+				hideAfterClick);
 	}
 
 	private void clearMessages() {
@@ -729,8 +749,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (closeSlidingMenu()) {
 			return;
 		} else if (mListShown) {
-			getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
-			mListShown = false;
+			hidePageSelection();
 		} else {
 			super.onBackPressed();
 		}
@@ -738,10 +757,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onRecent(String pid) {
-		if (mListShown) {
-			getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
-			mListShown = false;
-		}
+		hidePageSelection();
 		closeSlidingMenu();
 		if (!mFullscreen) {
 			setFullscreen(true);
