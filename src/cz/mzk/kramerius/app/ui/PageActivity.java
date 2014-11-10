@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,6 +66,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private static final String EXTRA_CURRENT_PAGE = "extra_current_page";
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
 
+	private static final int MENU_DETAILS = 101;
+	
 	private static final String LOG_TAG = PageActivity.class.getSimpleName();
 
 	private View mLoader;
@@ -265,12 +268,20 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		super.onSaveInstanceState(outState);
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, MENU_DETAILS, Menu.NONE, R.string.popup_card_details)
+			.setIcon(R.drawable.ic_action_info_outline).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
+		case MENU_DETAILS:
+			showMetadata();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
