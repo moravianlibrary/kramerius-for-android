@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +19,7 @@ import cz.mzk.kramerius.app.adapter.ViewerMenuArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.RecentMenuItem;
+import cz.mzk.kramerius.app.view.MenuItemWidget;
 
 public class ViewerMenuFragment extends Fragment implements OnClickListener {
 
@@ -31,11 +33,10 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	private ListView mListView;
 	private View mSettings;
 	private View mHome;
-	private View mOrientation;
-	private ImageView mOrientationIcon;
-	private boolean mOrientationLock = false;
-	
-	
+	private View mDownload;
+	private boolean mScreenLock = false;
+	private MenuItemWidget mScreenLockView;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,9 +50,12 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		mSettings.setOnClickListener(this);
 		mHome = view.findViewById(R.id.menu_home);
 		mHome.setOnClickListener(this);
-		mOrientation = view.findViewById(R.id.menu_orientation);
-		mOrientation.setOnClickListener(this);
-		mOrientationIcon = (ImageView) view.findViewById(R.id.menu_orientation_icon);
+		mDownload = view.findViewById(R.id.menu_download);
+		mDownload.setOnClickListener(this);
+		
+		mScreenLockView = (MenuItemWidget) view.findViewById(R.id.menu_screen_lock);
+		mScreenLockView.setOnClickListener(this);
+
 		mListView = (ListView) view.findViewById(R.id.menu_list);
 		populateMenuList();
 		return view;
@@ -84,7 +88,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 			}
 		});
 	}
-	
+
 	public void refreshRecent() {
 		populateMenuList();
 	}
@@ -97,11 +101,13 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		public void onHome();
 
 		public void onSettings();
-		
+
 		public void onOrientationLock(boolean locked);
 
 		public void onRecent(String pid);
 
+		public void onDownload();
+		
 	}
 
 	@Override
@@ -114,23 +120,25 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 			if (mCallback != null) {
 				mCallback.onHome();
 			}
-		}  else if (v == mOrientation) {
-			setOrientationLock(!mOrientationLock);
+		} else if (v == mScreenLockView) {
+			setOrientationLock(!mScreenLock);
+		} else if (v == mDownload) {
+			if(mCallback != null) {
+				mCallback.onDownload();
+			}
 		}
 	}
-	
-	private void setOrientationLock(boolean lock) {
-		mOrientationLock = lock;
-		if(mOrientationLock) {
-			mOrientationIcon.setImageResource(R.drawable.img_switch_on);			
-		} else {
-			mOrientationIcon.setImageResource(R.drawable.img_switch_off);
-		}
-		if(mCallback != null) {
-			mCallback.onOrientationLock(mOrientationLock);
-		}
-	}
-	
 
+	private void setOrientationLock(boolean lock) {
+		mScreenLock = lock;
+		if (mScreenLock) {
+			mScreenLockView.setSelected(true);
+		} else {
+			mScreenLockView.setSelected(false);
+		}
+		if (mCallback != null) {
+			mCallback.onOrientationLock(mScreenLock);
+		}
+	}
 
 }

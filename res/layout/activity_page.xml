@@ -3,19 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res/cz.mzk.kramerius.app"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg"
     android:orientation="vertical" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="?attr/colorPrimary"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/toolbar_height"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextAppearance="@style/ActionBar.TitleText" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg" >
+        android:layout_height="match_parent" >
 
         <RelativeLayout
             android:id="@+id/page_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:padding="0dp" >
 
             <FrameLayout
@@ -45,96 +55,12 @@
                 android:src="@drawable/img_loader"
                 android:visibility="gone" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <fragment
+                android:id="@+id/page_listFragment"
+                android:name="cz.mzk.kramerius.app.ui.PageSelectionFragment"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:layout_alignParentTop="true"
-                android:background="?attr/colorPrimary"
-                android:gravity="center_vertical"
-                android:minHeight="@dimen/toolbar_height"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:titleTextAppearance="@style/ActionBar.TitleText" />
-
-            <!--
-        <RelativeLayout
-            android:id="@+id/page_topPanel"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_alignParentTop="true"
-            android:background="@color/green"
-            android:clickable="true"
-            android:paddingLeft="0dp"
-            android:paddingRight="10dp" >
-
-            <ImageView
-                android:id="@+id/page_metadata"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_about_white" />
-
-            <LinearLayout
-                android:id="@+id/page_title_container"
-                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="45dp"
-                android:background="@drawable/ab_selector"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingRight="8dp" >
-
-                <ImageView
-                    android:id="@+id/page_drawer_icon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginRight="0dp"
-                    android:src="@drawable/ic_navigation_drawer" />
-
-                <TextView
-                    android:id="@+id/page_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:lines="1"
-                    android:textColor="@color/white"
-                    android:textSize="18dp"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/page_complex_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:visibility="gone" >
-
-                    <TextView
-                        android:id="@+id/page_complex_title1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:text="Rovnost"
-                        android:textColor="@color/white"
-                        android:textSize="17dp" />
-
-                    <TextView
-                        android:id="@+id/page_complex_title2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:text="Ročník 2334, Číslo 34"
-                        android:textColor="@color/white"
-                        android:textSize="12dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-            -->
+                android:layout_above="@+id/page_bottomPanel" />
 
             <RelativeLayout
                 android:id="@+id/page_bottomPanel"
@@ -184,14 +110,6 @@
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 android:visibility="gone" />
-
-            <fragment
-                android:id="@+id/page_listFragment"
-                android:name="cz.mzk.kramerius.app.ui.PageSelectionFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/page_bottomPanel"
-                android:layout_below="@id/toolbar" />
         </RelativeLayout>
 
         <FrameLayout
@@ -199,7 +117,6 @@
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:layout_marginTop="50dp"
             android:visibility="visible" />
     </android.support.v4.widget.DrawerLayout>
 

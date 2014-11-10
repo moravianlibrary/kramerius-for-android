@@ -16,6 +16,8 @@
         android:id="@+id/menu_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:lines="1"
         android:layout_gravity="center_vertical"
         android:textColor="@color/menu_item_noraml"
         android:textSize="@dimen/menu_item_title" />

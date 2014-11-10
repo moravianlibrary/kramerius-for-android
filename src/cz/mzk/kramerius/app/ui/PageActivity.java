@@ -67,7 +67,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
 
 	private static final int MENU_DETAILS = 101;
-	
+
 	private static final String LOG_TAG = PageActivity.class.getSimpleName();
 
 	private View mLoader;
@@ -88,7 +88,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private String mParentPid;
 
 	private View mListButton;
-	private View mMetadataButton;
+	// private View mMetadataButton;
 
 	private PageSelectionFragment mPageSelectionFragment;
 	private boolean mListShown;
@@ -268,14 +268,13 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(Menu.NONE, MENU_DETAILS, Menu.NONE, R.string.popup_card_details)
-			.setIcon(R.drawable.ic_action_info_outline).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				.setIcon(R.drawable.ic_action_info_outline).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -583,9 +582,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onClick(View v) {
-		if (v == mMetadataButton) {
-			showMetadata();
-		} else if (v == mListButton) {
+		if (v == mListButton) {
 			if (mListShown) {
 				hidePageSelection();
 			} else {
@@ -809,6 +806,15 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 		}
+	}
+
+	@Override
+	public void onDownload() {
+		if (mPageList == null) {
+			return;
+		}
+		//Item item = mPageList.get(mCurrentPage);
+		
 	}
 
 }

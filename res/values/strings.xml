@@ -44,7 +44,7 @@
     <string name="main_menu_feedback">Zpětná vazba</string>
     <string name="main_menu_settings">Nastavení</string>    
     <string name="main_menu_recent">Naposledy otevřené</string>
-    
+        
     <string name="featured_custom">Mohlo by se vám líbit</string>
     <string name="featured_newest">Nejnovější</string>
     <string name="featured_most_desirable">Nejžádanější</string>
@@ -167,10 +167,12 @@
     
  
     
-    <string name="page_menu_home">Domů</string>
-    <string name="page_menu_settings">Nastavení</string>    
-    <string name="page_menu_recent">Naposledy otevřené</string>
-    <string name="page_menu_orientation">Neotáčet obrazovku</string>
+    <string name="viewer_menu_home">Domů</string>
+    <string name="viewer_menu_settings">Nastavení</string>    
+    <string name="viewer_menu_recent">Naposledy otevřené</string>
+    <string name="viewer_menu_screen_lock">Zámek obrazovky</string>
+    <string name="viewer_menu_download">Stáhnou stránku</string>
+    
     
     
     <string name="inaccessible_document_header">Dokument není veřejně přístupný.</string>
