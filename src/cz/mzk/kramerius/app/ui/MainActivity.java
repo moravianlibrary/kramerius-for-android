@@ -35,6 +35,7 @@ import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
 import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.OnVirtualCollectionListener;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.PrefUtils;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
 		OnFeaturedListener, OnItemSelectedListener, OnSearchListener, OnVirtualCollectionListener {
@@ -51,6 +52,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	private MainFeaturedFragment mMainFragment;
 
 	private Toolbar mToolbar;
+	private boolean mLastPublicOnly;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,9 +129,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onHome() {
-		if (mMainFragment == null) {
+		boolean publicOnly = PrefUtils.isPublicOnly(this);				
+		if (mMainFragment == null || publicOnly != mLastPublicOnly) {
 			mMainFragment = new MainFeaturedFragment();
 		}
+		mLastPublicOnly = publicOnly;
 		mMainFragment.setCallback(this);
 		mMainFragment.setOnItemSelectedListener(this);
 		changeFragment(mMainFragment, true, R.string.main_title);
