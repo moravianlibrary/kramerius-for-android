@@ -44,6 +44,19 @@
         <item name="android:textColor">@color/button_text</item>
         <item name="android:textSize">@dimen/button_text</item>
     </style>
-    
+
+    <style name="MyDialogButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/dialog_button_height</item>
+        <item name="android:minWidth">@dimen/dialog_button_min_width</item>
+        <item name="android:background">@drawable/button_dialog</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/dialog_negative_button</item>
+        <item name="android:textSize">@dimen/dialog_button_text_height</item>
+        <item name="android:paddingLeft">@dimen/dialog_button_padding_left</item>
+        <item name="android:paddingRight">@dimen/dialog_button_padding_right</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 
 </resources>

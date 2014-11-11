@@ -42,6 +42,13 @@
     <color name="search_card_title">@color/color_primary</color>
     
     
+    <color name="dialog_positive_button">@color/color_primary</color>
+    <color name="dialog_negative_button">@color/dark_dark_grey</color>
+    <color name="dialog_title">@color/dark_dark_grey</color>
+    <color name="dialog_content">@color/dark_grey</color>
+    <color name="dialog_button_normal">#00000000</color>
+    <color name="dialog_button_pressed">#dddddd</color>
+    
     <color name="metadata_title">@color/dark_grey</color>
     <color name="metadata_subtitle">@color/dark_grey</color>
     <color name="metadata_value">@color/grey</color>

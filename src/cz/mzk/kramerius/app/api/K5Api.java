@@ -100,7 +100,12 @@ public class K5Api {
 
 	public static String getThumbnailPath(Context context, String uuid) {
 		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("uuid", uuid)
-				.appendQueryParameter("stream", "IMG_THUMB").build().toString();
+				.appendQueryParameter(PARAM_STREAM, "IMG_THUMB").build().toString();
+	}
+
+	public static String getFullImagePath(Context context, String uuid) {
+		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("uuid", uuid)
+				.appendQueryParameter(PARAM_STREAM, "IMG_FULL").build().toString();
 	}
 
 	public static Uri getItemUri(Context context, String pid) {

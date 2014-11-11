@@ -158,6 +158,10 @@
     <string name="search_filter_date_from">From</string>
     <string name="search_filter_date_to">To</string>          	
     
+      <string name="dialog_download_title">Download page</string>
+ 	<string name="dialog_download_content">The image will be downloaded to the Kramerius folder.\nWould you like to download the image?</string>
+    
+    
     <string name="viewer_menu_home">Home</string>
     <string name="viewer_menu_settings">Settings</string>    
     <string name="viewer_menu_recent">Recent</string>

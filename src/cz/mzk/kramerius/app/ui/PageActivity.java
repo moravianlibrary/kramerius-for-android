@@ -1,5 +1,11 @@
 package cz.mzk.kramerius.app.ui;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +19,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -44,6 +51,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
+import cz.mzk.kramerius.app.dialog.MaterialDialog;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
@@ -810,11 +818,76 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onDownload() {
+		closeSlidingMenu();
+
+		new MaterialDialog.Builder(this).title(R.string.dialog_download_title)
+				.content(R.string.dialog_download_content).positiveText(R.string.gen_yes)
+				.negativeText(R.string.gen_no).callback(new MaterialDialog.onActionButtonClickedListener() {
+
+					@Override
+					public void onPositiveButtonClicked() {
+						savePageImage();
+					}
+
+					@Override
+					public void onNegativeButtonClicked() {
+
+					}
+				}).build().show();
+
+	}
+
+	private void savePageImage() {
 		if (mPageList == null) {
 			return;
 		}
-		//Item item = mPageList.get(mCurrentPage);
-		
+		Item item = mPageList.get(mCurrentPage);
+		String url = K5Api.getFullImagePath(this, item.getPid());
+		String filename = item.getRootTitle() + " [" + mCurrentPage + "]";
+		new savePageImageTask().execute(url, filename);
+	}
+
+	class savePageImageTask extends AsyncTask<String, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			InputStream input = null;
+			try {
+				URL url = new URL(params[0]);
+				input = url.openStream();
+
+				File storagePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Kramerius");
+				if (!storagePath.exists()) {
+					storagePath.mkdirs();
+				}
+				OutputStream output = new FileOutputStream(storagePath + "/" + params[1] + ".jpg");
+				try {
+					byte[] buffer = new byte[1024];
+					int bytesRead = 0;
+					while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
+						output.write(buffer, 0, bytesRead);
+					}
+				} finally {
+					output.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (input != null) {
+					try {
+						input.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+
+		}
 	}
 
 }

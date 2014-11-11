@@ -165,7 +165,10 @@
     <string name="search_filter_date_to">Do</string>
      
     
- 
+    <string name="dialog_download_title">Stáhnout stránku</string>
+ 	<string name="dialog_download_content">Obrázek bude stažen do adresáře Kramerius.\nPřejete si stáhnou obrázek?</string>
+    
+    
     
     <string name="viewer_menu_home">Domů</string>
     <string name="viewer_menu_settings">Nastavení</string>    

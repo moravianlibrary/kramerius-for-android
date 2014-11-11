@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dialog_padding_left"
+        android:paddingRight="@dimen/dialog_padding_right"
+        android:paddingTop="@dimen/dialog_padding_top" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_title_margin_bottom"
+            android:textColor="@color/dialog_title"
+            android:textSize="@dimen/dialog_title_size" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dialog_content"
+            android:textSize="@dimen/dialog_content_size" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dialog_buttons_margin_left"
+        android:layout_marginRight="@dimen/dialog_buttons_margin_right"
+        android:layout_marginTop="@dimen/dialog_buttons_margin_top"
+        android:paddingBottom="@dimen/dialog_padding_bottom" >
+
+        <TextView
+            android:id="@+id/buttonPositive"
+            style="@style/MyDialogButton"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dialog_buttons_gap"
+            android:textColor="@color/dialog_positive_button" />
+
+        <TextView
+            android:id="@+id/buttonNegative"
+            style="@style/MyDialogButton"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/buttonPositive" />
+    </RelativeLayout>
+
+</LinearLayout>

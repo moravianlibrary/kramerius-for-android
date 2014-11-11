@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -44,8 +45,9 @@ public class MenuItemWidget extends LinearLayout {
 		}
 
 		LayoutInflater.from(context).inflate(R.layout.widget_menu_item, this);
-
+		Typeface typeface = Typeface.createFromAsset(getContext().getResources().getAssets(), "Roboto-Regular.ttf");
 		mTitleView = (TextView) this.findViewById(R.id.menu_item_title);
+		mTitleView.setTypeface(typeface);
 		mTitleView.setText(title);
 		mIconView = (ImageView) this.findViewById(R.id.menu_item_icon);
 		if (mIcon != 0) {

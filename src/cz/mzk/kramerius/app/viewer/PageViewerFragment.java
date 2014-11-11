@@ -41,7 +41,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	public static final String KEY_PAGE_PIDS = PageViewerFragment.class.getSimpleName() + "_pagePids";
 	public static final String KEY_CURRENT_PAGE_INDEX = PageViewerFragment.class.getSimpleName() + "_pageIndex";
 	public static final String KEY_POPULATED = PageViewerFragment.class.getSimpleName() + ":_populated";
-	private static final int IMG_FULL_HEIGHT = 1200;
+	private static final int IMG_FULL_HEIGHT = 1500;
 	private static final int MAX_IMG_FULL_HEIGHT = 1000;
 	private static final int IMG_FULL_SCALE_QUOTIENT = 100;
 
