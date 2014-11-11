@@ -51,7 +51,7 @@ public class CardUtils {
 		}
 	}
 
-	public static void setAnimationAdapter(CardGridArrayAdapter adapter, CardGridView view, int animType) {
+	public static void setAnimationAdapter(CardGridArrayAdapter adapter, CardGridView view, int animType) {		
 		AnimationAdapter animationAdapter = getAnimationAdapter(adapter, animType);
 		if (animationAdapter == null) {
 			return;

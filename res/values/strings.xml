@@ -167,7 +167,9 @@
     
     <string name="dialog_download_title">Stáhnout stránku</string>
  	<string name="dialog_download_content">Obrázek bude stažen do adresáře Kramerius.\nPřejete si stáhnou obrázek?</string>
-    
+    <string name="dialog_download_private_title">Stáhnout stránku</string>
+ 	<string name="dialog_download_private_content">Stranka není veřejně přístupná. Litujeme, ale obrázek není možné stáhnout.</string>
+ 	
     
     
     <string name="viewer_menu_home">Domů</string>

@@ -41,27 +41,34 @@ public class MaterialDialog extends AlertDialog implements View.OnClickListener 
 		}
 
 		mPositiveButton = (TextView) mView.findViewById(R.id.buttonPositive);
-		mPositiveButton.setTypeface(typefaceMedium);
-		mPositiveButton.setText(builder.positiveText);
-		mPositiveButton.setOnClickListener(this);
-
+		if (builder.positiveText == null || builder.positiveText.isEmpty()) {
+			mPositiveButton.setVisibility(View.GONE);
+		} else {
+			mPositiveButton.setTypeface(typefaceMedium);
+			mPositiveButton.setText(builder.positiveText);
+			mPositiveButton.setOnClickListener(this);
+		}
 		mNegativeButton = (TextView) mView.findViewById(R.id.buttonNegative);
-		mNegativeButton.setTypeface(typefaceMedium);
-		mNegativeButton.setText(builder.negativeText);
-		mNegativeButton.setOnClickListener(this);
-
+		if (builder.negativeText == null || builder.negativeText.isEmpty()) {
+			mNegativeButton.setVisibility(View.GONE);
+		} else {			
+			mNegativeButton.setTypeface(typefaceMedium);
+			mNegativeButton.setText(builder.negativeText);
+			mNegativeButton.setOnClickListener(this);
+		}
 		setView(mView);
 	}
 
 	@Override
 	public final void onClick(View v) {
-		if (mCallback == null) {
-			return;
-		}
 		if (v == mPositiveButton) {
-			mCallback.onPositiveButtonClicked();
+			if (mCallback != null) {
+				mCallback.onPositiveButtonClicked();
+			}
 		} else if (v == mNegativeButton) {
-			mCallback.onNegativeButtonClicked();
+			if (mCallback != null) {
+				mCallback.onNegativeButtonClicked();
+			}
 		}
 		dismiss();
 	}

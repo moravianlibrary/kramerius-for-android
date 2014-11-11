@@ -819,14 +819,27 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	@Override
 	public void onDownload() {
 		closeSlidingMenu();
-
-		new MaterialDialog.Builder(this).title(R.string.dialog_download_title)
-				.content(R.string.dialog_download_content).positiveText(R.string.gen_yes)
-				.negativeText(R.string.gen_no).callback(new MaterialDialog.onActionButtonClickedListener() {
+		if (mPageList == null) {
+			return;
+		}
+		final Item item = mPageList.get(mCurrentPage);
+		if(item.isPrivate()) {
+			new MaterialDialog.Builder(this)
+				.title(R.string.dialog_download_private_title)
+				.content(R.string.dialog_download_private_content)
+				.positiveText(R.string.gen_ok)
+				.build().show();
+		} else {
+		new MaterialDialog.Builder(this)
+				.title(R.string.dialog_download_title)
+				.content(R.string.dialog_download_content)
+				.positiveText(R.string.gen_yes)
+				.negativeText(R.string.gen_no)
+				.callback(new MaterialDialog.onActionButtonClickedListener() {
 
 					@Override
 					public void onPositiveButtonClicked() {
-						savePageImage();
+						savePageImage(item);
 					}
 
 					@Override
@@ -834,14 +847,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 					}
 				}).build().show();
+		}
 
 	}
 
-	private void savePageImage() {
-		if (mPageList == null) {
-			return;
-		}
-		Item item = mPageList.get(mCurrentPage);
+	private void savePageImage(Item item) {		
 		String url = K5Api.getFullImagePath(this, item.getPid());
 		String filename = item.getRootTitle() + " [" + mCurrentPage + "]";
 		new savePageImageTask().execute(url, filename);

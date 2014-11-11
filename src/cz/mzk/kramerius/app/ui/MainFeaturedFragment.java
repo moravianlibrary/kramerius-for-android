@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,7 +27,6 @@ import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
-import cz.mzk.kramerius.app.api.K5Constants;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
@@ -219,7 +217,7 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 		}
 	}
 
-	private void setGridViewHeightBasedOnChildren(GridView gridView, int count) {
+	private void setGridViewHeightBasedOnChildren(GridView gridView, int count) {		
 		ListAdapter listAdapter = gridView.getAdapter();
 		if (listAdapter == null) {
 			return;
@@ -236,10 +234,10 @@ public class MainFeaturedFragment extends BaseFragment implements OnClickListene
 			} else {
 				totalHeight += getResources().getDisplayMetrics().density * 10;
 			}
-		}
+		}		
 		ViewGroup.LayoutParams params = gridView.getLayoutParams();
 		params.height = totalHeight;
-		gridView.setLayoutParams(params);
+		gridView.setLayoutParams(params);	
 		mScrollView.scrollTo(0, 0);
 	}
 
