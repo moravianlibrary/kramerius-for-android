@@ -201,6 +201,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 				} else {
 					mDrawerLayout.openDrawer(mMenuContainer);
+					hidePageSelection();
 				}
 			}
 		});
@@ -603,9 +604,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (!mListShown) {
 			return;
 		}
-		getFragmentManager().beginTransaction()
-		// .setCustomAnimations(R.animator.slide_up, R.animator.slide_down)
-				.hide(mPageSelectionFragment).commit();
+		getFragmentManager().beginTransaction().hide(mPageSelectionFragment).commit();
+		mSeekBar.setEnabled(true);
 		mListShown = false;
 	}
 
@@ -613,9 +613,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (mListShown) {
 			return;
 		}
-		getFragmentManager().beginTransaction()
-		// .setCustomAnimations(R.animator.slide_down, R.animator.slide_up)
-				.show(mPageSelectionFragment).commit();
+
+		getFragmentManager().beginTransaction().show(mPageSelectionFragment).commit();
+		mSeekBar.setEnabled(false);
 		mListShown = true;
 	}
 
@@ -823,35 +823,29 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			return;
 		}
 		final Item item = mPageList.get(mCurrentPage);
-		if(item.isPrivate()) {
-			new MaterialDialog.Builder(this)
-				.title(R.string.dialog_download_private_title)
-				.content(R.string.dialog_download_private_content)
-				.positiveText(R.string.gen_ok)
-				.build().show();
+		if (item.isPrivate()) {
+			new MaterialDialog.Builder(this).title(R.string.dialog_download_private_title)
+					.content(R.string.dialog_download_private_content).positiveText(R.string.gen_ok).build().show();
 		} else {
-		new MaterialDialog.Builder(this)
-				.title(R.string.dialog_download_title)
-				.content(R.string.dialog_download_content)
-				.positiveText(R.string.gen_yes)
-				.negativeText(R.string.gen_no)
-				.callback(new MaterialDialog.onActionButtonClickedListener() {
+			new MaterialDialog.Builder(this).title(R.string.dialog_download_title)
+					.content(R.string.dialog_download_content).positiveText(R.string.gen_yes)
+					.negativeText(R.string.gen_no).callback(new MaterialDialog.onActionButtonClickedListener() {
 
-					@Override
-					public void onPositiveButtonClicked() {
-						savePageImage(item);
-					}
+						@Override
+						public void onPositiveButtonClicked() {
+							savePageImage(item);
+						}
 
-					@Override
-					public void onNegativeButtonClicked() {
+						@Override
+						public void onNegativeButtonClicked() {
 
-					}
-				}).build().show();
+						}
+					}).build().show();
 		}
 
 	}
 
-	private void savePageImage(Item item) {		
+	private void savePageImage(Item item) {
 		String url = K5Api.getFullImagePath(this, item.getPid());
 		String filename = item.getRootTitle() + " [" + mCurrentPage + "]";
 		new savePageImageTask().execute(url, filename);
