@@ -1,5 +1,7 @@
 package cz.mzk.kramerius.app.search;
 
+import java.util.Locale;
+
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class SearchQuery {
@@ -39,7 +41,7 @@ public class SearchQuery {
 	
 	public SearchQuery add(String key, String value, boolean substring) {
 		if (value != null && !value.trim().isEmpty()) {
-			String v = value.trim();
+			String v = value.trim().toLowerCase(Locale.ENGLISH);
 			if (!mQuery.isEmpty()) {
 				mQuery = mQuery + " AND ";
 			}			
