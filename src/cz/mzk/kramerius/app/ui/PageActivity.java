@@ -523,8 +523,17 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		initViewerFragment(mIsPdf);
-		mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
-		mPageSelectionFragment.assignItems(mPageList);
+		
+		
+		if(mIsPdf) {
+			hidePageSelection();
+			mListButton.setVisibility(View.GONE);
+		} else {
+			mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
+			mPageSelectionFragment.assignItems(mPageList);
+			mListButton.setVisibility(View.VISIBLE);
+		}
+		
 		mViewerWrapper.setVisibility(View.VISIBLE);
 	}
 
