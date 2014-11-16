@@ -5,10 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +40,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -62,6 +66,8 @@ import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
+import cz.mzk.kramerius.app.viewer.PageViewerFragment;
+import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
 
 public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener,
 		OnPageNumberSelected, ViewerMenuListener, EventListener {
@@ -73,6 +79,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private static final String EXTRA_PARENT_PID = "extra_parent_pid";
 	private static final String EXTRA_CURRENT_PAGE = "extra_current_page";
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
+	private static final String EXTRA_PDF = "extra_pdf";
 
 	private static final int MENU_DETAILS = 101;
 
@@ -120,6 +127,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	private String mPid;
 
+	private View mImageViewerContainer;
+	private View mPdfViewerContainer;
+
+	private boolean mIsPdf;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,6 +151,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
 		mMessageContainer = (FrameLayout) findViewById(R.id.page_message_container);
 
+		mImageViewerContainer = findViewById(R.id.fragmentImageViewerContainer);
+		mPdfViewerContainer = findViewById(R.id.fragmentPdfViewerContainer);
+
 		mViewerWrapper.setVisibility(View.INVISIBLE);
 		mContainer = (ViewGroup) findViewById(R.id.page_container);
 
@@ -148,23 +163,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 		mPid = getIntent().getExtras().getString(BaseActivity.EXTRA_PID);
 		mIndex = (TextView) findViewById(R.id.page_index);
-
-		mPageViewerFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(R.id.fragmentViewer);
-		mPageViewerFragment.setEventListener(this);
-
-		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
-		String[] vms = getResources().getStringArray(R.array.view_mode_values);
-		if (vms[0].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.FIT_TO_SCREEN);
-		} else if (vms[1].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_LEFT_VERTICAL_TOP);
-		} else if (vms[2].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_CENTER);
-		} else if (vms[3].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP);
-		}
-		setBackgroundColor();
 
 		mLoader = findViewById(R.id.page_loader);
 		mBottomPanel = findViewById(R.id.page_bottomPanel);
@@ -233,6 +231,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mSubtitle = savedInstanceState.getString(EXTRA_SUBTITLE);
 			mComplexTitle = savedInstanceState.getBoolean(EXTRA_COMPLEX_TITLE);
 			mFullscreen = savedInstanceState.getBoolean(EXTRA_FULLSCREEN);
+			mIsPdf = savedInstanceState.getBoolean(EXTRA_PDF);
 			if (!mFullscreen) {
 				setFullscreen(false);
 			}
@@ -241,6 +240,44 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			new LoadPagesTask(this).execute(mPid);
 		} else {
 			init();
+		}
+	}
+
+	private void initViewerFragment(boolean pdf) {
+
+		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
+				R.id.fragmentPdfViewer);
+		IPageViewerFragment imageFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
+				R.id.fragmentImageViewer);
+		if (pdf) {
+			mImageViewerContainer.setVisibility(View.GONE);
+			mPdfViewerContainer.setVisibility(View.VISIBLE);
+			mPageViewerFragment = pdfFragment;
+		} else {
+			mImageViewerContainer.setVisibility(View.VISIBLE);
+			mPdfViewerContainer.setVisibility(View.GONE);
+			;
+			mPageViewerFragment = imageFragment;
+		}
+
+		mPageViewerFragment.setEventListener(this);
+
+		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
+		String[] vms = getResources().getStringArray(R.array.view_mode_values);
+		if (vms[0].equals(vm)) {
+			mPageViewerFragment.setViewMode(ViewMode.FIT_TO_SCREEN);
+		} else if (vms[1].equals(vm)) {
+			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_LEFT_VERTICAL_TOP);
+		} else if (vms[2].equals(vm)) {
+			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_CENTER);
+		} else if (vms[3].equals(vm)) {
+			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP);
+		}
+		setBackgroundColor();
+		String domain = K5Api.getDomain(this);
+		if (mPageViewerFragment != null) {
+			mPageViewerFragment.populate(domain, itemsToPids());
 		}
 	}
 
@@ -255,6 +292,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void setBackgroundColor() {
+		if (mPageViewerFragment == null) {
+			return;
+		}
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_viewer_bg_color_key), getString(R.string.pref_viewer_bg_color_default));
 		if ("white".equals(bgColorValue)) {
@@ -275,6 +315,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		outState.putString(EXTRA_SUBTITLE, mSubtitle);
 		outState.putBoolean(EXTRA_COMPLEX_TITLE, mComplexTitle);
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
+		outState.putBoolean(EXTRA_PDF, mIsPdf);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -383,7 +424,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					}
 				}
 			}
-
+			if (item.getPdf() != null) {
+				downloadPdf(item);
+			}
 			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
 		}
 
@@ -423,6 +466,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 
 			mParentPid = result.getParent().getPid();
+			mIsPdf = result.getParent().getPdf() != null;
 			String selectedPid = result.getParent().getSelectedChild();
 			if (selectedPid == null) {
 				String domain = K5Api.getDomain(PageActivity.this);
@@ -446,26 +490,18 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void init() {
-		// mDrawerLayout.setActivated(true);
-		mViewerWrapper.setVisibility(View.VISIBLE);
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
-			// mTitle1View.setText(mTitle);
-			// mTitle2View.setText(mSubtitle);
-			// mComplextTitleView.setVisibility(View.VISIBLE);
-			// mTitleView.setVisibility(View.GONE);
 		} else {
-			// mTitleView.setText(mTitle);
 			mToolbar.setTitle(mTitle);
-			// mComplextTitleView.setVisibility(View.GONE);
-			// mTitleView.setVisibility(View.VISIBLE);
 		}
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
-		initPageViewrFragment();
+		initViewerFragment(mIsPdf);
 		mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
 		mPageSelectionFragment.assignItems(mPageList);
+		mViewerWrapper.setVisibility(View.VISIBLE);
 	}
 
 	private int getIndexFromPid(String pid) {
@@ -485,13 +521,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			return index;
 		}
 		return -1;
-	}
-
-	private void initPageViewrFragment() {
-		String domain = K5Api.getDomain(this);
-		if (mPageViewerFragment != null) {
-			mPageViewerFragment.populate(domain, itemsToPids());
-		}
 	}
 
 	@Override
@@ -701,7 +730,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				mFullscreen = !mFullscreen;
 				setFullscreen(mFullscreen);
 			}
-		} else {
+		} else if (x >= 0 && y >= 0) {
 			float w = x / mContainer.getWidth();
 			float h = y / mContainer.getHeight();
 			if (w < openingBorderMax || h < openingBorderMax) {
@@ -712,6 +741,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				mFullscreen = !mFullscreen;
 				setFullscreen(mFullscreen);
 			}
+		} else {
+			mFullscreen = !mFullscreen;
+			setFullscreen(mFullscreen);
 		}
 	}
 
@@ -892,6 +924,63 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		protected void onPostExecute(Boolean success) {
 
 		}
+	}
+
+	private boolean downloadPdf(Item item) {
+		String pdf = item.getPdf();
+		if (pdf == null) {
+			return false;
+		}
+		InputStream input = null;
+		OutputStream output = null;
+		HttpURLConnection connection = null;
+		try {
+			URL url = new URL(pdf);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.connect();
+
+			if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				return false;
+			}
+			input = connection.getInputStream();
+			output = new FileOutputStream("/sdcard/tmppdf.pdf");
+
+			byte data[] = new byte[4096];
+			int count;
+			while ((count = input.read(data)) != -1) {
+				// if (isCancelled()) {
+				// input.close();
+				// return null;
+				// }
+				output.write(data, 0, count);
+			}
+		} catch (Exception e) {
+			return false;
+		} finally {
+			try {
+				if (output != null)
+					output.close();
+				if (input != null)
+					input.close();
+			} catch (IOException ignored) {
+			}
+
+			if (connection != null)
+				connection.disconnect();
+		}
+		return true;
+	}
+
+	@Override
+	public void onPageChanged(int index) {
+		int pageCount = 0;
+		if (mPageList != null) {
+			pageCount = mPageList.size();
+		}
+		mCurrentPage = index;
+		clearMessages();
+		mIndex.setText((mCurrentPage + 1) + "/" + pageCount);
+		mSeekBar.setProgress(mCurrentPage);
 	}
 
 }

@@ -32,6 +32,7 @@ public class K5Api {
 	private static final String PATH_MODS = "BIBLIO_MODS";
 	private static final String PATH_MP3 = "MP3";
 	private static final String PATH_IMG = "img";
+	private static final String PATH_THUMB = "thumb";
 
 	private static final String PARAM_LIMIT = "limit";
 	private static final String PARAM_MODEL = "type";
@@ -98,9 +99,10 @@ public class K5Api {
 		return userPass.contains(";");
 	}
 
-	public static String getThumbnailPath(Context context, String uuid) {
-		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("uuid", uuid)
-				.appendQueryParameter(PARAM_STREAM, "IMG_THUMB").build().toString();
+	public static String getThumbnailPath(Context context, String pid) {
+		return getItemUri(context, pid).buildUpon().appendPath(PATH_THUMB).build().toString();
+//		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("uuid", uuid)
+//				.appendQueryParameter(PARAM_STREAM, "IMG_THUMB").build().toString();
 	}
 
 	public static String getFullImagePath(Context context, String uuid) {

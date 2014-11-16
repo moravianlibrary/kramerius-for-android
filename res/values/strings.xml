@@ -275,4 +275,21 @@
     
     
     
+    
+    <string name="mupdf_cannot_open_document">Cannot open document</string>
+	<string name="mupdf_cannot_open_document_Reason">Cannot open document: %1$s</string>
+	<string name="mupdf_cannot_open_file_Path">Cannot open file: %1$s</string>
+	<string name="mupdf_cannot_open_buffer">Cannot open buffer</string>
+    <string name="mupdf_okay">Okay</string>
+	<string name="mupdf_enter_password">Enter password</string>
+    <string name="mupdf_cancel">Cancel</string>
+	<string name="mupdf_fill_out_text_field">Fill out text field</string>
+    <string name="mupdf_choose_value">Choose value</string>
+	<string name="mupdf_no_further_occurrences_found">No further occurrences found</string>
+    <string name="mupdf_dismiss">Dismiss</string>
+	<string name="mupdf_text_not_found">Text not found</string>
+    <string name="mupdf_searching_">Searching&#8230;</string>
+	<string name="mupdf_not_supported">Not supported</string>    
+    
+    
 </resources>

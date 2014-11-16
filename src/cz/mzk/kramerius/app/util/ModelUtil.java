@@ -107,8 +107,8 @@ public class ModelUtil {
 			intent = new Intent(activity, PeriodicalActivity.class);
 		} else if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
 			intent = new Intent(activity, PeriodicalActivity.class);
-		} else if (item.getPdf() != null) {
-			intent = new Intent(activity, PdfViewerActivity.class);
+		//} else if (item.getPdf() != null) {
+		//	intent = new Intent(activity, PdfViewerActivity.class);
 		} else {
 			intent = new Intent(activity, PageActivity.class);
 		}

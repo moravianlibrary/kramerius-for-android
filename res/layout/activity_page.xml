@@ -33,11 +33,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-                <fragment
-                    android:id="@+id/fragmentViewer"
-                    android:name="cz.mzk.kramerius.app.viewer.PageViewerFragment"
+                <FrameLayout
+                    android:id="@+id/fragmentPdfViewerContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent" >
+
+                    <fragment
+                        android:id="@+id/fragmentPdfViewer"
+                        android:name="cz.mzk.kramerius.app.viewer.PdfViewerFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fragmentImageViewerContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <fragment
+                        android:id="@+id/fragmentImageViewer"
+                        android:name="cz.mzk.kramerius.app.viewer.PageViewerFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
             </FrameLayout>
 
             <FrameLayout
@@ -110,6 +128,8 @@
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 android:visibility="gone" />
+
+          
         </RelativeLayout>
 
         <FrameLayout

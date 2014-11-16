@@ -36,31 +36,13 @@ public interface IPageViewerFragment {
 	 */
 	public abstract int getCurrentPageIndex();
 
-	/**
-	 * 
-	 * @return Index of next page or null if current page is last one.
-	 */
-	public abstract Integer getNextPageIndex();
-
-	/**
-	 * 
-	 * @return Index of previous page or null if current page is first one.
-	 */
-	public abstract Integer getPreviousPageIndex();
-
+	
 	/**
 	 * Shows page by index.
 	 * 
 	 * @param pageIndex
 	 */
 	public abstract void showPage(int pageIndex);
-
-	/**
-	 * 
-	 * @param pageIndex
-	 * @return Pid of page by index.
-	 */
-	public abstract String getPagePid(int pageIndex);
 
 	/**
 	 * 
@@ -111,6 +93,9 @@ public interface IPageViewerFragment {
 		 *            area containing the image or null
 		 */
 		public void onSingleTap(float x, float y, Rect boundingBox);
+		
+		
+		public void onPageChanged(int index);
 
 	}
 

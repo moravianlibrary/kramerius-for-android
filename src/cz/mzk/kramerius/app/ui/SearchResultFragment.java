@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 	private static final String EXTRA_QUERY = "extra_query";
 
-	private static final String TAG = SearchResultFragment.class.getSimpleName();
+	private static final String LOG_TAG = SearchResultFragment.class.getSimpleName();
 
 	private String mSearchQuery;
 	private OnItemSelectedListener mOnItemSelectedListener;
@@ -119,6 +120,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		@Override
 		protected Pair<List<Item>, Integer> doInBackground(String... params) {
 			String query = params[0];
+			Log.d(LOG_TAG, "search query:" + query);
 			return K5Connector.getInstance().getSearchResult(tContext, query, mStart, mRows);
 		}
 

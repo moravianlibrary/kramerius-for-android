@@ -155,13 +155,11 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		return mCurrentPageIndex;
 	}
 
-	@Override
 	public Integer getNextPageIndex() {
 		int next = mCurrentPageIndex + 1;
 		return next == mPagePids.size() ? null : Integer.valueOf(next);
 	}
 
-	@Override
 	public Integer getPreviousPageIndex() {
 		int next = mCurrentPageIndex - 1;
 		return next == -1 ? null : Integer.valueOf(next);
@@ -332,7 +330,6 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 		return true;
 	}
 
-	@Override
 	public String getPagePid(int pageIndex) {
 		return mPagePids.get(pageIndex);
 	}

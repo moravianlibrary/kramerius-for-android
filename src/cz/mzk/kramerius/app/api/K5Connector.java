@@ -27,15 +27,16 @@ import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.util.Constants;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
 public class K5Connector {
 
-	public static final String TAG = K5Connector.class.getName();
+	public static final String LOG_TAG = K5Connector.class.getName();
 
-	public static final int CONNECTION_TIMEOUT = 5;
-	public static final int SOCKET_TIMEOUT = 6;
+	public static final int CONNECTION_TIMEOUT = 6;
+	public static final int SOCKET_TIMEOUT = 9;
 
 	public static K5Connector INSTANCE;
 
@@ -87,7 +88,9 @@ public class K5Connector {
 			List<Item> list = new ArrayList<Item>();
 			String requst = null;
 			requst = K5Api.getFeedPath(context, feed, limit, policy, model);
-			Log.d(TAG, "request:" + requst + ", " + feed);
+			if(Constants.DEBUG_MODE) {
+				Log.d(LOG_TAG, "request:" + requst + ", " + feed);
+			}			
 			HttpGet request = new HttpGet(requst);
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
@@ -362,6 +365,9 @@ public class K5Connector {
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			if(Constants.DEBUG_MODE) {
+				Log.d(LOG_TAG, "search result:" + jsonString);
+			}
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
 			if (responseJson == null) {
@@ -419,7 +425,9 @@ public class K5Connector {
 		try {
 			String requestPath = K5Api.getDoctypeCountPath(context, type);
 			HttpGet request = new HttpGet(requestPath);
-			Log.d(TAG, "query:" + requestPath);
+			if(Constants.DEBUG_MODE) {
+				Log.d(LOG_TAG, "query:" + requestPath);
+			}
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
