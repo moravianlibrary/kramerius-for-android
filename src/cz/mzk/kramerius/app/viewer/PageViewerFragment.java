@@ -335,7 +335,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	}
 
 	@Override
-	public int getPageNumber() {
+	public int getNumberOfPage() {
 		return mPagePids.size();
 	}
 

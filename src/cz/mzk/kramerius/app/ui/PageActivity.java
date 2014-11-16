@@ -10,8 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +38,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -60,14 +57,13 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
+import cz.mzk.kramerius.app.util.Constants;
 import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
-import cz.mzk.kramerius.app.viewer.PageViewerFragment;
-import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
 
 public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener,
 		OnPageNumberSelected, ViewerMenuListener, EventListener {
@@ -80,6 +76,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private static final String EXTRA_CURRENT_PAGE = "extra_current_page";
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
 	private static final String EXTRA_PDF = "extra_pdf";
+	private static final String EXTRA_PDF_STATUS = "extra_pdf_status";
 
 	private static final int MENU_DETAILS = 101;
 
@@ -131,6 +128,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private View mPdfViewerContainer;
 
 	private boolean mIsPdf;
+	private int mPdfStatus;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +150,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mMessageContainer = (FrameLayout) findViewById(R.id.page_message_container);
 
 		mImageViewerContainer = findViewById(R.id.fragmentImageViewerContainer);
+		mImageViewerContainer.setVisibility(View.GONE);
 		mPdfViewerContainer = findViewById(R.id.fragmentPdfViewerContainer);
-
+		mPdfViewerContainer.setVisibility(View.GONE);
 		mViewerWrapper.setVisibility(View.INVISIBLE);
 		mContainer = (ViewGroup) findViewById(R.id.page_container);
 
@@ -232,6 +231,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mComplexTitle = savedInstanceState.getBoolean(EXTRA_COMPLEX_TITLE);
 			mFullscreen = savedInstanceState.getBoolean(EXTRA_FULLSCREEN);
 			mIsPdf = savedInstanceState.getBoolean(EXTRA_PDF);
+			mPdfStatus = savedInstanceState.getInt(EXTRA_PDF_STATUS);
 			if (!mFullscreen) {
 				setFullscreen(false);
 			}
@@ -316,6 +316,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		outState.putBoolean(EXTRA_COMPLEX_TITLE, mComplexTitle);
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		outState.putBoolean(EXTRA_PDF, mIsPdf);
+		outState.putInt(EXTRA_PDF_STATUS, mPdfStatus);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -424,10 +425,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					}
 				}
 			}
+			int status = K5Api.STATUS_UNKNOWN;
 			if (item.getPdf() != null) {
-				downloadPdf(item);
+				status = downloadPdf(item);
 			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
+			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()), status);
 		}
 
 		@Override
@@ -448,6 +450,28 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 						}, true);
 				return;
 			}
+			mPdfStatus = result.getStatus();
+			if (result.getStatus() == K5Api.STATUS_PDF_FORBIDDEN) {
+				showWarningMessage(R.string.warn_pdf_private_message, R.string.warn_page_private_button,
+						new onWarningButtonClickedListener() {
+
+							@Override
+							public void onWarningButtonClicked() {
+								showInaccessibleDocumentActivity();
+							}
+						}, false);
+				return;
+			} else if (result.getStatus() == K5Api.STATUS_PDF_FAILED) {
+				showWarningMessage(R.string.warn_pdf_loading_failed, R.string.gen_again,
+						new onWarningButtonClickedListener() {
+
+							@Override
+							public void onWarningButtonClicked() {
+								new LoadPagesTask(PageActivity.this).execute(mPid);
+							}
+						}, true);
+				return;
+			} 
 
 			mPageList = new ArrayList<Item>();
 			if (result.getChildren() == null || result.getChildren().isEmpty()) {
@@ -484,7 +508,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					mCurrentPage = index;
 				}
 			}
-			mMenuFragment.refreshRecent();
+			mMenuFragment.refreshRecent();			
 			init();
 		}
 	}
@@ -811,6 +835,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			setFullscreen(true);
 		}
 		putToHistory();
+		mPageList = null;
 		new LoadPagesTask(this).execute(pid);
 	}
 
@@ -926,10 +951,10 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 	}
 
-	private boolean downloadPdf(Item item) {
+	private int downloadPdf(Item item) {
 		String pdf = item.getPdf();
 		if (pdf == null) {
-			return false;
+			return K5Api.STATUS_PDF_FAILED;
 		}
 		InputStream input = null;
 		OutputStream output = null;
@@ -938,24 +963,25 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			URL url = new URL(pdf);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.connect();
-
-			if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				return false;
+			int responseCode = connection.getResponseCode();
+			if (Constants.DEBUG_MODE) {
+				Log.d(LOG_TAG, "Downloading pdf, response code: " + responseCode);
+			}
+			if (responseCode == HttpURLConnection.HTTP_FORBIDDEN || responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+				return K5Api.STATUS_PDF_FORBIDDEN;
+			}
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				return K5Api.STATUS_PDF_FAILED;
 			}
 			input = connection.getInputStream();
-			output = new FileOutputStream("/sdcard/tmppdf.pdf");
-
+			output = new FileOutputStream(Constants.PDF_PATH);
 			byte data[] = new byte[4096];
 			int count;
 			while ((count = input.read(data)) != -1) {
-				// if (isCancelled()) {
-				// input.close();
-				// return null;
-				// }
 				output.write(data, 0, count);
 			}
 		} catch (Exception e) {
-			return false;
+			return K5Api.STATUS_PDF_FAILED;
 		} finally {
 			try {
 				if (output != null)
@@ -964,11 +990,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					input.close();
 			} catch (IOException ignored) {
 			}
-
-			if (connection != null)
+			if (connection != null) {
 				connection.disconnect();
+			}
 		}
-		return true;
+		return K5Api.STATUS_PDF_OK;
 	}
 
 	@Override

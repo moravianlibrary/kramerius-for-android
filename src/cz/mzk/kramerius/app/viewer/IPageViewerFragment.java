@@ -48,7 +48,7 @@ public interface IPageViewerFragment {
 	 * 
 	 * @return Number of pages.
 	 */
-	public abstract int getPageNumber();
+	public abstract int getNumberOfPage();
 
 	/**
 	 * Sets view mode for all pages from now on.

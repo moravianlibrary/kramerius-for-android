@@ -218,11 +218,13 @@
     <string name="gen_again">Opakovat</string>
     
     <string name="warn_data_loading_failed">Nepodařilo se načíst data.</string>
+    <string name="warn_pdf_loading_failed">Nepodařilo se stáhnout PDF dokument.</string>
+    <string name="warn_pdf_private_message">PDF dokument není veřejně přístupný.</string>
     <string name="warn_load_again">OPAKOVAT</string>
     <string name="warn_empty_result">Nebyly nalezeny žádné výsledky.</string>
     <string name="warn_empty_history">Zatím nemáte žádné otevřené dokumenty.</string>
     <string name="warn_empty_vc">Digitální knihovna neobsahuje žádné virtuální sbirky.</string>
-    <string name="warn_page_private_message">Stránka dokumentu není veřejně přístupná.</string>
+    <string name="warn_page_private_message">Stránka dokumentu není veřejně přístupná.</string>    
     <string name="warn_page_private_button">Více informací</string>
     <string name="warn_page_loading_failed">Nepodařilo se načíst stránku.</string>    
     

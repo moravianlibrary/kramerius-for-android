@@ -8,6 +8,13 @@ import cz.mzk.kramerius.app.R;
 
 public class K5Api {
 
+	
+	public static final int STATUS_UNKNOWN = 0;
+	public static final int STATUS_PDF_FAILED = 1;
+	public static final int STATUS_PDF_OK = 2;
+	public static final int STATUS_PDF_FORBIDDEN = 3;
+	
+	
 	public static final int FEED_NO_LIMIT = -1;
 
 	public static final int FEED_NEWEST = 0;

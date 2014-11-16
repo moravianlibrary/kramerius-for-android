@@ -17,10 +17,11 @@ import com.artifex.mupdfdemo.MuPDFPageAdapter;
 import com.artifex.mupdfdemo.MuPDFReaderView;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
+import cz.mzk.kramerius.app.util.Constants;
 
 public class PdfViewerFragment extends Fragment implements IPageViewerFragment, FilePicker.FilePickerSupport {
 
-	private static final String TAG = PdfViewerFragment.class.getSimpleName();
+	private static final String LOG_TAG = PdfViewerFragment.class.getSimpleName();
 
 	public static final String EXTRA_DOMAIN = PdfViewerFragment.class.getSimpleName() + "_domain";
 	public static final String EXTRA_PID = PdfViewerFragment.class.getSimpleName() + "_pid";
@@ -73,6 +74,9 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 		try {
 			mPdfCore = new MuPDFCore(getActivity(), filename);
 		} catch (Exception e) {
+			if(Constants.DEBUG_MODE) {
+				Log.d(LOG_TAG, "PDF CORE exception: " + e.getMessage());
+			}
 		}
 		if (mPdfCore == null) {
 			return;
@@ -127,7 +131,7 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 		if (pageIndex >= 0 && pageIndex < mPdfCore.countPages()) {
 			mPdfReaderView.setDisplayedViewIndex(pageIndex);
 		} else {
-			Log.w(TAG, "Page index out of range: " + pageIndex);
+
 		}
 	}
 
@@ -138,7 +142,7 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 	}
 
 	@Override
-	public int getPageNumber() {
+	public int getNumberOfPage() {
 		return mPdfCore.countPages();
 	}
 

@@ -191,6 +191,8 @@
     <string name="gen_again">Again</string>
     
     <string name="warn_data_loading_failed">Failed to load data.</string>
+	<string name="warn_pdf_loading_failed">Failed to load the PDF document.</string>
+    <string name="warn_pdf_private_message">The PDF document is publicly inaccessible.</string>   
     <string name="warn_load_again">AGAIN</string>
     <string name="warn_empty_result">No results found.</string>
     <string name="warn_empty_history">There ate no recent documents yet.</string>
