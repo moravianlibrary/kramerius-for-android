@@ -68,7 +68,7 @@ public class DoctypeSearchFilter extends SearchFilter {
 
 	@Override
 	public void addToQuery(SearchQuery query) {
-		query.add(getKey(), getModel(), false);
+		query.add(getKey(), getModel(), false, false);
 	}
 
 }

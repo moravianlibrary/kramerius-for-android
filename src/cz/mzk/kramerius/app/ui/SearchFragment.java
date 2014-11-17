@@ -166,7 +166,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
 			new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
-			new DateSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.DATE_BEGIN, name);
+			new DateSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.YEAR, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_isbn))) {
 			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.ISBN, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_keyword))) {

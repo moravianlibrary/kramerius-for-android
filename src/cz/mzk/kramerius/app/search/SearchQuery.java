@@ -19,6 +19,7 @@ public class SearchQuery {
 	public static final String DATE_BEGIN = "datum_begin";
 	public static final String DATE_END = "datum_end";
 	public static final String IDENTIFIER = "dc.identifier";
+	public static final String YEAR = "rok";
 	public static final String SYSNO = "sysno";
 	public static final String SIGNATURE = "signature";
 	public static final String KEYWORDS = "keywords";
@@ -36,12 +37,15 @@ public class SearchQuery {
 
 	public SearchQuery identifier(String key, String value) {
 		String iv =  key + "\\:" + value.trim();
-		return add(IDENTIFIER, iv, false);
+		return add(IDENTIFIER, iv, false, false);
 	}
 	
-	public SearchQuery add(String key, String value, boolean substring) {
+	public SearchQuery add(String key, String value, boolean substring, boolean toLowerCase) {
 		if (value != null && !value.trim().isEmpty()) {
-			String v = value.trim().toLowerCase(Locale.ENGLISH);
+			String v = value.trim();
+			if(toLowerCase) {
+				v = v.toLowerCase(Locale.ENGLISH);
+			}
 			if (!mQuery.isEmpty()) {
 				mQuery = mQuery + " AND ";
 			}			
@@ -55,27 +59,27 @@ public class SearchQuery {
 
 	public SearchQuery fulltext(String value) {
 		hasFulltext = true;
-		return add(OCR, value, false);
+		return add(OCR, value, false, true);
 	}
 	
 	public SearchQuery add(String key, String value) {
-		return add(key, value, true);
+		return add(key, value, true, true);
 	}
 
-	public SearchQuery neg(String key, String value, boolean substring) {
-		return add("-" + key, value, substring);
+	public SearchQuery neg(String key, String value, boolean substring, boolean toLowerCase) {
+		return add("-" + key, value, substring, toLowerCase);
 	}	
 
 	public SearchQuery neg(String key, String value) {
-		return neg(key, value, true);
+		return neg(key, value, true, true);
 	}		
 	
 	public SearchQuery date(int begin, int end) {		
 		String value = "[" + begin + " TO " + end + "]";
 		if(begin < 1) {
-			neg(DATE_BEGIN, "0", false);
+			neg(YEAR, "0", false, false);
 		}
-		return add(DATE_BEGIN, value, false);
+		return add(YEAR, value, false, false);
 	}	
 	
 	

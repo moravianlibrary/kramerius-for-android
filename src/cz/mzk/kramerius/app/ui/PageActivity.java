@@ -242,7 +242,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			init();
 		}
 	}
-
+	
 	private void initViewerFragment(boolean pdf) {
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
 				R.id.fragmentPdfViewer);
