@@ -244,7 +244,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void initViewerFragment(boolean pdf) {
-
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
 				R.id.fragmentPdfViewer);
 		IPageViewerFragment imageFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
@@ -256,12 +255,12 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			mImageViewerContainer.setVisibility(View.VISIBLE);
 			mPdfViewerContainer.setVisibility(View.GONE);
-			;
 			mPageViewerFragment = imageFragment;
 		}
-
+		if (mPageViewerFragment == null) {
+			return;
+		}
 		mPageViewerFragment.setEventListener(this);
-
 		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
 		String[] vms = getResources().getStringArray(R.array.view_mode_values);
@@ -471,7 +470,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 							}
 						}, true);
 				return;
-			} 
+			}
 
 			mPageList = new ArrayList<Item>();
 			if (result.getChildren() == null || result.getChildren().isEmpty()) {
@@ -508,12 +507,13 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					mCurrentPage = index;
 				}
 			}
-			mMenuFragment.refreshRecent();			
+			mMenuFragment.refreshRecent();
 			init();
 		}
 	}
 
 	private void init() {
+		Log.d(LOG_TAG, "init - activity:" + this);
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
@@ -523,9 +523,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		initViewerFragment(mIsPdf);
-		
-		
-		if(mIsPdf) {
+
+		if (mIsPdf) {
 			hidePageSelection();
 			mListButton.setVisibility(View.GONE);
 		} else {
@@ -533,7 +532,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mPageSelectionFragment.assignItems(mPageList);
 			mListButton.setVisibility(View.VISIBLE);
 		}
-		
+
 		mViewerWrapper.setVisibility(View.VISIBLE);
 	}
 

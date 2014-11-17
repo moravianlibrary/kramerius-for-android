@@ -62,6 +62,9 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	}
 
 	private void populateMenuList() {
+		if(getActivity() == null) {
+			return;
+		}
 		List<RecentMenuItem> list = new ArrayList<RecentMenuItem>();
 		String domain = K5Api.getDomain(getActivity());
 
