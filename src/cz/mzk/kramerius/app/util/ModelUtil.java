@@ -6,7 +6,6 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.PageActivity;
-import cz.mzk.kramerius.app.ui.PdfViewerActivity;
 import cz.mzk.kramerius.app.ui.PeriodicalActivity;
 import cz.mzk.kramerius.app.ui.SoundRecordingActivity;
 import cz.mzk.kramerius.app.ui.SoundUnitActivity;
@@ -106,9 +105,7 @@ public class ModelUtil {
 		} else if (ModelUtil.PERIODICAL.equals(item.getModel())) {
 			intent = new Intent(activity, PeriodicalActivity.class);
 		} else if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
-			intent = new Intent(activity, PeriodicalActivity.class);
-		//} else if (item.getPdf() != null) {
-		//	intent = new Intent(activity, PdfViewerActivity.class);
+			intent = new Intent(activity, PeriodicalActivity.class);		
 		} else {
 			intent = new Intent(activity, PageActivity.class);
 		}
