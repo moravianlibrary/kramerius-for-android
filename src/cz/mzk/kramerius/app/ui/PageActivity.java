@@ -58,6 +58,7 @@ import cz.mzk.kramerius.app.model.ParentChildrenPair;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
 import cz.mzk.kramerius.app.util.Constants;
+import cz.mzk.kramerius.app.util.FileUtils;
 import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
@@ -67,6 +68,8 @@ import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
 public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener,
 		OnPageNumberSelected, ViewerMenuListener, EventListener {
+
+	public static final String EXTRA_SECURE = "extra_secure";
 
 	private static final String EXTRA_TITLE = "extra_title";
 	private static final String EXTRA_SUBTITLE = "extra_subtitle";
@@ -134,6 +137,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		// if(getIntent().hasExtra(EXTRA_SECURE)) {
+		// if(getIntent().getBooleanExtra(EXTRA_SECURE, false)) {
+		// getWindow( ).addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+		// }
+		// }
 		boolean keepScreenOn = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				getString(R.string.pref_keep_screen_on_key),
 				Boolean.parseBoolean(getString(R.string.pref_keep_screen_on_default)));
@@ -242,17 +250,19 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			init();
 		}
 	}
-	
+
 	private void initViewerFragment(boolean pdf) {
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
 				R.id.fragmentPdfViewer);
 		IPageViewerFragment imageFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
 				R.id.fragmentImageViewer);
 		if (pdf) {
+			mMenuFragment.setDownloadType(ViewerMenuFragment.DOWNLOAD_PDF);
 			mImageViewerContainer.setVisibility(View.GONE);
 			mPdfViewerContainer.setVisibility(View.VISIBLE);
 			mPageViewerFragment = pdfFragment;
 		} else {
+			mMenuFragment.setDownloadType(ViewerMenuFragment.DOWNLOAD_PAGE);
 			mImageViewerContainer.setVisibility(View.VISIBLE);
 			mPdfViewerContainer.setVisibility(View.GONE);
 			mPageViewerFragment = imageFragment;
@@ -366,6 +376,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mPageViewerFragment.showPage(mCurrentPage);
 		mIndex.setText((mCurrentPage + 1) + "/" + mPageList.size());
 		mSeekBar.setProgress(mCurrentPage);
+
 	}
 
 	private void showMetadata() {
@@ -449,6 +460,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 						}, true);
 				return;
 			}
+
 			mPdfStatus = result.getStatus();
 			if (result.getStatus() == K5Api.STATUS_PDF_FORBIDDEN) {
 				showWarningMessage(R.string.warn_pdf_private_message, R.string.warn_page_private_button,
@@ -513,7 +525,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void init() {
-		Log.d(LOG_TAG, "init - activity:" + this);
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
@@ -888,6 +899,14 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			return;
 		}
 		final Item item = mPageList.get(mCurrentPage);
+		if (mIsPdf) {
+			onPdfDownload(item);
+		} else {
+			onImageDownload(item);
+		}
+	}
+
+	private void onImageDownload(final Item item) {
 		if (item.isPrivate()) {
 			new MaterialDialog.Builder(this).title(R.string.dialog_download_private_title)
 					.content(R.string.dialog_download_private_content).positiveText(R.string.gen_ok).build().show();
@@ -907,7 +926,43 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 						}
 					}).build().show();
 		}
+	}
 
+	private void onPdfDownload(final Item item) {
+		if (item.isPrivate()) {
+			new MaterialDialog.Builder(this).title(R.string.dialog_download_pdf_private_title)
+					.content(R.string.dialog_download_pdf_private_content).positiveText(R.string.gen_ok).build().show();
+		} else {
+			new MaterialDialog.Builder(this).title(R.string.dialog_download_pdf_title)
+					.content(R.string.dialog_download_pdf_content).positiveText(R.string.gen_yes)
+					.negativeText(R.string.gen_no).callback(new MaterialDialog.onActionButtonClickedListener() {
+
+						@Override
+						public void onPositiveButtonClicked() {
+							savePdfDocument(item);
+						}
+
+						@Override
+						public void onNegativeButtonClicked() {
+
+						}
+					}).build().show();
+		}
+	}
+
+	private void savePdfDocument(Item item) {
+		File storagePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+				+ Constants.DOWNLOAD_PATH);
+		if (!storagePath.exists()) {
+			storagePath.mkdirs();
+		}
+		File dstFile = new File(storagePath, item.getRootTitle() + ".pdf");
+		File srcFile = new File(Constants.PDF_PATH);
+		try {
+			FileUtils.copy(srcFile, dstFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void savePageImage(Item item) {
@@ -925,7 +980,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				URL url = new URL(params[0]);
 				input = url.openStream();
 
-				File storagePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Kramerius");
+				File storagePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/"
+						+ Constants.DOWNLOAD_PATH);
 				if (!storagePath.exists()) {
 					storagePath.mkdirs();
 				}

@@ -108,6 +108,9 @@ public class ModelUtil {
 			intent = new Intent(activity, PeriodicalActivity.class);		
 		} else {
 			intent = new Intent(activity, PageActivity.class);
+//			if(item.isPrivate()) {
+//				intent.putExtra(PageActivity.EXTRA_SECURE, true);
+//			}
 		}
 		intent.putExtra(BaseActivity.EXTRA_PID, item.getPid());
 		activity.startActivity(intent);		

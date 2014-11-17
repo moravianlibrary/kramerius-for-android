@@ -68,5 +68,14 @@ public class MenuItemWidget extends LinearLayout {
 			}
 		}
 	}
+	
+	
+	public void setTitle(int titleRes) {
+		if(getContext() == null) {
+			return;
+		}
+		mTitleView.setText(getContext().getString(titleRes));
+	}
+	
 
 }

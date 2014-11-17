@@ -8,5 +8,6 @@ public class Constants {
 	
 	public static final String PDF_PATH = "/sdcard/tmppdf.pdf"; 
 	
+	public static final String DOWNLOAD_PATH = "Kramerius";
 	
 }

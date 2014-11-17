@@ -159,10 +159,16 @@
     <string name="search_filter_date_to">To</string>          	
     
     <string name="dialog_download_title">Download page</string>
- 	<string name="dialog_download_content">The image will be downloaded to the Kramerius folder.\nWould you like to download the image?</string>
-    
-    <string name="dialog_download_private_title">Download page</string>
+ 	<string name="dialog_download_content">The image will be downloaded to the Kramerius folder.\nWould you like to download the image?</string>    
+    <string name="dialog_download_private_title">Inaccessible page</string>
  	<string name="dialog_download_private_content">The page is publicly inaccessible.\nWe are sorry, the image cannot be downloaded.</string>
+ 	
+ 	
+    <string name="dialog_download_pdf_title">Download document</string>
+ 	<string name="dialog_download_pdf_content">The PDF document will be downloaded to the Kramerius folder.\nWould you like to download the document?</string>
+    <string name="dialog_download_pdf_private_title">Inaccessible document</string>
+ 	<string name="dialog_download_pdf_private_content">The PDF document is publicly inaccessible.\nWe are sorry, the document cannot be downloaded.</string> 	    
+ 		
  	
  	
     <string name="viewer_menu_home">Home</string>
@@ -170,6 +176,7 @@
     <string name="viewer_menu_recent">Recent</string>
     <string name="viewer_menu_screen_lock">Screen Lock</string>
     <string name="viewer_menu_download">Download Page</string>
+    <string name="viewer_menu_download_pdf">Download document</string>
     
     <string name="inaccessible_document_header">Dokument není veřejně přístupný.</string>
     <string name="inaccessible_document_why_title">Proč je dokument neveřejný?</string>

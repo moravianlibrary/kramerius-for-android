@@ -23,6 +23,10 @@ import cz.mzk.kramerius.app.view.MenuItemWidget;
 
 public class ViewerMenuFragment extends Fragment implements OnClickListener {
 
+	public static final int DOWNLOAD_NOTHING = 0;
+	public static final int DOWNLOAD_PAGE = 1;
+	public static final int DOWNLOAD_PDF = 2;
+
 	public static final int MENU_NONE = -1;
 	public static final int MENU_HOME = 0;
 	public static final int MENU_SETTINGS = 1;
@@ -33,7 +37,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	private ListView mListView;
 	private View mSettings;
 	private View mHome;
-	private View mDownload;
+	private MenuItemWidget mDownload;
 	private boolean mScreenLock = false;
 	private MenuItemWidget mScreenLockView;
 
@@ -50,9 +54,9 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		mSettings.setOnClickListener(this);
 		mHome = view.findViewById(R.id.menu_home);
 		mHome.setOnClickListener(this);
-		mDownload = view.findViewById(R.id.menu_download);
+		mDownload = (MenuItemWidget) view.findViewById(R.id.menu_download);
 		mDownload.setOnClickListener(this);
-		
+		mDownload.setVisibility(View.GONE);
 		mScreenLockView = (MenuItemWidget) view.findViewById(R.id.menu_screen_lock);
 		mScreenLockView.setOnClickListener(this);
 
@@ -62,7 +66,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	}
 
 	private void populateMenuList() {
-		if(getActivity() == null) {
+		if (getActivity() == null) {
 			return;
 		}
 		List<RecentMenuItem> list = new ArrayList<RecentMenuItem>();
@@ -92,6 +96,25 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		});
 	}
 
+	public void setDownloadType(int type) {
+		if (mDownload == null) {
+			return;
+		}
+		switch (type) {
+		case DOWNLOAD_NOTHING:
+			mDownload.setVisibility(View.GONE);
+			break;
+		case DOWNLOAD_PDF:
+			mDownload.setVisibility(View.VISIBLE);
+			mDownload.setTitle(R.string.viewer_menu_download_pdf);
+			break;
+		case DOWNLOAD_PAGE:
+			mDownload.setVisibility(View.VISIBLE);
+			mDownload.setTitle(R.string.viewer_menu_download);
+			break;
+		}
+	}
+
 	public void refreshRecent() {
 		populateMenuList();
 	}
@@ -110,7 +133,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		public void onRecent(String pid);
 
 		public void onDownload();
-		
+
 	}
 
 	@Override
@@ -126,7 +149,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		} else if (v == mScreenLockView) {
 			setOrientationLock(!mScreenLock);
 		} else if (v == mDownload) {
-			if(mCallback != null) {
+			if (mCallback != null) {
 				mCallback.onDownload();
 			}
 		}
