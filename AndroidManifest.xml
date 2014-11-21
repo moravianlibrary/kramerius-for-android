@@ -3,7 +3,7 @@
     package="cz.mzk.kramerius.app"
     android:versionCode="18"
     android:versionName="0.2.9" >
-    
+
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
@@ -20,13 +20,16 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="cz.mzk.kramerius.app.ui.MainActivity"
-            android:label="@string/app_name"
-             >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.LauncherActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -39,6 +42,26 @@
                     android:scheme="http" />
                 <data
                     android:host="docker.mzk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius4.nkp.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="krameriusndktest.mzk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.lib.cas.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="cdk-test.lib.cas.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.techlib.cz"
                     android:pathPrefix="/search"
                     android:scheme="http" />
             </intent-filter>
@@ -100,8 +123,6 @@
             android:name=".data.KrameriusProvider"
             android:authorities="cz.mzk.kramerius.app.kramerius"
             android:exported="false" />
-          
-        
     </application>
 
 </manifest>

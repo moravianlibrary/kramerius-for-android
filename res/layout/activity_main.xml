@@ -15,7 +15,9 @@
         android:minHeight="@dimen/toolbar_height"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"        
-        app:titleTextAppearance="@style/ActionBar.TitleText" />
+        app:titleTextAppearance="@style/ActionBar.TitleText" >
+       
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"

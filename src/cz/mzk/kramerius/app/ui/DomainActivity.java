@@ -93,10 +93,7 @@ public class DomainActivity extends BaseActivity {
 	}
 
 	private void onDomainSelected(Domain domain) {
-		PreferenceManager.getDefaultSharedPreferences(this).edit()
-				.putString(getString(R.string.pref_domain_key), domain.getDomain())
-				.putString(getString(R.string.pref_protocol_key), domain.getProtocol()).commit();
-		K5Connector.getInstance().restart();
+		K5Api.setDomain(this, domain);
 		Intent intent = new Intent(DomainActivity.this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);

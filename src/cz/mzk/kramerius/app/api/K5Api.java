@@ -5,16 +5,15 @@ import android.net.Uri;
 import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.model.Domain;
 
 public class K5Api {
 
-	
 	public static final int STATUS_UNKNOWN = 0;
 	public static final int STATUS_PDF_FAILED = 1;
 	public static final int STATUS_PDF_OK = 2;
 	public static final int STATUS_PDF_FORBIDDEN = 3;
-	
-	
+
 	public static final int FEED_NO_LIMIT = -1;
 
 	public static final int FEED_NEWEST = 0;
@@ -55,6 +54,17 @@ public class K5Api {
 	public static String getDomain(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getString(
 				context.getString(R.string.pref_domain_key), context.getString(R.string.pref_domain_default));
+	}
+
+	public static void setDomain(Context context, String domain, String protocol) {
+		PreferenceManager.getDefaultSharedPreferences(context).edit()
+				.putString(context.getString(R.string.pref_domain_key), domain)
+				.putString(context.getString(R.string.pref_protocol_key), protocol).commit();
+		K5Connector.getInstance().restart();
+	}
+
+	public static void setDomain(Context context, Domain domain) {
+		setDomain(context, domain.getDomain(), domain.getProtocol());
 	}
 
 	public static String getProtocol(Context context) {
@@ -108,8 +118,10 @@ public class K5Api {
 
 	public static String getThumbnailPath(Context context, String pid) {
 		return getItemUri(context, pid).buildUpon().appendPath(PATH_THUMB).build().toString();
-//		return getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("uuid", uuid)
-//				.appendQueryParameter(PARAM_STREAM, "IMG_THUMB").build().toString();
+		// return
+		// getBaseUri(context).buildUpon().appendPath("img").appendQueryParameter("uuid",
+		// uuid)
+		// .appendQueryParameter(PARAM_STREAM, "IMG_THUMB").build().toString();
 	}
 
 	public static String getFullImagePath(Context context, String uuid) {
