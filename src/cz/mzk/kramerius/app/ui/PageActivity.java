@@ -927,7 +927,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					}).build().show();
 		}
 	}
-
+	
 	private void onPdfDownload(final Item item) {
 		if (item.isPrivate()) {
 			new MaterialDialog.Builder(this).title(R.string.dialog_download_pdf_private_title)

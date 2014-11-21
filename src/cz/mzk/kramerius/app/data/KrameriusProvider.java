@@ -87,8 +87,8 @@ public class KrameriusProvider extends ContentProvider {
 					selection, selectionArgs, null, null, sortOrder);
 			break;
 		case LANGUAGE:
-			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.LanguageEntry.TABLE_NAME, projection,
-					selection, selectionArgs, null, null, sortOrder);
+			cursor = mOpenHelper.getReadableDatabase().query(true, KrameriusContract.LanguageEntry.TABLE_NAME, projection,
+					selection, selectionArgs, null, null, sortOrder, null);
 			break;
 		case RELATOR:
 			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.RelatorEntry.TABLE_NAME, projection,

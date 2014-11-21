@@ -1,5 +1,6 @@
 package cz.mzk.kramerius.app.search;
 
+import java.util.List;
 import java.util.Locale;
 
 import cz.mzk.kramerius.app.util.ModelUtil;
@@ -57,6 +58,28 @@ public class SearchQuery {
 		return this;
 	}
 
+	public SearchQuery languages(List<String> languages) {
+		if(languages.isEmpty()) {
+			return this;
+		}
+		if (!mQuery.isEmpty()) {
+			mQuery = mQuery + " AND ";
+		}
+		if(languages.size() == 1) {
+			mQuery += SearchQuery.LANGUAGE + ":" + languages.get(0);
+			return this;
+		}
+		mQuery+="(";
+		for(int i = 0; i < languages.size(); i++) {
+			mQuery += SearchQuery.LANGUAGE + ":" + languages.get(i);
+			if(i < languages.size() - 1) {
+				mQuery += " OR ";
+			}
+		}
+		mQuery+=")";
+		return this;		
+	}
+	
 	public SearchQuery fulltext(String value) {
 		hasFulltext = true;
 		return add(OCR, value, false, true);

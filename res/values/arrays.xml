@@ -37,6 +37,7 @@
         <item name="author">@string/search_filter_author</item>
         <item name="doctype">@string/search_filter_doctype</item>
         <item name="year">@string/search_filter_year</item>
+        <item name="issn">@string/search_filter_language</item>
         <item name="issn">@string/search_filter_issn</item>
         <item name="isbn">@string/search_filter_isbn</item>
         <item name="keyword">@string/search_filter_keyword</item>

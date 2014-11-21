@@ -61,6 +61,10 @@
     <string name="recent_title">Recent</string>
     
     <string name="search_title">Search</string>
+    <string name="search_language_select_title">Select languges</string>
+    <string name="search_language_select_all">All</string>
+    
+    
     
     <string name="search_result_title">Search Result</string>
     
@@ -141,6 +145,7 @@
    
    <string name="search_filter_name">Name</string>
    <string name="search_filter_author">Author</string>
+   <string name="search_filter_language">Language</string>
    <string name="search_filter_doctype">Document Type</string>
    <string name="search_filter_year">Year of Pubblication</string>
    <string name="search_filter_issn">ISSN</string>
@@ -192,10 +197,11 @@
     <string name="popup_card_share">Share</string>
     
 
-    <string name="gen_ok">Ok</string>
+    <string name="gen_ok">OK</string>
     <string name="gen_yes">Yes</string>
     <string name="gen_no">No</string>
     <string name="gen_again">Again</string>
+    <string name="gen_cancel">Cancel</string>
     
     <string name="warn_data_loading_failed">Failed to load data.</string>
 	<string name="warn_pdf_loading_failed">Failed to load the PDF document.</string>

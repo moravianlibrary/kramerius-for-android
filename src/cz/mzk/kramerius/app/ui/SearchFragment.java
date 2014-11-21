@@ -20,6 +20,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.search.DateSearchFilter;
 import cz.mzk.kramerius.app.search.DoctypeSearchFilter;
 import cz.mzk.kramerius.app.search.InputSearchFilter;
+import cz.mzk.kramerius.app.search.LanguageSearchFilter;
 import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
@@ -165,6 +166,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.ISSN, name, false);
 		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
 			new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, name);
+		} else if (name.equals(getResources().getString(R.string.search_filter_language))) {
+			new LanguageSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.LANGUAGE, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {
 			new DateSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.YEAR, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_isbn))) {

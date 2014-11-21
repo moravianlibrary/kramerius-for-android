@@ -67,6 +67,9 @@
     <string name="recent_title">Naposledy otevřené</string>
     
     <string name="search_title">Hledání</string>
+    <string name="search_language_select_title">Vyberte jazyky</string>
+    <string name="search_language_select_all">Vše</string>
+    
     
     <string name="search_result_title">Výsledky Hledání</string>
     
@@ -147,6 +150,7 @@
    
    <string name="search_filter_name">Název</string>
    <string name="search_filter_author">Autor</string>
+   <string name="search_filter_language">Jazyk</string>
    <string name="search_filter_doctype">Typ dokumentu</string>
    <string name="search_filter_year">Rok vydání</string>
    <string name="search_filter_issn">ISSN</string>
@@ -201,10 +205,12 @@
     
 
 
-    <string name="gen_ok">Ok</string>
+    <string name="gen_ok">OK</string>
     <string name="gen_yes">Ano</string>
     <string name="gen_no">Ne</string>
     <string name="gen_again">Opakovat</string>
+    <string name="gen_cancel">Zrušit</string>
+    
     
     <string name="warn_data_loading_failed">Nepodařilo se načíst data.</string>
     <string name="warn_pdf_loading_failed">Nepodařilo se stáhnout PDF dokument.</string>

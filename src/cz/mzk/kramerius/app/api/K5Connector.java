@@ -361,7 +361,9 @@ public class K5Connector {
 		try {
 			String requestPath = K5Api.getSearchPath(context, query, start, rows);
 			HttpGet request = new HttpGet(requestPath);
-			// Log.d(TAG, "query:" + requestPath);
+			if(Constants.DEBUG_MODE) {
+				Log.d(LOG_TAG, "query - search:" + requestPath);
+			}
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
