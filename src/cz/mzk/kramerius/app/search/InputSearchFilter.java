@@ -24,6 +24,7 @@ public class InputSearchFilter extends SearchFilter {
 		init(context, parentView);
 	}
 
+	
 	private void init(Context context, ViewGroup parent) {
 		View view = LayoutInflater.from(context).inflate(R.layout.view_search_input, parent, false);
 		mInput = (EditText) view.findViewById(R.id.search_filter_input);

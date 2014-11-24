@@ -26,7 +26,6 @@ public class DomainUtil {
 			add(new Domain("Národní technická knihovna", "Digitální knihovna NTK", "http", "kramerius.techlib.cz",
 					R.drawable.logo_ntk));
 			add(new Domain("Moravská zemská knihovna", "Docker MZK", "http", "docker.mzk.cz", R.drawable.logo_mzk));
-
 		}
 	};
 

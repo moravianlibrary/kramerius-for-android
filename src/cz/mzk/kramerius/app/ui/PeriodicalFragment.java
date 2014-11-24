@@ -150,7 +150,7 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 			String subtitle = "";
 			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
 			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
-				subtitle = getString(R.string.metadata_periodical_volume) + result.getParent().getVolumeTitle();
+				subtitle = getString(R.string.metadata_periodical_volume) + " " + result.getParent().getVolumeTitle();
 				getSupportActionBar().setSubtitle(subtitle);
 			}
 			if (result.getChildren().isEmpty()) {
