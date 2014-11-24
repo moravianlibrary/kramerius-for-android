@@ -7,66 +7,45 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/search_bottomPanel"
+        android:id="@+id/search_top_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#d6d6d6"
-        android:gravity="center_vertical"
-        android:padding="10dp" >
+        android:layout_marginTop="13dp" >
 
         <CheckBox
             android:id="@+id/search_check_public"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:button="@null"
             android:checked="true"
+            android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
             android:text="@string/search_public_only"
             android:textColor="@color/grey" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/search_top_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:weightSum="2" >
 
         <Button
             android:id="@+id/search_add_filter"
-            android:layout_width="0dp"
+            android:layout_width="130dp"
             android:layout_height="45dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"           
+            android:layout_alignLeft="@id/search_check_public"
             android:background="@drawable/button_raised"
             android:gravity="center"
             android:text="@string/search_add_filter"
             android:textAllCaps="true"
             android:textColor="#fff"
             android:textSize="14dp" />
-
-        <Button
-            android:id="@+id/search_fulltext"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_raised_white"
-            android:gravity="center"
-            android:text="@string/search_fulltext"
-            android:textAllCaps="true"
-            android:textColor="#555"
-            android:textSize="14dp" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/search_bottomPanel"
         android:layout_below="@id/search_top_panel"
-        android:padding="10dp" >
+        android:padding="10dp" 
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:id="@+id/search_filter_container"
@@ -77,18 +56,12 @@
     </ScrollView>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/search_bottomPanel"
-        android:background="#22000000" />
-
-    <ImageView
         android:id="@+id/search_go"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginRight="5dp"
         android:background="@drawable/fab_background"
         android:padding="25dp"

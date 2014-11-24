@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.search.SearchQuery.TextOccurrence;
 
 public class InputSearchFilter extends SearchFilter {
 
@@ -82,7 +83,11 @@ public class InputSearchFilter extends SearchFilter {
 		if (mWithIdentifier) {
 			query.identifier(getKey(), getValue());
 		} else {
-			query.add(getKey(), getValue());
+			TextOccurrence occurrence = TextOccurrence.SUBSTRING;
+			if(getKey() == SearchQuery.OCR) {
+				occurrence = TextOccurrence.EXACT;
+			}
+			query.add(getKey(), getValue(), occurrence, true);
 		}
 
 	}

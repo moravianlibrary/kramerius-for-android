@@ -25,10 +25,15 @@ import cz.mzk.kramerius.app.search.LanguageSearchFilter;
 import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.PrefUtils;
 
 public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	private static final String TAG = SearchFragment.class.getName();
+
+	public static final String EXTRA_TYPE = "extra_type";
+	public static final int TYPE_BASIC = 0;
+	public static final int TYPE_FULLTEXT = 1;
 
 	private CheckBox mCheckPublicOnly;
 
@@ -36,11 +41,12 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 
 	private View mGoButton;
 	private View mAddFilterButton;
-	private View mFulltextButton;
 
 	private ViewGroup mFilterContainer;
 
 	private List<SearchFilter> mFilters;
+
+	private int mType;
 
 	public interface OnSearchListener {
 		public void onSearchQuery(String query);
@@ -54,6 +60,15 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mType = getArguments().getInt(EXTRA_TYPE, TYPE_BASIC);
+	}
+
+	public static SearchFragment getInstance(int type) {
+		SearchFragment f = new SearchFragment();
+		Bundle args = new Bundle();
+		args.putInt(EXTRA_TYPE, type);
+		f.setArguments(args);
+		return f;
 	}
 
 	@Override
@@ -67,19 +82,23 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		mGoButton.setOnClickListener(this);
 		mAddFilterButton = view.findViewById(R.id.search_add_filter);
 		mAddFilterButton.setOnClickListener(this);
-		mFulltextButton = view.findViewById(R.id.search_fulltext);
-		mFulltextButton.setOnClickListener(this);
-
 		mCheckPublicOnly = (CheckBox) view.findViewById(R.id.search_check_public);
 
-		new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.TITLE, getResources()
-				.getString(R.string.search_filter_name), false);
-		new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, getResources()
-				.getString(R.string.search_filter_doctype));
+		mCheckPublicOnly.setChecked(PrefUtils.isPublicOnly(getActivity()));
 
-		
-		
-	
+		if (mType == TYPE_FULLTEXT) {
+			// mAddFilterButton.setVisibility(View.GONE);
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, false, SearchQuery.OCR, getResources()
+					.getString(R.string.search_filter_fulltext), false);
+		} else {
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.TITLE, getResources()
+					.getString(R.string.search_filter_name), false);
+			new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, getResources()
+					.getString(R.string.search_filter_doctype), false);
+
+			// mAddFilterButton.setVisibility(View.VISIBLE);
+		}
+
 		return view;
 	}
 
@@ -114,6 +133,7 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		for (SearchFilter filter : mFilters) {
 			filter.addToQuery(query);
 		}
+		query.fulltext(mType == TYPE_FULLTEXT);
 		String queryString = query.build();
 		Analytics.sendEvent(getActivity(), "search", "query", queryString);
 		Log.d(TAG, "query:" + queryString);
@@ -140,13 +160,16 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 			search();
 		} else if (v == mAddFilterButton) {
 			showFilterDialog();
-		} else if (v == mFulltextButton) {
-			// TODO:
 		}
 	}
 
 	private void showFilterDialog() {
-		String[] allItems = getResources().getStringArray(R.array.search_filter_entries);
+		String[] allItems = null;
+		if (mType == TYPE_BASIC) {
+			allItems = getResources().getStringArray(R.array.search_filter_entries);
+		} else {
+			allItems = getResources().getStringArray(R.array.search_fulltext_filter_entries);
+		}
 		final List<String> itemList = new ArrayList<String>(Arrays.asList(allItems));
 		for (SearchFilter filter : mFilters) {
 			itemList.remove(filter.getName());
@@ -169,7 +192,12 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		} else if (name.equals(getResources().getString(R.string.search_filter_issn))) {
 			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.ISSN, name, false);
 		} else if (name.equals(getResources().getString(R.string.search_filter_doctype))) {
-			new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, name);
+			if (mType == TYPE_FULLTEXT) {
+				new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL_PATH, name,
+						true);
+			} else {
+				new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, name, false);
+			}
 		} else if (name.equals(getResources().getString(R.string.search_filter_language))) {
 			new LanguageSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.LANGUAGE, name);
 		} else if (name.equals(getResources().getString(R.string.search_filter_year))) {

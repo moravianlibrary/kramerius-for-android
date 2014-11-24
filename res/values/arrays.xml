@@ -41,9 +41,13 @@
         <item name="issn">@string/search_filter_issn</item>
         <item name="isbn">@string/search_filter_isbn</item>
         <item name="keyword">@string/search_filter_keyword</item>
-        <item name="fulltext">@string/search_filter_fulltext</item>        
         <item name="signature">@string/search_filter_signature</item>
         <item name="sysno">@string/search_filter_sysno</item>
+    </string-array>
+    <string-array name="search_fulltext_filter_entries">
+        <item name="doctype">@string/search_filter_doctype</item>
+        <item name="year">@string/search_filter_year</item>
+        <item name="fulltext">@string/search_filter_fulltext</item>        
     </string-array>
     <string-array name="search_type_entries">
         <item name="0">@string/search_type_basic</item>

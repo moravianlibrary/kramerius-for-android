@@ -10,16 +10,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.search.SearchQuery.TextOccurrence;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class DoctypeSearchFilter extends SearchFilter {
 
 	private Spinner mSpinner;
-
+	private boolean mFullscreen;
 
 	public DoctypeSearchFilter(Context context, ViewGroup parentView, List<SearchFilter> filters, boolean removable,
-			String key, String name) {
+			String key, String name, boolean fullscreen) {
 		super(context, parentView, filters, removable, key, name);		
+		mFullscreen = fullscreen;
 		init(context, parentView);
 	}
 
@@ -68,7 +70,11 @@ public class DoctypeSearchFilter extends SearchFilter {
 
 	@Override
 	public void addToQuery(SearchQuery query) {
-		query.add(getKey(), getModel(), false, false);
+		if(mFullscreen) {
+			query.add(getKey(), getModel(), TextOccurrence.STARTS, false);
+		} else {
+			query.add(getKey(), getModel(), TextOccurrence.EXACT, false);
+		}
 	}
 
 }

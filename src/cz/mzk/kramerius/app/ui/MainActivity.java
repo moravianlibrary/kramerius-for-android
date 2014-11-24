@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +12,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
@@ -24,7 +24,6 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
 import cz.mzk.kramerius.app.ui.MainFeaturedFragment.OnFeaturedListener;
@@ -50,7 +49,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	private static final int FRAGMENT_FEATURED = 6;
 	private static final int FRAGMENT_LOGIN = 7;
 	private static final int FRAGMENT_USER_INFO = 8;
-	
+
 	private MainMenuFragment mMenuFragment;
 	private int mSelectedFragment;
 	private FrameLayout mMenuContainer;
@@ -66,7 +65,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		mTitle = getString(R.string.main_title);
@@ -103,7 +102,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 				public void onDrawerClosed(View view) {
 					getSupportActionBar().setTitle(mTitle);
-					if(mSelectedFragment == FRAGMENT_SEARCH) {
+					if (mSelectedFragment == FRAGMENT_SEARCH) {
 						mSearchSpinner.setVisibility(View.VISIBLE);
 					}
 					supportInvalidateOptionsMenu();
@@ -111,9 +110,9 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 				public void onDrawerOpened(View drawerView) {
 					getSupportActionBar().setTitle(mDrawerTitle);
-					if(mSelectedFragment == FRAGMENT_SEARCH) {
+					if (mSelectedFragment == FRAGMENT_SEARCH) {
 						mSearchSpinner.setVisibility(View.GONE);
-					}					
+					}
 					supportInvalidateOptionsMenu();
 
 				}
@@ -122,23 +121,41 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 			mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		}
-		
-		
-		
+
 		mSearchSpinner = (Spinner) findViewById(R.id.search_spinner);
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mToolbar.getContext(),
-                R.array.search_type_entries, R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.item_spinner_toolbar);
-		
+				R.array.search_type_entries, R.layout.support_simple_spinner_dropdown_item);
+		adapter.setDropDownViewResource(R.layout.item_spinner_toolbar);
+
 		mSearchSpinner.setAdapter(adapter);
 		mSearchSpinner.setVisibility(View.GONE);
+
+		mSearchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+				if (mSelectedFragment == FRAGMENT_SEARCH) {
+					int type = SearchFragment.TYPE_BASIC;
+					if (position == 1) {
+						type = SearchFragment.TYPE_FULLTEXT;
+					}
+					SearchFragment fragment = SearchFragment.getInstance(type);
+					fragment.setOnSearchListener(MainActivity.this);
+					changeFragment(fragment, FRAGMENT_SEARCH, R.string.search_title);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parentView) {
+			}
+		});
+
 		onHome();
 	}
 
 	@Override
 	public void onHome() {
-		boolean publicOnly = PrefUtils.isPublicOnly(this);				
+		boolean publicOnly = PrefUtils.isPublicOnly(this);
 		if (mMainFragment == null || publicOnly != mLastPublicOnly) {
 			mMainFragment = new MainFeaturedFragment();
 		}
@@ -152,7 +169,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mTitle = title;
 		mToolbar.setTitle(title);
 	}
-
 
 	private boolean closeSlidingMenu() {
 		if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mMenuContainer)) {
@@ -206,21 +222,21 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		changeFragment(fragment, type, getString(titleRes));
 	}
 
-	private void changeFragment(Fragment fragment, int type, String title) {		
+	private void changeFragment(Fragment fragment, int type, String title) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		if (isTablet()) {
 			ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_left);
 		}
 		ft.replace(R.id.main_content, fragment).commit();
-		
-		if(type == FRAGMENT_SEARCH) {
+
+		if (type == FRAGMENT_SEARCH) {
 			mSearchSpinner.setVisibility(View.VISIBLE);
 			refreshTitle("");
 		} else {
 			mSearchSpinner.setVisibility(View.GONE);
 			refreshTitle(title);
-		}		
-		mSelectedFragment = type;		
+		}
+		mSelectedFragment = type;
 		closeSlidingMenu();
 	}
 
@@ -260,8 +276,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		ModelUtil.startActivityByModel(this, item);
 	}
 
-
-
 	@Override
 	public void onHelp() {
 		changeFragment(new HelpFragment(), FRAGMENT_HELP, R.string.help_title);
@@ -274,7 +288,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onSearch() {
-		SearchFragment fragment = new SearchFragment();
+		SearchFragment fragment = SearchFragment.getInstance(SearchFragment.TYPE_BASIC);
 		fragment.setOnSearchListener(this);
 		changeFragment(fragment, FRAGMENT_SEARCH, R.string.search_title);
 	}

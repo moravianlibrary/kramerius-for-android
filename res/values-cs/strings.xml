@@ -229,7 +229,6 @@
     <string name="pref_viewer_bg_color_white">Bílá</string>
     <string name="pref_viewer_bg_color_black">Černá</string>
     
-    
     <string name="pref_viewer_mode_fit">Přizpůsobit obrazovce</string>
     <string name="pref_viewer_mode_top_left">Zarovnat k levému hornímu okraji</string>
     <string name="pref_viewer_mode_center">Zarovnat na střed</string>
