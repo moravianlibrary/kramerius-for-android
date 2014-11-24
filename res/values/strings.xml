@@ -47,6 +47,9 @@
     <string name="featured_newest">Newest</string>
     <string name="featured_most_desirable">Most Desirable</string>
     <string name="featured_show_all">MORE</string>
+    
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
         
     <string name="about_title">About</string>
     <string name="about_app_title">Kramerius</string>
