@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,9 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		new DoctypeSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.MODEL, getResources()
 				.getString(R.string.search_filter_doctype));
 
+		
+		
+	
 		return view;
 	}
 

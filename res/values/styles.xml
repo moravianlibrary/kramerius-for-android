@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
         <item name="android:textColor">@color/dark_grey</item>
@@ -58,5 +58,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:textAllCaps">true</item>
     </style>
+    
+
 
 </resources>

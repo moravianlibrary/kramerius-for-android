@@ -61,9 +61,7 @@
     <string name="recent_title">Recent</string>
     
     <string name="search_title">Search</string>
-    <string name="search_language_select_title">Select languges</string>
-    <string name="search_language_select_all">All</string>
-    
+
     
     
     <string name="search_result_title">Search Result</string>
@@ -141,6 +139,11 @@
    <string name="search_public_only">Public only</string>
    <string name="search_add_filter">Add filter</string>
    <string name="search_fulltext">Fulltext</string>
+   <string name="search_language_select_title">Select languges</string>
+   <string name="search_language_select_all">All</string>
+   <string name="search_type_basic">Search</string>
+   <string name="search_type_fulltext">Fulltext</string>
+       
    
    
    <string name="search_filter_name">Name</string>

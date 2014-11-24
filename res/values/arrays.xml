@@ -45,5 +45,8 @@
         <item name="signature">@string/search_filter_signature</item>
         <item name="sysno">@string/search_filter_sysno</item>
     </string-array>
-
+    <string-array name="search_type_entries">
+        <item name="0">@string/search_type_basic</item>
+        <item name="1">@string/search_type_fulltext</item>
+    </string-array>
 </resources>

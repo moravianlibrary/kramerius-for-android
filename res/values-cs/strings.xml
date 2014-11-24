@@ -66,10 +66,7 @@
     
     <string name="recent_title">Naposledy otevřené</string>
     
-    <string name="search_title">Hledání</string>
-    <string name="search_language_select_title">Vyberte jazyky</string>
-    <string name="search_language_select_all">Vše</string>
-    
+    <string name="search_title">Hledání</string>    
     
     <string name="search_result_title">Výsledky Hledání</string>
     
@@ -146,6 +143,11 @@
    <string name="search_public_only">Pouze veřejné</string>
    <string name="search_add_filter">Přidat filtr</string>
    <string name="search_fulltext">Fulltext</string>
+   <string name="search_language_select_title">Vyberte jazyky</string>
+   <string name="search_language_select_all">Vše</string>
+   <string name="search_type_basic">Hledání</string>
+   <string name="search_type_fulltext">Fulltext</string>
+    
    
    
    <string name="search_filter_name">Název</string>
