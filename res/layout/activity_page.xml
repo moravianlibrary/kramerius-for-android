@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/cz.mzk.kramerius.app"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
     android:orientation="vertical" >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <include
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="?attr/colorPrimary"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/toolbar_height"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleTextAppearance="@style/ActionBar.TitleText" />
+        android:layout_height="wrap_content"
+        layout="@layout/view_toolbar" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"
@@ -84,6 +77,7 @@
                 android:id="@+id/page_bottomPanel"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:elevation="3dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/color_primary"
                 android:clickable="true"
@@ -128,8 +122,6 @@
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 android:visibility="gone" />
-
-          
         </RelativeLayout>
 
         <FrameLayout

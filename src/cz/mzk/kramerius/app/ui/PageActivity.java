@@ -1075,8 +1075,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	@Override
 	public void onHelp() {
-		// TODO Auto-generated method stub
-		
+		closeSlidingMenu();
+		Intent intent = new Intent(PageActivity.this, HelpActivity.class);
+		startActivity(intent);	
 	}
 
 }

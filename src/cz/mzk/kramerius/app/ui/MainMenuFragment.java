@@ -73,8 +73,8 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		mMenuItems.add(mMenuVirtual);
 		mMenuItems.add(mMenuSearch);
 		mMenuItems.add(mMenuRecent);
-		mMenuItems.add(mMenuSettings);
-		mMenuItems.add(mMenuHelp);
+		//mMenuItems.add(mMenuSettings);
+		//mMenuItems.add(mMenuHelp);
 
 		mDomainTitle = (TextView) view.findViewById(R.id.menu_domain_title);
 		mDomainUrl = (TextView) view.findViewById(R.id.menu_domain_url);
@@ -154,25 +154,28 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		if (mCallback == null) {
 			return;
-		}
-		selectItem(v);
+		}		
 		if (v == mMenuHome) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Home");
+			selectItem(v);
 			mCallback.onHome();
 		} else if (v == mMenuHelp) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Help");
 			mCallback.onHelp();
 		} else if (v == mMenuRecent) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Recent");
+			selectItem(v);
 			mCallback.onRecent();
 		} else if (v == mMenuSearch) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Search");
+			selectItem(v);
 			mCallback.onSearch();
 		} else if (v == mMenuSettings) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Setting");
 			mCallback.onSettings();
 		} else if (v == mMenuVirtual) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Collections");
+			selectItem(v);
 			mCallback.onVirtualCollections();
 		} else if (v == mDomainContainer) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");

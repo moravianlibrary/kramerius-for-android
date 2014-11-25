@@ -55,10 +55,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		return true;
 	}
 	
-	@Override
-	public void onStart() {
-	    super.onStart();
-	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_settings);
-	}	
+//	@Override
+//	public void onStart() {
+//	    super.onStart();
+//	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_settings);
+//	}	
 
 }

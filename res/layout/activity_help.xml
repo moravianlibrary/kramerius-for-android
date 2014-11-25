@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
@@ -10,8 +9,9 @@
         android:layout_height="wrap_content"
         layout="@layout/view_toolbar" />
 
-    <FrameLayout
-        android:id="@+id/vc_container"
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="cz.mzk.kramerius.app.ui.HelpFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

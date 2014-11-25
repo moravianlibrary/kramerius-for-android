@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mMenuFragment.setCallback(this);
 		getFragmentManager().beginTransaction().replace(R.id.main_menu, mMenuFragment).commit();
 
-		mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		getSupportActionBar().setTitle(R.string.main_title);
 
@@ -122,8 +122,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 		}
 
-		mSearchSpinner = (Spinner) findViewById(R.id.search_spinner);
-
+		mSearchSpinner = (Spinner) findViewById(R.id.spinner);
+		//mSearchSpinner = new Spinner(this);
+		//mToolbar.addView(mSearchSpinner);
+		
+		
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mToolbar.getContext(),
 				R.array.search_type_entries, R.layout.support_simple_spinner_dropdown_item);
 		adapter.setDropDownViewResource(R.layout.item_spinner_toolbar);
@@ -215,7 +218,10 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onSettings() {
-		changeFragment(new SettingsFragment(), FRAGMENT_SETTINGS, R.string.settings_title);
+		//changeFragment(new SettingsFragment(), FRAGMENT_SETTINGS, R.string.settings_title);
+		closeSlidingMenu();
+		Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+		startActivity(intent);
 	}
 
 	private void changeFragment(Fragment fragment, int type, int titleRes) {
@@ -230,6 +236,9 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		ft.replace(R.id.main_content, fragment).commit();
 
 		if (type == FRAGMENT_SEARCH) {
+			if(mSelectedFragment != type) {
+				mSearchSpinner.setSelection(0);
+			}
 			mSearchSpinner.setVisibility(View.VISIBLE);
 			refreshTitle("");
 		} else {
@@ -278,12 +287,15 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onHelp() {
-		changeFragment(new HelpFragment(), FRAGMENT_HELP, R.string.help_title);
+		//changeFragment(new HelpFragment(), FRAGMENT_HELP, R.string.help_title);
+		closeSlidingMenu();
+		Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+		startActivity(intent);		
 	}
 
 	@Override
 	public void onAbout() {
-		changeFragment(new AboutFragment(), FRAGMENT_HELP, R.string.about_title);
+//		changeFragment(new AboutFragment(), FRAGMENT_HELP, R.string.about_title);
 	}
 
 	@Override

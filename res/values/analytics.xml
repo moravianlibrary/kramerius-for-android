@@ -22,6 +22,7 @@
   <string name="cz.mzk.kramerius.app.ui.SoundRecordingActivity">Sound Recording</string>
   <string name="cz.mzk.kramerius.app.ui.SoundUnitActivity">Sound Unit</string>
   <string name="cz.mzk.kramerius.app.ui.SettingsActivity">Settings</string>
+  <string name="cz.mzk.kramerius.app.ui.HelpActivity">Help</string>
   <string name="cz.mzk.kramerius.app.ui.InaccessibleDocumentActivity">Inaccessible Document</string>
   
   

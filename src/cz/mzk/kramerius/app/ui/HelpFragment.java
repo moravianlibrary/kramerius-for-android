@@ -33,16 +33,7 @@ public class HelpFragment extends Fragment {
 		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_page)).execute(ModelUtil.PAGE);
 		return view;
 	}
-	
-	
-	@Override
-	public void onStart() {
-	    super.onStart();
-	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_help);
-	}	
-	
-	
-	
+		
 
 	class GetDoctypeCountTask extends AsyncTask<String, Void, Integer> {
 

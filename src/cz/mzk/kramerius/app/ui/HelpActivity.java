@@ -8,16 +8,15 @@ import android.view.MenuItem;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 
-public class SettingsActivity extends BaseActivity {
+public class HelpActivity extends BaseActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_settings);
-
+		setContentView(R.layout.activity_help);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		getSupportActionBar().setTitle(R.string.settings_title);
+		//getSupportActionBar().setTitle(R.string.settings_title);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
