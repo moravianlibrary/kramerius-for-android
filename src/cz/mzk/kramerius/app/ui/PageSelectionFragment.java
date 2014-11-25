@@ -87,10 +87,5 @@ public class PageSelectionFragment extends BaseFragment {
 		mGridview.setAdapter(mAdapter);
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		Analytics.sendScreenView(getActivity(), R.string.ga_appview_page_selection);
-	}
 
 }

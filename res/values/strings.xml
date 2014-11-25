@@ -258,8 +258,8 @@
     <string name="pref_view_mode_key" translatable="false">p_view_mode</string>    
     <string name="pref_viewer_bg_color_default" translatable="false">black</string>
     <string name="pref_viewer_bg_color_key" translatable="false">p_viewer_bg_color</string>
-    <string name="pref_domain_default" translatable="false">docker.mzk.cz</string>
-    <string name="pref_domain_key" translatable="false">p_domain</string>
+    <string name="pref_domain_default" translatable="false">kramerius.mzk.cz</string>
+    <string name="pref_domain_key" translatable="false">p_domain_new</string>
     <string name="pref_protocol_default" translatable="false">http</string>
     <string name="pref_protocol_key" translatable="false">p_protocol</string>    
     <string name="pref_public_only_default" translatable="false">true</string>
@@ -271,11 +271,11 @@
     <string name="ga_appview_help" translatable="false">Help</string>
     <string name="ga_appview_search" translatable="false">Search</string>
     <string name="ga_appview_search_result" translatable="false">Search Result</string>
-    <string name="ga_appview_main_featured" translatable="false">Main Featured</string>
-    <string name="ga_appview_selected" translatable="false">Selected</string>
+    <string name="ga_appview_main_featured" translatable="false">Main Fragment</string>
+    <string name="ga_appview_custom" translatable="false">Custom</string>
     <string name="ga_appview_newest" translatable="false">Newest</string>
     <string name="ga_appview_most_desirable" translatable="false">Most Desirable</string>
-    <string name="ga_appview_history" translatable="false">History</string>
+    <string name="ga_appview_history" translatable="false">Recent</string>
     <string name="ga_appview_login" translatable="false">Login</string>
     <string name="ga_appview_page_selection" translatable="false">Page Selection</string>
     <string name="ga_appview_user_info" translatable="false">User Info</string>

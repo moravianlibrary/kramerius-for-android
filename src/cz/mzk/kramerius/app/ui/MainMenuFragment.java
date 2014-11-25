@@ -15,6 +15,7 @@ import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.view.MenuItemWidget;
 
@@ -156,18 +157,25 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		}
 		selectItem(v);
 		if (v == mMenuHome) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Home");
 			mCallback.onHome();
 		} else if (v == mMenuHelp) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Help");
 			mCallback.onHelp();
 		} else if (v == mMenuRecent) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Recent");
 			mCallback.onRecent();
 		} else if (v == mMenuSearch) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Search");
 			mCallback.onSearch();
 		} else if (v == mMenuSettings) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Setting");
 			mCallback.onSettings();
 		} else if (v == mMenuVirtual) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Collections");
 			mCallback.onVirtualCollections();
 		} else if (v == mDomainContainer) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");
 			onSelectDomain();
 		}
 	}

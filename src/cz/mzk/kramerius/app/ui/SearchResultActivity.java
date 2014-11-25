@@ -1,5 +1,7 @@
 package cz.mzk.kramerius.app.ui;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -53,5 +55,17 @@ public class SearchResultActivity extends BaseActivity implements OnItemSelected
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+	}	
 
 }

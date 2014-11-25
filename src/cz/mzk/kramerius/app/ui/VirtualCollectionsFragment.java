@@ -51,7 +51,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_virtual_collections, container, false);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		inflateLoader((ViewGroup) view, inflater);
-		new GetVirtualCollectionsTask(getActivity()).execute();//OnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		new GetVirtualCollectionsTask(getActivity()).execute();
 		return view;
 	}
 
@@ -64,7 +64,6 @@ public class VirtualCollectionsFragment extends BaseFragment {
 			mOnVirtualCollectionListener.onVirtualCollectionSelected(vc);
 		}
 	}
-
 
 	
 	class GetVirtualCollectionsTask extends AsyncTask<Void, Void, List<Item>> {

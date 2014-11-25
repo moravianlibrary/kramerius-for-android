@@ -26,7 +26,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
-import cz.mzk.kramerius.app.ui.MainFeaturedFragment.OnFeaturedListener;
+import cz.mzk.kramerius.app.ui.MainFragment.OnFeaturedListener;
 import cz.mzk.kramerius.app.ui.MainMenuFragment.MainMenuListener;
 import cz.mzk.kramerius.app.ui.SearchFragment.OnSearchListener;
 import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	private ActionBarDrawerToggle mDrawerToggle;
 	private int mDrawerTitle;
 	private String mTitle;
-	private MainFeaturedFragment mMainFragment;
+	private MainFragment mMainFragment;
 
 	private Toolbar mToolbar;
 	private boolean mLastPublicOnly;
@@ -157,7 +157,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	public void onHome() {
 		boolean publicOnly = PrefUtils.isPublicOnly(this);
 		if (mMainFragment == null || publicOnly != mLastPublicOnly) {
-			mMainFragment = new MainFeaturedFragment();
+			mMainFragment = new MainFragment();
 		}
 		mLastPublicOnly = publicOnly;
 		mMainFragment.setCallback(this);
@@ -343,9 +343,10 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onVirtualCollectionSelected(Item vc) {
+		Analytics.sendEvent(this, "collection", "selected", vc.getTitle());
 		Intent intent = new Intent(MainActivity.this, VirtualCollectionActivity.class);
 		intent.putExtra(EXTRA_PID, vc.getPid());
-		intent.putExtra(EXTRA_TITLE, vc.getTitle());
+		intent.putExtra(EXTRA_TITLE, vc.getTitle());		
 		startActivity(intent);
 	}
 

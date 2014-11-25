@@ -82,7 +82,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 			Analytics.sendScreenView(getActivity(), R.string.ga_appview_newest);
 			break;
 		case K5Api.FEED_CUSTOM:
-			Analytics.sendScreenView(getActivity(), R.string.ga_appview_selected);
+			Analytics.sendScreenView(getActivity(), R.string.ga_appview_custom);
 			break;
 		case K5Api.FEED_MOST_DESIRABLE:
 			Analytics.sendScreenView(getActivity(), R.string.ga_appview_most_desirable);

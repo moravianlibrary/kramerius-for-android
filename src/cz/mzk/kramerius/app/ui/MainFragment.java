@@ -34,13 +34,13 @@ import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.PrefUtils;
 import cz.mzk.kramerius.app.util.ShareUtils;
 
-public class MainFeaturedFragment extends BaseFragment implements OnClickListener, OnOpenDetailListener,
+public class MainFragment extends BaseFragment implements OnClickListener, OnOpenDetailListener,
 		OnPopupMenuSelectedListener {
 
 	private static final int FEATURED_PHONE_LIMIT = 4;
 	private static final int FEATURED_TABLET_LIMIT = 5;
 
-	private static final String TAG = MainFeaturedFragment.class.getSimpleName();
+	private static final String TAG = MainFragment.class.getSimpleName();
 
 	private OnItemSelectedListener mOnItemSelectedListener;
 	private OnFeaturedListener mCallback;

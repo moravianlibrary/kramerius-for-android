@@ -30,7 +30,6 @@ import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ShareUtils;
 
@@ -94,12 +93,6 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		if (mOnItemSelectedListener != null) {
 			mOnItemSelectedListener.onItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		Analytics.sendScreenView(getActivity(), R.string.ga_appview_search_result);
 	}
 
 	class GetResultTask extends AsyncTask<String, Void, Pair<List<Item>, Integer>> {

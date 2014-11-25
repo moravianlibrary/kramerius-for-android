@@ -1073,4 +1073,10 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mSeekBar.setProgress(mCurrentPage);
 	}
 
+	@Override
+	public void onHelp() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

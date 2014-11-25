@@ -19,6 +19,7 @@ import cz.mzk.kramerius.app.adapter.ViewerMenuArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.RecentMenuItem;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.view.MenuItemWidget;
 
 public class ViewerMenuFragment extends Fragment implements OnClickListener {
@@ -37,6 +38,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	private ListView mListView;
 	private View mSettings;
 	private View mHome;
+	private View mHelp;
 	private MenuItemWidget mDownload;
 	private boolean mScreenLock = false;
 	private MenuItemWidget mScreenLockView;
@@ -54,6 +56,8 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		mSettings.setOnClickListener(this);
 		mHome = view.findViewById(R.id.menu_home);
 		mHome.setOnClickListener(this);
+		mHelp = view.findViewById(R.id.menu_help);
+		mHelp.setOnClickListener(this);
 		mDownload = (MenuItemWidget) view.findViewById(R.id.menu_download);
 		mDownload.setOnClickListener(this);
 		mDownload.setVisibility(View.GONE);
@@ -126,6 +130,8 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	public interface ViewerMenuListener {
 		public void onHome();
 
+		public void onHelp();
+		
 		public void onSettings();
 
 		public void onOrientationLock(boolean locked);
@@ -140,16 +146,25 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		if (v == mSettings) {
 			if (mCallback != null) {
+				Analytics.sendEvent(getActivity(), "page_menu", "action", "Settings");
 				mCallback.onSettings();
 			}
 		} else if (v == mHome) {
 			if (mCallback != null) {
+				Analytics.sendEvent(getActivity(), "page_menu", "action", "Home");
 				mCallback.onHome();
 			}
+		} else if (v == mHelp) {
+			if (mCallback != null) {
+				Analytics.sendEvent(getActivity(), "page_menu", "action", "Help");
+				mCallback.onHelp();
+			}
 		} else if (v == mScreenLockView) {
+			Analytics.sendEvent(getActivity(), "page_menu", "action", "Screen Lock");
 			setOrientationLock(!mScreenLock);
 		} else if (v == mDownload) {
 			if (mCallback != null) {
+				Analytics.sendEvent(getActivity(), "page_menu", "action", "Download");
 				mCallback.onDownload();
 			}
 		}
