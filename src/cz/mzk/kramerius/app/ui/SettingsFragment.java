@@ -5,13 +5,16 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.util.Analytics;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+
+	private int mHackCounter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,26 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_viewer_bg_color_key)));
+		initHack();
 		return view;
+	}
+
+	private void initHack() {
+		mHackCounter = 0;
+		Preference preference = findPreference(getString(R.string.pref_keep_screen_on_key));
+		preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mHackCounter++;
+				if (mHackCounter >= 8) {
+					PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+							.putBoolean(getString(R.string.pref_all_sources), true).commit();
+					Toast.makeText(getActivity(), "Other sources are available now!", Toast.LENGTH_LONG).show();
+				}
+				return true;
+			}
+		});
 	}
 
 	private void bindPreferenceSummaryToValue(Preference preference) {
@@ -42,7 +64,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object value) {
 		String stringValue = value.toString();
-
 		if (preference instanceof ListPreference) {
 			ListPreference listPreference = (ListPreference) preference;
 			int prefIndex = listPreference.findIndexOfValue(stringValue);
@@ -54,11 +75,5 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		}
 		return true;
 	}
-	
-//	@Override
-//	public void onStart() {
-//	    super.onStart();
-//	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_settings);
-//	}	
 
 }

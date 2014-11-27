@@ -1,5 +1,6 @@
 package cz.mzk.kramerius.app.viewer;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.Fragment;
@@ -70,9 +71,9 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 		}
 		mDomain = domain;
 
-		String filename = Environment.getExternalStorageDirectory() + "/tmppdf.pdf";
 		try {
-			mPdfCore = new MuPDFCore(getActivity(), filename);
+			File file = new File(getActivity().getFilesDir(), Constants.PDF_PATH);
+			mPdfCore = new MuPDFCore(getActivity(), file.getAbsolutePath());
 		} catch (Exception e) {
 			if(Constants.DEBUG_MODE) {
 				Log.d(LOG_TAG, "PDF CORE exception: " + e.getMessage());

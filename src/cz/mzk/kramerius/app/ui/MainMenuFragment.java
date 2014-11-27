@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -178,8 +179,12 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 			selectItem(v);
 			mCallback.onVirtualCollections();
 		} else if (v == mDomainContainer) {
-			Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");
-			onSelectDomain();
+			if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.pref_all_sources), false)) {
+				Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");
+				onSelectDomain();
+			} else {
+				Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain locked");
+			}
 		}
 	}
 

@@ -35,8 +35,8 @@ public class K5Connector {
 
 	public static final String LOG_TAG = K5Connector.class.getName();
 
-	public static final int CONNECTION_TIMEOUT = 6;
-	public static final int SOCKET_TIMEOUT = 9;
+	public static final int CONNECTION_TIMEOUT = 10;
+	public static final int SOCKET_TIMEOUT = 10;
 
 	public static K5Connector INSTANCE;
 

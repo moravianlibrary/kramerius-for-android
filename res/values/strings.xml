@@ -189,9 +189,9 @@
     <string name="viewer_menu_download">Download Page</string>
     <string name="viewer_menu_download_pdf">Download document</string>
     
-    <string name="inaccessible_document_header">Dokument není veřejně přístupný.</string>
+    <string name="inaccessible_document_header">document is not publicly accessible.</string>
     <string name="inaccessible_document_why_title">Proč je dokument neveřejný?</string>
-    <string name="inaccessible_document_why_content">Tento dokument si nemůžete volně prohlížet kvůli autorským právům. Autorský zákon připouští zpřístupnění děl 70 let po smrti všech autorů (včetně překladatele, ilustrátora atd.) a 50 let od vydání díla.</string>
+    <string name="inaccessible_document_why_content">The Copyright Act allows public access to works only after 70 years from the author's time of death.</string>
     <string name="inaccessible_document_how_title">Jak se k dokumentu dostat?</string>
     <string name="inaccessible_document_how_content">Tady bude nějaký vhodný text, který nebude závislý na konkrétním Krameriovi. Asi si pro každého Kraméria držet název instituce a uživatele pak nasměrovat do této instituce.</string>
     <string name="inaccessible_document_report_title">Myslíte si, že by dokument měl být veřejně přístupný?</string>
@@ -264,7 +264,7 @@
     <string name="pref_protocol_key" translatable="false">p_protocol</string>    
     <string name="pref_public_only_default" translatable="false">true</string>
     <string name="pref_public_only_key" translatable="false">p_public_only</string>
-    
+    <string name="pref_all_sources" translatable="false">p_all_sources</string>
     
     
 	<string name="ga_appview_about" translatable="false">About</string>

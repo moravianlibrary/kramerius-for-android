@@ -42,6 +42,8 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	private MenuItemWidget mDownload;
 	private boolean mScreenLock = false;
 	private MenuItemWidget mScreenLockView;
+	
+	private int mDownloadType = DOWNLOAD_NOTHING;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,10 +62,9 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		mHelp.setOnClickListener(this);
 		mDownload = (MenuItemWidget) view.findViewById(R.id.menu_download);
 		mDownload.setOnClickListener(this);
-		mDownload.setVisibility(View.GONE);
 		mScreenLockView = (MenuItemWidget) view.findViewById(R.id.menu_screen_lock);
 		mScreenLockView.setOnClickListener(this);
-
+		refreshDownloadType();
 		mListView = (ListView) view.findViewById(R.id.menu_list);
 		populateMenuList();
 		return view;
@@ -101,10 +102,15 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	}
 
 	public void setDownloadType(int type) {
+		mDownloadType = type;
+		refreshDownloadType();
+	}
+	
+	public void refreshDownloadType() {
 		if (mDownload == null) {
 			return;
-		}
-		switch (type) {
+		} 
+		switch (mDownloadType) {
 		case DOWNLOAD_NOTHING:
 			mDownload.setVisibility(View.GONE);
 			break;

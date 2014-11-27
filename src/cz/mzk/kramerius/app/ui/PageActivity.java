@@ -75,7 +75,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private static final String EXTRA_SUBTITLE = "extra_subtitle";
 	private static final String EXTRA_COMPLEX_TITLE = "extra_complex_title";
 	private static final String EXTRA_ITEMS = "extra_items";
-	private static final String EXTRA_PARENT_PID = "extra_parent_pid";
+	private static final String EXTRA_PARENT_ITEM = "extra_parent_item";
 	private static final String EXTRA_CURRENT_PAGE = "extra_current_page";
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
 	private static final String EXTRA_PDF = "extra_pdf";
@@ -100,7 +100,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private TextView mSeekPosition;
 
 	private SystemBarTintManager mSystemBarTintManager;
-	private String mParentPid;
+	private Item mParentItem;
 
 	private View mListButton;
 	// private View mMetadataButton;
@@ -233,7 +233,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			if (savedInstanceState.containsKey(EXTRA_ITEMS)) {
 				mPageList = savedInstanceState.getParcelableArrayList(EXTRA_ITEMS);
 			}
-			mParentPid = savedInstanceState.getString(EXTRA_PARENT_PID);
+			mParentItem = savedInstanceState.getParcelable(EXTRA_PARENT_ITEM);
 			mTitle = savedInstanceState.getString(EXTRA_TITLE);
 			mSubtitle = savedInstanceState.getString(EXTRA_SUBTITLE);
 			mComplexTitle = savedInstanceState.getBoolean(EXTRA_COMPLEX_TITLE);
@@ -319,7 +319,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			outState.putParcelableArrayList(EXTRA_ITEMS, (ArrayList<Item>) mPageList);
 		}
 		outState.putInt(EXTRA_CURRENT_PAGE, mCurrentPage);
-		outState.putString(EXTRA_PARENT_PID, mParentPid);
+		outState.putParcelable(EXTRA_PARENT_ITEM, mParentItem);
 		outState.putString(EXTRA_TITLE, mTitle);
 		outState.putString(EXTRA_SUBTITLE, mSubtitle);
 		outState.putBoolean(EXTRA_COMPLEX_TITLE, mComplexTitle);
@@ -374,14 +374,19 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 		clearMessages();
 		mPageViewerFragment.showPage(mCurrentPage);
-		mIndex.setText((mCurrentPage + 1) + "/" + mPageList.size());
+
+		mIndex.setText((mCurrentPage + 1) + "/" + mPageViewerFragment.getNumberOfPage());
 		mSeekBar.setProgress(mCurrentPage);
 
 	}
 
 	private void showMetadata() {
 		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);
-		intent.putExtra(BaseActivity.EXTRA_PID, mPageList.get(mCurrentPage).getPid());
+		String pid = mParentItem.getPid();
+		if (mPageList != null && mCurrentPage < mPageList.size()) {
+			pid = mPageList.get(mCurrentPage).getPid();
+		}
+		intent.putExtra(BaseActivity.EXTRA_PID, pid);
 		startActivity(intent);
 	}
 
@@ -500,7 +505,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				mSubtitle = null;
 			}
 
-			mParentPid = result.getParent().getPid();
+			mParentItem = result.getParent();
 			mIsPdf = result.getParent().getPdf() != null;
 			String selectedPid = result.getParent().getSelectedChild();
 			if (selectedPid == null) {
@@ -508,7 +513,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI,
 						new String[] { HistoryEntry.COLUMN_PID },
 						HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
-						new String[] { domain, mParentPid }, null);
+						new String[] { domain, mParentItem.getPid() }, null);
 				if (c.moveToFirst()) {
 					selectedPid = c.getString(0);
 				}
@@ -531,10 +536,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			mToolbar.setTitle(mTitle);
 		}
-		mSeekBar.setMax(mPageList.size() - 1);
-		mSeekBar.setProgress(mCurrentPage);
 		initViewerFragment(mIsPdf);
-
 		if (mIsPdf) {
 			hidePageSelection();
 			mListButton.setVisibility(View.GONE);
@@ -543,6 +545,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mPageSelectionFragment.assignItems(mPageList);
 			mListButton.setVisibility(View.VISIBLE);
 		}
+		mSeekBar.setMax(mPageViewerFragment.getNumberOfPage() - 1);
+		mSeekBar.setProgress(mCurrentPage);
 
 		mViewerWrapper.setVisibility(View.VISIBLE);
 	}
@@ -573,13 +577,13 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void putToHistory() {
-		if (mParentPid == null || mPageList == null) {
+		if (mParentItem == null || mPageList == null) {
 			return;
 		}
 		String domain = K5Api.getDomain(this);
 		Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI, new String[] { HistoryEntry._ID },
 				HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
-				new String[] { domain, mParentPid }, null);
+				new String[] { domain, mParentItem.getPid() }, null);
 		boolean insert = true;
 		if (c.moveToFirst()) {
 			insert = false;
@@ -588,8 +592,10 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (insert) {
 			ContentValues cv = new ContentValues();
 			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
-			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
-			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentItem.getPid());
+			if (mPageList != null && mCurrentPage < mPageList.size()) {
+				cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			}
 			cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
 			cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
 			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
@@ -597,14 +603,16 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			ContentValues cv = new ContentValues();
 			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
-			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentPid);
-			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentItem.getPid());
+			if (mPageList != null && mCurrentPage < mPageList.size()) {
+				cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+			}
 			cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
 			cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
 			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
 			getContentResolver().update(HistoryEntry.CONTENT_URI, cv,
 					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
-					new String[] { domain, mParentPid });
+					new String[] { domain, mParentItem.getPid() });
 		}
 
 	}
@@ -729,8 +737,12 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void showInaccessibleDocumentActivity() {
-		Intent intent = new Intent(PageActivity.this, InaccessibleDocumentActivity.class);
-		startActivity(intent);
+		new MaterialDialog.Builder(this).title(R.string.inaccessible_document_header)
+				.content(R.string.inaccessible_document_why_content).positiveText(R.string.gen_ok).build().show();
+
+		// Intent intent = new Intent(PageActivity.this,
+		// InaccessibleDocumentActivity.class);
+		// startActivity(intent);
 	}
 
 	@Override
@@ -898,11 +910,12 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		if (mPageList == null) {
 			return;
 		}
-		final Item item = mPageList.get(mCurrentPage);
 		if (mIsPdf) {
-			onPdfDownload(item);
+			onPdfDownload(mParentItem);
 		} else {
-			onImageDownload(item);
+			if (mCurrentPage < mPageList.size()) {
+				onImageDownload(mPageList.get(mCurrentPage));
+			}
 		}
 	}
 
@@ -927,7 +940,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 					}).build().show();
 		}
 	}
-	
+
 	private void onPdfDownload(final Item item) {
 		if (item.isPrivate()) {
 			new MaterialDialog.Builder(this).title(R.string.dialog_download_pdf_private_title)
@@ -957,9 +970,10 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			storagePath.mkdirs();
 		}
 		File dstFile = new File(storagePath, item.getRootTitle() + ".pdf");
-		File srcFile = new File(Constants.PDF_PATH);
+		// File srcFile = new File(Constants.PDF_PATH);
 		try {
-			FileUtils.copy(srcFile, dstFile);
+			// FileUtils.copy(srcFile, dstFile);
+			FileUtils.copyFromInternal(this, Constants.PDF_PATH, dstFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -1021,7 +1035,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			return K5Api.STATUS_PDF_FAILED;
 		}
 		InputStream input = null;
-		OutputStream output = null;
+		FileOutputStream output = null;
 		HttpURLConnection connection = null;
 		try {
 			URL url = new URL(pdf);
@@ -1038,7 +1052,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				return K5Api.STATUS_PDF_FAILED;
 			}
 			input = connection.getInputStream();
-			output = new FileOutputStream(Constants.PDF_PATH);
+			output = openFileOutput(Constants.PDF_PATH, MODE_PRIVATE);
 			byte data[] = new byte[4096];
 			int count;
 			while ((count = input.read(data)) != -1) {
@@ -1064,8 +1078,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	@Override
 	public void onPageChanged(int index) {
 		int pageCount = 0;
-		if (mPageList != null) {
-			pageCount = mPageList.size();
+		if (mPageViewerFragment != null) {
+			pageCount = mPageViewerFragment.getNumberOfPage();
 		}
 		mCurrentPage = index;
 		clearMessages();
@@ -1077,7 +1091,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	public void onHelp() {
 		closeSlidingMenu();
 		Intent intent = new Intent(PageActivity.this, HelpActivity.class);
-		startActivity(intent);	
+		startActivity(intent);
 	}
 
 }

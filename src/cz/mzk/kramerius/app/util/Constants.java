@@ -6,7 +6,7 @@ public class Constants {
 	
 	public static final int HISTORY_LIMIT = 10;
 	
-	public static final String PDF_PATH = "/sdcard/tmppdf.pdf"; 
+	public static final String PDF_PATH = "pdf_doc.pdf"; 
 	
 	public static final String DOWNLOAD_PATH = "Kramerius";
 	

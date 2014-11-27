@@ -574,7 +574,10 @@ public class MetadataFragment extends BaseFragment {
 		@Override
 		protected void onPostExecute(List<Pair<Metadata, String>> hierachyMetadata) {
 			stopLoaderAnimation();
-			if (hierachyMetadata == null || getActivity() == null) {
+			if(getActivity() == null) {
+				return;
+			}
+			if (hierachyMetadata == null) {
 				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 					@Override
 					public void onWarningButtonClicked() {
