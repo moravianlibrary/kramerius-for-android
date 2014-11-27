@@ -22,8 +22,8 @@
     
     
     
-    <string name="main_title">Digitální knihovna</string>
-    <string name="main_menu_title">Digitální knihovna</string>
+    <string name="main_title">Kramerius</string>
+    <string name="main_menu_title">Kramerius</string>
     <string name="newest_title">Nejnovější</string>
     <string name="selected_title">Vybrané</string>
     <string name="most_desirable_title">Nejžádanější</string>    
@@ -57,10 +57,9 @@
     <string name="about_title">O Aplikaci</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_version">v0.2.9/DEV</string>
     <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     <string name="about_app_feedback_prefix">Feedback - Kramerius</string>
-    
+    <string name="about_todo">Nápověda bude doplněna.</string>
     
     <string name="inaccessible_document_title">Veřejně nepřístupný dokument</string>
     

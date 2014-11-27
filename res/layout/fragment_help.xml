@@ -1,6 +1,67 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+        <LinearLayout
+            android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"            
+            android:layout_marginBottom="15dp"
+            android:text="@string/about_app_title"
+            android:textColor="@color/dark_dark_grey"
+            android:textSize="26dp" />
+
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/about_app_subtitle"
+            android:textColor="@color/dark_grey"
+            android:textSize="21dp" />
+
+         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/about_app_version"
+            android:textColor="@color/dark_grey"
+            android:textSize="21dp" />
+         
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/about_todo"
+            android:textColor="#F44336"
+            android:textSize="16dp" />
+        
+    </LinearLayout>
+    
+  <TextView
+      		android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/about_app_copyright"
+            android:textColor="@color/dark_grey"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:textSize="12dp" />
+
+<ScrollView 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_below="@id/header"
+    android:layout_above="@id/footer"
     android:background="@color/bg" >
 
     <LinearLayout
@@ -9,30 +70,7 @@
         android:orientation="vertical"
         android:padding="15dp" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Obsah digitální knihovny"
-            android:textColor="@color/dark_grey"
-            android:textSize="19dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="Digitální knihovna může obsahovat digitalizované dokumenty (například vzácné a ohrožené dokumenty digitalizované v národních programech Memoriae Mundi Series Bohemica a Kramerius) i elektronické dokumenty vytvořené přímo v digitální podobě (například odborné články ve formátu PDF)."
-            android:textColor="@color/grey"
-            android:textSize="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Přístup do Digitální knihovny je omezen přístupovými právy. Metadata, tj. bibliografické a další popisy dokumentů jsou přístupné všem, obrazová data dokumentů nechráněných autorským zákonem také, obrazová data chráněná autorským zákonem pouze uživatelům přistupujícím z počítačů umístěných v prostorách příslušné knihovny vlastnící dokument."
-            android:textColor="@color/grey"
-            android:textSize="16dp" />
-
-        <TextView
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -331,3 +369,4 @@
     </LinearLayout>
 
 </ScrollView>
+</RelativeLayout>

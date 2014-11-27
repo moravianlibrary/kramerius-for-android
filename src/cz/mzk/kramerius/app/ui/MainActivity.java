@@ -121,6 +121,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 			mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		}
+		mLastPublicOnly = PrefUtils.isPublicOnly(this);
 
 		mSearchSpinner = (Spinner) findViewById(R.id.spinner);
 		//mSearchSpinner = new Spinner(this);
@@ -166,6 +167,14 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mMainFragment.setCallback(this);
 		mMainFragment.setOnItemSelectedListener(this);
 		changeFragment(mMainFragment, FRAGMENT_HOME, R.string.main_title);
+	}
+	
+	@Override
+	protected void onResume() {	
+		super.onResume();
+		if(mSelectedFragment == FRAGMENT_HOME && PrefUtils.isPublicOnly(this) != mLastPublicOnly) {
+			onHome();
+		}
 	}
 
 	private void refreshTitle(String title) {

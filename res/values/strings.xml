@@ -20,8 +20,8 @@
     <string name="document_unknown">Unknown Type</string>
     <string name="document_all">All</string>
     
-    <string name="main_title">Digital Library</string>
-    <string name="main_menu_title">Digital Library</string>
+    <string name="main_title">Kramerius</string>
+    <string name="main_menu_title">Kramerius</string>
     <string name="newest_title">Newest</string>
     <string name="selected_title">Recommended</string>
     <string name="most_desirable_title">Most Desirable</string>    
@@ -54,10 +54,10 @@
     <string name="about_title">About</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digital Library</string>
-    <string name="about_app_version">v0.2.9/DEV</string>
+    <string name="about_app_version">v0.2.9/BETA</string>
     <string name="about_app_copyright">Copyright © 2014 Moravian library in Brno</string>
-    <string name="about_app_feedback_prefix">Feedback - Kramerius</string>
-    
+    <string name="about_app_feedback_prefix">Feedback - Kramerius</string>        
+    <string name="about_todo">Will be added soon.</string>
     
     <string name="inaccessible_document_title">Publicly inaccessible document</string>
     
@@ -191,7 +191,7 @@
     
     <string name="inaccessible_document_header">document is not publicly accessible.</string>
     <string name="inaccessible_document_why_title">Proč je dokument neveřejný?</string>
-    <string name="inaccessible_document_why_content">The Copyright Act allows public access to works only after 70 years from the author's time of death.</string>
+    <string name="inaccessible_document_why_content">The Copyright Act allows public access to works only after 70 years from the author\'s time of death.</string>
     <string name="inaccessible_document_how_title">Jak se k dokumentu dostat?</string>
     <string name="inaccessible_document_how_content">Tady bude nějaký vhodný text, který nebude závislý na konkrétním Krameriovi. Asi si pro každého Kraméria držet název instituce a uživatele pak nasměrovat do této instituce.</string>
     <string name="inaccessible_document_report_title">Myslíte si, že by dokument měl být veřejně přístupný?</string>
