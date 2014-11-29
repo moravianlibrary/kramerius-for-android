@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,9 +34,11 @@ import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Location;
 import cz.mzk.kramerius.app.metadata.Metadata;
+import cz.mzk.kramerius.app.metadata.MetadataWrapper;
 import cz.mzk.kramerius.app.metadata.Part;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
+import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ShareUtils;
@@ -99,10 +102,11 @@ public class MetadataFragment extends BaseFragment {
 		new getMetadataTask(getActivity()).execute(mPid);
 	}
 
-	private void populateTopLevelMetadata(Metadata metadata, String model, boolean expandable) {
+	private void populateTopLevelMetadata(Metadata metadata, String model, boolean privateDocument, boolean expandable) {
 		if (metadata.getTitleInfo().getTitle() != null) {
 			TextView mainTitle = new TextView(getActivity());
 			mainTitle.setTextIsSelectable(true);
+			mainTitle.setSingleLine(true);
 			mainTitle.setText(metadata.getTitleInfo().getTitle());
 			mainTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_title));
 			mainTitle.setTextColor(getResources().getColor(R.color.metadata_title));
@@ -126,7 +130,8 @@ public class MetadataFragment extends BaseFragment {
 				}
 			};
 		}
-		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(model)), expandable, onClick));
+		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(model)), privateDocument, expandable,
+				onClick));
 
 		addTitleInfo(metadata);
 		addIdentifiers(metadata);
@@ -141,7 +146,7 @@ public class MetadataFragment extends BaseFragment {
 		addNotes(metadata);
 	}
 
-	private void populatePeriodicalVolume(Metadata metadata, boolean expandable) {
+	private void populatePeriodicalVolume(Metadata metadata, boolean privateDocument, boolean expandable) {
 		View.OnClickListener onClick = null;
 		final String pid = metadata.getPid();
 		if (expandable) {
@@ -156,7 +161,7 @@ public class MetadataFragment extends BaseFragment {
 			};
 		}
 		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_VOLUME)),
-				expandable, onClick));
+				privateDocument, expandable, onClick));
 
 		Part part = metadata.getPart();
 		if (part == null) {
@@ -167,9 +172,9 @@ public class MetadataFragment extends BaseFragment {
 		addNotes(metadata);
 	}
 
-	private void populatePeriodicalItem(Metadata metadata) {
-		mContainer
-				.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_ITEM)), false, null));
+	private void populatePeriodicalItem(Metadata metadata, boolean privateDocument) {
+		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PERIODICAL_ITEM)),
+				privateDocument, false, null));
 		Part part = metadata.getPart();
 		String date = null;
 		String issue = null;
@@ -192,9 +197,10 @@ public class MetadataFragment extends BaseFragment {
 		addNotes(metadata);
 	}
 
-	private void populatePage(Metadata metadata) {
+	private void populatePage(Metadata metadata, boolean privateDocument) {
 		// mContainer.addView(createSubtitleView(getString(R.string.metadata_page)));
-		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PAGE)), false, null));
+		mContainer.addView(createModelHeaderView(getString(ModelUtil.getLabel(ModelUtil.PAGE)), privateDocument, false,
+				null));
 
 		Part part = metadata.getPart();
 		if (part == null) {
@@ -205,7 +211,10 @@ public class MetadataFragment extends BaseFragment {
 		addNotes(metadata);
 	}
 
-	private void populateMetadata(Metadata metadata, String model, boolean expandable) {
+	private void populateMetadata(MetadataWrapper metadataWrapper, boolean expandable) {
+		Metadata metadata = metadataWrapper.getMetadata();
+		String model = metadataWrapper.getModel();
+		boolean privateDocument = metadataWrapper.isDocumentPrivate();
 		if (metadata == null || model == null) {
 			return;
 		}
@@ -213,14 +222,14 @@ public class MetadataFragment extends BaseFragment {
 				|| model.equals(ModelUtil.MONOGRAPH) || model.equals(ModelUtil.SOUND_RECORDING)
 				|| model.equals(ModelUtil.MAP) || model.equals(ModelUtil.GRAPHIC)
 				|| model.equals(ModelUtil.SHEET_MUSIC) || model.equals(ModelUtil.ARCHIVE)) {
-			populateTopLevelMetadata(metadata, model, expandable);
+			populateTopLevelMetadata(metadata, model, privateDocument, expandable);
 
 		} else if (model.equals(ModelUtil.PAGE)) {
-			populatePage(metadata);
+			populatePage(metadata, privateDocument);
 		} else if (model.equals(ModelUtil.PERIODICAL_VOLUME)) {
-			populatePeriodicalVolume(metadata, expandable);
+			populatePeriodicalVolume(metadata, privateDocument, expandable);
 		} else if (model.equals(ModelUtil.PERIODICAL_ITEM)) {
-			populatePeriodicalItem(metadata);
+			populatePeriodicalItem(metadata, privateDocument);
 		}
 
 	}
@@ -314,12 +323,13 @@ public class MetadataFragment extends BaseFragment {
 		if (metadata.getLanguages().size() > 1) {
 			title = getString(R.string.metadata_languages);
 		}
-		String languages = "";			
+		String languages = "";
 		for (int i = 0; i < metadata.getLanguages().size(); i++) {
 
 			String language = metadata.getLanguages().get(i);
 			Cursor c = getActivity().getContentResolver().query(KrameriusContract.LanguageEntry.CONTENT_URI,
-					new String[] { LanguageEntry.COLUMN_NAME }, LanguageEntry.COLUMN_CODE + "=? AND " + LanguageEntry.COLUMN_LANG + "=?",
+					new String[] { LanguageEntry.COLUMN_NAME },
+					LanguageEntry.COLUMN_CODE + "=? AND " + LanguageEntry.COLUMN_LANG + "=?",
 					new String[] { language, LangUtils.getLanguage() }, null);
 			if (c.moveToFirst()) {
 				String l = c.getString(0);
@@ -375,16 +385,16 @@ public class MetadataFragment extends BaseFragment {
 			String s = author.getName() == null ? getString(R.string.metadata_author_unknown) : author.getName();
 			if (author.getDate() != null) {
 				s += ", " + author.getDate();
-			}				
+			}
 			if (!author.getRoleCodes().isEmpty()) {
-				s += " (";				
+				s += " (";
 				for (int i = 0; i < author.getRoleCodes().size(); i++) {
 					String role = author.getRoleCodes().get(i);
 					Cursor c = getActivity().getContentResolver().query(KrameriusContract.RelatorEntry.CONTENT_URI,
-							new String[] { RelatorEntry.COLUMN_NAME }, RelatorEntry.COLUMN_CODE + "=? AND " + RelatorEntry.COLUMN_LANG + "=?",
+							new String[] { RelatorEntry.COLUMN_NAME },
+							RelatorEntry.COLUMN_CODE + "=? AND " + RelatorEntry.COLUMN_LANG + "=?",
 							new String[] { role, LangUtils.getLanguage() }, null);
-					
-					
+
 					if (c.moveToFirst()) {
 						String r = c.getString(0);
 						if (r != null && !r.isEmpty()) {
@@ -436,26 +446,75 @@ public class MetadataFragment extends BaseFragment {
 		return view;
 	}
 
-	private View createModelHeaderView(String title, boolean expandable, View.OnClickListener onClick) {
+	private View createModelHeaderView(String title, boolean privateDocument, boolean expandable,
+			View.OnClickListener onClick) {
 		RelativeLayout rl = new RelativeLayout(getActivity());
 		RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.WRAP_CONTENT);
-		// rlp.topMargin =
-		// getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_top);
-		// rlp.bottomMargin =
-		// getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_bottom);
 		rl.setLayoutParams(rlp);
-
 		rl.setPadding(0, getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_top), 0,
 				getResources().getDimensionPixelSize(R.dimen.metadata_model_header_margin_bottom));
 
+		// ImageView lockIcon = new ImageView(getActivity());
+		// lockIcon.setImageResource(R.drawable.ic_lock);
+		// RelativeLayout.LayoutParams rlpLock = new
+		// RelativeLayout.LayoutParams((int) getResources().getDimension(
+		// R.dimen.metadata_lock_icon_size), (int)
+		// getResources().getDimension(R.dimen.metadata_lock_icon_size));
+		// //rlpLock.addRule(RelativeLayout.CENTER_VERTICAL);
+		// //rlpLock.addRule(RelativeLayout.RIGHT_OF, textView.getId());
+		// //rlpLock.addRule(RelativeLayout.ALIGN_LEFT, textView.getId());
+		// lockIcon.setLayoutParams(rlpLock);
+		// if (!privateDocument) {
+		// lockIcon.setVisibility(View.GONE);
+		// }
+		// rl.addView(lockIcon);
+		//
+		// TextView textView = new TextView(getActivity());
+		// textView.setTextIsSelectable(true);
+		// textView.setText(title);
+		// textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+		// getResources().getDimension(R.dimen.metadata_subtitle));
+		// textView.setTextColor(getResources().getColor(R.color.metadata_subtitle));
+		//
+		//
+		// RelativeLayout.LayoutParams rlpText = new
+		// RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+		// RelativeLayout.LayoutParams.WRAP_CONTENT);
+		// //rlpText.addRule(RelativeLayout.CENTER_VERTICAL);
+		// rlpText.addRule(RelativeLayout.RIGHT_OF, lockIcon.getId());
+		// textView.setLayoutParams(rlpText);
+		// rl.addView(textView);
+
+		LinearLayout ll = new LinearLayout(getActivity());
+		ll.setOrientation(LinearLayout.HORIZONTAL);
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		//lp.gravity = Gravity.CENTER_VERTICAL;
+		ll.setGravity(Gravity.CENTER_VERTICAL);
+		ll.setLayoutParams(lp);
+		
+		
 		TextView textView = new TextView(getActivity());
 		textView.setTextIsSelectable(true);
 		textView.setText(title);
 		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_subtitle));
 		textView.setTextColor(getResources().getColor(R.color.metadata_subtitle));
+		ll.addView(textView);
 
-		rl.addView(textView);
+		ImageView lockIcon = new ImageView(getActivity());
+		lockIcon.setImageResource(R.drawable.ic_lock);
+		if (!privateDocument) {
+			lockIcon.setVisibility(View.GONE);
+		}
+		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams((int) getResources().getDimension(
+				R.dimen.metadata_lock_icon_size), (int)
+				 getResources().getDimension(R.dimen.metadata_lock_icon_size));
+		lockIcon.setLayoutParams(llp);
+		
+		
+		ll.addView(lockIcon);
+		rl.addView(ll);
 
 		if (expandable) {
 			Button button = new Button(getActivity());
@@ -539,7 +598,7 @@ public class MetadataFragment extends BaseFragment {
 		return view;
 	}
 
-	class getMetadataTask extends AsyncTask<String, Void, List<Pair<Metadata, String>>> {
+	class getMetadataTask extends AsyncTask<String, Void, List<MetadataWrapper>> {
 
 		private Context tContext;
 
@@ -554,33 +613,38 @@ public class MetadataFragment extends BaseFragment {
 		}
 
 		@Override
-		protected List<Pair<Metadata, String>> doInBackground(String... params) {
+		protected List<MetadataWrapper> doInBackground(String... params) {
 			String pid = params[0];
 			List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, pid);
 			if (hierarchy == null) {
 				return null;
 			}
-			List<Pair<Metadata, String>> hierarchyMetadata = new ArrayList<Pair<Metadata, String>>();
+			List<MetadataWrapper> hierarchyMetadata = new ArrayList<MetadataWrapper>();
 			for (int i = 0; i < hierarchy.size(); i++) {
-				Metadata metadata = K5Connector.getInstance().getModsMetadata(tContext, hierarchy.get(i).first);
-				hierarchyMetadata.add(new Pair<Metadata, String>(metadata, hierarchy.get(i).second));
+				String hPid = hierarchy.get(i).first;
+				String model = hierarchy.get(i).second;
+				Metadata metadata = K5Connector.getInstance().getModsMetadata(tContext, hPid);
+				Item item = K5Connector.getInstance().getItem(tContext, hPid);
+				boolean privateDocument = item == null ? false : item.isPrivate();
+				hierarchyMetadata.add(new MetadataWrapper(metadata, model, privateDocument));
 			}
 			return hierarchyMetadata;
 		}
 
 		@Override
-		protected void onPostExecute(List<Pair<Metadata, String>> hierachyMetadata) {
+		protected void onPostExecute(List<MetadataWrapper> hierachyMetadata) {
 			stopLoaderAnimation();
-			if(getActivity() == null) {
+			if (getActivity() == null) {
 				return;
 			}
 			if (hierachyMetadata == null) {
-				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
-					@Override
-					public void onWarningButtonClicked() {
-						new getMetadataTask(getActivity()).execute(mPid);
-					}
-				});
+				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again,
+						new onWarningButtonClickedListener() {
+							@Override
+							public void onWarningButtonClicked() {
+								new getMetadataTask(getActivity()).execute(mPid);
+							}
+						});
 				return;
 			}
 			mContainer.setVisibility(View.VISIBLE);
@@ -588,10 +652,10 @@ public class MetadataFragment extends BaseFragment {
 		}
 	}
 
-	private void populateHierarchy(List<Pair<Metadata, String>> hierarchy) {
+	private void populateHierarchy(List<MetadataWrapper> hierarchy) {
 		for (int i = 0; i < hierarchy.size(); i++) {
 			boolean expandable = i < hierarchy.size() - 2;
-			populateMetadata(hierarchy.get(i).first, hierarchy.get(i).second, expandable);
+			populateMetadata(hierarchy.get(i), expandable);
 			if (hierarchy.size() > 0 && i < hierarchy.size() - 1) {
 				mContainer.addView(createDividerView());
 			}

@@ -82,5 +82,6 @@
     <dimen name="metadata_button_width">70dp</dimen>
     <dimen name="metadata_button_height">22dp</dimen>
     <dimen name="metadata_button_text_size">13dp</dimen>
+    <dimen name="metadata_lock_icon_size">22dp</dimen>
 
 </resources>

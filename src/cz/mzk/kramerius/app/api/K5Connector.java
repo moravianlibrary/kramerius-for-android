@@ -192,10 +192,16 @@ public class K5Connector {
 	public Item getItem(Context context, String pid, String domain) {
 		try {
 			String requst = K5Api.getItemPath(context, pid);
+			if(VersionUtils.Debuggable()) {
+				Log.d(LOG_TAG, "getItem - Request:" + requst);
+			}
 			requst.replace(K5Api.getDomain(context), domain);
 			HttpGet request = new HttpGet(requst);
 			HttpResponse response = getClient().execute(request);
-			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);			
+			if(VersionUtils.Debuggable()) {
+				Log.d(LOG_TAG, "getItem - Response:" + jsonString);
+			}			
 			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
 			Item item = new Item();
 			item.setPid(jsonItem.optString(K5Constants.PID));

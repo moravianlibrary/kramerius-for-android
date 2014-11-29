@@ -12,6 +12,8 @@ public class Metadata {
 	private String ccnb;
 	private String oclc;
 
+	private boolean privateDocument;
+	
 	private Part part;
 	private TitleInfo titleInfo;
 	private Location location;
@@ -36,6 +38,14 @@ public class Metadata {
 		keywords = new ArrayList<String>();
 	}
 
+	public boolean isDocument() {
+		return privateDocument;
+	}
+	
+	public void setPrivateDocument(boolean isPrivate) {
+		privateDocument = isPrivate;
+	}
+	
 	public String getPid() {
 		return pid;
 	}
