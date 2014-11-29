@@ -19,4 +19,10 @@ public class PrefUtils {
 				Boolean.parseBoolean(context.getString(R.string.pref_public_only_default)));
 	}	
 
+	
+	public static final boolean useBookmarks(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+				context.getString(R.string.pref_bookmark_key),
+				Boolean.parseBoolean(context.getString(R.string.pref_bookmark_default)));
+	}		
 }

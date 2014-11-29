@@ -24,6 +24,12 @@
             android:summary="@string/pref_keep_screen_on_summary"
             android:title="@string/pref_keep_screen_on_title" />
 
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_bookmark_default"
+            android:key="@string/pref_bookmark_key"
+            android:summary="@string/pref_bookmark_summary"
+            android:title="@string/pref_bookmark_title" />        
+        
         <ListPreference
             android:defaultValue="@string/pref_view_mode_default"
             android:entries="@array/view_mode_entries"

@@ -21,7 +21,6 @@
     <string name="document_all">Vše</string>
     
     
-    
     <string name="main_title">Kramerius</string>
     <string name="main_menu_title">Kramerius</string>
     <string name="newest_title">Nejnovější</string>
@@ -240,6 +239,9 @@
     
     <string name="pref_keep_screen_on_title">Nevypínat obrazovku</string>
     <string name="pref_keep_screen_on_summary">Nevypínat obrazovku při prohlížení dokumentů</string>
+
+    <string name="pref_bookmark_title">Používat záložky</string>
+    <string name="pref_bookmark_summary">Dokumant se otevře na straně, na které jste ho naposledy opustili.</string>    
     
     <string name="pref_hardware_buttons_title">Použítvat hardwarová tlačítka</string>
     <string name="pref_hardware_buttons_summary">Použítvat hardwarová tlačítka pro otáčení stránek</string>

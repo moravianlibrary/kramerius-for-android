@@ -61,6 +61,7 @@ import cz.mzk.kramerius.app.util.Constants;
 import cz.mzk.kramerius.app.util.FileUtils;
 import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.PrefUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
@@ -508,21 +509,23 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 			mParentItem = result.getParent();
 			mIsPdf = result.getParent().getPdf() != null;
-			String selectedPid = result.getParent().getSelectedChild();
-			if (selectedPid == null) {
-				String domain = K5Api.getDomain(PageActivity.this);
-				Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI,
-						new String[] { HistoryEntry.COLUMN_PID },
-						HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
-						new String[] { domain, mParentItem.getPid() }, null);
-				if (c.moveToFirst()) {
-					selectedPid = c.getString(0);
+			if (PrefUtils.useBookmarks(tContext)) {
+				String selectedPid = result.getParent().getSelectedChild();
+				if (selectedPid == null) {
+					String domain = K5Api.getDomain(PageActivity.this);
+					Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI,
+							new String[] { HistoryEntry.COLUMN_PID },
+							HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+							new String[] { domain, mParentItem.getPid() }, null);
+					if (c.moveToFirst()) {
+						selectedPid = c.getString(0);
+					}
 				}
-			}
-			if (selectedPid != null) {
-				int index = getIndexFromPid(selectedPid);
-				if (index > -1 && mCurrentPage < mPageList.size()) {
-					mCurrentPage = index;
+				if (selectedPid != null) {
+					int index = getIndexFromPid(selectedPid);
+					if (index > -1 && mCurrentPage < mPageList.size()) {
+						mCurrentPage = index;
+					}
 				}
 			}
 			mMenuFragment.refreshRecent();
@@ -894,7 +897,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	@Override
 	public void onOrientationLock(boolean locked) {
 		if (locked) {
-			if(VersionUtils.Debuggable()) {
+			if (VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "orientation: " + getResources().getConfiguration().orientation);
 			}
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

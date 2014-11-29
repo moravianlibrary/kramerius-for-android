@@ -230,10 +230,12 @@
     <string name="pref_viewer_mode_top_left">Align to the top-left edge</string>
     <string name="pref_viewer_mode_center">Align to the center</string>
     <string name="pref_viewer_mode_center_horizontal">Align to the horizontal center</string>
-    
-    
+        
     <string name="pref_category_viewer">Viewer</string>
     <string name="pref_category_basic">Basic</string>
+
+    <string name="pref_bookmark_title">Use bookmarks</string>
+    <string name="pref_bookmark_summary">Document wll be opened on the page you left it last time.</string>
     
     <string name="pref_keep_screen_on_title">Keep the Screen On</string>
     <string name="pref_keep_screen_on_summary">Keep the screen on while reading</string>
@@ -250,7 +252,9 @@
     <string name="pref_public_only_summary">Show only the publicly available documents</string>
    
     
-    
+
+    <string name="pref_bookmark_default" translatable="false">true</string>
+    <string name="pref_bookmark_key" translatable="false">p_bookmark</string>
     <string name="pref_keep_screen_on_default" translatable="false">true</string>
     <string name="pref_keep_screen_on_key" translatable="false">p_keep_screen_on</string>
     <string name="pref_hardware_buttons_default" translatable="false">true</string>
