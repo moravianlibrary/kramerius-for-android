@@ -54,9 +54,9 @@
     <string name="about_title">About</string>
     <string name="about_app_title">Kramerius</string>
     <string name="about_app_subtitle">Digital Library</string>
-    <string name="about_app_version">v0.2.9/BETA</string>
     <string name="about_app_copyright">Copyright © 2014 Moravian library in Brno</string>
     <string name="about_app_feedback_prefix">Feedback - Kramerius</string>        
+    <string name="about_app_version_unknown">unknown</string>
     <string name="about_todo">Will be added soon.</string>
     
     <string name="inaccessible_document_title">Publicly inaccessible document</string>
@@ -158,6 +158,7 @@
    <string name="search_filter_isbn">ISBN</string>
    <string name="search_filter_ddt">DDT</string>
    <string name="search_filter_mdt">MDT</string>
+   <string name="search_filter_ccnb">čČNB</string>
    <string name="search_filter_signature">Shelf Number</string>
    <string name="search_filter_sysno">System Number</string>
    <string name="search_filter_keyword">Keyword</string>

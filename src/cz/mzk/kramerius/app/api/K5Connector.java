@@ -29,6 +29,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.util.Constants;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
 public class K5Connector {
@@ -88,7 +89,7 @@ public class K5Connector {
 			List<Item> list = new ArrayList<Item>();
 			String requst = null;
 			requst = K5Api.getFeedPath(context, feed, limit, policy, model);
-			if(Constants.DEBUG_MODE) {
+			if(VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "request:" + requst + ", " + feed);
 			}			
 			HttpGet request = new HttpGet(requst);
@@ -192,7 +193,6 @@ public class K5Connector {
 			String requst = K5Api.getItemPath(context, pid);
 			requst.replace(K5Api.getDomain(context), domain);
 			HttpGet request = new HttpGet(requst);
-			//Log.d(TAG, "getItem: " + requst);
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
@@ -361,13 +361,13 @@ public class K5Connector {
 		try {
 			String requestPath = K5Api.getSearchPath(context, query, start, rows);
 			HttpGet request = new HttpGet(requestPath);
-			if(Constants.DEBUG_MODE) {
+			if(VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "query - search:" + requestPath);
 			}
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
-			if(Constants.DEBUG_MODE) {
+			if(VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "search result:" + jsonString);
 			}
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
@@ -427,13 +427,12 @@ public class K5Connector {
 		try {
 			String requestPath = K5Api.getDoctypeCountPath(context, type);
 			HttpGet request = new HttpGet(requestPath);
-			if(Constants.DEBUG_MODE) {
+			if(VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "query:" + requestPath);
 			}
 			request.setHeader("accept", "application/json");
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
-			// Log.d(TAG, "result:" + jsonString);
 			JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
 			JSONObject responseJson = json.optJSONObject("response");
 			if (responseJson == null) {

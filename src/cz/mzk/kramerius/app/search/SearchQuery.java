@@ -27,6 +27,7 @@ public class SearchQuery {
 	public static final String YEAR = "rok";
 	public static final String SYSNO = "sysno";
 	public static final String SIGNATURE = "signature";
+	public static final String CCNB = "ccnb";
 	public static final String KEYWORDS = "keywords";
 	public static final String OCR = "text_ocr";
 	public static final String MODEL_PATH = "model_path";

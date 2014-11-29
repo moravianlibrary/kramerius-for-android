@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import android.app.AlertDialog;
@@ -14,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.util.Constants;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class LanguageSearchFilter extends SearchFilter {
 
@@ -47,8 +50,15 @@ public class LanguageSearchFilter extends SearchFilter {
 	}
 
 	private void assignLanguages() {
+		String lang = "en";
+		if("cs".equals(Locale.getDefault().getLanguage())) {
+			lang = "cs";
+		}		
+		
+		
 		Cursor cursor = getContext().getContentResolver().query(LanguageEntry.CONTENT_URI,
-				new String[] { LanguageEntry.COLUMN_NAME }, null, null,
+				new String[] { LanguageEntry.COLUMN_NAME }, LanguageEntry.COLUMN_LANG + "=?",
+				new String[] { lang },
 				LanguageEntry.COLUMN_NAME + " COLLATE LOCALIZED");
 		if (cursor == null) {
 			return;
@@ -143,9 +153,13 @@ public class LanguageSearchFilter extends SearchFilter {
 		if (!mLanguageSelected) {
 			return;
 		}
+		String lang = "en";
+		if("cs".equals(Locale.getDefault().getLanguage())) {
+			lang = "cs";
+		}
 		Cursor cursor = getContext().getContentResolver().query(LanguageEntry.CONTENT_URI,
-				new String[] { LanguageEntry.COLUMN_CODE }, LanguageEntry.COLUMN_NAME + " IN (" + getValue() + ")",
-				null, null);
+				new String[] { LanguageEntry.COLUMN_CODE }, LanguageEntry.COLUMN_NAME + " IN (" + getValue() + ") AND " + LanguageEntry.COLUMN_LANG + "=?",
+				new String[] {lang}, null);
 		if (cursor == null) {
 			return;
 		}
@@ -153,7 +167,7 @@ public class LanguageSearchFilter extends SearchFilter {
 		while (cursor.moveToNext()) {
 			languages.add(cursor.getString(0));
 		}
-		if (Constants.DEBUG_MODE) {
+		if (VersionUtils.Debuggable()) {
 			Log.d(LOG_TAG, "addToQuery - languages: " + languages.toString());
 		}
 		query.languages(languages);

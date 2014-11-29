@@ -63,6 +63,7 @@ import cz.mzk.kramerius.app.util.MessageUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
+import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
@@ -893,7 +894,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	@Override
 	public void onOrientationLock(boolean locked) {
 		if (locked) {
-			Log.d(LOG_TAG, "orientation: " + getResources().getConfiguration().orientation);
+			if(VersionUtils.Debuggable()) {
+				Log.d(LOG_TAG, "orientation: " + getResources().getConfiguration().orientation);
+			}
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			} else {
@@ -1042,7 +1045,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			connection = (HttpURLConnection) url.openConnection();
 			connection.connect();
 			int responseCode = connection.getResponseCode();
-			if (Constants.DEBUG_MODE) {
+			if (VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "Downloading pdf, response code: " + responseCode);
 			}
 			if (responseCode == HttpURLConnection.HTTP_FORBIDDEN || responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {

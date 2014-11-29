@@ -19,6 +19,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class PlayerFragment extends Fragment implements OnClickListener, OnCompletionListener, OnPreparedListener,
 		OnBufferingUpdateListener, OnSeekBarChangeListener {
@@ -109,7 +110,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, OnCompl
 
 	@Override
 	public void onCompletion(MediaPlayer mediaPlayer) {
-		Log.d(TAG, "PLAYER:onComplete"  + mediaPlayer.isPlaying() + ", " + mediaPlayer.getCurrentPosition());
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "PLAYER:onComplete"  + mediaPlayer.isPlaying() + ", " + mediaPlayer.getCurrentPosition());
+		}
 		stop();
 		if (mCallback != null && mediaPlayer.getCurrentPosition() > 0) {
 			mCallback.onPlayerComplete();
@@ -144,11 +147,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, OnCompl
 	}
 
 	public void play(String link, boolean playAfterPrepared) {
-		Log.d(TAG, "PLAYER:play");
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "PLAYER:play");
+		}
 		stop();
 		mPlayAfterPrepared = playAfterPrepared;
 		mMediaPlayer.reset();
-		Log.d(TAG, "PLAYER:play-afterReset");
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "PLAYER:play-afterReset");
+		}
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		try {
 			mMediaPlayer.setDataSource(link);

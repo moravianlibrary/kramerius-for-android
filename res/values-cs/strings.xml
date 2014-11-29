@@ -158,6 +158,7 @@
    <string name="search_filter_isbn">ISBN</string>
    <string name="search_filter_ddt">DDT</string>
    <string name="search_filter_mdt">MDT</string>
+   <string name="search_filter_ccnb">čČNB</string>
    <string name="search_filter_signature">Signatura</string>
    <string name="search_filter_sysno">Systémové číslo</string>
    <string name="search_filter_keyword">Klíčové slovo</string>

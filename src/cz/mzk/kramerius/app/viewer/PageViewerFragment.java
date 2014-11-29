@@ -27,6 +27,7 @@ import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHand
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 /**
  * @author Martin Řehánek
@@ -167,7 +168,9 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void showPage(int pageIndex) {
-		Log.d(TAG, "Showing page " + pageIndex);
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "Showing page " + pageIndex);
+		}
 		if (pageIndex >= 0 && pageIndex < mPagePids.size()) {
 			if (mImageRequest != null) {
 				mImageRequest.cancel();
@@ -179,7 +182,9 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 			String url = buildZoomifyBaseUrl(pid);
 			mTiledImageView.loadImage(url.toString());
 		} else {
-			Log.w(TAG, "Page index out of range: " + pageIndex);
+			if(VersionUtils.Debuggable()) {
+				Log.w(TAG, "Page index out of range: " + pageIndex);
+			}
 		}
 	}
 
@@ -214,7 +219,9 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {
-		Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError, code: " + responseCode);
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError, code: " + responseCode);
+		}
 		hideViews();
 		switch (responseCode) {
 		case 403: // FORBIDDEN
@@ -255,7 +262,9 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	private void loadPageImageFromDatastream() {
 		String pid = mPagePids.get(mCurrentPageIndex);
 		final String url = buildScaledImageDatastreamUrl(pid);
-		Log.d(TAG, "Url: " + url);
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "Url: " + url);
+		}
 		mImageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
 			@Override
 			public void onResponse(Bitmap bitmap) {

@@ -32,6 +32,7 @@ import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.ShareUtils;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class SearchResultFragment extends BaseFragment implements OnOpenDetailListener, OnScrollListener,
 		OnPopupMenuSelectedListener {
@@ -113,7 +114,9 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		@Override
 		protected Pair<List<Item>, Integer> doInBackground(String... params) {
 			String query = params[0];
-			Log.d(LOG_TAG, "search query:" + query);
+			if(VersionUtils.Debuggable()) {
+				Log.d(LOG_TAG, "search query:" + query);
+			}
 			return K5Connector.getInstance().getSearchResult(tContext, query, mStart, mRows);
 		}
 

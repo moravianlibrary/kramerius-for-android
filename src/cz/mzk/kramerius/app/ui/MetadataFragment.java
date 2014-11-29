@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,6 @@ import android.widget.TextView;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
@@ -314,12 +314,16 @@ public class MetadataFragment extends BaseFragment {
 			title = getString(R.string.metadata_languages);
 		}
 		String languages = "";
+		String lang = "en";
+		if("cs".equals(Locale.getDefault().getLanguage())) {
+			lang = "cs";
+		}		
 		for (int i = 0; i < metadata.getLanguages().size(); i++) {
 
 			String language = metadata.getLanguages().get(i);
 			Cursor c = getActivity().getContentResolver().query(KrameriusContract.LanguageEntry.CONTENT_URI,
-					new String[] { LanguageEntry.COLUMN_NAME }, LanguageEntry.COLUMN_CODE + "=?",
-					new String[] { language }, null);
+					new String[] { LanguageEntry.COLUMN_NAME }, LanguageEntry.COLUMN_CODE + "=? AND " + LanguageEntry.COLUMN_LANG + "=?",
+					new String[] { language, lang }, null);
 			if (c.moveToFirst()) {
 				String l = c.getString(0);
 				if (l != null && !l.isEmpty()) {

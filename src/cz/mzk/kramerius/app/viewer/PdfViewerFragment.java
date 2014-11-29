@@ -19,6 +19,7 @@ import com.artifex.mupdfdemo.MuPDFReaderView;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.util.Constants;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class PdfViewerFragment extends Fragment implements IPageViewerFragment, FilePicker.FilePickerSupport {
 
@@ -75,7 +76,7 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 			File file = new File(getActivity().getFilesDir(), Constants.PDF_PATH);
 			mPdfCore = new MuPDFCore(getActivity(), file.getAbsolutePath());
 		} catch (Exception e) {
-			if(Constants.DEBUG_MODE) {
+			if(VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "PDF CORE exception: " + e.getMessage());
 			}
 		}

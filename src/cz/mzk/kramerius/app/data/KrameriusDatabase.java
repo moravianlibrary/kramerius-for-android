@@ -21,12 +21,13 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION_INITIAL = 1;
 	private static final int DATABASE_VERSION_RELATORS = 2;
 	private static final int DATABASE_VERSION_HISTORY = 3;
+	private static final int DATABASE_VERSION_LOCALE_LANGUAGES = 4;
 
-	private static final int DATABASE_VERSION = DATABASE_VERSION_HISTORY;
+	private static final int DATABASE_VERSION = DATABASE_VERSION_LOCALE_LANGUAGES;
 
 	private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
 	private static final String DATABASE_NAME_EXTERNAL = Environment
-			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius2.db";
+			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius4.db";
 
 	private Context mContext;
 
@@ -48,7 +49,9 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 		final String SQL_CREATE_LANGUAGE_TABLE = "CREATE TABLE " + LanguageEntry.TABLE_NAME + " (" + LanguageEntry._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + LanguageEntry.COLUMN_CODE + " TEXT NOT NULL, "
-				+ LanguageEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
+				+ LanguageEntry.COLUMN_NAME + " TEXT NOT NULL, " 
+				+ LanguageEntry.COLUMN_LANG + " TEXT NOT NULL" 				
+				+ ");";
 
 		final String SQL_CREATE_LANGUAGE_CODE_INDEX = "CREATE INDEX " + LanguageEntry.TABLE_NAME + "_"
 				+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
@@ -116,7 +119,24 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			db.execSQL(SQL_CREATE_HISTORY_TABLE);
 
 			version = DATABASE_VERSION_HISTORY;
-		}
+		
+		case DATABASE_VERSION_HISTORY:
+			db.execSQL("DROP INDEX IF EXISTS " + LanguageEntry.TABLE_NAME + "_"
+					+ LanguageEntry.COLUMN_CODE);	
+			db.execSQL("DROP TABLE IF EXISTS " + LanguageEntry.TABLE_NAME);			
+			
+			final String SQL_CREATE_LANGUAGE_CODE_INDEX = "CREATE INDEX " + LanguageEntry.TABLE_NAME + "_"
+					+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
+					+ ");";
+			final String SQL_CREATE_LANGUAGE_TABLE = "CREATE TABLE " + LanguageEntry.TABLE_NAME + " (" + LanguageEntry._ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + LanguageEntry.COLUMN_CODE + " TEXT NOT NULL, "
+			+ LanguageEntry.COLUMN_NAME + " TEXT NOT NULL, " 
+			+ LanguageEntry.COLUMN_LANG + " TEXT NOT NULL" 				
+			+ ");";
+			db.execSQL(SQL_CREATE_LANGUAGE_TABLE);
+			db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
+			version = DATABASE_VERSION_LOCALE_LANGUAGES;
+		} 
 	}
 
 	private void populateFrom(SQLiteDatabase db, int resourceId) {

@@ -34,6 +34,7 @@ import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.OnVirtualCollectionLis
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.PrefUtils;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
 		OnFeaturedListener, OnItemSelectedListener, OnSearchListener, OnVirtualCollectionListener {
@@ -378,7 +379,8 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("message/rfc822");
 		i.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.feedback_email) });
-		String subject = getString(R.string.about_app_feedback_prefix) + " " + getString(R.string.about_app_version);
+		
+		String subject = getString(R.string.about_app_feedback_prefix) + " " + VersionUtils.getVersion(this);
 		i.putExtra(Intent.EXTRA_SUBJECT, subject);
 		i.putExtra(Intent.EXTRA_TEXT, "");
 		try {

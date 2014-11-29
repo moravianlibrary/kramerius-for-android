@@ -25,6 +25,7 @@ import cz.mzk.kramerius.app.search.SearchFilter;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.PrefUtils;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class SearchFragment extends BaseFragment implements OnClickListener {
 
@@ -135,7 +136,9 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 		query.fulltext(mType == TYPE_FULLTEXT);
 		String queryString = query.build();
 		Analytics.sendEvent(getActivity(), "search", "query", queryString);
-		Log.d(TAG, "query:" + queryString);
+		if(VersionUtils.Debuggable()) {
+			Log.d(TAG, "query:" + queryString);
+		}
 		if (mOnSearchListener != null) {
 			mOnSearchListener.onSearchQuery(queryString);
 		}
@@ -205,6 +208,8 @@ public class SearchFragment extends BaseFragment implements OnClickListener {
 			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.ISBN, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_keyword))) {
 			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.KEYWORDS, name, false);
+		} else if (name.equals(getResources().getString(R.string.search_filter_ccnb))) {
+			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.CCNB, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_signature))) {
 			new InputSearchFilter(getActivity(), mFilterContainer, mFilters, true, SearchQuery.SIGNATURE, name, true);
 		} else if (name.equals(getResources().getString(R.string.search_filter_sysno))) {

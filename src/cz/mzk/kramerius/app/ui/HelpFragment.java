@@ -13,27 +13,39 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class HelpFragment extends Fragment {
 
 	private static final String TAG = HelpFragment.class.getName();
- 	
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_help, container, false);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_monograph)).execute(ModelUtil.MONOGRAPH);		
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_sound_recording)).execute(ModelUtil.SOUND_RECORDING);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_map)).execute(ModelUtil.MAP);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_periodical)).execute(ModelUtil.PERIODICAL);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_graphic)).execute(ModelUtil.GRAPHIC);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_manuscript)).execute(ModelUtil.MANUSCRIPT);								
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_sheetmusic)).execute(ModelUtil.SHEET_MUSIC);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_archive)).execute(ModelUtil.ARCHIVE);
-		new GetDoctypeCountTask(getActivity(),(TextView) view.findViewById(R.id.doctype_count_page)).execute(ModelUtil.PAGE);
+
+		TextView version = (TextView) view.findViewById(R.id.help_version);
+		version.setText(VersionUtils.getVersion(getActivity()));
+
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_monograph))
+				.execute(ModelUtil.MONOGRAPH);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_sound_recording))
+				.execute(ModelUtil.SOUND_RECORDING);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_map))
+				.execute(ModelUtil.MAP);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_periodical))
+				.execute(ModelUtil.PERIODICAL);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_graphic))
+				.execute(ModelUtil.GRAPHIC);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_manuscript))
+				.execute(ModelUtil.MANUSCRIPT);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_sheetmusic))
+				.execute(ModelUtil.SHEET_MUSIC);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_archive))
+				.execute(ModelUtil.ARCHIVE);
+		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_page))
+				.execute(ModelUtil.PAGE);
 		return view;
 	}
-		
 
 	class GetDoctypeCountTask extends AsyncTask<String, Void, Integer> {
 
@@ -58,7 +70,5 @@ public class HelpFragment extends Fragment {
 			tView.setText(String.valueOf(count));
 		}
 	}
-	
-
 
 }
