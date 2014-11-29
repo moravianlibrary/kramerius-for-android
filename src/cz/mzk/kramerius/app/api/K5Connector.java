@@ -28,6 +28,7 @@ import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.util.Constants;
+import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.xml.ModsParser;
@@ -296,7 +297,7 @@ public class K5Connector {
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
 				item.setPid(jsonItem.optString(K5Constants.PID));
-				item.setTitle(jsonItem.getJSONObject(K5Constants.VC_DESCS).optString(K5Constants.LANG_CS));
+				item.setTitle(jsonItem.getJSONObject(K5Constants.VC_DESCS).optString(LangUtils.getLanguage()));
 				list.add(item);
 			}
 			return list;

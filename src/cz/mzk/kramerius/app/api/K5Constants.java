@@ -27,7 +27,6 @@ public class K5Constants {
 	public static final String DETAILS_PART_NUMBER = "partNumber";
 	
 	public static final String VC_DESCS = "descs";
-	public static final String LANG_CS = "cs";
 	
 	
 	public static final String MIME_TYPE_PDF = "application/pdf";

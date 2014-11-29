@@ -36,6 +36,7 @@ import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.metadata.Part;
 import cz.mzk.kramerius.app.metadata.Publisher;
 import cz.mzk.kramerius.app.metadata.TitleInfo;
+import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.ShareUtils;
 import cz.mzk.kramerius.app.util.TextUtil;
@@ -313,17 +314,13 @@ public class MetadataFragment extends BaseFragment {
 		if (metadata.getLanguages().size() > 1) {
 			title = getString(R.string.metadata_languages);
 		}
-		String languages = "";
-		String lang = "en";
-		if("cs".equals(Locale.getDefault().getLanguage())) {
-			lang = "cs";
-		}		
+		String languages = "";			
 		for (int i = 0; i < metadata.getLanguages().size(); i++) {
 
 			String language = metadata.getLanguages().get(i);
 			Cursor c = getActivity().getContentResolver().query(KrameriusContract.LanguageEntry.CONTENT_URI,
 					new String[] { LanguageEntry.COLUMN_NAME }, LanguageEntry.COLUMN_CODE + "=? AND " + LanguageEntry.COLUMN_LANG + "=?",
-					new String[] { language, lang }, null);
+					new String[] { language, LangUtils.getLanguage() }, null);
 			if (c.moveToFirst()) {
 				String l = c.getString(0);
 				if (l != null && !l.isEmpty()) {
@@ -378,20 +375,16 @@ public class MetadataFragment extends BaseFragment {
 			String s = author.getName() == null ? getString(R.string.metadata_author_unknown) : author.getName();
 			if (author.getDate() != null) {
 				s += ", " + author.getDate();
-			}
+			}				
 			if (!author.getRoleCodes().isEmpty()) {
-				s += " (";
+				s += " (";				
 				for (int i = 0; i < author.getRoleCodes().size(); i++) {
 					String role = author.getRoleCodes().get(i);
-					// int resId = getResources()
-					// .getIdentifier("author_" + role, "string",
-					// getActivity().getPackageName());
-					// if (resId != 0) {
-					// role = getString(resId);
-					// }
 					Cursor c = getActivity().getContentResolver().query(KrameriusContract.RelatorEntry.CONTENT_URI,
-							new String[] { RelatorEntry.COLUMN_NAME }, RelatorEntry.COLUMN_CODE + "=?",
-							new String[] { role }, null);
+							new String[] { RelatorEntry.COLUMN_NAME }, RelatorEntry.COLUMN_CODE + "=? AND " + RelatorEntry.COLUMN_LANG + "=?",
+							new String[] { role, LangUtils.getLanguage() }, null);
+					
+					
 					if (c.moveToFirst()) {
 						String r = c.getString(0);
 						if (r != null && !r.isEmpty()) {

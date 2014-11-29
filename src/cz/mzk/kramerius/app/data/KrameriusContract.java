@@ -14,7 +14,7 @@ public class KrameriusContract {
 	public static final String PATH_LANGUAGE = "language";
 	public static final String PATH_RELATOR = "relator";
 	public static final String PATH_HISTORY = "history";
-	public static final String PATH_LOCALE = "locale";
+
 
 	public static final class InstitutuinEntry implements BaseColumns {
 
@@ -60,6 +60,7 @@ public class KrameriusContract {
 
 		public static final String COLUMN_CODE = "relator_code";
 		public static final String COLUMN_NAME = "name";
+		public static final String COLUMN_LANG = "lang";
 	}
 
 	public static final class HistoryEntry implements BaseColumns {

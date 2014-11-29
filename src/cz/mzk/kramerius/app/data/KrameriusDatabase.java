@@ -22,8 +22,9 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION_RELATORS = 2;
 	private static final int DATABASE_VERSION_HISTORY = 3;
 	private static final int DATABASE_VERSION_LOCALE_LANGUAGES = 4;
+	private static final int DATABASE_VERSION_LOCALE_RELATORS = 5;
 
-	private static final int DATABASE_VERSION = DATABASE_VERSION_LOCALE_LANGUAGES;
+	private static final int DATABASE_VERSION = DATABASE_VERSION_LOCALE_RELATORS;
 
 	private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
 	private static final String DATABASE_NAME_EXTERNAL = Environment
@@ -59,7 +60,9 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 		final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
-				+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
+				+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," 
+				+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" 
+				+ ");";
 
 		final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
 				+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
@@ -94,7 +97,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		int version = oldVersion;
 		switch (version) {
-		case DATABASE_VERSION_INITIAL:
+		case DATABASE_VERSION_INITIAL: {
 			final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
 					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
@@ -104,10 +107,10 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 					+ ");";
 			db.execSQL(SQL_CREATE_RELATOR_TABLE);
 			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
-			populateFrom(db, R.raw.relators);
+			populateFrom(db, R.raw.relators_old_v2);
 
 			version = DATABASE_VERSION_RELATORS;
-		
+		}
 		case DATABASE_VERSION_RELATORS:
 			final String SQL_CREATE_HISTORY_TABLE = "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" + HistoryEntry._ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
@@ -136,6 +139,25 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			db.execSQL(SQL_CREATE_LANGUAGE_TABLE);
 			db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
 			version = DATABASE_VERSION_LOCALE_LANGUAGES;
+			
+		case DATABASE_VERSION_LOCALE_LANGUAGES: {
+			db.execSQL("DROP INDEX IF EXISTS " + RelatorEntry.TABLE_NAME + "_"
+					+ RelatorEntry.COLUMN_CODE);	
+			db.execSQL("DROP TABLE IF EXISTS " + RelatorEntry.TABLE_NAME);			
+			
+			final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
+					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," 
+					+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" 
+					+ ");";
+
+			final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
+					+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
+
+			db.execSQL(SQL_CREATE_RELATOR_TABLE);
+			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
+			version = DATABASE_VERSION_LOCALE_RELATORS;
+		}
 		} 
 	}
 
