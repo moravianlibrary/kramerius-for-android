@@ -533,9 +533,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void init() {
-		if(mPageViewerFragment == null) {
-			return;
-		}
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
@@ -543,6 +540,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mToolbar.setTitle(mTitle);
 		}
 		initViewerFragment(mIsPdf);
+		if(mPageViewerFragment == null) {
+			return;
+		}		
 		if (mIsPdf) {
 			hidePageSelection();
 			mListButton.setVisibility(View.GONE);
