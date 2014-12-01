@@ -128,7 +128,13 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 			if (item == null) {
 				return null;
 			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
+			if(ModelUtil.PERIODICAL.equals(item.getModel())) {
+				return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.PERIODICAL_VOLUME));
+			} else if(ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
+				return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.PERIODICAL_ITEM));
+			} else {
+				return null;
+			}						
 		}
 
 		@Override
