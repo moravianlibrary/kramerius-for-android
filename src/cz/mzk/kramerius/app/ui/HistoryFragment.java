@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
@@ -24,6 +25,7 @@ import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
+import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.card.RecentCard;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.Item;
@@ -115,6 +117,13 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 						if (mOnItemSelectedListener != null) {
 							mOnItemSelectedListener.onItemSelected(((RecentCard) card).getItem());
 						}
+					}
+				});
+				card.setOnLongClickListener(new OnLongCardClickListener() {				
+					@Override
+					public boolean onLongClick(Card card, View view) {
+						onPopupDetailsSelected(((RecentCard) card).getItem());
+						return false;
 					}
 				});
 				cards.add(card);

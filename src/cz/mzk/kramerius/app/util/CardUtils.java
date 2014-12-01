@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.util;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardGridView;
@@ -89,7 +90,7 @@ public class CardUtils {
 	}
 
 	public static CardGridArrayAdapter createAdapter(Context context, List<Item> items,
-			final OnItemSelectedListener listener, OnPopupMenuSelectedListener popupListener,
+			final OnItemSelectedListener listener, final OnPopupMenuSelectedListener popupListener,
 			DisplayImageOptions options) {
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for (Item item : items) {
@@ -104,6 +105,16 @@ public class CardUtils {
 					}
 				}
 			});
+			card.setOnLongClickListener(new OnLongCardClickListener() {				
+				@Override
+				public boolean onLongClick(Card card, View view) {
+					if(popupListener != null) {
+						popupListener.onPopupDetailsSelected(((GridCard) card).getItem());
+					}
+					return false;
+				}
+			});
+			
 			cards.add(card);
 		}
 		return new CardGridArrayAdapter(context, cards);

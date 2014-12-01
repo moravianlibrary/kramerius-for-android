@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
@@ -25,6 +26,7 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
+import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.card.SoundUnitCard;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
@@ -125,6 +127,13 @@ public class SoundRecordingActivity extends BaseActivity implements OnPopupMenuS
 				@Override
 				public void onClick(Card card, View view) {
 					openSoundUnit(((SoundUnitCard) card).getItem());
+				}
+			});
+			card.setOnLongClickListener(new OnLongCardClickListener() {				
+				@Override
+				public boolean onLongClick(Card card, View view) {
+					onPopupDetailsSelected((((SoundUnitCard) card).getItem()));
+					return false;
 				}
 			});
 			cards.add(card);

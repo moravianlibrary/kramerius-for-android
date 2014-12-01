@@ -107,10 +107,11 @@ public class MetadataFragment extends BaseFragment {
 			TextView mainTitle = new TextView(getActivity());
 			mainTitle.setTextIsSelectable(true);
 			mainTitle.setSingleLine(true);
+			mainTitle.setLines(1);
 			mainTitle.setText(metadata.getTitleInfo().getTitle());
 			mainTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.metadata_title));
 			mainTitle.setTextColor(getResources().getColor(R.color.metadata_title));
-			LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+			LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT);
 			llp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.metadata_title_margin_bottom);
 			mainTitle.setLayoutParams(llp);

@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardGridView;
 
@@ -29,6 +30,7 @@ import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.model.Item;
@@ -205,6 +207,14 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 					}
 				}
 			});
+			card.setOnLongClickListener(new OnLongCardClickListener() {				
+				@Override
+				public boolean onLongClick(Card card, View view) {
+					onPopupDetailsSelected((((PeriodicalCard) card).getItem()));
+					return false;
+				}
+			});
+			
 			cards.add(card);
 		}
 		mAdapter = new CardGridArrayAdapter(getActivity(), cards);
