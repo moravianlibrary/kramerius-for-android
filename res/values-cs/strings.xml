@@ -28,7 +28,7 @@
     <string name="most_desirable_title">Nejžádanější</string>    
     <string name="user_info_title">Uživatelský účet</string>
     <string name="login_title">Přihlášení</string>
-    <string name="virtual_collections_title">Virtuální sbírky</string>
+    <string name="virtual_collections_title">Sbírky</string>
     <string name="settings_title">Nastavení</string>
     <string name="help_title">Nápověda</string>
     <string name="metadata_title">Podrobnosti</string>
@@ -36,7 +36,7 @@
     
     
     <string name="main_menu_home">Domů</string>
-    <string name="main_menu_virtual_colections">Virtuální sbírky</string>
+    <string name="main_menu_virtual_colections">Sbírky</string>
     <string name="main_menu_search">Hledat</string>
     <string name="main_menu_about">O aplikaci</string>
     <string name="main_menu_help">Nápověda a zpětná vazba</string>
@@ -219,7 +219,7 @@
     <string name="warn_load_again">OPAKOVAT</string>
     <string name="warn_empty_result">Nebyly nalezeny žádné výsledky.</string>
     <string name="warn_empty_history">Zatím nemáte žádné otevřené dokumenty.</string>
-    <string name="warn_empty_vc">Digitální knihovna neobsahuje žádné virtuální sbirky.</string>
+    <string name="warn_empty_vc">Digitální knihovna neobsahuje žádné sbírky.</string>
     <string name="warn_page_private_message">Stránka dokumentu není veřejně přístupná.</string>    
     <string name="warn_page_private_button">Více informací</string>
     <string name="warn_page_loading_failed">Nepodařilo se načíst stránku.</string>    

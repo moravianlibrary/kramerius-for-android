@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.util.Analytics;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
@@ -40,9 +41,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mHackCounter++;
 				if (mHackCounter >= 8) {
-					PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-							.putBoolean(getString(R.string.pref_all_sources), true).commit();
-					Toast.makeText(getActivity(), "Other sources are available now!", Toast.LENGTH_LONG).show();
+					if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(
+							getString(R.string.pref_all_sources), false)) {
+						Analytics.sendEvent(getActivity(), "settings", "domains_unlocked");
+
+						PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+								.putBoolean(getString(R.string.pref_all_sources), true).commit();
+						Toast.makeText(getActivity(), "Other sources are available now!", Toast.LENGTH_LONG).show();
+					}
 				}
 				return true;
 			}

@@ -23,6 +23,7 @@ import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.DomainCard;
 import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.DomainUtil;
 
@@ -93,6 +94,7 @@ public class DomainActivity extends BaseActivity {
 	}
 
 	private void onDomainSelected(Domain domain) {
+		Analytics.sendEvent(this, "domain", domain.getDomain());
 		K5Api.setDomain(this, domain);
 		Intent intent = new Intent(DomainActivity.this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
