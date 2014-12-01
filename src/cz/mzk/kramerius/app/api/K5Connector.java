@@ -248,7 +248,7 @@ public class K5Connector {
 		return getItem(context, pid, K5Api.getDomain(context));
 	}
 
-	public List<Item> getChildren(Context context, String pid) {
+	public List<Item> getChildren(Context context, String pid, String modelFilter) {
 		try {
 			List<Item> list = new ArrayList<Item>();
 			String requst = K5Api.getChildrenPath(context, pid);
@@ -256,11 +256,15 @@ public class K5Connector {
 			HttpResponse response = getClient().execute(request);
 			String jsonString = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 			JSONArray data = (JSONArray) new JSONTokener(jsonString).nextValue();
-			for (int i = 0; i < data.length(); i++) {
+			for (int i = 0; i < data.length(); i++) {				
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
+				String model = jsonItem.optString(K5Constants.MODEL);
+				if(modelFilter != null && !modelFilter.equals(model)) {
+					continue;
+				}
 				item.setPid(jsonItem.optString(K5Constants.PID));
-				item.setModel(jsonItem.optString(K5Constants.MODEL));
+				item.setModel(model);
 				item.setIssn(jsonItem.optString(K5Constants.ISSN));
 				item.setDate(jsonItem.optString(K5Constants.DATE));
 				item.setTitle(jsonItem.optString(K5Constants.TITLE));
@@ -291,6 +295,12 @@ public class K5Connector {
 		}
 		return null;
 	}
+	
+	
+	public List<Item> getChildren(Context context, String pid) {
+		return getChildren(context, pid, null);
+	}
+	
 
 	public List<Item> getVirtualCollctions(Context context) {
 		try {

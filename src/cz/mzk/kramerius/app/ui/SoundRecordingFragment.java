@@ -106,7 +106,7 @@ public class SoundRecordingFragment extends BaseFragment implements OnPopupMenuS
 			if (item == null) {
 				return null;
 			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
+			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.SOUND_UNIT));
 		}
 
 		@Override
@@ -127,20 +127,11 @@ public class SoundRecordingFragment extends BaseFragment implements OnPopupMenuS
 			}
 			String title = TextUtil.parseTitle(result.getParent().getRootTitle());
 			getSupportActionBar().setTitle(title);
-//			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {
-//			} else if (ModelUtil.PERIODICAL_VOLUME.equals(result.getParent().getModel())) {
-//			}
-			List<Item> items = new ArrayList<Item>();
-			for(Item item : result.getChildren()) {
-				if(ModelUtil.SOUND_UNIT.equals(item.getModel())) {
-					items.add(item);
-				}
-			}
 			if (result.getChildren().isEmpty()) {
 				showWarningMessage(getString(R.string.warn_empty_result), null, null);
 				return;
 			} else {
-				setItems(items);
+				setItems(result.getChildren());
 			}
 		}
 	}

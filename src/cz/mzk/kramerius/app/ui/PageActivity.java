@@ -445,7 +445,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			if (item.getPdf() != null) {
 				status = downloadPdf(item);
 			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()), status);
+			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.PAGE), status);
 		}
 
 		@Override
