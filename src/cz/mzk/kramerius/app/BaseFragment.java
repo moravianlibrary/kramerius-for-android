@@ -99,6 +99,9 @@ public abstract class BaseFragment extends Fragment {
 	
 	
 	protected ActionBar getSupportActionBar() {
+		if(getActivity() == null) {
+			return null;
+		}
 		return ((ActionBarActivity) getActivity()).getSupportActionBar();
 	}
 

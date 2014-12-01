@@ -30,7 +30,6 @@ import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Connector;
-import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.model.Item;
@@ -60,7 +59,7 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		inflateLoader(container, inflater);
-		new GetPeriodicalVolumesTask(getActivity()).execute(mPid);
+		new GetPeriodicalVolumesTask(getActivity().getApplicationContext()).execute(mPid);
 		return view;
 	}
 
@@ -135,7 +134,7 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 		@Override
 		protected void onPostExecute(ParentChildrenPair result) {
 			stopLoaderAnimation();
-			if (tContext == null) {
+			if (getActivity() == null) {
 				return;
 			}
 			if (result == null || result.getParent() == null || result.getChildren() == null) {
@@ -147,7 +146,7 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 				});
 				return;
 			}
-			String title = TextUtil.parseTitle(result.getParent().getRootTitle());
+			String title = TextUtil.parseTitle(result.getParent().getRootTitle());			
 			getSupportActionBar().setTitle(title);
 			String subtitle = "";
 			if (ModelUtil.PERIODICAL.equals(result.getParent().getModel())) {

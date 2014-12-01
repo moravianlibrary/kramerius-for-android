@@ -247,7 +247,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 		}
 		if (mPageList == null) {
-			new LoadPagesTask(this).execute(mPid);
+			new LoadPagesTask(getApplicationContext()).execute(mPid);
 		} else {
 			init();
 		}
@@ -403,7 +403,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		@Override
 		protected void onPreExecute() {
 			clearMessages();
-			// mDrawerLayout.setActivated(false);
 			mViewerWrapper.setVisibility(View.INVISIBLE);
 			mLoader.setVisibility(View.VISIBLE);
 			mLoader.startAnimation(mLoaderAnimation);
@@ -453,7 +452,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		protected void onPostExecute(ParentChildrenPair result) {
 			mLoader.clearAnimation();
 			mLoader.setVisibility(View.GONE);
-			if (tContext == null) {
+			if (PageActivity.this == null) {
 				return;
 			}
 			if (result == null || result.getParent() == null) {
@@ -462,7 +461,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 							@Override
 							public void onWarningButtonClicked() {
-								new LoadPagesTask(PageActivity.this).execute(mPid);
+								new LoadPagesTask(PageActivity.this.getApplicationContext()).execute(mPid);
 							}
 						}, true);
 				return;
@@ -485,7 +484,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 							@Override
 							public void onWarningButtonClicked() {
-								new LoadPagesTask(PageActivity.this).execute(mPid);
+								new LoadPagesTask(PageActivity.this.getApplicationContext()).execute(mPid);
 							}
 						}, true);
 				return;
@@ -534,6 +533,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void init() {
+		if(mPageViewerFragment == null) {
+			return;
+		}
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
@@ -871,7 +873,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 		putToHistory();
 		mPageList = null;
-		new LoadPagesTask(this).execute(pid);
+		new LoadPagesTask(getApplicationContext()).execute(pid);
 	}
 
 	private boolean closeSlidingMenu() {

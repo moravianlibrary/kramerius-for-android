@@ -108,13 +108,13 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 		String policy = PrefUtils.getPolicy(getActivity());
 
 		if (mCustomList == null) {
-			new GetFeaturedTask(getActivity(), K5Api.FEED_CUSTOM, policy).execute();
+			new GetFeaturedTask(getActivity().getApplicationContext(), K5Api.FEED_CUSTOM, policy).execute();
 		} else {
 			populateGrid(K5Api.FEED_CUSTOM);
 		}
 		mNewestExpandButton.setVisibility(View.GONE);
 		if (mNewestList == null) {
-			new GetFeaturedTask(getActivity(), K5Api.FEED_NEWEST, policy).execute();
+			new GetFeaturedTask(getActivity().getApplicationContext(), K5Api.FEED_NEWEST, policy).execute();
 		} else {
 			populateGrid(K5Api.FEED_NEWEST);
 		}
@@ -165,7 +165,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 		protected void onPostExecute(List<Item> result) {
 			if (tType == K5Api.FEED_CUSTOM) {
 				stopLoaderAnimation(mLoaderCustom);
-				if (tContext == null || result == null) {
+				if (getActivity() == null || result == null) {
 					mCustomAgainButton.setVisibility(View.VISIBLE);
 					mCustomWarning.setVisibility(View.VISIBLE);
 					return;
@@ -174,7 +174,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 				fillList(result, mCustomList);
 			} else if (tType == K5Api.FEED_NEWEST) {
 				stopLoaderAnimation(mLoaderNewest);
-				if (tContext == null || result == null) {
+				if (getActivity() == null || result == null) {
 					mNewestAgainButton.setVisibility(View.VISIBLE);
 					mNewestWarning.setVisibility(View.VISIBLE);
 					return;
@@ -251,9 +251,9 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 		} else if (v == mCustomExpandButton) {
 			mCallback.onFeatured(K5Api.FEED_CUSTOM);
 		} else if (v == mNewestAgainButton) {
-			new GetFeaturedTask(getActivity(), K5Api.FEED_NEWEST, PrefUtils.getPolicy(getActivity())).execute();
+			new GetFeaturedTask(getActivity().getApplicationContext(), K5Api.FEED_NEWEST, PrefUtils.getPolicy(getActivity())).execute();
 		} else if (v == mCustomAgainButton) {
-			new GetFeaturedTask(getActivity(), K5Api.FEED_CUSTOM, PrefUtils.getPolicy(getActivity())).execute();
+			new GetFeaturedTask(getActivity().getApplicationContext(), K5Api.FEED_CUSTOM, PrefUtils.getPolicy(getActivity())).execute();
 		}
 	}
 

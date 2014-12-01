@@ -51,7 +51,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		View view = inflater.inflate(R.layout.fragment_virtual_collections, container, false);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
 		inflateLoader((ViewGroup) view, inflater);
-		new GetVirtualCollectionsTask(getActivity()).execute();
+		new GetVirtualCollectionsTask(getActivity().getApplicationContext()).execute();
 		return view;
 	}
 
@@ -87,7 +87,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 		@Override
 		protected void onPostExecute(List<Item> result) {
 			stopLoaderAnimation();
-			if (tContext == null) {
+			if (getActivity() == null) {
 				return;
 			}
 			if (result == null) {
@@ -95,7 +95,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 					@Override
 					public void onWarningButtonClicked() {
-						new GetVirtualCollectionsTask(getActivity()).execute();
+						new GetVirtualCollectionsTask(getActivity().getApplicationContext()).execute();
 					}
 				});
 				return;
@@ -107,7 +107,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 			ArrayList<Card> cards = new ArrayList<Card>();
 			for (Item item : result) {
-				VirtualCollectionCard card = new VirtualCollectionCard(tContext, item);
+				VirtualCollectionCard card = new VirtualCollectionCard(getActivity(), item);
 				card.setOnClickListener(new OnCardClickListener() {
 					@Override
 					public void onClick(Card card, View view) {
@@ -118,7 +118,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 				cards.add(card);
 			}
 
-			mAdapter = new CardGridArrayAdapter(tContext, cards);
+			mAdapter = new CardGridArrayAdapter(getActivity(), cards);
 			CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
 		}
 

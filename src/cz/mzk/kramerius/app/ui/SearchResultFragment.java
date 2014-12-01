@@ -86,7 +86,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		mCardGridView.setOnScrollListener(this);
 		inflateLoader(container, inflater);
 		mLoading = true;
-		new GetResultTask(getActivity()).execute(mSearchQuery);
+		new GetResultTask(getActivity().getApplicationContext()).execute(mSearchQuery);
 		return view;
 	}
 
@@ -122,7 +122,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 		@Override
 		protected void onPostExecute(Pair<List<Item>, Integer> result) {
-			if (tContext == null) {
+			if (getActivity() == null) {
 				return;
 			}
 			if (mFirst) {
@@ -137,7 +137,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 								@Override
 								public void onWarningButtonClicked() {
-									new GetResultTask(getActivity()).execute(mSearchQuery);
+									new GetResultTask(getActivity().getApplicationContext()).execute(mSearchQuery);
 								}
 							});
 				}
@@ -160,6 +160,9 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 	}
 
 	private void populateGrid(List<Item> items) {
+		if(getActivity() == null) {
+			return;
+		}
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for (Item item : items) {
 			GridCard card = new GridCard(getActivity(), item, mOptions);
@@ -202,7 +205,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 		if (loadMore && hasMore) {
 			mStart += mRows;
 			mLoading = true;
-			new GetResultTask(getActivity()).execute(mSearchQuery);
+			new GetResultTask(getActivity().getApplicationContext()).execute(mSearchQuery);
 		}
 	}
 

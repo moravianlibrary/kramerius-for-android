@@ -27,24 +27,24 @@ public class PageSelectionFragment extends BaseFragment {
 	private PageSelectionAdapter mAdapter;
 	private OnPageNumberSelected mOnPageNumberSelected;
 
-	@Override
-	public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-
-		Display display = getActivity().getWindowManager().getDefaultDisplay();
-		Point size = new Point();
-		display.getSize(size);
-		float h = size.y;
-
-		Animator animator = null;
-		if (enter) {
-			animator = ObjectAnimator.ofFloat(this, "translationY", h, 0);
-		} else {
-			animator = ObjectAnimator.ofFloat(this, "translationY", 0, h);
-		}
-
-		animator.setDuration(500);
-		return animator;
-	}
+//	@Override
+//	public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+//
+//		Display display = getActivity().getWindowManager().getDefaultDisplay();
+//		Point size = new Point();
+//		display.getSize(size);
+//		float h = size.y;
+//
+//		Animator animator = null;
+//		if (enter) {
+//			animator = ObjectAnimator.ofFloat(this, "translationY", h, 0);
+//		} else {
+//			animator = ObjectAnimator.ofFloat(this, "translationY", 0, h);
+//		}
+//
+//		animator.setDuration(500);
+//		return animator;
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

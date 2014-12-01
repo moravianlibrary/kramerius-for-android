@@ -135,7 +135,7 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 
 		@Override
 		protected void onPostExecute(List<Card> result) {
-			if(tContext == null) {
+			if(getActivity() == null) {
 				return;
 			}
 			if (result.isEmpty() || result == null) {

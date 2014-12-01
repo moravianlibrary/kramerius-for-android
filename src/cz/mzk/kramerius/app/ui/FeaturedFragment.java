@@ -70,7 +70,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 		View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
 		inflateLoader(container, inflater);
 		mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
-		new GetFeaturedTask(getActivity()).execute(mType);
+		new GetFeaturedTask(getActivity().getApplicationContext()).execute(mType);
 		return view;
 	}
 
@@ -114,15 +114,15 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 
 		@Override
 		protected void onPostExecute(List<Item> result) {
-			if(tContext == null) {
+			stopLoaderAnimation();
+			if(getActivity() == null) {
 				return;
-			}
-			stopLoaderAnimation();			
+			}					
 			if (result == null) {
 				showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again, new onWarningButtonClickedListener() {
 					@Override
 					public void onWarningButtonClicked() {
-						new GetFeaturedTask(getActivity()).execute(mType);
+						new GetFeaturedTask(getActivity().getApplicationContext()).execute(mType);
 					}
 				});
 				return;
@@ -132,6 +132,9 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 	}
 
 	private void populateGrid(List<Item> items) {
+		if(getActivity() == null) {
+			return;
+		}
 		mAdapter = CardUtils.createAdapter(getActivity(), items, mOnItemSelectedListener, this, mOptions);
 		CardUtils.setAnimationAdapter(mAdapter, mCardGridView);
 	}

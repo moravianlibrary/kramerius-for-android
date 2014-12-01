@@ -26,23 +26,23 @@ public class HelpFragment extends Fragment {
 		TextView version = (TextView) view.findViewById(R.id.help_version);
 		version.setText(VersionUtils.getVersion(getActivity()));
 
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_monograph))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_monograph))
 				.execute(ModelUtil.MONOGRAPH);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_sound_recording))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_sound_recording))
 				.execute(ModelUtil.SOUND_RECORDING);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_map))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_map))
 				.execute(ModelUtil.MAP);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_periodical))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_periodical))
 				.execute(ModelUtil.PERIODICAL);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_graphic))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_graphic))
 				.execute(ModelUtil.GRAPHIC);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_manuscript))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_manuscript))
 				.execute(ModelUtil.MANUSCRIPT);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_sheetmusic))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_sheetmusic))
 				.execute(ModelUtil.SHEET_MUSIC);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_archive))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_archive))
 				.execute(ModelUtil.ARCHIVE);
-		new GetDoctypeCountTask(getActivity(), (TextView) view.findViewById(R.id.doctype_count_page))
+		new GetDoctypeCountTask(getActivity().getApplicationContext(), (TextView) view.findViewById(R.id.doctype_count_page))
 				.execute(ModelUtil.PAGE);
 		return view;
 	}

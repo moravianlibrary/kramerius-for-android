@@ -99,7 +99,10 @@ public class MetadataFragment extends BaseFragment {
 
 	public void assignPid(String pid) {
 		mPid = pid;
-		new getMetadataTask(getActivity()).execute(mPid);
+		if(getActivity() == null) {
+			return;
+		}
+		new getMetadataTask(getActivity().getApplicationContext()).execute(mPid);
 	}
 
 	private void populateTopLevelMetadata(Metadata metadata, String model, boolean privateDocument, boolean expandable) {
@@ -643,7 +646,7 @@ public class MetadataFragment extends BaseFragment {
 						new onWarningButtonClickedListener() {
 							@Override
 							public void onWarningButtonClicked() {
-								new getMetadataTask(getActivity()).execute(mPid);
+								new getMetadataTask(getActivity().getApplicationContext()).execute(mPid);
 							}
 						});
 				return;
