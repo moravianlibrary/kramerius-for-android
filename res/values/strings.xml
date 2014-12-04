@@ -181,7 +181,9 @@
     <string name="dialog_download_pdf_private_title">Inaccessible document</string>
  	<string name="dialog_download_pdf_private_content">The PDF document is publicly inaccessible.\nWe are sorry, the document cannot be downloaded.</string> 	    
  		
- 	
+    <string name="dialog_viewer_first_visit_title">Hint</string>
+ 	<string name="dialog_viewer_first_visit_content">To turn on/off the fullscreen mode, tap to the middle of the screen.\n\nTo go to the previous/next page, tap to the left/right edge of the screen or use volume up/down hardware buttons.</string>
+    	
  	
     <string name="viewer_menu_home">Home</string>
     <string name="viewer_menu_settings">Settings</string>    
@@ -189,7 +191,7 @@
     <string name="viewer_menu_screen_lock">Screen Lock</string>
     <string name="viewer_menu_download">Download Page</string>
     <string name="viewer_menu_download_pdf">Download document</string>
-    
+        
     <string name="inaccessible_document_header">document is not publicly accessible.</string>
     <string name="inaccessible_document_why_title">Proč je dokument neveřejný?</string>
     <string name="inaccessible_document_why_content">The Copyright Act allows public access to works only after 70 years from the author\'s time of death.</string>

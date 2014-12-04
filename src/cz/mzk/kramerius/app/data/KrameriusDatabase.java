@@ -138,6 +138,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			+ ");";
 			db.execSQL(SQL_CREATE_LANGUAGE_TABLE);
 			db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
+			populateFrom(db, R.raw.languages);			
 			version = DATABASE_VERSION_LOCALE_LANGUAGES;
 			
 		case DATABASE_VERSION_LOCALE_LANGUAGES: {
@@ -156,6 +157,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 			db.execSQL(SQL_CREATE_RELATOR_TABLE);
 			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
+			populateFrom(db, R.raw.relators);
 			version = DATABASE_VERSION_LOCALE_RELATORS;
 		}
 		} 

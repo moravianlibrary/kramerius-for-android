@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,10 +26,11 @@ import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.PlayerFragment.PlayerListener;
 import cz.mzk.kramerius.app.util.TextUtil;
+import cz.mzk.kramerius.app.util.VersionUtils;
 
 public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 
-	public static final String TAG = SoundUnitActivity.class.getName();
+	public static final String LOG_TAG = SoundUnitActivity.class.getSimpleName();
 
 	private PlayerFragment mPlayerFragment;
 	private ListView mList;
@@ -120,20 +122,6 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 			if (children == null) {
 				return;
 			}
-
-			// addFakeTrack(children, "Losing My Religion",
-			// "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-			// addFakeTrack(children, "Shiny Happy People",
-			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-			// addFakeTrack(children, "Everybody Hurts",
-			// "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-			// addFakeTrack(children, "Man On The Moon",
-			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-			// addFakeTrack(children, "Bad Day",
-			// "uuid:9dc2a9bc-24d0-4614-aa89-85824aa20720");
-			// addFakeTrack(children, "Leaving New Your",
-			// "uuid:57fffa5f-67fb-4d31-ac28-72504334a837");
-
 			mSoundUnitInfo.setText(getString(R.string.sound_unit_tracks) + " " + children.size());
 			mAdapter = new TrackArrayAdapter(tContext, children);
 			mList.setAdapter(mAdapter);
@@ -148,10 +136,9 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 		}
 		Item item = mAdapter.getItem(position);
 		String link = K5Api.getMp3StreamPath(this, item.getPid());
-		// if(position == 1) {
-		// link =
-		// "http://krameriustest.mzk.cz/search/audioProxy/uuid:50dffefd-27fe-40df-1121-2e0d82b770a9/MP3";
-		// }
+		if(VersionUtils.Debuggable()) {
+			Log.d(LOG_TAG, "MP3 path:" + link);
+		}
 		mPlayerFragment.play(link, play);
 		mAdapter.setSelection(position);
 

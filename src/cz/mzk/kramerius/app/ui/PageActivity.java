@@ -545,7 +545,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}		
 		if (mIsPdf) {
 			hidePageSelection();
-			mListButton.setVisibility(View.GONE);
+			mListButton.setVisibility(View.GONE);			
 		} else {
 			mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
 			mPageSelectionFragment.assignItems(mPageList);
@@ -553,8 +553,13 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 		mSeekBar.setMax(mPageViewerFragment.getNumberOfPage() - 1);
 		mSeekBar.setProgress(mCurrentPage);
-
 		mViewerWrapper.setVisibility(View.VISIBLE);
+		if(PrefUtils.isFirstViewerVisit(this)) {
+			new MaterialDialog.Builder(this).title(R.string.dialog_viewer_first_visit_title)
+			.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
+
+		}
+		
 	}
 
 	private int getIndexFromPid(String pid) {

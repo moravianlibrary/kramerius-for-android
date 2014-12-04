@@ -28,7 +28,7 @@ public class VersionUtils {
 		case ALPHA:
 			return TYPE_ALPHA;
 		case BETA:
-			return TYPE_DEV;
+			return TYPE_BETA;
 		default:
 			return TYPE_DEV;
 		}

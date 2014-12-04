@@ -180,7 +180,10 @@
     <string name="dialog_download_pdf_private_title">Nepřístupný dokument</string>
  	<string name="dialog_download_pdf_private_content">PDF dokument není veřejně přístupný. Litujeme, ale dokument není možné stáhnout.</string> 	    
     
-    
+    <string name="dialog_viewer_first_visit_title">Tip</string>
+    <string name="dialog_viewer_first_visit_content">Tapnutím doprostřed obrazovky vypnete/zapnete celoobrazovkovy režim.\n\nPřechod na předchozí/další stránku provedete tapnutím do levé/pravé části obrazovky nebo hardwarovými tlačíty pro ovládání hlasitosti.</string>
+ 	
+ 	
     <string name="viewer_menu_home">Domů</string>
     <string name="viewer_menu_settings">Nastavení</string>    
     <string name="viewer_menu_recent">Naposledy otevřené</string>
