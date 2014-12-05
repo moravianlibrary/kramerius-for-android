@@ -38,7 +38,7 @@ public class VersionUtils {
 		try {
 			return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			return context.getString(R.string.about_app_version_unknown);
+			return context.getString(R.string.help_about_app_version_unknown);
 		}
 	}
 	

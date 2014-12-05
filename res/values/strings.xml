@@ -29,7 +29,28 @@
     <string name="login_title">Log In</string>
     <string name="virtual_collections_title">Collections</string>
     <string name="settings_title">Settings</string>
+    
     <string name="help_title">Help</string>
+    <string name="help_menu_about">About</string>
+    <string name="help_menu_content">Digital Library content</string>
+    <string name="help_menu_feedback">Send Feedback</string>
+    
+    <string name="help_about_app_title">Kramerius</string>
+    <string name="help_about_app_subtitle">Digital Library</string>
+    <string name="help_about_app_copyright">Copyright © 2014 Moravian library in Brno</string>
+    <string name="help_about_app_feedback_prefix">Feedback - Kramerius</string>        
+    <string name="help_about_app_version_unknown">unknown</string>
+ 	<string name="help_about_description">
+        <![CDATA[                
+        Kramerius je digitální knihovna, díky které můžete prohlížet díla, která již nepodléhají autorskému zákonu. 
+        <br/>Naleznete zde klasická díla, historické spisy, staré noviny a časopisy, kolekce map a další digitalizované dokumenty. 
+        <br/><br/>Aplikace je zatím pouze v beta verzi. Prosíme Vás proto o shovívavost při hodnocení a o pomoc s testováním aplikace. 
+        <br/>Máte-li jakékoliv připomínky, otázky, nápady, nebo jste našli chybu, kontaktujte nás na <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
+        <br/><br/>Aplikaci vyvíjí <a href="http://www.mzk.cz">Moravská zemská knihovna v Brně</a> 
+    	]]></string>    
+    
+    
+    
     <string name="metadata_title">Details</string>
     <string name="domain_title">Data Source</string>
     
@@ -51,13 +72,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
         
-    <string name="about_title">About</string>
-    <string name="about_app_title">Kramerius</string>
-    <string name="about_app_subtitle">Digital Library</string>
-    <string name="about_app_copyright">Copyright © 2014 Moravian library in Brno</string>
-    <string name="about_app_feedback_prefix">Feedback - Kramerius</string>        
-    <string name="about_app_version_unknown">unknown</string>
-    <string name="about_todo">Will be added soon.</string>
+   
     
     <string name="inaccessible_document_title">Publicly inaccessible document</string>
     
@@ -70,7 +85,7 @@
     <string name="search_result_title">Search Result</string>
     
     
-    <string name="feedback_email">jan.rychtar.dev@gmail.com</string>
+    <string name="feedback_email">developer@mzk.cz</string>
     <string name="feedback_chooseEmailClient">Select an e-mail client</string>
 	<string name="feedback_noEmailClient">You have no e-mail client installed.</string>
     

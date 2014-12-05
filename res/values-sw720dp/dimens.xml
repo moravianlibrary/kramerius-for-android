@@ -16,4 +16,7 @@
     <dimen name="warning_message_text">19dp</dimen>
     
     
+    <dimen name="help_content_padding">20dp</dimen>
+    <dimen name="help_menu_top">10dp</dimen>
+    
 </resources>

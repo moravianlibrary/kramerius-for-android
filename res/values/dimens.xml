@@ -24,7 +24,8 @@
     
     <dimen name="main_featured_text">19dp</dimen>
     
-    
+    <dimen name="help_content_padding">15dp</dimen>
+    <dimen name="help_menu_top">10dp</dimen>
     
     <dimen name="dialog_padding_top">24dp</dimen>
     <dimen name="dialog_padding_left">24dp</dimen>

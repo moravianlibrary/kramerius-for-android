@@ -30,7 +30,26 @@
     <string name="login_title">Přihlášení</string>
     <string name="virtual_collections_title">Sbírky</string>
     <string name="settings_title">Nastavení</string>
+    
     <string name="help_title">Nápověda</string>
+ 	<string name="help_menu_about">O aplikaci</string>
+    <string name="help_menu_content">Obsah digitální knihovny</string>
+    <string name="help_menu_feedback">Zaslat zpětnou vazbu</string>
+    <string name="help_about_app_title">Kramerius</string>
+    <string name="help_about_app_subtitle">Digitální knihovna</string>
+    <string name="help_about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
+    <string name="help_about_description">
+        <![CDATA[                
+        Kramerius je digitální knihovna, díky které můžete prohlížet díla, která již nepodléhají autorskému zákonu. 
+        <br/>Naleznete zde klasická díla, historické spisy, staré noviny a časopisy, kolekce map a další digitalizované dokumenty. 
+        <br/><br/>Aplikace je zatím pouze v beta verzi. Prosíme Vás proto o shovívavost při hodnocení a o pomoc s testováním aplikace. 
+        <br/>Máte-li jakékoliv připomínky, otázky, nápady, nebo jste našli chybu, kontaktujte nás na <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
+        <br/><br/>Aplikaci vyvíjí <a href="http://www.mzk.cz">Moravská zemská knihovna v Brně</a> 
+    	]]></string>
+    
+    
+    
+    
     <string name="metadata_title">Podrobnosti</string>
     <string name="domain_title">Zdroj dat</string>
     
@@ -53,13 +72,7 @@
     <string name="drawer_close">Close navigation drawer</string>
     
     
-    <string name="about_title">O Aplikaci</string>
-    <string name="about_app_title">Kramerius</string>
-    <string name="about_app_subtitle">Digitální knihovna</string>
-    <string name="about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
-    <string name="about_app_feedback_prefix">Feedback - Kramerius</string>
-    <string name="about_todo">Nápověda bude doplněna.</string>
-    
+
     <string name="inaccessible_document_title">Veřejně nepřístupný dokument</string>
     
     <string name="recent_title">Naposledy otevřené</string>
@@ -69,7 +82,6 @@
     <string name="search_result_title">Výsledky Hledání</string>
     
     
-    <string name="feedback_email">jan.rychtar.dev@gmail.com</string>
     <string name="feedback_chooseEmailClient">Vyberte e-mailového klienta</string>
 	<string name="feedback_noEmailClient">Nemáte nainstalovanou žádnou aplikaci na posílání e-mailů.</string>
     

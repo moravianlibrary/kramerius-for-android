@@ -372,23 +372,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		startActivity(intent);
 	}
 
-	@Override
-	public void onFeedback() {
-		closeSlidingMenu();
-		Analytics.sendEvent(this, "feedback", "from_menu");
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.setType("message/rfc822");
-		i.putExtra(Intent.EXTRA_EMAIL, new String[] { getString(R.string.feedback_email) });
-		
-		String subject = getString(R.string.about_app_feedback_prefix) + " " + VersionUtils.getVersion(this);
-		i.putExtra(Intent.EXTRA_SUBJECT, subject);
-		i.putExtra(Intent.EXTRA_TEXT, "");
-		try {
-			startActivity(Intent.createChooser(i, getString(R.string.feedback_chooseEmailClient)));
-		} catch (android.content.ActivityNotFoundException ex) {
-			Toast.makeText(MainActivity.this, getString(R.string.feedback_noEmailClient), Toast.LENGTH_SHORT).show();
-		}
-	}
 
 	@Override
 	public void onRecent() {

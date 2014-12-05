@@ -29,8 +29,7 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	public static final int MENU_RECENT = 3;
 	public static final int MENU_ABOUT = 4;
 	public static final int MENU_HELP = 5;
-	public static final int MENU_FEEDBACK = 6;
-	public static final int MENU_SETTINGS = 7;
+	public static final int MENU_SETTINGS = 6;
 
 	private MainMenuListener mCallback;
 
@@ -142,8 +141,6 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		public void onSearch();
 
 		public void onHelp();
-
-		public void onFeedback();
 
 		public void onAbout();
 
