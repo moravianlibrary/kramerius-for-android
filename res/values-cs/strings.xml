@@ -219,7 +219,9 @@
     <string name="popup_card_open">Otevřít</string>
     <string name="popup_card_share">Sdílet</string>
     
-
+    <string name="popup_domain_card_content">Obsah</string>
+    <string name="popup_domain_card_open">Použít</string>
+    
 
     <string name="gen_ok">OK</string>
     <string name="gen_yes">Ano</string>

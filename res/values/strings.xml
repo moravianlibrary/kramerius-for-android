@@ -220,7 +220,10 @@
     <string name="popup_card_open">Open</string>
     <string name="popup_card_share">Share</string>
     
-
+    <string name="popup_domain_card_content">Content</string>
+    <string name="popup_domain_card_open">Use</string>
+    
+    
     <string name="gen_ok">OK</string>
     <string name="gen_yes">Yes</string>
     <string name="gen_no">No</string>

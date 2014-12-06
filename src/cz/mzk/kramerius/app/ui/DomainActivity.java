@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener;
+import it.gmariotti.cardslib.library.internal.Card.OnLongCardClickListener;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 
@@ -22,12 +23,14 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.DomainCard;
+import cz.mzk.kramerius.app.card.PeriodicalCard;
+import cz.mzk.kramerius.app.card.DomainCard.OnDomainPopupListener;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.DomainUtil;
 
-public class DomainActivity extends BaseActivity {
+public class DomainActivity extends BaseActivity implements OnDomainPopupListener {
 
 	public static final String TAG = DomainActivity.class.getName();
 
@@ -46,7 +49,6 @@ public class DomainActivity extends BaseActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		
 		mList = (CardListView) findViewById(R.id.card_list);
 		populate();
 	}
@@ -67,10 +69,22 @@ public class DomainActivity extends BaseActivity {
 		ArrayList<Card> cards = new ArrayList<Card>();
 		for (Domain domain : DomainUtil.getDomains()) {
 			DomainCard card = new DomainCard(this, domain);
+			card.setOnDomainPopupListener(this);
 			card.setOnClickListener(new OnCardClickListener() {
 				@Override
 				public void onClick(Card card, View view) {
-					onDomainSelected(((DomainCard) card).getDomain());
+					Domain domain = ((DomainCard) card).getDomain();
+					Analytics.sendEvent(DomainActivity.this, "domain", domain.getDomain(), "from_click");
+					onDomainSelected(domain);
+				}
+			});
+			card.setOnLongClickListener(new OnLongCardClickListener() {
+				@Override
+				public boolean onLongClick(Card card, View view) {
+					Domain domain = ((DomainCard) card).getDomain();
+					Analytics.sendEvent(DomainActivity.this, "domain_detail", domain.getDomain(), "from_popup");
+					onDomainDetail(domain);
+					return false;
 				}
 			});
 			cards.add(card);
@@ -78,8 +92,6 @@ public class DomainActivity extends BaseActivity {
 		mAdapter = new CardArrayAdapter(this, cards);
 		CardUtils.setAnimationAdapter(mAdapter, mList);
 	}
-
-	
 
 	@Override
 	public void onStart() {
@@ -94,11 +106,28 @@ public class DomainActivity extends BaseActivity {
 	}
 
 	private void onDomainSelected(Domain domain) {
-		Analytics.sendEvent(this, "domain", domain.getDomain());
 		K5Api.setDomain(this, domain);
 		Intent intent = new Intent(DomainActivity.this, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
+	}
+
+	private void onDomainDetail(Domain domain) {
+		Intent intent = new Intent(DomainActivity.this, DomainDetailActivity.class);
+		intent.putExtra(BaseActivity.EXTRA_DOMAIN, domain.getDomain());
+		startActivity(intent);
+	}
+
+	@Override
+	public void onDomainPopupOpen(Domain domain) {
+		Analytics.sendEvent(this, "domain", domain.getDomain(), "from_popup");
+		onDomainSelected(domain);
+	}
+
+	@Override
+	public void onDomainPopupContent(Domain domain) {
+		Analytics.sendEvent(this, "domain_detail", domain.getDomain(), "from_popup");
+		onDomainDetail(domain);
 	}
 
 }

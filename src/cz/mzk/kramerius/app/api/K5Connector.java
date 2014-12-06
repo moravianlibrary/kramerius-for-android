@@ -467,7 +467,7 @@ public class K5Connector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return -1;
 	}
 
 	public Map<String, Boolean> getUserRights(Context context) {

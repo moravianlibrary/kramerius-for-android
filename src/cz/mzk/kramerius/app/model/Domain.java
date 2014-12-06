@@ -61,7 +61,7 @@ public class Domain {
 	}
 
 	public String getUrl() {
-		return getProtocol() + "//" + getDomain();
+		return getProtocol() + "://" + getDomain();
 	}
 	
 }

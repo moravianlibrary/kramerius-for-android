@@ -11,6 +11,7 @@ public class BaseActivity extends ActionBarActivity {
 
 	public static final String EXTRA_PID = "extra_pid";
 	public static final String EXTRA_TITLE = "extra_title";
+	public static final String EXTRA_DOMAIN = "extra_domain";
 
 	public static final int PHONE = 0;
 	public static final int TABLET = 1;

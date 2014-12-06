@@ -3,7 +3,10 @@ package cz.mzk.kramerius.app.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Domain;
 
 public class DomainUtil {
@@ -40,6 +43,10 @@ public class DomainUtil {
 			}
 		}
 		return null;
+	}
+	
+	public static Domain getCurrentDomain(Context context) {
+		return getDomain(K5Api.getDomain(context));
 	}
 
 }
