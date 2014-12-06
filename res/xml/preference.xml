@@ -47,5 +47,13 @@
         
     </PreferenceCategory>
    
+    
+    <PreferenceCategory android:title="@string/pref_category_advanced" >
+        <Preference
+            android:key="@string/pref_advanced_button_key"
+            android:title="@string/pref_advanced_button_title" />
+        
+    </PreferenceCategory>
+    
 
 </PreferenceScreen>

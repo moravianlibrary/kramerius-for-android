@@ -52,17 +52,13 @@ public class CardUtils {
 		}
 	}
 
-	public static void setAnimationAdapter(CardGridArrayAdapter adapter, CardGridView view, int animType) {		
+	public static void setAnimationAdapter(CardGridArrayAdapter adapter, CardGridView view, int animType) {
 		AnimationAdapter animationAdapter = getAnimationAdapter(adapter, animType);
 		if (animationAdapter == null) {
 			return;
 		}
 		animationAdapter.setAbsListView(view);
 		view.setExternalAdapter(animationAdapter, adapter);
-	}
-
-	public static void setAnimationAdapter(CardGridArrayAdapter adapter, CardGridView view) {
-		setAnimationAdapter(adapter, view, ANIM_SCALE_IN);
 	}
 
 	public static void setAnimationAdapter(CardArrayAdapter adapter, CardListView view, int animType) {
@@ -74,13 +70,26 @@ public class CardUtils {
 		view.setExternalAdapter(animationAdapter, adapter);
 	}
 
+	public static void setAnimationAdapter(CardGridArrayAdapter adapter, CardGridView view) {
+		if (view != null && view.getContext() != null && PrefUtils.useCardAnimation(view.getContext())) {
+			setAnimationAdapter(adapter, view, ANIM_SCALE_IN);
+		} else {
+			view.setAdapter(adapter);
+		}
+	}
+
 	public static void setAnimationAdapter(CardArrayAdapter adapter, CardListView view) {
-		setAnimationAdapter(adapter, view, ANIM_SCALE_IN);
+		if (view != null && view.getContext() != null && PrefUtils.useCardAnimation(view.getContext())) {
+			setAnimationAdapter(adapter, view, ANIM_SCALE_IN);
+		} else {
+			view.setAdapter(adapter);
+		}
 	}
 
 	public static DisplayImageOptions initUniversalImageLoaderLibrary(Context context) {
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context.getApplicationContext()).build();
-		DisplayImageOptions options = new DisplayImageOptions.Builder().showImageOnLoading(R.drawable.img_empty_loader)
+		DisplayImageOptions options = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.drawable.img_empty_loader)
 				// .displayer(new FadeInBitmapDisplayer(500, true, false,
 				// false))
 				.cacheInMemory(true).cacheOnDisk(true).showImageForEmptyUri(R.drawable.img_empty)
@@ -105,16 +114,16 @@ public class CardUtils {
 					}
 				}
 			});
-			card.setOnLongClickListener(new OnLongCardClickListener() {				
+			card.setOnLongClickListener(new OnLongCardClickListener() {
 				@Override
 				public boolean onLongClick(Card card, View view) {
-					if(popupListener != null) {
+					if (popupListener != null) {
 						popupListener.onPopupDetailsSelected(((GridCard) card).getItem());
 					}
 					return false;
 				}
 			});
-			
+
 			cards.add(card);
 		}
 		return new CardGridArrayAdapter(context, cards);

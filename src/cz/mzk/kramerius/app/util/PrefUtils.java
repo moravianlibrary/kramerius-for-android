@@ -7,7 +7,7 @@ import cz.mzk.kramerius.app.api.K5Constants;
 
 public class PrefUtils {
 
-	public static final String FISRT_VIEWER_VISIT = "p_first_viewer_visit5";
+	public static final String FISRT_VIEWER_VISIT = "p_first_viewer_visit";
 
 	public static final String getPolicy(Context context) {
 		String policy = isPublicOnly(context) ? K5Constants.POLICY_PUBLIC : null;
@@ -15,15 +15,20 @@ public class PrefUtils {
 	}
 
 	public static final boolean isPublicOnly(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-				context.getString(R.string.pref_public_only_key),
-				Boolean.parseBoolean(context.getString(R.string.pref_public_only_default)));
+		return getBooleanValue(context, R.string.pref_public_only_key, R.string.pref_public_only_default);
 	}
 
 	public static final boolean useBookmarks(Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-				context.getString(R.string.pref_bookmark_key),
-				Boolean.parseBoolean(context.getString(R.string.pref_bookmark_default)));
+		return getBooleanValue(context, R.string.pref_bookmark_key, R.string.pref_bookmark_default);
+	}
+
+	public static final boolean useCardAnimation(Context context) {
+		return getBooleanValue(context, R.string.pref_card_animation_key, R.string.pref_card_animation_default);
+	}
+
+	private static final boolean getBooleanValue(Context context, int key, int defValue) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(key),
+				Boolean.parseBoolean(context.getString(defValue)));
 	}
 
 	public static final boolean isFirstViewerVisit(Context context) {

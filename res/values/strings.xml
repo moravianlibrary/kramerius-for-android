@@ -29,6 +29,7 @@
     <string name="login_title">Log In</string>
     <string name="virtual_collections_title">Collections</string>
     <string name="settings_title">Settings</string>
+    <string name="advanced_settings_title">Advanced Settings</string>
     
     <string name="help_title">Help</string>
     <string name="help_menu_about">About</string>
@@ -242,17 +243,17 @@
     <string name="warn_page_loading_failed">Failed to load the page.</string>    
     
 
+    <string name="pref_category_viewer">Viewer</string>
+    <string name="pref_category_basic">Basic</string>
+    <string name="pref_category_advanced">Advanced</string>
+        
     <string name="pref_viewer_bg_color_white">White</string>
     <string name="pref_viewer_bg_color_black">Black</string>
-    
     
     <string name="pref_viewer_mode_fit">Fit to Screen</string>
     <string name="pref_viewer_mode_top_left">Align to the top-left edge</string>
     <string name="pref_viewer_mode_center">Align to the center</string>
     <string name="pref_viewer_mode_center_horizontal">Align to the horizontal center</string>
-        
-    <string name="pref_category_viewer">Viewer</string>
-    <string name="pref_category_basic">Basic</string>
 
     <string name="pref_bookmark_title">Use bookmarks</string>
     <string name="pref_bookmark_summary">Document wll be opened on the page you left it last time.</string>
@@ -271,6 +272,10 @@
     <string name="pref_public_only_title">Public documents only</string>
     <string name="pref_public_only_summary">Show only the publicly available documents</string>
    
+    <string name="pref_advanced_button_title">Advanced Settings</string>
+    
+    <string name="pref_card_animation_title">Card animations</string>
+    <string name="pref_card_animation_summary">Use animation in card lists</string>
     
 
     <string name="pref_bookmark_default" translatable="false">true</string>
@@ -290,7 +295,9 @@
     <string name="pref_public_only_default" translatable="false">true</string>
     <string name="pref_public_only_key" translatable="false">p_public_only</string>
     <string name="pref_all_sources" translatable="false">p_all_sources</string>
-    
+    <string name="pref_advanced_button_key" translatable="false">p_advanced_button</string>
+    <string name="pref_card_animation_default" translatable="false">true</string>
+    <string name="pref_card_animation_key" translatable="false">p_card_animation</string>
     
 	<string name="ga_appview_about" translatable="false">About</string>
     <string name="ga_appview_help" translatable="false">Help</string>
