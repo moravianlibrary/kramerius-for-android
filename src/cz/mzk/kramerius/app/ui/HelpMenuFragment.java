@@ -33,7 +33,7 @@ public class HelpMenuFragment extends BaseFragment implements OnClickListener {
 	private List<MenuItemWidget> mMenuItems;
 
 	public interface HelpMenuListener {
-		public void onFragmentSelected(int viewResource, int titleResource);
+		public void onFragmentSelected(Fragment fragment, int titleResource);
 
 		public void onFeedback();
 	}
@@ -69,7 +69,7 @@ public class HelpMenuFragment extends BaseFragment implements OnClickListener {
 		super.onActivityCreated(savedInstanceState);
 		if(isTablet()) {
 			selectMenuItem(mItemAbout);
-			mCallback.onFragmentSelected(R.layout.fragment_help_about, R.string.help_menu_about);			
+			mCallback.onFragmentSelected(new HelpAboutFragment(), R.string.help_menu_about);			
 		}
 	}
 
@@ -82,10 +82,10 @@ public class HelpMenuFragment extends BaseFragment implements OnClickListener {
 			mCallback.onFeedback();
 		} else if (v == mItemAbout) {
 			selectMenuItem(mItemAbout);
-			mCallback.onFragmentSelected(R.layout.fragment_help_about, R.string.help_menu_about);
+			mCallback.onFragmentSelected(new HelpAboutFragment(), R.string.help_menu_about);
 		} else if (v == mItemContent) {
 			selectMenuItem(mItemContent);
-			mCallback.onFragmentSelected(R.layout.fragment_help_content, R.string.help_menu_content);
+			mCallback.onFragmentSelected(DomainDetailFragment.newInstance(null), R.string.help_menu_content);
 		} 
 	}
 }

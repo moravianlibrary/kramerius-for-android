@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,11 +15,9 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.ServerErrorException;
-import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.model.Domain;
-import cz.mzk.kramerius.app.ui.PeriodicalFragment.GetPeriodicalVolumesTask;
 import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
@@ -49,10 +46,10 @@ public class DomainDetailFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_domain_detail, container, false);
-		if (mDomainKey == null) {
-			return view;
-		}
-		domain = DomainUtil.getDomain(mDomainKey);
+		domain = DomainUtil.getCurrentDomain(getActivity());
+		if (mDomainKey != null) {
+			domain = DomainUtil.getDomain(mDomainKey);
+		}		
 		if (domain == null) {
 			return view;
 		}
@@ -84,9 +81,9 @@ public class DomainDetailFragment extends BaseFragment {
 		@Override
 		protected Map<String, Integer> doInBackground(Domain... params) {
 			Map<String, Integer> result = new LinkedHashMap<String, Integer>();
-			Domain domain = params[0];
+			Domain domain = params[0];			
 			Domain currentDomain = DomainUtil.getCurrentDomain(tContext);
-			K5Api.setDomain(tContext, domain);
+			K5Api.setDomain(tContext, domain);			
 			try {
 				addType(result, ModelUtil.MONOGRAPH);
 				addType(result, ModelUtil.PERIODICAL);

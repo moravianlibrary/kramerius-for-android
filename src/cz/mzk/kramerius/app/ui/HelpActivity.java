@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
@@ -76,14 +77,14 @@ public class HelpActivity extends BaseActivity implements HelpMenuListener {
 	}
 
 	@Override
-	public void onFragmentSelected(int viewResource, int titleResource) {
+	public void onFragmentSelected(Fragment fragment, int titleResource) {
 		if (isTablet()) {
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			ft.replace(R.id.help_content, HelpContentFragment.newInstance(viewResource)).commit();
+			ft.replace(R.id.help_content, fragment).commit();
 		} else {
 			getSupportActionBar().setTitle(titleResource);
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
-			ft.replace(R.id.help_menu, HelpContentFragment.newInstance(viewResource)).commit();
+			ft.replace(R.id.help_menu, fragment).commit();
 			mIsMenuShown = false;
 		}
 

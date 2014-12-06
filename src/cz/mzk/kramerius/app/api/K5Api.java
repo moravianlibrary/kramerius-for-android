@@ -6,6 +6,8 @@ import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.util.DomainUtil;
+import cz.mzk.kramerius.app.util.PrefUtils;
 
 public class K5Api {
 
@@ -64,6 +66,9 @@ public class K5Api {
 	}
 
 	public static void setDomain(Context context, Domain domain) {
+		if(DomainUtil.getCurrentDomain(context).getUrl().equals(domain.getUrl())) {
+			return;
+		}
 		setDomain(context, domain.getDomain(), domain.getProtocol());
 	}
 
