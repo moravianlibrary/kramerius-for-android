@@ -6,6 +6,7 @@ import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.util.PrefUtils;
 
@@ -78,6 +79,11 @@ public class K5Api {
 	}
 
 	public static Uri getBaseUri(Context context) {
+		//if(getDomain(context).equals("kramerius.zcm.cz")) {
+		//	return Uri.parse(getProtocol(context) + "://" + getDomain(context));
+		//} else if(getDomain(context).contains(":") || getDomain(context).contains("/")) {
+		//	return Uri.parse(getProtocol(context) + "://" + getDomain(context) + "/" + PATH_SEARCH);
+	//	}
 		return new Uri.Builder().scheme(getProtocol(context)).authority(getDomain(context)).appendPath(PATH_SEARCH)
 				.build();
 	}
@@ -214,7 +220,7 @@ public class K5Api {
 
 	public static String getDoctypeCountPath(Context context, String type) {
 		return getApiUri(context).buildUpon().appendPath(PATH_SEARCH)
-				.appendQueryParameter("q", "document_type:" + type).appendQueryParameter("rows", "0").build()
+				.appendQueryParameter("q", SearchQuery.MODEL + ":" + type).appendQueryParameter("rows", "0").build()
 				.toString();
 	}
 

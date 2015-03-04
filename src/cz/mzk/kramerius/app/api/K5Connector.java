@@ -23,11 +23,10 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
-import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
-import cz.mzk.kramerius.app.util.Constants;
+import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
@@ -102,7 +101,7 @@ public class K5Connector {
 				Item item = new Item();
 				JSONObject jsonItem = data.getJSONObject(i);
 				String m = jsonItem.optString(K5Constants.MODEL);
-				if(ModelUtil.PAGE.equals(m)) {
+				if(ModelUtil.PAGE.equals(m) || m.isEmpty()) {
 					continue;
 				}
 				// if(ModelUtil.PAGE.equals(m)) {
@@ -415,11 +414,12 @@ public class K5Connector {
 				if (authors != null && authors.length() > 0) {
 					item.setAuthor(authors.optString(0));
 				}
-				item.setPolicyPrivate("private".equals(itemJson.optString("dostupnost")));
-				JSONArray models = itemJson.optJSONArray("document_type");
-				if (models != null && models.length() > 0) {
-					item.setModel(models.optString(0));
-				}
+				item.setPolicyPrivate("private".equals(itemJson.optString("dostupnost")));				
+				item.setModel(itemJson.optString(SearchQuery.MODEL));
+//				JSONArray models = itemJson.optJSONArray(SearchQuery.MODEL);
+//				if (models != null && models.length() > 0) {
+//					item.setModel(models.optString(0));
+//				}
 
 				items.add(item);
 			}

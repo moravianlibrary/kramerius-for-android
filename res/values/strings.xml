@@ -42,14 +42,12 @@
     <string name="help_about_app_feedback_prefix">Feedback - Kramerius</string>        
     <string name="help_about_app_version_unknown">unknown</string>
  	<string name="help_about_description">
-        <![CDATA[                
-        Kramerius je digitální knihovna, díky které můžete prohlížet díla, která již nepodléhají autorskému zákonu. 
-        <br/>Naleznete zde klasická díla, historické spisy, staré noviny a časopisy, kolekce map a další digitalizované dokumenty. 
-        <br/><br/>Aplikace je zatím pouze v beta verzi. Prosíme Vás proto o shovívavost při hodnocení a o pomoc s testováním aplikace. 
-        <br/>Máte-li jakékoliv připomínky, otázky, nápady, nebo jste našli chybu, kontaktujte nás na <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
-        <br/><br/>Aplikaci vyvíjí <a href="http://www.mzk.cz">Moravská zemská knihovna v Brně</a> 
-    	]]></string>    
-    
+        <![CDATA[     
+        Kramerius is a digital library containing classical works, historical writings, old newspapers and magazines, map collections and other digitized documents from Czech libraries.
+		<br/><br/>This is a beta version of the Application.
+		<br/>If you have any questions, comments, ideas, or you encountered a bug, please contact us at <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
+		<br/><br/>The appliacition is developed by the <a href="http://www.mzk.cz">Moravian Library in Brno</a> 
+    	]]></string>            
     
     
     <string name="metadata_title">Details</string>

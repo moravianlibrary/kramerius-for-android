@@ -19,7 +19,8 @@ public class SearchQuery {
 	public static final String DDT = "ddt";
 	public static final String MDT = "mdt";
 	public static final String POLICY = "dostupnost";
-	public static final String MODEL = "document_type";
+	//public static final String MODEL = "document_type";
+	public static final String MODEL = "fedora.model";
 	public static final String COLLECTION = "collection";
 	public static final String DATE_BEGIN = "datum_begin";
 	public static final String DATE_END = "datum_end";
@@ -132,16 +133,16 @@ public class SearchQuery {
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("(");
-		sb.append("document_type:" + ModelUtil.MONOGRAPH).append(" OR ");
-		sb.append("document_type:" + ModelUtil.PERIODICAL).append(" OR ");
-		sb.append("document_type:" + ModelUtil.GRAPHIC).append(" OR ");
-		sb.append("document_type:" + ModelUtil.ARCHIVE).append(" OR ");
-		sb.append("document_type:" + ModelUtil.MANUSCRIPT).append(" OR ");
-		sb.append("document_type:" + ModelUtil.MAP).append(" OR ");
-		sb.append("document_type:" + ModelUtil.SHEET_MUSIC).append(" OR ");
-		sb.append("document_type:" + ModelUtil.SOUND_RECORDING);
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.MONOGRAPH).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.PERIODICAL).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.GRAPHIC).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.ARCHIVE).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.MANUSCRIPT).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.MAP).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.SHEET_MUSIC).append(" OR ");
+		sb.append(SearchQuery.MODEL + ":" + ModelUtil.SOUND_RECORDING);
 		if (hasFulltext) {
-			sb.append(" OR ").append("document_type:" + ModelUtil.PAGE);
+			sb.append(" OR ").append(SearchQuery.MODEL + ":" + ModelUtil.PAGE);
 		}
 		sb.append(")");
 
