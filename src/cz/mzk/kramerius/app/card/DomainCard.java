@@ -39,7 +39,8 @@ public class DomainCard extends Card {
 	}
 
 	private void init() {
-		MainCardHeader header = new MainCardHeader(getContext(), 17, R.color.grey, 1);
+		//MainCardHeader header = new MainCardHeader(getContext(), 17, R.color.grey, 1);
+		MainCardHeader header = new MainCardHeader(getContext(), 2);
 		header.setTitle(mDomain.getTitle());
 		header.setPopupMenu(R.menu.domain_card_popup, new CardHeader.OnClickCardHeaderPopupMenuListener() {
 			@Override
@@ -62,8 +63,8 @@ public class DomainCard extends Card {
 
 	@Override
 	public void setupInnerViewElements(ViewGroup parent, View view) {
-		TextView description = (TextView) view.findViewById(R.id.domain_description);
-		description.setText(mDomain.getSubtitle());
+		//TextView description = (TextView) view.findViewById(R.id.domain_description);
+		//description.setText(mDomain.getSubtitle());
 		TextView domain = (TextView) view.findViewById(R.id.domain_url);
 		domain.setText(mDomain.getDomain());
 	}

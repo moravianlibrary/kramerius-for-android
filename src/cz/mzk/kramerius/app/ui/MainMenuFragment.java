@@ -176,12 +176,12 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 			selectItem(v);
 			mCallback.onVirtualCollections();
 		} else if (v == mDomainContainer) {
-			if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.pref_all_sources), false)) {
-				Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");
-				onSelectDomain();
-			} else {
-				Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain locked");
-			}
+			//if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.pref_all_sources), false)) {
+			Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");
+			onSelectDomain();
+			//} else {
+			//	Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain locked");
+			//}
 		}
 	}
 

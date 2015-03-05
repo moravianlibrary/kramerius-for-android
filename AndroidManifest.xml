@@ -40,13 +40,12 @@
                     android:host="kramerius.mzk.cz"
                     android:pathPrefix="/search"
                     android:scheme="http" />
-                <!--
                 <data
-                    android:host="docker.mzk.cz"
+                    android:host="kramerius.kr-olomoucky.cz"
                     android:pathPrefix="/search"
                     android:scheme="http" />
                 <data
-                    android:host="kramerius4.nkp.cz"
+                    android:host="kramerius.cbvk.cz"
                     android:pathPrefix="/search"
                     android:scheme="http" />
                 <data
@@ -54,18 +53,9 @@
                     android:pathPrefix="/search"
                     android:scheme="http" />
                 <data
-                    android:host="kramerius.lib.cas.cz"
+                    android:host="kramerius4.svkhk.cz"
                     android:pathPrefix="/search"
-                    android:scheme="http" />
-                <data
-                    android:host="cdk-test.lib.cas.cz"
-                    android:pathPrefix="/search"
-                    android:scheme="http" />
-                <data
-                    android:host="kramerius.techlib.cz"
-                    android:pathPrefix="/search"
-                    android:scheme="http" />
-                -->
+                    android:scheme="http" />     
             </intent-filter>
         </activity>
         <activity

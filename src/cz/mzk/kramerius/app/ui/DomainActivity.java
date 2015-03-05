@@ -66,8 +66,9 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
 
 	private void populate() {
 		String currentDomain = K5Api.getDomain(this); // TODO
-		ArrayList<Card> cards = new ArrayList<Card>();
-		for (Domain domain : DomainUtil.getDomains()) {
+		ArrayList<Card> cards = new ArrayList<Card>();		
+		boolean allDomains = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_all_sources), false);		
+		for (Domain domain : DomainUtil.getDomains(allDomains)) {
 			DomainCard card = new DomainCard(this, domain);
 			card.setOnDomainPopupListener(this);
 			card.setOnClickListener(new OnCardClickListener() {

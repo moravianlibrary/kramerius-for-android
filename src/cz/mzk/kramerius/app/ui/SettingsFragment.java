@@ -58,10 +58,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 					if (!PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(
 							getString(R.string.pref_all_sources), false)) {
 						Analytics.sendEvent(getActivity(), "settings", "domains_unlocked");
-
 						PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
 								.putBoolean(getString(R.string.pref_all_sources), true).commit();
 						Toast.makeText(getActivity(), "Other sources are available now!", Toast.LENGTH_LONG).show();
+					} else {
+						Analytics.sendEvent(getActivity(), "settings", "domains_locked");
+						PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+								.putBoolean(getString(R.string.pref_all_sources), false).commit();
+						Toast.makeText(getActivity(), "Other sources are locked again!", Toast.LENGTH_LONG).show();						
 					}
 				}
 				return true;

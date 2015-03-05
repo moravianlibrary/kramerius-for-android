@@ -80,9 +80,8 @@
                         android:id="@+id/menu_domain_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="10dp"
+                        android:text="-"                        
+                        android:lines="2"
                         android:textStyle="bold"
                         android:textColor="#fff"
                         android:textSize="15dp" />

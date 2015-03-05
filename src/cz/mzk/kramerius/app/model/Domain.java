@@ -3,18 +3,18 @@ package cz.mzk.kramerius.app.model;
 public class Domain {
 
 	private String title;
-	private String subtitle;
 	private String domain;
 	private String protocol;
 	private int logo;
-
+	private boolean unlocked; 
+	
 	public Domain() {
 
 	}
 
-	public Domain(String title, String subtitle, String protocol, String domain, int logo) {
+	public Domain(boolean unlocked, String title, String protocol, String domain, int logo) {
+		this.unlocked = unlocked;
 		this.title = title;
-		this.subtitle = subtitle;
 		this.domain = domain;
 		this.protocol = protocol;
 		this.logo = logo;
@@ -24,10 +24,10 @@ public class Domain {
 		return title;
 	}
 
-	public String getSubtitle() {
-		return subtitle;
+	public boolean isUnlocked() {
+		return unlocked;
 	}
-
+	
 	public String getDomain() {
 		return domain;
 	}
@@ -44,8 +44,8 @@ public class Domain {
 		this.title = title;
 	}
 
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
+	public void setUnlocked(boolean unlocked) {
+		this.unlocked = unlocked;
 	}
 
 	public void setDomain(String domain) {

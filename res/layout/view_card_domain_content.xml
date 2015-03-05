@@ -5,14 +5,6 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/domain_description"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:lines="1"
-        android:textColor="@color/light_grey"
-        android:textSize="14dp" />
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
