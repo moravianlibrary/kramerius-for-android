@@ -1,6 +1,7 @@
 package cz.mzk.kramerius.app.ui;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -39,17 +40,19 @@ import cz.mzk.kramerius.app.util.VersionUtils;
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
 		OnFeaturedListener, OnItemSelectedListener, OnSearchListener, OnVirtualCollectionListener {
 
+	
+	
 	public static final String TAG = MainActivity.class.getName();
-
+	public static final String CURRENT_FRAGMENT_KEY = "key_current_fragment";
+	
+	
 	private static final int FRAGMENT_HOME = 0;
 	private static final int FRAGMENT_SEARCH = 1;
 	private static final int FRAGMENT_COLLECTIOS = 2;
 	private static final int FRAGMENT_RECENT = 3;
-	private static final int FRAGMENT_HELP = 4;
-	private static final int FRAGMENT_SETTINGS = 5;
-	private static final int FRAGMENT_FEATURED = 6;
-	private static final int FRAGMENT_LOGIN = 7;
-	private static final int FRAGMENT_USER_INFO = 8;
+	private static final int FRAGMENT_FEATURED_NEWEST = 4;
+	private static final int FRAGMENT_FEATURED_CUSTOM = 5;
+	private static final int FRAGMENT_FEATURED_MOST_DESIRABLE = 6;
 
 	private MainMenuFragment mMenuFragment;
 	private int mSelectedFragment;
@@ -72,15 +75,40 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mTitle = getString(R.string.main_title);
 		mDrawerTitle = R.string.main_menu_title;
 
+		
+		
+		
+		
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction transaction = fm.beginTransaction();
+		if (fm.findFragmentByTag("menu_fragment") == null) {
+			mMenuFragment = new MainMenuFragment();
+			//mMenuFragment.setCallback(this);
+			//transaction.replace(R.id.main_menu, mMenuFragment, "menu_fragment").commit();
+		} else {
+			mMenuFragment = (MainMenuFragment) fm.findFragmentByTag("menu_fragment");
+		    //transaction.detach(mMenuFragment);
+		    //transaction.replace(R.id.main_menu, mMenuFragment, "menu_fragment").commit();
+		    //transaction.attach(mFragment);
+		}
+		mMenuFragment.setCallback(this);
+		transaction.replace(R.id.main_menu, mMenuFragment, "menu_fragment");
+		transaction.commit();
+		
+		
+		
+		/*
 		mMenuFragment = new MainMenuFragment();
 		mMenuFragment.setCallback(this);
-		getFragmentManager().beginTransaction().replace(R.id.main_menu, mMenuFragment).commit();
+		getFragmentManager().beginTransaction().replace(R.id.main_menu, mMenuFragment, "menu_fragment").commit();
+		*/
+
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(mToolbar);
 		getSupportActionBar().setTitle(R.string.main_title);
 
-		if (getDevice() == TABLET) {
+		if (getDevice() == TABLET && isLandscape()) {
 			//
 		} else {
 			mMenuContainer = (FrameLayout) findViewById(R.id.main_menu);
@@ -154,10 +182,62 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 			public void onNothingSelected(AdapterView<?> parentView) {
 			}
 		});
-
-		onHome();
+		
+		if (savedInstanceState != null) {
+             resolveLastState(savedInstanceState.getInt(CURRENT_FRAGMENT_KEY, FRAGMENT_HOME));
+        } else {        
+        	onHome();
+        }
 	}
 
+	
+	private void resolveLastState(int state) {
+		
+		switch (state) {
+		case FRAGMENT_HOME:
+			//mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_HOME);
+			onHome();			
+			break;
+		case FRAGMENT_COLLECTIOS:
+			//mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_VIRTUAL_COLLECTION);
+			onVirtualCollections();
+			break;
+		case FRAGMENT_SEARCH:
+		//	mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_SEARCH);
+			onSearch();
+			break;
+		case FRAGMENT_RECENT:
+		//	mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_RECENT);
+			onRecent();
+			break;
+		case FRAGMENT_FEATURED_CUSTOM:
+		//	mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_NONE);
+			onFeatured(K5Api.FEED_CUSTOM);
+			break;
+		case FRAGMENT_FEATURED_NEWEST:
+			//mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_NONE);
+			onFeatured(K5Api.FEED_NEWEST);
+			break;
+		case FRAGMENT_FEATURED_MOST_DESIRABLE:
+			//mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_NONE);
+			onFeatured(K5Api.FEED_MOST_DESIRABLE);
+			break;
+		default:
+		//	mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_HOME);
+			onHome();
+			break;
+		}
+	}
+	
+	@Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_FRAGMENT_KEY, mSelectedFragment);
+    }	
+	
+	
+	
+	
 	@Override
 	public void onHome() {
 		boolean publicOnly = PrefUtils.isPublicOnly(this);
@@ -206,11 +286,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 	}
 
 	private void showLogin() {
-		changeFragment(new LoginFragment(), FRAGMENT_LOGIN, R.string.login_title);
+		//changeFragment(new LoginFragment(), FRAGMENT_LOGIN, R.string.login_title);
 	}
 
 	private void showUserInfo() {
-		changeFragment(new UserInfoFragment(), FRAGMENT_USER_INFO, R.string.user_info_title);
+		//changeFragment(new UserInfoFragment(), FRAGMENT_USER_INFO, R.string.user_info_title);
 	}
 
 	@Override
@@ -266,13 +346,13 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 		mMenuFragment.setActiveMenuItem(MainMenuFragment.MENU_NONE);
 		switch (type) {
 		case K5Api.FEED_MOST_DESIRABLE:
-			changeFragment(fragment, FRAGMENT_FEATURED, R.string.most_desirable_title);
+			changeFragment(fragment, FRAGMENT_FEATURED_MOST_DESIRABLE, R.string.most_desirable_title);
 			break;
 		case K5Api.FEED_NEWEST:
-			changeFragment(fragment, FRAGMENT_FEATURED, R.string.newest_title);
+			changeFragment(fragment, FRAGMENT_FEATURED_NEWEST, R.string.newest_title);
 			break;
 		case K5Api.FEED_CUSTOM:
-			changeFragment(fragment, FRAGMENT_FEATURED, R.string.selected_title);
+			changeFragment(fragment, FRAGMENT_FEATURED_CUSTOM, R.string.selected_title);
 			break;
 		}
 	}
@@ -297,7 +377,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onHelp() {
-		//changeFragment(new HelpFragment(), FRAGMENT_HELP, R.string.help_title);
 		closeSlidingMenu();
 		Intent intent = new Intent(MainActivity.this, HelpActivity.class);
 		startActivity(intent);		
@@ -305,7 +384,6 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
 	@Override
 	public void onAbout() {
-//		changeFragment(new AboutFragment(), FRAGMENT_HELP, R.string.about_title);
 	}
 
 	@Override

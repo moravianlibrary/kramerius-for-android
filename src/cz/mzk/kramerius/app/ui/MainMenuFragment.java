@@ -22,6 +22,9 @@ import cz.mzk.kramerius.app.view.MenuItemWidget;
 
 public class MainMenuFragment extends Fragment implements OnClickListener {
 
+	
+	public static final String CURRENT_MENU_ITEM_KEY = "key_current_menu_item";
+	
 	public static final int MENU_NONE = -1;
 	public static final int MENU_HOME = 0;
 	public static final int MENU_VIRTUAL_COLLECTION = 1;
@@ -45,19 +48,26 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	private TextView mDomainUrl;
 	private ImageView mDomainLogo;
 	private View mDomainContainer;
+	
+	private int mCurrentMenuItem;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-
+		if (savedInstanceState != null) {
+			mCurrentMenuItem = savedInstanceState.getInt(CURRENT_MENU_ITEM_KEY, MENU_HOME);
+		} else {
+			mCurrentMenuItem = MENU_HOME;
+		}
+	}	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
 		mMenuItems = new ArrayList<MenuItemWidget>();
 		mMenuHome = (MenuItemWidget) view.findViewById(R.id.menu_home);
 		mMenuHome.setOnClickListener(this);
-		mMenuHome.setSelected(true);
+		//mMenuHome.setSelected(true);
 		mMenuVirtual = (MenuItemWidget) view.findViewById(R.id.menu_virtual);
 		mMenuVirtual.setOnClickListener(this);
 		mMenuSearch = (MenuItemWidget) view.findViewById(R.id.menu_search);
@@ -82,8 +92,17 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		mDomainContainer = view.findViewById(R.id.menu_domain_container);
 		mDomainContainer.setOnClickListener(this);
 		fillDomain();
+		setActiveMenuItem(mCurrentMenuItem);
 		return view;
 	}
+	
+		
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(CURRENT_MENU_ITEM_KEY, mCurrentMenuItem);
+		super.onSaveInstanceState(outState);
+	}	
+	
 
 	private void fillDomain() {
 		Domain domain = DomainUtil.getDomain(K5Api.getDomain(getActivity()));
@@ -97,12 +116,16 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 	}
 
 	private void selectItem(View selectedItem) {
+		if(mMenuItems == null) {
+			return;
+		}
 		for (MenuItemWidget item : mMenuItems) {
 			item.setSelected(item == selectedItem);
 		}
 	}
 
-	public void setActiveMenuItem(int index) {
+	public void setActiveMenuItem(int index) {		
+		mCurrentMenuItem = index;
 		selectItem(getItem(index));
 	}
 
@@ -155,33 +178,29 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
 		}		
 		if (v == mMenuHome) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Home");
-			selectItem(v);
+			setActiveMenuItem(MENU_HOME);
 			mCallback.onHome();
 		} else if (v == mMenuHelp) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Help");
 			mCallback.onHelp();
 		} else if (v == mMenuRecent) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Recent");
-			selectItem(v);
+			setActiveMenuItem(MENU_RECENT);
 			mCallback.onRecent();
 		} else if (v == mMenuSearch) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Search");
-			selectItem(v);
+			setActiveMenuItem(MENU_SEARCH);
 			mCallback.onSearch();
 		} else if (v == mMenuSettings) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Setting");
 			mCallback.onSettings();
 		} else if (v == mMenuVirtual) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Collections");
-			selectItem(v);
+			setActiveMenuItem(MENU_VIRTUAL_COLLECTION);
 			mCallback.onVirtualCollections();
 		} else if (v == mDomainContainer) {
-			//if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.pref_all_sources), false)) {
 			Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain");
 			onSelectDomain();
-			//} else {
-			//	Analytics.sendEvent(getActivity(), "main_menu", "action", "Domain locked");
-			//}
 		}
 	}
 

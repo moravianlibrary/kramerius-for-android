@@ -97,6 +97,15 @@ public abstract class BaseFragment extends Fragment {
 		return mDevice == BaseActivity.TABLET;
 	}
 	
+	public boolean isLandscape() {
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+	}
+
+	public boolean isPortrait() {
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+	}
+	
+	
 	
 	protected ActionBar getSupportActionBar() {
 		if(getActivity() == null) {

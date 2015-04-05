@@ -44,5 +44,14 @@ public class BaseActivity extends ActionBarActivity {
 	public boolean isTablet() {
 		return mDevice == TABLET;
 	}
+	
+	public boolean isLandscape() {
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+	}
 
+	public boolean isPortrait() {
+		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+	}
+	
+	
 }

@@ -67,9 +67,11 @@ public class HelpMenuFragment extends BaseFragment implements OnClickListener {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {	
 		super.onActivityCreated(savedInstanceState);
-		if(isTablet()) {
+		if(isTablet() && isLandscape()) {
 			selectMenuItem(mItemAbout);
-			mCallback.onFragmentSelected(new HelpAboutFragment(), R.string.help_menu_about);			
+			if(mCallback != null) {
+				mCallback.onFragmentSelected(new HelpAboutFragment(), R.string.help_menu_about);
+			}
 		}
 	}
 

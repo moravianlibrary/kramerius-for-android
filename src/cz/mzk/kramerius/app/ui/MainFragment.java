@@ -38,7 +38,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 		OnPopupMenuSelectedListener {
 
 	private static final int FEATURED_PHONE_LIMIT = 4;
-	private static final int FEATURED_TABLET_LIMIT = 5;
+	private static final int FEATURED_TABLET_LIMIT = 8;
 
 	private static final String TAG = MainFragment.class.getSimpleName();
 
@@ -232,7 +232,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 				int c = Math.min(items, count);
 				totalHeight = totalHeight * c + (int) (getResources().getDisplayMetrics().density * 10);
 			} else {
-				totalHeight += getResources().getDisplayMetrics().density * 10;
+				//totalHeight += getResources().getDisplayMetrics().density * 10;
 			}
 		}		
 		ViewGroup.LayoutParams params = gridView.getLayoutParams();

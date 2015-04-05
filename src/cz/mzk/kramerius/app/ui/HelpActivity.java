@@ -78,7 +78,7 @@ public class HelpActivity extends BaseActivity implements HelpMenuListener {
 
 	@Override
 	public void onFragmentSelected(Fragment fragment, int titleResource) {
-		if (isTablet()) {
+		if (isTablet() && isLandscape()) {
 			FragmentTransaction ft = getFragmentManager().beginTransaction();
 			ft.replace(R.id.help_content, fragment).commit();
 		} else {
