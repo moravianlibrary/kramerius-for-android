@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,10 +23,10 @@ public class BaseActivity extends ActionBarActivity {
 		Configuration config = getResources().getConfiguration();
 		if (config.smallestScreenWidthDp >= 720) {
 			mDevice = TABLET;
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		} else {
 			mDevice = PHONE;
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(this);
 		tintManager.setStatusBarTintEnabled(true);

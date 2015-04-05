@@ -14,7 +14,7 @@ public class VersionUtils {
 	private static final String TYPE_ALPHA = "ALPHA";
 	private static final String TYPE_BETA = "BETA";
 
-	private static final int VERSION = BETA;
+	private static final int VERSION = DEV;
 
 	
 	public static boolean Debuggable() {
