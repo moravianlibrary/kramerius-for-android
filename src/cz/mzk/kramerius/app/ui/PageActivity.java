@@ -22,6 +22,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -49,6 +52,7 @@ import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.adapter.PageViewPagerAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
@@ -134,6 +138,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	private boolean mIsPdf;
 	private int mPdfStatus;
+	
+	private PageViewPagerAdapter mPagerAdapter;
+	private ViewPager mViewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -246,12 +253,27 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				setFullscreen(false);
 			}
 		}
+		
+		
+		
 		if (mPageList == null) {
 			new LoadPagesTask(getApplicationContext()).execute(mPid);
 		} else {
 			init();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private void initViewerFragment(boolean pdf) {
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
@@ -369,7 +391,15 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 	}
 
+	
+	
+	
 	private void loadPage() {
+		loadPage(false);
+	}
+	
+	private void loadPage(boolean fromPager) {
+/*
 		if (mPageViewerFragment == null || !mPageViewerFragment.isPopulated() || mPageList == null
 				|| mPageList.isEmpty()) {
 			return;
@@ -379,8 +409,21 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 		mIndex.setText((mCurrentPage + 1) + "/" + mPageViewerFragment.getNumberOfPage());
 		mSeekBar.setProgress(mCurrentPage);
-
+*/
+		
+		if(mPageList == null || mPageList.isEmpty()) {
+			return;
+		}
+		clearMessages();
+		if(!fromPager) {
+			mViewPager.setCurrentItem(mCurrentPage);
+		}
+		mIndex.setText((mCurrentPage + 1) + "/" + mPageList.size());
+		mSeekBar.setProgress(mCurrentPage);				
 	}
+	
+
+	
 
 	private void showMetadata() {
 		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);
@@ -539,10 +582,80 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			mToolbar.setTitle(mTitle);
 		}
+		
+		
+		
+		
+		/*
 		initViewerFragment(mIsPdf);
 		if(mPageViewerFragment == null) {
 			return;
+		}	
+		*/
+		
+		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				getString(R.string.pref_viewer_bg_color_key), getString(R.string.pref_viewer_bg_color_default));
+		int color = Color.BLACK;
+		if ("white".equals(bgColorValue)) {
+			color = Color.WHITE;
+		} else if ("black".equals(bgColorValue)) {
+			color = Color.BLACK;
 		}		
+		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
+		String[] vms = getResources().getStringArray(R.array.view_mode_values);
+		ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
+		if (vms[1].equals(vm)) {
+			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_LEFT_VERTICAL_TOP;
+		} else if (vms[2].equals(vm)) {
+			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_CENTER;
+		} else if (vms[3].equals(vm)) {
+			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP;
+		}
+		
+		mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color, viewMode, this);
+        mViewPager.setAdapter(mPagerAdapter);
+        
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int index) {
+				mCurrentPage = index;
+				loadPage(true);
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        
+        if(mCurrentPage != 0) {
+        	loadPage();
+        }
+        
+        
+
+        	
+        	
+        	/*
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+*/
+      
+		
 		if (mIsPdf) {
 			hidePageSelection();
 			mListButton.setVisibility(View.GONE);			
@@ -551,7 +664,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mPageSelectionFragment.assignItems(mPageList);
 			mListButton.setVisibility(View.VISIBLE);
 		}
-		mSeekBar.setMax(mPageViewerFragment.getNumberOfPage() - 1);
+		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		mViewerWrapper.setVisibility(View.VISIBLE);
 		if(PrefUtils.isFirstViewerVisit(this)) {

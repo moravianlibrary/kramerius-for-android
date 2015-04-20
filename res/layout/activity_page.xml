@@ -49,6 +49,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </FrameLayout>
+
+                <cz.mzk.kramerius.app.view.PageViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+                </cz.mzk.kramerius.app.view.PageViewPager>
             </FrameLayout>
 
             <FrameLayout
@@ -59,8 +65,8 @@
 
             <ImageView
                 android:id="@+id/page_loader"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/loader_width"
+                android:layout_height="@dimen/loader_height"
                 android:layout_centerInParent="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/img_loader"
@@ -77,10 +83,10 @@
                 android:id="@+id/page_bottomPanel"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:elevation="3dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/color_primary"
                 android:clickable="true"
+                android:elevation="3dp"
                 android:paddingLeft="0dp"
                 android:paddingRight="10dp" >
 

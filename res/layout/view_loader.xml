@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/loader"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/loader_width"
+        android:layout_height="@dimen/loader_height"
         android:layout_centerInParent="true"
         android:scaleType="fitXY"
         android:src="@drawable/img_loader" />

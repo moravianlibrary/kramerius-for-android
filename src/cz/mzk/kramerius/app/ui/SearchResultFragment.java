@@ -122,12 +122,13 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 
 		@Override
 		protected void onPostExecute(Pair<List<Item>, Integer> result) {
+			stopLoaderAnimation();
 			if (getActivity() == null) {
 				return;
 			}
-			if (mFirst) {
-				stopLoaderAnimation();
-			}
+			//if (mFirst) {
+			//	stopLoaderAnimation();
+			//}
 			mLoading = false;
 			if (result == null || result.first == null) {
 				if (mFirst) {

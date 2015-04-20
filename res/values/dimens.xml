@@ -9,6 +9,10 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_title">19dp</dimen>
 
+
+    <dimen name="loader_height">60dp</dimen>
+    <dimen name="loader_width">60dp</dimen>
+    
     
     <dimen name="button_corner">2dp</dimen>
     <dimen name="button_padding_left">10dp</dimen>
