@@ -26,7 +26,7 @@ import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
@@ -158,7 +158,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
 
 		@Override
 		protected List<Item> doInBackground(Void... params) {
-			return K5Connector.getInstance().getFeatured(tContext, tType, mFeaturedLimit, tPolicy, null);
+			return K5ConnectorFactory.getConnector().getFeatured(tContext, tType, mFeaturedLimit, tPolicy, null);
 		}
 
 		@Override

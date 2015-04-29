@@ -28,16 +28,15 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
-
-public class SinglePageViewerFragment extends Fragment implements OnTouchListener,
-		ImageInitializationHandler, SingleTapListener {
+public class SinglePageViewerFragment extends Fragment implements OnTouchListener, ImageInitializationHandler,
+		SingleTapListener {
 
 	private static final String TAG = SinglePageViewerFragment.class.getSimpleName();
 
 	private static final int IMG_FULL_HEIGHT = 1500;
 
 	private String mDomain;
-	private String mPid;	
+	private String mPid;
 	private int mBackgroud;
 	private View mContainer;
 	private View mProgressView;
@@ -50,27 +49,26 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	private ImageRequest mImageRequest;
 	private ViewMode mViewMode;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mDomain = getArguments().getString("domain");
-        mPid = getArguments().getString("pid");
-        mBackgroud = getArguments().getInt("background");
-        mViewMode = ViewMode.values()[getArguments().getInt("viewmode")];
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mDomain = getArguments().getString("domain");
+		mPid = getArguments().getString("pid");
+		mBackgroud = getArguments().getInt("background");
+		mViewMode = ViewMode.values()[getArguments().getInt("viewmode")];
+	}
 
-    public static SinglePageViewerFragment newInstance(String domain, String pid, int backgroud, ViewMode viewMode) {
-    	SinglePageViewerFragment fragment = new SinglePageViewerFragment();
-        Bundle args = new Bundle();
-        args.putString("domain", domain);
-        args.putString("pid", pid);
-        args.putInt("background", backgroud);
-        args.putInt("viewmode", viewMode.ordinal());
-        fragment.setArguments(args);
-        return fragment;
-    }
-	
-	
+	public static SinglePageViewerFragment newInstance(String domain, String pid, int backgroud, ViewMode viewMode) {
+		SinglePageViewerFragment fragment = new SinglePageViewerFragment();
+		Bundle args = new Bundle();
+		args.putString("domain", domain);
+		args.putString("pid", pid);
+		args.putInt("background", backgroud);
+		args.putInt("viewmode", viewMode.ordinal());
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_single_page_viewer, container, false);
@@ -88,23 +86,20 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		return view;
 	}
 
-	
 	@Override
 	public void onAttach(Activity activity) {
-	    super.onAttach(activity);
-	    try {
-	        mEventListener = (EventListener) activity;
-	    } catch (ClassCastException e) {
-	        throw new ClassCastException(activity.toString() + " must implement EventListener");
-	    }
-	}	
-	
-	
+		super.onAttach(activity);
+		try {
+			mEventListener = (EventListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement EventListener");
+		}
+	}
+
 	public boolean isSwipeEnabled() {
 		return mTiledImageView.getInitialScaleFactor() >= mTiledImageView.getTotalScaleFactor();
 	}
-	
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -116,7 +111,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 			@Override
 			public boolean onSingleTapConfirmed(MotionEvent e) {
-				if(mEventListener != null) {
+				if (mEventListener != null) {
 					mEventListener.onSingleTap(e.getX(), e.getY(), null);
 				}
 				return true;
@@ -132,7 +127,6 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		}
 	}
 
-	
 	private void showPage() {
 		if (mImageRequest != null) {
 			mImageRequest.cancel();
@@ -172,15 +166,15 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	@Override
 	public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {
-		if(VersionUtils.Debuggable()) {
+		if (VersionUtils.Debuggable()) {
 			Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError, code: " + responseCode);
 		}
 		hideViews();
 		switch (responseCode) {
 		case 403: // FORBIDDEN
-			if(mEventListener != null) {
+			if (mEventListener != null) {
 				mEventListener.onAccessDenied();
-			}			
+			}
 			break;
 		// TODO: remove this temporary hack
 		// @see https://github.com/ceskaexpedice/kramerius/issues/110
@@ -191,11 +185,11 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 			break;
 		case 401:// UNAUTHORIZED
 			// TODO: urge user to log in
-			if(mEventListener != null) {
+			if (mEventListener != null) {
 				mEventListener.onAccessDenied();
 			}
 		default:
-			if(mEventListener != null) {
+			if (mEventListener != null) {
 				mEventListener.onNetworkError(responseCode);
 			}
 		}
@@ -220,19 +214,19 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	private void loadPageImageFromDatastream() {
 		final String url = buildScaledImageDatastreamUrl(mPid);
-		if(VersionUtils.Debuggable()) {
+		if (VersionUtils.Debuggable()) {
 			Log.d(TAG, "Url: " + url);
 		}
-		mImageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+		mImageRequest = new RedirectingImageRequest(url, new Response.Listener<Bitmap>() {
 			@Override
 			public void onResponse(Bitmap bitmap) {
 				inflateImage(bitmap);
 			}
-		}, 0, 0, null, new Response.ErrorListener() {
+		}, new Response.ErrorListener() {
 			public void onErrorResponse(VolleyError error) {
 				hideViews();
 				int statusCode = error.networkResponse.statusCode;
-				if(mEventListener != null) {
+				if (mEventListener != null) {
 					if (statusCode == 403 || statusCode == 401) {
 						mEventListener.onAccessDenied();
 					} else {
@@ -262,9 +256,9 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	public void onImagePropertiesRedirectionLoopError(String imagePropertiesUrl, int redirections) {
 		// Log.d(TAG, "onImagePropertiesRedirectionLoopError");
 		hideViews();
-		if(mEventListener != null) {
+		if (mEventListener != null) {
 			mEventListener.onNetworkError(null);
-		}	
+		}
 	}
 
 	@Override
@@ -272,7 +266,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		// Log.d(TAG, "onImagePropertiesDataTransferError");
 		hideViews();
 		Log.d("onImagePropertiesDataTransferError", imagePropertiesUrl + " - " + errorMessage);
-		if(mEventListener != null) {
+		if (mEventListener != null) {
 			mEventListener.onNetworkError(null);
 		}
 	}
@@ -281,7 +275,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	public void onImagePropertiesInvalidDataError(String imagePropertiesUrl, String errorMessage) {
 		// Log.d(TAG, "onImagePropertiesInvalidDataError");
 		hideViews();
-		if(mEventListener != null) {
+		if (mEventListener != null) {
 			mEventListener.onInvalidDataError("imageProperties.xml: " + errorMessage);
 		}
 	}
@@ -298,12 +292,11 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		mGestureDetector.onTouchEvent(event);
 		return true;
 	}
-	
+
 	public String getPagePid(int pageIndex) {
 		return "";
 	}
 
-	
 	private void setViewMode(ViewMode mode) {
 		mTiledImageView.setViewMode(mode);
 	}

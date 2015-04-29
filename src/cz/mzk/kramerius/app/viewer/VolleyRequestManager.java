@@ -23,7 +23,7 @@ import com.android.volley.toolbox.HurlStack;
  * 
  */
 public class VolleyRequestManager {
-	public static final int DISK_CACHE_SIZE_B = 1024 * 1024 * 2;// 2MB
+	public static final int DISK_CACHE_SIZE_B = 1024 * 1024 * 10;// 10MB
 	public static final String DEFAULT_CACHE_DIR = "volley";
 
 	private static RequestQueue requestQueue = null;

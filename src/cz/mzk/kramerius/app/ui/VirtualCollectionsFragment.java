@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.VirtualCollectionCard;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
@@ -81,7 +81,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 		@Override
 		protected List<Item> doInBackground(Void... params) {
-			return K5Connector.getInstance().getVirtualCollctions(tContext);
+			return K5ConnectorFactory.getConnector().getVirtualCollctions(tContext);
 		}
 
 		@Override

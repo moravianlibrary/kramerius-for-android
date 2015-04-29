@@ -26,7 +26,7 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.GridCard;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
@@ -117,7 +117,7 @@ public class SearchResultFragment extends BaseFragment implements OnOpenDetailLi
 			if(VersionUtils.Debuggable()) {
 				Log.d(LOG_TAG, "search query:" + query);
 			}
-			return K5Connector.getInstance().getSearchResult(tContext, query, mStart, mRows);
+			return K5ConnectorFactory.getConnector().getSearchResult(tContext, query, mStart, mRows);
 		}
 
 		@Override

@@ -8,7 +8,6 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.DomainUtil;
-import cz.mzk.kramerius.app.util.PrefUtils;
 
 public class K5Api {
 
@@ -63,11 +62,11 @@ public class K5Api {
 		PreferenceManager.getDefaultSharedPreferences(context).edit()
 				.putString(context.getString(R.string.pref_domain_key), domain)
 				.putString(context.getString(R.string.pref_protocol_key), protocol).commit();
-		K5Connector.getInstance().restart();
+		K5ConnectorFactory.getConnector().restart();
 	}
 
 	public static void setDomain(Context context, Domain domain) {
-		if(DomainUtil.getCurrentDomain(context).getUrl().equals(domain.getUrl())) {
+		if (DomainUtil.getCurrentDomain(context).getUrl().equals(domain.getUrl())) {
 			return;
 		}
 		setDomain(context, domain.getDomain(), domain.getProtocol());
@@ -79,11 +78,11 @@ public class K5Api {
 	}
 
 	public static Uri getBaseUri(Context context) {
-		//if(getDomain(context).equals("kramerius.zcm.cz")) {
-		//	return Uri.parse(getProtocol(context) + "://" + getDomain(context));
-		//} else if(getDomain(context).contains(":") || getDomain(context).contains("/")) {
-		//	return Uri.parse(getProtocol(context) + "://" + getDomain(context) + "/" + PATH_SEARCH);
-	//	}
+		// if(getDomain(context).equals("kramerius.zcm.cz")) {
+		// return Uri.parse(getProtocol(context) + "://" + getDomain(context));
+		// } else if(getDomain(context).contains(":") || getDomain(context).contains("/")) {
+		// return Uri.parse(getProtocol(context) + "://" + getDomain(context) + "/" + PATH_SEARCH);
+		// }
 		return new Uri.Builder().scheme(getProtocol(context)).authority(getDomain(context)).appendPath(PATH_SEARCH)
 				.build();
 	}
@@ -118,7 +117,7 @@ public class K5Api {
 	public static void logOut(Context context) {
 		PreferenceManager.getDefaultSharedPreferences(context).edit().remove(getDomain(context) + "_user_pass")
 				.commit();
-		K5Connector.getInstance().restart();
+		K5ConnectorFactory.getConnector().restart();
 	}
 
 	public static boolean isLoggedIn(Context context) {

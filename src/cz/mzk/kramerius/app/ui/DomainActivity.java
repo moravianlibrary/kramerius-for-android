@@ -7,7 +7,6 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,9 +20,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
 import cz.mzk.kramerius.app.card.DomainCard;
-import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.card.DomainCard.OnDomainPopupListener;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.Analytics;

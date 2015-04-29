@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
@@ -30,15 +30,15 @@ public class LauncherActivity extends Activity {
 					pid = data.getQueryParameter("pid");
 				}
 			}
-			if (pid != null) {							
+			if (pid != null) {
 				String domain = data.getHost();
 				String protocol = data.getScheme();
 				K5Api.setDomain(this, domain, protocol);
-				goToDocument(pid);								
+				goToDocument(pid);
 				return;
 			}
 		}
-		finish();				
+		finish();
 	}
 
 	private void goToDocument(String pid) {
@@ -54,7 +54,7 @@ public class LauncherActivity extends Activity {
 
 		@Override
 		protected Item doInBackground(String... params) {
-			return K5Connector.getInstance().getItem(LauncherActivity.this, params[0]);
+			return K5ConnectorFactory.getConnector().getItem(LauncherActivity.this, params[0]);
 		}
 
 		@Override

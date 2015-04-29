@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.util.Analytics;
 
@@ -72,7 +72,7 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 
 		@Override
 		protected User doInBackground(Void... params) {
-			return K5Connector.getInstance().getUserInfo(tContext);
+			return K5ConnectorFactory.getConnector().getUserInfo(tContext);
 		}
 
 		@Override
@@ -91,7 +91,7 @@ public class UserInfoFragment extends Fragment implements OnClickListener {
 
 		@Override
 		protected Map<String, Boolean> doInBackground(Void... params) {
-			return K5Connector.getInstance().getUserRights(tContext);
+			return K5ConnectorFactory.getConnector().getUserRights(tContext);
 		}
 
 		@Override

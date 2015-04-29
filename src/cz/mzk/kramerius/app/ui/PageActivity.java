@@ -22,8 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -54,7 +52,7 @@ import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.PageViewPagerAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.dialog.MaterialDialog;
 import cz.mzk.kramerius.app.model.Item;
@@ -74,6 +72,10 @@ import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
 public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener,
 		OnPageNumberSelected, ViewerMenuListener, EventListener {
+
+	private static final int PDF_CONNECTION_TIMEOUT = 5000;
+	private static final int PDF_DATA_READ_TIMEOUT = 0;// unlimited
+	private static final int PDF_MAX_REDIRECTIONS = 5;
 
 	public static final String EXTRA_SECURE = "extra_secure";
 
@@ -138,7 +140,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 	private boolean mIsPdf;
 	private int mPdfStatus;
-	
+
 	private PageViewPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 
@@ -253,27 +255,13 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				setFullscreen(false);
 			}
 		}
-		
-		
-		
+
 		if (mPageList == null) {
 			new LoadPagesTask(getApplicationContext()).execute(mPid);
 		} else {
 			init();
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	private void initViewerFragment(boolean pdf) {
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
@@ -391,39 +379,28 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 	}
 
-	
-	
-	
 	private void loadPage() {
 		loadPage(false);
 	}
-	
-	private void loadPage(boolean fromPager) {
-/*
-		if (mPageViewerFragment == null || !mPageViewerFragment.isPopulated() || mPageList == null
-				|| mPageList.isEmpty()) {
-			return;
-		}
-		clearMessages();
-		mPageViewerFragment.showPage(mCurrentPage);
 
-		mIndex.setText((mCurrentPage + 1) + "/" + mPageViewerFragment.getNumberOfPage());
-		mSeekBar.setProgress(mCurrentPage);
-*/
-		
-		if(mPageList == null || mPageList.isEmpty()) {
+	private void loadPage(boolean fromPager) {
+		//
+		// if (mPageViewerFragment == null || !mPageViewerFragment.isPopulated() || mPageList == null || mPageList.isEmpty()) {
+		// return; } clearMessages(); mPageViewerFragment.showPage(mCurrentPage);
+		//
+		// mIndex.setText((mCurrentPage + 1) + "/" + mPageViewerFragment.getNumberOfPage()); mSeekBar.setProgress(mCurrentPage);
+		//
+
+		if (mPageList == null || mPageList.isEmpty()) {
 			return;
 		}
 		clearMessages();
-		if(!fromPager) {
+		if (!fromPager) {
 			mViewPager.setCurrentItem(mCurrentPage);
 		}
 		mIndex.setText((mCurrentPage + 1) + "/" + mPageList.size());
-		mSeekBar.setProgress(mCurrentPage);				
+		mSeekBar.setProgress(mCurrentPage);
 	}
-	
-
-	
 
 	private void showMetadata() {
 		Intent intent = new Intent(PageActivity.this, MetadataActivity.class);
@@ -435,6 +412,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		startActivity(intent);
 	}
 
+	// TODO: tenhle task by se mel nekde ukladat a zabijet s cancel(true), jinak nam tam zustane viset treba dlouhe stahovani pdf
 	class LoadPagesTask extends AsyncTask<String, Void, ParentChildrenPair> {
 
 		private Context tContext;
@@ -453,18 +431,19 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
-			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			Item item = K5ConnectorFactory.getConnector().getItem(tContext, params[0]);
 			if (item == null) {
 				return null;
 			}
 			if (ModelUtil.PAGE.equals(item.getModel())) {
-				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
+				List<Pair<String, String>> hierarchy = K5ConnectorFactory.getConnector().getHierarychy(tContext,
+						item.getPid());
 				if (hierarchy == null) {
 					return null;
 				}
 				if (hierarchy.size() > 1) {
 					String parentPid = hierarchy.get(hierarchy.size() - 2).first;
-					Item parentItem = K5Connector.getInstance().getItem(tContext, parentPid);
+					Item parentItem = K5ConnectorFactory.getConnector().getItem(tContext, parentPid);
 					if (parentItem != null) {
 						parentItem.setSelectedChild(item.getPid());
 						item = parentItem;
@@ -472,10 +451,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 				}
 			}
 			if (ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
-				List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, item.getPid());
+				List<Pair<String, String>> hierarchy = K5ConnectorFactory.getConnector().getHierarychy(tContext,
+						item.getPid());
 				for (int i = 0; i < hierarchy.size(); i++) {
 					if (ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
-						Item parent = K5Connector.getInstance().getItem(tContext, hierarchy.get(i).first);
+						Item parent = K5ConnectorFactory.getConnector().getItem(tContext, hierarchy.get(i).first);
 						if (parent != null) {
 							item.setTitle(getString(R.string.metadata_periodical_volume) + " "
 									+ parent.getVolumeTitle() + ", " + getString(R.string.metadata_periodical_item)
@@ -486,9 +466,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 			int status = K5Api.STATUS_UNKNOWN;
 			if (item.getPdf() != null) {
-				status = downloadPdf(item);
+				status = downloadPdf(item.getPdf());
 			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.PAGE), status);
+
+			return new ParentChildrenPair(item, K5ConnectorFactory.getConnector().getChildren(tContext, item.getPid(),
+					ModelUtil.PAGE), status);
 		}
 
 		@Override
@@ -582,17 +564,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else {
 			mToolbar.setTitle(mTitle);
 		}
-		
-		
-		
-		
+
 		/*
-		initViewerFragment(mIsPdf);
-		if(mPageViewerFragment == null) {
-			return;
-		}	
-		*/
-		
+		 * initViewerFragment(mIsPdf); if(mPageViewerFragment == null) { return; }
+		 */
+
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_viewer_bg_color_key), getString(R.string.pref_viewer_bg_color_default));
 		int color = Color.BLACK;
@@ -600,7 +576,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			color = Color.WHITE;
 		} else if ("black".equals(bgColorValue)) {
 			color = Color.BLACK;
-		}		
+		}
 		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
 		String[] vms = getResources().getStringArray(R.array.view_mode_values);
@@ -612,53 +588,45 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else if (vms[3].equals(vm)) {
 			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP;
 		}
-		
+
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color, viewMode, this);
-        mViewPager.setAdapter(mPagerAdapter);
-        
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			
+		mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
+				viewMode, this);
+		mViewPager.setAdapter(mPagerAdapter);
+
+		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
 			@Override
 			public void onPageSelected(int index) {
 				mCurrentPage = index;
 				loadPage(true);
 			}
-			
+
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
-        
-        if(mCurrentPage != 0) {
-        	loadPage();
-        }
-        
-        
 
-        	
-        	
-        	/*
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-*/
-      
-		
+		if (mCurrentPage != 0) {
+			loadPage();
+		}
+
+		/*
+		 * @Override public boolean onTouch(View v, MotionEvent event) { v.getParent().requestDisallowInterceptTouchEvent(true);
+		 * return false; } });
+		 */
+
 		if (mIsPdf) {
 			hidePageSelection();
-			mListButton.setVisibility(View.GONE);			
+			mListButton.setVisibility(View.GONE);
 		} else {
 			mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
 			mPageSelectionFragment.assignItems(mPageList);
@@ -667,12 +635,12 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		mViewerWrapper.setVisibility(View.VISIBLE);
-		if(PrefUtils.isFirstViewerVisit(this)) {
+		if (PrefUtils.isFirstViewerVisit(this)) {
 			new MaterialDialog.Builder(this).title(R.string.dialog_viewer_first_visit_title)
-			.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
+					.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
 
 		}
-		
+
 	}
 
 	private int getIndexFromPid(String pid) {
@@ -1155,50 +1123,83 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 	}
 
-	private int downloadPdf(Item item) {
-		String pdf = item.getPdf();
-		if (pdf == null) {
+	private int downloadPdf(String pdfUrl) {
+		return downloadPdf(pdfUrl, PDF_MAX_REDIRECTIONS);
+	}
+
+	private int downloadPdf(String pdfUrl, int remainingRedirections) {
+		if (remainingRedirections == 0) {
+			Log.e(LOG_TAG, "too many redirections for: " + pdfUrl);
 			return K5Api.STATUS_PDF_FAILED;
 		}
+		if (VersionUtils.Debuggable()) {
+			Log.d(LOG_TAG, "Downloading pdf from: " + pdfUrl);
+		}
+
 		InputStream input = null;
 		FileOutputStream output = null;
 		HttpURLConnection connection = null;
 		try {
-			URL url = new URL(pdf);
+			URL url = new URL(pdfUrl);
 			connection = (HttpURLConnection) url.openConnection();
-			connection.connect();
+			connection.setReadTimeout(PDF_DATA_READ_TIMEOUT);
+			connection.setConnectTimeout(PDF_CONNECTION_TIMEOUT);
 			int responseCode = connection.getResponseCode();
+			String location = connection.getHeaderField("Location");
 			if (VersionUtils.Debuggable()) {
-				Log.d(LOG_TAG, "Downloading pdf, response code: " + responseCode);
+				Log.d(LOG_TAG, "response code: " + responseCode);
 			}
-			if (responseCode == HttpURLConnection.HTTP_FORBIDDEN || responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+			switch (responseCode) {
+			case 300:
+			case 301:
+			case 302:
+			case 303:
+			case 305:
+			case 307:
+				if (location == null || location.isEmpty()) {
+					Log.e(LOG_TAG, "redirection with missing 'Location' header: \"" + pdfUrl + '\"');
+					return K5Api.STATUS_PDF_FAILED;
+				}
+				connection.disconnect();
+				return downloadPdf(location, remainingRedirections - 1);
+			case HttpURLConnection.HTTP_FORBIDDEN:
+			case HttpURLConnection.HTTP_UNAUTHORIZED:
 				return K5Api.STATUS_PDF_FORBIDDEN;
-			}
-			if (responseCode != HttpURLConnection.HTTP_OK) {
+			case HttpURLConnection.HTTP_OK:
+				if (VersionUtils.Debuggable()) {
+					Log.d(LOG_TAG, "processing pdf");
+				}
+				input = connection.getInputStream();
+				output = openFileOutput(Constants.PDF_PATH, MODE_PRIVATE);
+				byte data[] = new byte[4096];
+				int count;
+				while ((count = input.read(data)) != -1) {
+					output.write(data, 0, count);
+				}
+				if (VersionUtils.Debuggable()) {
+					Log.d(LOG_TAG, "pdf downloaded and saved");
+				}
+				return K5Api.STATUS_PDF_OK;
+			default:
+				Log.e(LOG_TAG, "Unexpected response code " + responseCode + ": \"" + pdfUrl + '\"');
 				return K5Api.STATUS_PDF_FAILED;
-			}
-			input = connection.getInputStream();
-			output = openFileOutput(Constants.PDF_PATH, MODE_PRIVATE);
-			byte data[] = new byte[4096];
-			int count;
-			while ((count = input.read(data)) != -1) {
-				output.write(data, 0, count);
 			}
 		} catch (Exception e) {
 			return K5Api.STATUS_PDF_FAILED;
 		} finally {
 			try {
-				if (output != null)
+				if (output != null) {
 					output.close();
-				if (input != null)
+				}
+				if (input != null) {
 					input.close();
+				}
 			} catch (IOException ignored) {
 			}
 			if (connection != null) {
 				connection.disconnect();
 			}
 		}
-		return K5Api.STATUS_PDF_OK;
 	}
 
 	@Override

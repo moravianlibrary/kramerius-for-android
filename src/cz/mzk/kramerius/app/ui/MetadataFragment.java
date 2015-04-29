@@ -26,7 +26,7 @@ import android.widget.TextView;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
@@ -99,7 +99,7 @@ public class MetadataFragment extends BaseFragment {
 
 	public void assignPid(String pid) {
 		mPid = pid;
-		if(getActivity() == null) {
+		if (getActivity() == null) {
 			return;
 		}
 		new getMetadataTask(getActivity().getApplicationContext()).execute(mPid);
@@ -494,11 +494,10 @@ public class MetadataFragment extends BaseFragment {
 		ll.setOrientation(LinearLayout.HORIZONTAL);
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT);
-		//lp.gravity = Gravity.CENTER_VERTICAL;
+		// lp.gravity = Gravity.CENTER_VERTICAL;
 		ll.setGravity(Gravity.CENTER_VERTICAL);
 		ll.setLayoutParams(lp);
-		
-		
+
 		TextView textView = new TextView(getActivity());
 		textView.setTextIsSelectable(true);
 		textView.setText(title);
@@ -512,11 +511,9 @@ public class MetadataFragment extends BaseFragment {
 			lockIcon.setVisibility(View.GONE);
 		}
 		LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams((int) getResources().getDimension(
-				R.dimen.metadata_lock_icon_size), (int)
-				 getResources().getDimension(R.dimen.metadata_lock_icon_size));
+				R.dimen.metadata_lock_icon_size), (int) getResources().getDimension(R.dimen.metadata_lock_icon_size));
 		lockIcon.setLayoutParams(llp);
-		
-		
+
 		ll.addView(lockIcon);
 		rl.addView(ll);
 
@@ -619,7 +616,7 @@ public class MetadataFragment extends BaseFragment {
 		@Override
 		protected List<MetadataWrapper> doInBackground(String... params) {
 			String pid = params[0];
-			List<Pair<String, String>> hierarchy = K5Connector.getInstance().getHierarychy(tContext, pid);
+			List<Pair<String, String>> hierarchy = K5ConnectorFactory.getConnector().getHierarychy(tContext, pid);
 			if (hierarchy == null) {
 				return null;
 			}
@@ -627,8 +624,8 @@ public class MetadataFragment extends BaseFragment {
 			for (int i = 0; i < hierarchy.size(); i++) {
 				String hPid = hierarchy.get(i).first;
 				String model = hierarchy.get(i).second;
-				Metadata metadata = K5Connector.getInstance().getModsMetadata(tContext, hPid);
-				Item item = K5Connector.getInstance().getItem(tContext, hPid);
+				Metadata metadata = K5ConnectorFactory.getConnector().getModsMetadata(tContext, hPid);
+				Item item = K5ConnectorFactory.getConnector().getItem(tContext, hPid);
 				boolean privateDocument = item == null ? false : item.isPrivate();
 				hierarchyMetadata.add(new MetadataWrapper(metadata, model, privateDocument));
 			}

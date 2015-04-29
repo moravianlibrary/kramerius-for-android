@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.util.Analytics;
 
@@ -26,15 +26,14 @@ public class LoginFragment extends Fragment {
 	private TextView mMessage;
 	private LoginListener mLoginListener;
 
-	
 	public interface LoginListener {
 		public void onLoginSuccess();
 	}
-	
+
 	public void setLoginListener(LoginListener loginListener) {
 		mLoginListener = loginListener;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +42,7 @@ public class LoginFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_login, container, false);
-	//	ScreenUtil.setInsets(getActivity(), view);
+		// ScreenUtil.setInsets(getActivity(), view);
 		mLogin = (EditText) view.findViewById(R.id.login_userName);
 		mPassword = (EditText) view.findViewById(R.id.login_userPassword);
 		mConfirm = (Button) view.findViewById(R.id.login_confirm);
@@ -82,9 +81,9 @@ public class LoginFragment extends Fragment {
 	private void onLoginSuccess(User user) {
 		message("Přihlášení proběhlo úspěšně", false);
 		K5Api.storeUser(getActivity(), user.getLogin(), user.getPassword());
-		if(mLoginListener != null) {
+		if (mLoginListener != null) {
 			mLoginListener.onLoginSuccess();
-		}		
+		}
 	}
 
 	private void onLoginFailed() {
@@ -101,7 +100,7 @@ public class LoginFragment extends Fragment {
 
 		@Override
 		protected User doInBackground(String... params) {
-			return K5Connector.getInstance().getUserInfo(tContext, params[0], params[1]);
+			return K5ConnectorFactory.getConnector().getUserInfo(tContext, params[0], params[1]);
 		}
 
 		@Override
@@ -113,12 +112,11 @@ public class LoginFragment extends Fragment {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onStart() {
-	    super.onStart();
-	    Analytics.sendScreenView(getActivity(), R.string.ga_appview_login);
-	}		
-	
+		super.onStart();
+		Analytics.sendScreenView(getActivity(), R.string.ga_appview_login);
+	}
 
 }

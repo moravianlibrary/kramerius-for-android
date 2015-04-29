@@ -168,7 +168,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void showPage(int pageIndex) {
-		if(VersionUtils.Debuggable()) {
+		if (VersionUtils.Debuggable()) {
 			Log.d(TAG, "Showing page " + pageIndex);
 		}
 		if (pageIndex >= 0 && pageIndex < mPagePids.size()) {
@@ -182,7 +182,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 			String url = buildZoomifyBaseUrl(pid);
 			mTiledImageView.loadImage(url.toString());
 		} else {
-			if(VersionUtils.Debuggable()) {
+			if (VersionUtils.Debuggable()) {
 				Log.w(TAG, "Page index out of range: " + pageIndex);
 			}
 		}
@@ -219,7 +219,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 
 	@Override
 	public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {
-		if(VersionUtils.Debuggable()) {
+		if (VersionUtils.Debuggable()) {
 			Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError, code: " + responseCode);
 		}
 		hideViews();
@@ -262,15 +262,15 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 	private void loadPageImageFromDatastream() {
 		String pid = mPagePids.get(mCurrentPageIndex);
 		final String url = buildScaledImageDatastreamUrl(pid);
-		if(VersionUtils.Debuggable()) {
+		if (VersionUtils.Debuggable()) {
 			Log.d(TAG, "Url: " + url);
 		}
-		mImageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+		mImageRequest = new RedirectingImageRequest(url, new Response.Listener<Bitmap>() {
 			@Override
 			public void onResponse(Bitmap bitmap) {
 				inflateImage(bitmap);
 			}
-		}, 0, 0, null, new Response.ErrorListener() {
+		}, new Response.ErrorListener() {
 			public void onErrorResponse(VolleyError error) {
 				hideViews();
 				int statusCode = error.networkResponse.statusCode;
@@ -281,6 +281,7 @@ public class PageViewerFragment extends Fragment implements IPageViewerFragment,
 				}
 			}
 		});
+
 		VolleyRequestManager.addToRequestQueue(mImageRequest);
 	}
 

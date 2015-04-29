@@ -16,7 +16,7 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.ServerErrorException;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.util.ModelUtil;
@@ -49,7 +49,7 @@ public class DomainDetailFragment extends BaseFragment {
 		domain = DomainUtil.getCurrentDomain(getActivity());
 		if (mDomainKey != null) {
 			domain = DomainUtil.getDomain(mDomainKey);
-		}		
+		}
 		if (domain == null) {
 			return view;
 		}
@@ -81,9 +81,9 @@ public class DomainDetailFragment extends BaseFragment {
 		@Override
 		protected Map<String, Integer> doInBackground(Domain... params) {
 			Map<String, Integer> result = new LinkedHashMap<String, Integer>();
-			Domain domain = params[0];			
+			Domain domain = params[0];
 			Domain currentDomain = DomainUtil.getCurrentDomain(tContext);
-			K5Api.setDomain(tContext, domain);			
+			K5Api.setDomain(tContext, domain);
 			try {
 				addType(result, ModelUtil.MONOGRAPH);
 				addType(result, ModelUtil.PERIODICAL);
@@ -103,7 +103,7 @@ public class DomainDetailFragment extends BaseFragment {
 		}
 
 		private void addType(Map<String, Integer> map, String type) throws ServerErrorException {
-			int count = K5Connector.getInstance().getDoctypeCount(tContext, type);
+			int count = K5ConnectorFactory.getConnector().getDoctypeCount(tContext, type);
 			if (count == -1) {
 				throw new ServerErrorException("doctype count request failed for " + type);
 			}

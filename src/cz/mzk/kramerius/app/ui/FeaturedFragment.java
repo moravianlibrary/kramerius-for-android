@@ -19,7 +19,7 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.util.Analytics;
@@ -109,7 +109,7 @@ public class FeaturedFragment extends BaseFragment implements OnPopupMenuSelecte
 		@Override
 		protected List<Item> doInBackground(Integer... params) {
 			int type = params[0];
-			return K5Connector.getInstance().getFeatured(tContext, type, K5Api.FEED_NO_LIMIT, tPolicy, null);
+			return K5ConnectorFactory.getConnector().getFeatured(tContext, type, K5Api.FEED_NO_LIMIT, tPolicy, null);
 		}
 
 		@Override

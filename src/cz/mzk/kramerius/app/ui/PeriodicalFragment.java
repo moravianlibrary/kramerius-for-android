@@ -29,7 +29,7 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.OnOpenDetailListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.PeriodicalCard;
 import cz.mzk.kramerius.app.model.Item;
@@ -124,14 +124,14 @@ public class PeriodicalFragment extends BaseFragment implements SearchView.OnQue
 
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
-			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			Item item = K5ConnectorFactory.getConnector().getItem(tContext, params[0]);
 			if (item == null) {
 				return null;
 			}
 			if(ModelUtil.PERIODICAL.equals(item.getModel())) {
-				return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.PERIODICAL_VOLUME));
+				return new ParentChildrenPair(item, K5ConnectorFactory.getConnector().getChildren(tContext, item.getPid(), ModelUtil.PERIODICAL_VOLUME));
 			} else if(ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
-				return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.PERIODICAL_ITEM));
+				return new ParentChildrenPair(item, K5ConnectorFactory.getConnector().getChildren(tContext, item.getPid(), ModelUtil.PERIODICAL_ITEM));
 			} else {
 				return null;
 			}						

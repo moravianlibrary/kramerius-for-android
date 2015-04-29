@@ -22,7 +22,7 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.TrackArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.PlayerFragment.PlayerListener;
 import cz.mzk.kramerius.app.util.TextUtil;
@@ -102,8 +102,8 @@ public class SoundUnitActivity extends BaseActivity implements PlayerListener {
 
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
-			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid()));
+			Item item = K5ConnectorFactory.getConnector().getItem(tContext, params[0]);
+			return new ParentChildrenPair(item, K5ConnectorFactory.getConnector().getChildren(tContext, item.getPid()));
 		}
 
 		@Override

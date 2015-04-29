@@ -23,7 +23,7 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.api.K5Connector;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.OnPopupMenuSelectedListener;
 import cz.mzk.kramerius.app.card.SoundUnitCard;
 import cz.mzk.kramerius.app.model.Item;
@@ -102,11 +102,11 @@ public class SoundRecordingFragment extends BaseFragment implements OnPopupMenuS
 
 		@Override
 		protected ParentChildrenPair doInBackground(String... params) {
-			Item item = K5Connector.getInstance().getItem(tContext, params[0]);
+			Item item = K5ConnectorFactory.getConnector().getItem(tContext, params[0]);
 			if (item == null) {
 				return null;
 			}
-			return new ParentChildrenPair(item, K5Connector.getInstance().getChildren(tContext, item.getPid(), ModelUtil.SOUND_UNIT));
+			return new ParentChildrenPair(item, K5ConnectorFactory.getConnector().getChildren(tContext, item.getPid(), ModelUtil.SOUND_UNIT));
 		}
 
 		@Override
