@@ -40,8 +40,8 @@ import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.SoundRecording;
 import cz.mzk.kramerius.app.model.Track;
-import cz.mzk.kramerius.app.service.MediaPlayerServiceBinder;
 import cz.mzk.kramerius.app.service.MediaPlayerService;
+import cz.mzk.kramerius.app.service.MediaPlayerServiceBinder;
 import cz.mzk.kramerius.app.service.MediaPlayerWithState.State;
 import cz.mzk.kramerius.app.util.BitmapUtil;
 import cz.mzk.kramerius.app.util.ModelUtil;
@@ -69,6 +69,8 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 	private ImageView mActionbarThumb;
 	private TextView mActionbarTitle;
 	private TextView mActionbarAuthor;
+	private ImageView mActionbarBtnInfo;
+
 	private ProgressBar mProgressBar;
 	private View mContent;
 	private ImageView mBtnPlayAll;
@@ -107,6 +109,8 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 		mActionbarThumb = (ImageView) findViewById(R.id.thumb);
 		mActionbarTitle = (TextView) findViewById(R.id.title);
 		mActionbarAuthor = (TextView) findViewById(R.id.author);
+		mActionbarBtnInfo = (ImageView) findViewById(R.id.btnInfo);
+		mActionbarBtnInfo.setOnClickListener(this);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 		mContent = findViewById(R.id.content);
 		mBtnPlayAll = (ImageView) findViewById(R.id.btnPlayAll);
@@ -397,6 +401,10 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 			bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, 0);
 			intent.putExtras(bundle);
 			startService(intent);
+		} else if (v == mActionbarBtnInfo) {
+			Intent intent = new Intent(this, MetadataActivity.class);
+			intent.putExtra(EXTRA_PID, mPid);
+			startActivity(intent);
 		}
 	}
 
