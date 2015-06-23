@@ -1,7 +1,5 @@
 package cz.mzk.kramerius.app.util;
 
-import java.io.Serializable;
-
 import android.app.Activity;
 import android.content.Intent;
 import cz.mzk.kramerius.app.BaseActivity;
@@ -100,7 +98,7 @@ public class ModelUtil {
 		Intent intent = null;
 		if (ModelUtil.SOUND_RECORDING.equals(item.getModel())) {
 			intent = new Intent(activity, SoundRecordingActivity.class);
-			intent.putExtra(SoundRecordingActivity.EXTRA_SOUND_RECORDING_ITEM,(Serializable) item);
+			intent.putExtra(SoundRecordingActivity.EXTRA_SOUND_RECORDING_ITEM, item);
 		} else if (ModelUtil.PERIODICAL.equals(item.getModel())) {
 			intent = new Intent(activity, PeriodicalActivity.class);
 		} else if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {

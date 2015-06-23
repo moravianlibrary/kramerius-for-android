@@ -133,8 +133,8 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 			protected SoundRecording doInBackground(Item... params) {
 				Item srItem = params[0];
 				if (srItem == null) {
-					//item obtained like this does not include author(s)
-					//see http://kramerius.mzk.cz/search/api/v5.0/item/uuid%3A6f840b85-e6b3-49f1-9710-71aed0beca47
+					// item obtained like this does not include author(s)
+					// see http://kramerius.mzk.cz/search/api/v5.0/item/uuid%3A6f840b85-e6b3-49f1-9710-71aed0beca47
 					srItem = K5ConnectorFactory.getConnector().getItem(SoundRecordingActivity.this, mPid);
 				}
 				String srTitle = srItem.getTitle();
@@ -219,7 +219,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 				Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
 				intent.setAction(MediaPlayerService.ACTION_PLAY);
 				Bundle bundle = new Bundle();
-				bundle.putSerializable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
+				bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
 				bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, position);
 				intent.putExtras(bundle);
 				startService(intent);
@@ -232,18 +232,18 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 
 	private void loadData(Bundle bundle) {
 		mPid = bundle.getString(EXTRA_PID);
-		mSoundRecording = (SoundRecording) bundle.getSerializable(EXTRA_SOUND_RECORDING);
-		mSoundRecordingItem = (Item) bundle.getSerializable(EXTRA_SOUND_RECORDING_ITEM);
+		mSoundRecording = (SoundRecording) bundle.getParcelable(EXTRA_SOUND_RECORDING);
+		mSoundRecordingItem = (Item) bundle.getParcelable(EXTRA_SOUND_RECORDING_ITEM);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle bundle) {
 		bundle.putString(EXTRA_PID, mPid);
 		if (mSoundRecording != null) {
-			bundle.putSerializable(EXTRA_SOUND_RECORDING, mSoundRecording);
+			bundle.putParcelable(EXTRA_SOUND_RECORDING, mSoundRecording);
 		}
 		if (mSoundRecordingItem != null) {
-			bundle.putSerializable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
+			bundle.putParcelable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
 		}
 		super.onSaveInstanceState(bundle);
 	}
@@ -393,7 +393,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 			Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
 			intent.setAction(MediaPlayerService.ACTION_PLAY);
 			Bundle bundle = new Bundle();
-			bundle.putSerializable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
+			bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
 			bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, 0);
 			intent.putExtras(bundle);
 			startService(intent);

@@ -1,14 +1,14 @@
 package cz.mzk.kramerius.app.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Track implements Serializable {
+public class Track implements Parcelable {
 
-	public enum AudioFormat {
+	public static enum AudioFormat {
 		OGG, MP3, WAV
 	}
 
-	private static final long serialVersionUID = -1092821915152321819L;
 	private final String mPid;
 	private final String mTitle;
 	private final String mSoundRecordingPid;
@@ -73,5 +73,31 @@ public class Track implements Serializable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(mPid);
+		dest.writeString(mTitle);
+		dest.writeString(mSoundRecordingPid);
+		dest.writeString(mSoundRecordingTitle);
+		dest.writeString(mSoundUnitPid);
+		dest.writeString(mSoundRecordingTitle);
+	}
+
+	public static final Parcelable.Creator<Track> CREATOR = new Parcelable.Creator<Track>() {
+		public Track createFromParcel(Parcel in) {
+			return new Track(in.readString(), in.readString(), in.readString(), in.readString(), in.readString(),
+					in.readString());
+		}
+
+		public Track[] newArray(int size) {
+			return new Track[size];
+		}
+	};
 
 }

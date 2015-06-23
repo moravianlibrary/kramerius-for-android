@@ -100,9 +100,8 @@ public class MediaPlayerService extends Service {
 			String action = intent.getAction();
 			// LOGGER.info("action: " + action);
 			if (action.equals(ACTION_PLAY)) {
-				// handleActionPlay(intent);
 				SoundRecording newSoundRecording = (SoundRecording) intent
-						.getSerializableExtra(EXTRA_PLAY_SOUND_RECORDING);
+						.getParcelableExtra(EXTRA_PLAY_SOUND_RECORDING);
 				int newIndex = intent.getIntExtra(EXTRA_PLAY_POSITION, 0);
 				if (!newSoundRecording.equals(mSoundRecording)) {// sound recording switched
 					mSoundRecording = newSoundRecording;
@@ -337,15 +336,14 @@ public class MediaPlayerService extends Service {
 		String title = getResources().getString(titleRes);
 		return new NotificationCompat.Action.Builder(iconRes, title, pendingIntent).build();
 	}
-	
-	
+
 	public static PendingIntent buildStopServicePendingIntent(Context context) {
-        Intent intent = new Intent(context, MediaPlayerService.class);
-        intent.setAction(ACTION_STOP);
-        PendingIntent pendingIntent = PendingIntent.getService(context, SERVICE_PI_REQ_CODE, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        return pendingIntent;
-    }
+		Intent intent = new Intent(context, MediaPlayerService.class);
+		intent.setAction(ACTION_STOP);
+		PendingIntent pendingIntent = PendingIntent.getService(context, SERVICE_PI_REQ_CODE, intent,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+		return pendingIntent;
+	}
 
 	private PendingIntent buildStopServicePI() {
 		Intent intent = new Intent(this, MediaPlayerService.class);

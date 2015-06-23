@@ -1,11 +1,13 @@
 package cz.mzk.kramerius.app.model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class SoundRecording implements Serializable {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-	private static final long serialVersionUID = 3250806601186245219L;
+public class SoundRecording implements Parcelable {
+
 	private final String mPid;
 	private final String mTitle;
 	private final String mAuthor;
@@ -41,5 +43,33 @@ public class SoundRecording implements Serializable {
 	public int getSize() {
 		return mTracks.size();
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(mPid);
+		dest.writeString(mTitle);
+		dest.writeString(mAuthor);
+		dest.writeTypedList(mTracks);
+	}
+
+	public static final Parcelable.Creator<SoundRecording> CREATOR = new Parcelable.Creator<SoundRecording>() {
+		public SoundRecording createFromParcel(Parcel in) {
+			String pid = in.readString();
+			String title = in.readString();
+			String author = in.readString();
+			List<Track> tracks = new ArrayList<Track>();
+			in.readTypedList(tracks, Track.CREATOR);
+			return new SoundRecording(pid, title, author, tracks);
+		}
+
+		public SoundRecording[] newArray(int size) {
+			return new SoundRecording[size];
+		}
+	};
 
 }
