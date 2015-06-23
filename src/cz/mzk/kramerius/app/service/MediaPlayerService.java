@@ -337,6 +337,15 @@ public class MediaPlayerService extends Service {
 		String title = getResources().getString(titleRes);
 		return new NotificationCompat.Action.Builder(iconRes, title, pendingIntent).build();
 	}
+	
+	
+	public static PendingIntent buildStopServicePendingIntent(Context context) {
+        Intent intent = new Intent(context, MediaPlayerService.class);
+        intent.setAction(ACTION_STOP);
+        PendingIntent pendingIntent = PendingIntent.getService(context, SERVICE_PI_REQ_CODE, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        return pendingIntent;
+    }
 
 	private PendingIntent buildStopServicePI() {
 		Intent intent = new Intent(this, MediaPlayerService.class);

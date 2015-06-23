@@ -1,5 +1,7 @@
 package cz.mzk.kramerius.app.api;
 
+import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
 import android.content.Context;
 import android.net.Uri;
 import android.net.Uri.Builder;
@@ -8,6 +10,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Track.AudioFormat;
 import cz.mzk.kramerius.app.search.SearchQuery;
+import cz.mzk.kramerius.app.service.MediaPlayerService;
 import cz.mzk.kramerius.app.util.DomainUtil;
 
 public class K5Api {
@@ -60,11 +63,23 @@ public class K5Api {
 	}
 
 	public static void setDomain(Context context, String domain, String protocol) {
+	    killAudioPlayerIfDomainChanged(context, domain);
 		PreferenceManager.getDefaultSharedPreferences(context).edit()
 				.putString(context.getString(R.string.pref_domain_key), domain)
 				.putString(context.getString(R.string.pref_protocol_key), protocol).commit();
 		K5ConnectorFactory.getConnector().restart();
 	}
+	
+	private static void killAudioPlayerIfDomainChanged(Context context, String domain) {
+        if (!domain.equals(getDomain(context))) {
+            PendingIntent intent = MediaPlayerService.buildStopServicePendingIntent(context);
+            try {
+                intent.send();
+            } catch (CanceledException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 	public static void setDomain(Context context, Domain domain) {
 		if (DomainUtil.getCurrentDomain(context).getUrl().equals(domain.getUrl())) {
