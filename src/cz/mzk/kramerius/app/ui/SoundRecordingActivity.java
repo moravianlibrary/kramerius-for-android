@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
@@ -228,6 +229,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 
 	protected void onStart() {
 		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
 		Intent intent = new Intent(this, MediaPlayerService.class);
 		bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 		fetchThumbnail();
@@ -351,6 +353,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 
 	protected void onStop() {
 		super.onStop();
+		EasyTracker.getInstance(this).activityStart(this);
 		// cancel loading thumbnail
 		if (mFetchThumbBitmapTask != null) {
 			mFetchThumbBitmapTask.cancel(true);
