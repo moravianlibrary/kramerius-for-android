@@ -6,6 +6,7 @@ import android.net.Uri.Builder;
 import android.preference.PreferenceManager;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.model.Track.AudioFormat;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.DomainUtil;
 
@@ -38,7 +39,7 @@ public class K5Api {
 	private static final String PATH_CHILDREN = "children";
 	private static final String PATH_STREAM = "streams";
 	private static final String PATH_MODS = "BIBLIO_MODS";
-	private static final String PATH_MP3 = "MP3";
+	// private static final String PATH_MP3 = "MP3";
 	private static final String PATH_IMG = "img";
 	private static final String PATH_THUMB = "thumb";
 
@@ -203,8 +204,22 @@ public class K5Api {
 		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MODS).build().toString();
 	}
 
-	public static String getMp3StreamPath(Context context, String pid) {
-		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MP3).build().toString();
+	public static String getAudioStreamPath(Context context, String pid, AudioFormat format) {
+		// tyhle verze neumi range
+		// return "http://kramerius.mzk.cz/search/api/v5.0/item/" + pid + "/streams/OGG";
+		// return "http://kramerius.mzk.cz/search/api/v5.0/item/" + pid + "/streams/MP3";
+
+		// u OGG vraci MediaPlayer.getDuration() vzdy 0
+		// return "http://kramerius.mzk.cz/search/audioProxy/" + pid + "/OGG";
+		// tohle je asi nejlepsi
+		// return "http://kramerius.mzk.cz/search/audioProxy/" + pid + "/MP3";
+
+		// return "http://kramerius.mzk.cz/search/audioProxy/" + pid + "/" + format;
+		return getBaseUri(context).toString() + "/audioProxy/" + pid + "/" + format.toString();
+
+		// TODO: replace with this code after fix of this issue is tested:
+		// https://github.com/ceskaexpedice/kramerius/issues/109
+		// return getStreamUri(context, pid).buildUpon().appendPath(format.toString()).build().toString();
 	}
 
 	public static String getSearchPath(Context context, String query, int start, int rows) {

@@ -17,6 +17,8 @@
         <item name="android:textColor">#fff</item>
         <item name="android:textSize">@dimen/toolbar_title</item>
     </style>
+    
+    <style name="ActionBar.SubtitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
     <style name="MyActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/color_primary</item>

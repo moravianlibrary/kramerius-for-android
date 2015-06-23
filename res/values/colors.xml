@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-      
+
     <color name="color_primary">#0073b2</color>
     <color name="color_primary_dark">#005d93</color>
-    
+
     <color name="status_bar">@color/color_primary_dark</color>
-    
+
     <color name="primary_highlight">#33a4b0</color>
-    
-    
+
+
     <color name="menu_item_noraml">#656565</color>
     <color name="menu_bottom_divider">#e6e6e6</color>
-    
+
     <color name="button_normal">@color/color_primary</color>
     <color name="button_pressed">@color/color_primary_dark</color>
     <color name="button_text">@color/white</color>
-    
+
     <color name="warning_message_text">@color/grey</color>
-    
-    <color name="bg">#e3e3e3</color>    
+
+    <color name="bg">#e3e3e3</color>
     <color name="card_pressed">#f9f9f9</color>
-    
-    <color name="dark_green">#00675b</color>    
+
+    <color name="dark_green">#00675b</color>
     <color name="green_semi_transparent">#aa009688</color>
     <color name="grey">#757575</color>
     <color name="light_grey">#959595</color>
@@ -33,26 +33,32 @@
     <color name="black">#000000</color>
 
     <color name="card_line">#d5d5d5</color>
-    
+
     <color name="button_menu_normal">#ffffff</color>
     <color name="button_menu_pressed">#eeeeee</color>
-    
-    
+
+
     <color name="search_card_title">@color/color_primary</color>
-    
-    
+
+
     <color name="dialog_positive_button">@color/color_primary</color>
     <color name="dialog_negative_button">@color/dark_dark_grey</color>
     <color name="dialog_title">@color/dark_dark_grey</color>
     <color name="dialog_content">@color/dark_grey</color>
     <color name="dialog_button_normal">#00000000</color>
     <color name="dialog_button_pressed">#dddddd</color>
-    
+
     <color name="metadata_title">@color/dark_grey</color>
     <color name="metadata_subtitle">@color/dark_grey</color>
     <color name="metadata_value">@color/grey</color>
     <color name="metadata_key">@color/light_grey</color>
     <color name="metadata_divider">#d5d5d5</color>
-    
-    
+
+    <color name="track_inactive">#e0e0e0</color>
+    <color name="track_inactive_presed">#d0d0d0</color>
+    <color name="track_active">#c0c0c0</color>
+    <color name="track_devider">#bababa</color>
+    <color name="white54">#54FFFFFF</color>
+
+
 </resources>

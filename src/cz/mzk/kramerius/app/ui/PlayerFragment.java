@@ -1,258 +1,164 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.io.IOException;
+import java.util.logging.Logger;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnPreparedListener;
+import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.util.VersionUtils;
+import cz.mzk.kramerius.app.service.MediaPlayerService;
+import cz.mzk.kramerius.app.service.MediaPlayerWithState.State;
 
-public class PlayerFragment extends Fragment implements OnClickListener, OnCompletionListener, OnPreparedListener,
-		OnBufferingUpdateListener, OnSeekBarChangeListener {
+public class PlayerFragment extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
-	private static final String TAG = PlayerFragment.class.getName();
-	
-	private SeekBar mSeekBar;
-	private View mPlay;
-	private View mPause;
-	private View mPrevious;
-	private View mNext;
-	private MediaPlayer mMediaPlayer;
-	private TextView mTimeView;
-	private TextView mDurationView;
+	private static final Logger LOGGER = Logger.getLogger(PlayerFragment.class.getSimpleName());
 
-	private PlayerListener mCallback;
-
-	private boolean mPlayAfterPrepared;
-	private int mLastProgress;
-
-	private Handler mHandler = new Handler();
-	private Runnable mTimerTask = new Runnable() {
-		public void run() {
-			if (mMediaPlayer != null) {
-				int duration = mMediaPlayer.getDuration();
-				int position = mMediaPlayer.getCurrentPosition();
-				int seek = 0;
-				if (duration > 0) {
-					seek = (int) ((position / (duration * 1.0)) * 100);
-					mSeekBar.setProgress(seek);
-					mTimeView.setText(timerToString(position));
-				}
-				mHandler.removeCallbacks(mTimerTask);
-				mHandler.postDelayed(mTimerTask, 1000);
-			}
-		};
-	};
-
-	public void setCallback(PlayerListener callback) {
-		mCallback = callback;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mMediaPlayer = new MediaPlayer();
-		mMediaPlayer.setOnBufferingUpdateListener(this);
-		mMediaPlayer.setOnPreparedListener(this);
-		mMediaPlayer.setOnCompletionListener(this);
-
-	}
+	private View mRootView;
+	private ProgressBar mProgressBarLoading;
+	private SeekBar mSeekBarKnownLength;
+	private SeekBar mSeekBarUnknownLength;
+	private View mBtnResume;
+	private View mBtnPause;
+	private View mBtnPrevious;
+	private View mBtnNext;
+	private TextView mCurrentTime;
+	private TextView mTotalTime;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_player, container, false);
-		mPlay = view.findViewById(R.id.player_play);
-		mPause = view.findViewById(R.id.player_pause);
-		mPrevious = view.findViewById(R.id.player_previous);
-		mNext = view.findViewById(R.id.player_next);
-		mPlay.setOnClickListener(this);
-		mPause.setOnClickListener(this);
-		mNext.setOnClickListener(this);
-		mPrevious.setOnClickListener(this);
-		mPause.setVisibility(View.GONE);
-		mPlay.setVisibility(View.VISIBLE);
-		mTimeView = (TextView) view.findViewById(R.id.player_time);
-		mDurationView = (TextView) view.findViewById(R.id.player_duration);
-		mSeekBar = (SeekBar) view.findViewById(R.id.player_seekBar);
-		mSeekBar.setOnSeekBarChangeListener(this);
-		mSeekBar.setMax(100);
-
+		mRootView = view;
+		mBtnResume = view.findViewById(R.id.resume);
+		mBtnPause = view.findViewById(R.id.pause);
+		mBtnPrevious = view.findViewById(R.id.previous);
+		mBtnNext = view.findViewById(R.id.next);
+		mBtnResume.setOnClickListener(this);
+		mBtnPause.setOnClickListener(this);
+		mBtnNext.setOnClickListener(this);
+		mBtnPrevious.setOnClickListener(this);
+		mCurrentTime = (TextView) view.findViewById(R.id.current_time);
+		mTotalTime = (TextView) view.findViewById(R.id.duration);
+		mProgressBarLoading = (ProgressBar) view.findViewById(R.id.progressBar_loading);
+		mSeekBarKnownLength = (SeekBar) view.findViewById(R.id.seekBar_known_length);
+		mSeekBarKnownLength.setOnSeekBarChangeListener(this);
+		mSeekBarUnknownLength = (SeekBar) view.findViewById(R.id.seekBar_unknown_length);
+		mSeekBarUnknownLength.setOnSeekBarChangeListener(this);
 		return view;
 	}
 
-	@Override
-	public void onPrepared(MediaPlayer mediaplayer) {
-		if (!mMediaPlayer.isPlaying()) {
-			mPlay.setVisibility(View.VISIBLE);
-			mTimeView.setVisibility(View.VISIBLE);
-			mTimeView.setText(timerToString(0));
-			mDurationView.setVisibility(View.VISIBLE);
-			mDurationView.setText(timerToString(mMediaPlayer.getDuration()));
-			if(mPlayAfterPrepared) {
-				onPlayButtonClicked();
+	public void update(boolean enabled, State state, Integer currentMillis, Integer totalMillis) {
+		mRootView.setVisibility(enabled ? View.VISIBLE : View.GONE);
+		if (enabled) {
+			updatePrimaryButtonVisibility(state);
+			if (currentMillis == null || currentMillis == 0) {
+				mCurrentTime.setText("--:--");
+				mTotalTime.setText("--:--");
+				mProgressBarLoading.setVisibility(View.VISIBLE);
+				mSeekBarUnknownLength.setVisibility(View.INVISIBLE);
+				mSeekBarKnownLength.setVisibility(View.INVISIBLE);
+			} else {// playing or paused
+				mCurrentTime.setText(timeToString(currentMillis));
+				mProgressBarLoading.setVisibility(View.INVISIBLE);
+				if (totalMillis == null || totalMillis == 0) {// unknown length
+					mSeekBarKnownLength.setVisibility(View.INVISIBLE);
+					mSeekBarUnknownLength.setVisibility(View.VISIBLE);
+					mSeekBarUnknownLength.setMax(currentMillis);
+					mSeekBarUnknownLength.setProgress(currentMillis);
+					mTotalTime.setText("--:--");
+				} else {// known length
+					mSeekBarUnknownLength.setVisibility(View.INVISIBLE);
+					mSeekBarKnownLength.setVisibility(View.VISIBLE);
+					mTotalTime.setText(timeToString(totalMillis));
+					mSeekBarKnownLength.setMax(totalMillis);
+					mSeekBarKnownLength.setProgress(currentMillis);
+				}
 			}
 		}
 	}
 
-	@Override
-	public void onCompletion(MediaPlayer mediaPlayer) {
-		if(VersionUtils.Debuggable()) {
-			Log.d(TAG, "PLAYER:onComplete"  + mediaPlayer.isPlaying() + ", " + mediaPlayer.getCurrentPosition());
+	private void updatePrimaryButtonVisibility(State state) {
+		int pauseVisibility = View.INVISIBLE;
+		int playVisibility = View.INVISIBLE;
+		if (state != null) {
+			if (state == State.STARTED) {
+				pauseVisibility = View.VISIBLE;
+			} else if (state == State.PAUSED) {
+				playVisibility = View.VISIBLE;
+			}
 		}
-		stop();
-		if (mCallback != null && mediaPlayer.getCurrentPosition() > 0) {
-			mCallback.onPlayerComplete();
-		}
-	}
-
-	@Override
-	public void onBufferingUpdate(MediaPlayer mp, int percent) {
-		mSeekBar.setSecondaryProgress(percent);
+		mBtnResume.setVisibility(playVisibility);
+		mBtnPause.setVisibility(pauseVisibility);
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v == mPlay) {
-			onPlayButtonClicked();
-		} else if (v == mPause) {
-			onPauseButtonClicked();
-		} else if (v == mPrevious) {
-			onPreviousButtonClicked();
-		} else if (v == mNext) {
-			onNextButtonClicked();
+		Activity activity = getActivity();
+		Intent intent = new Intent(activity, MediaPlayerService.class);
+		if (v == mBtnResume) {
+			intent.setAction(MediaPlayerService.ACTION_RESUME);
+		} else if (v == mBtnPause) {
+			intent.setAction(MediaPlayerService.ACTION_PAUSE);
+		} else if (v == mBtnPrevious) {
+			intent.setAction(MediaPlayerService.ACTION_PREVIOUS);
+		} else if (v == mBtnNext) {
+			intent.setAction(MediaPlayerService.ACTION_NEXT);
+		} else {
+			return;
 		}
-	}
-
-	private void stop() {
-		if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
-			mMediaPlayer.pause();
-		}
-		mDurationView.setText("");
-		mTimeView.setText("");
-		mSeekBar.setProgress(0);
-	}
-
-	public void play(String link, boolean playAfterPrepared) {
-		if(VersionUtils.Debuggable()) {
-			Log.d(TAG, "PLAYER:play");
-		}
-		stop();
-		mPlayAfterPrepared = playAfterPrepared;
-		mMediaPlayer.reset();
-		if(VersionUtils.Debuggable()) {
-			Log.d(TAG, "PLAYER:play-afterReset");
-		}
-		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		PendingIntent pendingIntent = PendingIntent.getService(activity, MediaPlayerService.SERVICE_PI_REQ_CODE,
+				intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		try {
-			mMediaPlayer.setDataSource(link);
-			// mediaPlayer.prepare(); // might take long! (for buffering, etc)
-			// //@@
-			mMediaPlayer.prepareAsync();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block///
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void onPlayButtonClicked() {
-		play();
-		if (mCallback != null) {
-			mCallback.onPlayerPlay();
-		}
-
-	}
-
-	private void onPauseButtonClicked() {
-		pause();
-		if (mCallback != null) {
-			mCallback.onPlayerPause();
-		}
-	}
-	
-	public void pause() {
-		if (!mMediaPlayer.isPlaying()) {
-			return;
-		}
-		mMediaPlayer.pause();
-		mPlay.setVisibility(View.VISIBLE);
-		mPause.setVisibility(View.GONE);
-		mHandler.removeCallbacks(mTimerTask);		
-	}
-	
-	public void play() {
-		if (mMediaPlayer.isPlaying()) {
-			return;
-		}
-		mMediaPlayer.start();
-		mPlay.setVisibility(View.GONE);
-		mPause.setVisibility(View.VISIBLE);
-		mHandler.postDelayed(mTimerTask, 1000);		
-	}
-
-	private void onPreviousButtonClicked() {
-		if (mCallback != null) {
-			mCallback.onPlayerPrevious();
-		}
-	}
-
-	private void onNextButtonClicked() {
-		if (mCallback != null) {
-			mCallback.onPlayerNext();
+			pendingIntent.send();
+		} catch (CanceledException e) {
+			LOGGER.warning("intent canceled: " + e.getMessage());
 		}
 	}
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		if (fromUser) {
-			mLastProgress = progress;
-		}
+		// nothing
 	}
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-
+		// nothing
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		if (mMediaPlayer == null) {
-			return;
+		if (seekBar == mSeekBarKnownLength) {
+			Activity activity = getActivity();
+			if (activity != null) {
+				Intent intent = new Intent(activity, MediaPlayerService.class);
+				intent.setAction(MediaPlayerService.ACTION_REWIND);
+				int progress = seekBar.getProgress();
+				Bundle bundle = new Bundle();
+				bundle.putInt(MediaPlayerService.EXTRA_REWIND_TIME, progress);
+				intent.putExtras(bundle);
+				PendingIntent pendingIntent = PendingIntent.getService(activity,
+						MediaPlayerService.SERVICE_PI_REQ_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+				try {
+					pendingIntent.send();
+				} catch (CanceledException e) {
+					LOGGER.warning("intent canceled: " + e.getMessage());
+				}
+			}
 		}
-		int secondaryPosition = seekBar.getSecondaryProgress();
-		if (mLastProgress > secondaryPosition) {
-			seekBar.setProgress(secondaryPosition);
-		}
-		int duration = mMediaPlayer.getDuration();
-		int seek = duration * mLastProgress / 100;
-		mMediaPlayer.seekTo(seek);
 	}
 
-	public static String timerToString(int time) {
-		int sec = time / 1000;
+	public static String timeToString(int timeMillis) {
+		int sec = timeMillis / 1000;
 		int days = sec / (60 * 60 * 24);
 		int timeHours = sec % (60 * 60 * 24);
 		int hours = timeHours / (60 * 60);
@@ -276,18 +182,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, OnCompl
 		} else {
 			return "" + value;
 		}
-	}
-
-	public interface PlayerListener {
-		public void onPlayerPlay();
-
-		public void onPlayerPause();
-
-		public void onPlayerNext();
-
-		public void onPlayerPrevious();
-		
-		public void onPlayerComplete();
 	}
 
 }

@@ -1,17 +1,131 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg"
-    android:orientation="vertical" >
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res/cz.mzk.kramerius.app"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/grey">
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_toolbar" />
+	<!-- tohle tu jen nechavam na porovnani, jestli to je dobre nastylovane -->
+	<!-- pouzil jsem precejen vlastni layout kvuli nemoznosti nastavit padding 
+		pro ikonu -->
+	<include
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		layout="@layout/view_toolbar"
+		android:visibility="gone" />
 
-    <FrameLayout
-        android:id="@+id/soundrecording_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+	<android.support.v7.widget.Toolbar
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="?attr/colorPrimary"
+		android:elevation="@dimen/toolbar_elevation"
+		tools:ignore="UnusedAttribute">
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:minHeight="@dimen/toolbar_height"
+			android:padding="4dp"
+			app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+			app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+			app:titleTextAppearance="@style/ActionBar.TitleText">
+
+			<ImageView
+				android:id="@+id/thumb"
+				android:layout_width="@dimen/sound_recording_thumb_width"
+				android:layout_height="@dimen/sound_recording_thumb_height"
+				android:scaleType="fitCenter"
+				android:layout_centerVertical="true"
+				android:layout_alignParentLeft="true"
+				tools:ignore="RtlHardcoded" />
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_centerVertical="true"
+				android:paddingLeft="10dp"
+				android:layout_toRightOf="@id/thumb"
+				tools:ignore="RtlHardcoded">
+
+				<TextView
+					android:id="@+id/title"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:lines="1"
+					style="@style/ActionBar.TitleText" />
+
+				<TextView
+					android:id="@+id/author"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:lines="1"
+					style="@style/ActionBar.SubtitleText" />
+
+			</LinearLayout>
+
+		</RelativeLayout>
+	</android.support.v7.widget.Toolbar>
+
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<ProgressBar
+			android:id="@+id/progressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center" />
+
+		<RelativeLayout
+			android:id="@+id/content"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:clickable="true"
+			android:orientation="vertical"
+			android:visibility="invisible">
+
+			<fragment
+				android:id="@+id/playerFragment"
+				android:name="cz.mzk.kramerius.app.ui.PlayerFragment"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:elevation="@dimen/toolbar_elevation"
+				tools:ignore="UnusedAttribute" />
+
+			<ListView
+				android:id="@+id/tracks"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_above="@id/playerFragment"
+				android:divider="@color/track_devider"
+				android:dividerHeight="1dp" />
+
+			<ImageView
+				android:id="@+id/btnPlayAll"
+				android:layout_width="75dp"
+				android:layout_height="75dp"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
+				android:layout_marginBottom="5dp"
+				android:layout_marginRight="5dp"
+				android:background="@drawable/fab_background"
+				android:padding="25dp"
+				android:clickable="true"
+				android:src="@drawable/ic_play_arrow_white_36dp"
+				android:visibility="gone"
+				tools:ignore="RtlHardcoded" />
+
+		</RelativeLayout>
+
+	</FrameLayout>
+
 
 </LinearLayout>

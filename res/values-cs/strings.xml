@@ -280,5 +280,10 @@
     
     <string name="pref_card_animation_title">Animované karty</string>
     <string name="pref_card_animation_summary">Animovat zobrazní karet v seznamech</string>    
+    
+    <string name="audioplayer_notification_btn_play">Hrát</string>
+	<string name="audioplayer_notification_btn_pause">Pozastavit</string>
+	<string name="audioplayer_notification_btn_previous">Předchozí</string>
+	<string name="audioplayer_notification_btn_next">Další</string>
         
 </resources>

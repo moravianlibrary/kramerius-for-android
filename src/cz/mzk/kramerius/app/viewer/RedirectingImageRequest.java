@@ -5,6 +5,7 @@ import android.graphics.Bitmap.Config;
 import android.util.Log;
 import android.widget.ImageView.ScaleType;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -35,22 +36,27 @@ public class RedirectingImageRequest extends ImageRequest {
 
 	@Override
 	public void deliverError(VolleyError error) {
-		final int status = error.networkResponse.statusCode;
-		// Handle 30x
-		switch (status) {
-		case 300:
-		case 301:
-		case 302:
-		case 303:
-		case 305:
-		case 307:
-			String location = error.networkResponse.headers.get("Location");
-			if (VersionUtils.Debuggable()) {
-				Log.d(TAG, "Redirecting, Location: " + location);
+		NetworkResponse response = error.networkResponse;
+		if (response != null) {
+			final int status = response.statusCode;
+			// Handle 30x
+			switch (status) {
+			case 300:
+			case 301:
+			case 302:
+			case 303:
+			case 305:
+			case 307:
+				String location = error.networkResponse.headers.get("Location");
+				if (VersionUtils.Debuggable()) {
+					Log.d(TAG, "Redirecting, Location: " + location);
+				}
+				VolleyRequestManager.addToRequestQueue(new RedirectingImageRequest(location, listener, errorListener));
+				break;
+			default:
+				super.deliverError(error);
 			}
-			VolleyRequestManager.addToRequestQueue(new RedirectingImageRequest(location, listener, errorListener));
-			break;
-		default:
+		} else {
 			super.deliverError(error);
 		}
 	}

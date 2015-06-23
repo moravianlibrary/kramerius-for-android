@@ -327,11 +327,12 @@
     <string name="mupdf_dismiss">Dismiss</string>
 	<string name="mupdf_text_not_found">Text not found</string>
     <string name="mupdf_searching_">Searching&#8230;</string>
-	<string name="mupdf_not_supported">Not supported</string>    
+	<string name="mupdf_not_supported">Not supported</string>
     
-    
-    
-    
+	<string name="audioplayer_notification_btn_play">Play</string>
+    <string name="audioplayer_notification_btn_pause">Pause</string>
+    <string name="audioplayer_notification_btn_previous">Previous</string>
+    <string name="audioplayer_notification_btn_next">Next</string>
     
     
 </resources>
