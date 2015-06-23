@@ -35,6 +35,8 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.TrackArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
+import cz.mzk.kramerius.app.metadata.Author;
+import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.SoundRecording;
 import cz.mzk.kramerius.app.model.Track;
@@ -57,9 +59,11 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 	private static final Logger LOGGER = Logger.getLogger(SoundRecordingActivity.class.getSimpleName());
 
 	private static final String EXTRA_SOUND_RECORDING = "sound_recording";
+	public static final String EXTRA_SOUND_RECORDING_ITEM = "sound_recording_item";
 
 	// data
 	private String mPid;
+	private Item mSoundRecordingItem;
 	private SoundRecording mSoundRecording;
 	// views
 	private ImageView mActionbarThumb;
@@ -118,20 +122,31 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 		if (mSoundRecording != null) {
 			inflateViews();
 		} else {
-			loadDataAsync();
+			fetchDataAsync();
 		}
 	}
 
-	private void loadDataAsync() {
-		new AsyncTask<Void, Void, SoundRecording>() {
+	private void fetchDataAsync() {
+		new AsyncTask<Item, Void, SoundRecording>() {
 
 			@Override
-			protected SoundRecording doInBackground(Void... params) {
-				Item srItem = K5ConnectorFactory.getConnector().getItem(SoundRecordingActivity.this, mPid);
-				String srAuthor = srItem.getAuthor();
+			protected SoundRecording doInBackground(Item... params) {
+				Item srItem = params[0];
+				if (srItem == null) {
+					//item obtained like this does not include author(s)
+					//see http://kramerius.mzk.cz/search/api/v5.0/item/uuid%3A6f840b85-e6b3-49f1-9710-71aed0beca47
+					srItem = K5ConnectorFactory.getConnector().getItem(SoundRecordingActivity.this, mPid);
+				}
 				String srTitle = srItem.getTitle();
+				String srAuthor = srItem.getAuthor();
 				if (srAuthor == null) {
-					srAuthor = "TODO: author missing";
+					Metadata modsMetadata = K5ConnectorFactory.getConnector().getModsMetadata(
+							SoundRecordingActivity.this, mPid);
+					List<Author> modsAuthors = modsMetadata.getAuthors();
+					if (modsAuthors != null && !modsAuthors.isEmpty()) {
+						Author author = modsAuthors.get(0);
+						srAuthor = author.getName();
+					}
 				}
 				List<Track> tracks = getAllTracks(srTitle);
 				return new SoundRecording(mPid, srTitle, srAuthor, tracks);
@@ -173,13 +188,15 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 				inflateViews();
 			};
 
-		}.execute();
+		}.execute(mSoundRecordingItem);
 	}
 
 	private void inflateViews() {
 		mActionbarTitle.setText(mSoundRecording.getTitle());
 		getSupportActionBar().setTitle(mSoundRecording.getTitle());
-		mActionbarAuthor.setText(mSoundRecording.getAuthor());
+		if (mSoundRecording.getAuthor() != null) {
+			mActionbarAuthor.setText(mSoundRecording.getAuthor());
+		}
 		getSupportActionBar().setSubtitle(mSoundRecording.getAuthor());
 		mTracksAdapter = new TrackArrayAdapter(this, mSoundRecording, new PlayerServiceHelper() {
 
@@ -216,6 +233,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 	private void loadData(Bundle bundle) {
 		mPid = bundle.getString(EXTRA_PID);
 		mSoundRecording = (SoundRecording) bundle.getSerializable(EXTRA_SOUND_RECORDING);
+		mSoundRecordingItem = (Item) bundle.getSerializable(EXTRA_SOUND_RECORDING_ITEM);
 	}
 
 	@Override
@@ -223,6 +241,9 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 		bundle.putString(EXTRA_PID, mPid);
 		if (mSoundRecording != null) {
 			bundle.putSerializable(EXTRA_SOUND_RECORDING, mSoundRecording);
+		}
+		if (mSoundRecordingItem != null) {
+			bundle.putSerializable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
 		}
 		super.onSaveInstanceState(bundle);
 	}

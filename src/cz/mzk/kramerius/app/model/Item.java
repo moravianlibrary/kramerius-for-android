@@ -1,9 +1,11 @@
 package cz.mzk.kramerius.app.model;
 
+import java.io.Serializable;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Item implements Parcelable {
+public class Item implements Parcelable, Serializable {
 
 	private String pid;
 	private String issn;
