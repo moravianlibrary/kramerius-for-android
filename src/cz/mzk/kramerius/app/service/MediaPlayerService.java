@@ -100,13 +100,13 @@ public class MediaPlayerService extends Service {
 			String action = intent.getAction();
 			// LOGGER.info("action: " + action);
 			if (action.equals(ACTION_PLAY)) {
+				Track currentTrack = getCurrentTrack();
 				SoundRecording newSoundRecording = (SoundRecording) intent
 						.getParcelableExtra(EXTRA_PLAY_SOUND_RECORDING);
 				int newIndex = intent.getIntExtra(EXTRA_PLAY_POSITION, 0);
 				if (!newSoundRecording.equals(mSoundRecording)) {// sound recording switched
 					mSoundRecording = newSoundRecording;
 				}
-				Track currentTrack = getCurrentTrack();
 				if (currentTrack == null) {
 					mCurrentTrackIndex = newIndex;
 					play();
