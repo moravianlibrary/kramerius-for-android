@@ -93,4 +93,7 @@
     <dimen name="sound_recording_thumb_width">50dp</dimen>
     <dimen name="sound_recording_thumb_height">50dp</dimen>
 
+    <dimen name="track_rv_card_elevation_inactive">2dp</dimen>
+    <dimen name="track_rv_card_elevation_active">1dp</dimen>
+
 </resources>

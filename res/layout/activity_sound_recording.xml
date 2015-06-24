@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey">
+    android:background="@color/bg">
 
     <!-- tohle tu jen nechavam na porovnani, jestli to je dobre nastylovane -->
     <!-- pouzil jsem precejen vlastni layout kvuli nemoznosti nastavit padding pro ikonu -->
@@ -109,14 +109,25 @@
                 android:elevation="@dimen/toolbar_elevation"
                 tools:ignore="UnusedAttribute" />
 
-            <ListView
+            <!-- Select player version by commenting/uncommenting ListView/RecyclerView -->
+
+            <!-- <ListView -->
+            <!-- android:id="@+id/tracks" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:layout_alignParentTop="true" -->
+            <!-- android:layout_above="@id/playerFragment" -->
+            <!-- android:divider="@color/track_lv_devider" -->
+            <!-- android:dividerHeight="1dp" -->
+            <!-- android:footerDividersEnabled="true" -->
+            <!-- tools:ignore="UnusedAttribute" /> -->
+
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/tracks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_above="@id/playerFragment"
-                android:divider="@color/track_devider"
-                android:dividerHeight="1dp" />
+                android:layout_above="@id/playerFragment" />
 
             <ImageView
                 android:id="@+id/btnPlayAll"

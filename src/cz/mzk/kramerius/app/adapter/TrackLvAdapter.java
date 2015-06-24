@@ -12,18 +12,18 @@ import cz.mzk.kramerius.app.model.SoundRecording;
 import cz.mzk.kramerius.app.model.Track;
 import cz.mzk.kramerius.app.ui.SoundRecordingActivity.PlayerServiceHelper;
 
-public class TrackArrayAdapter extends ArrayAdapter<Track> {
+public class TrackLvAdapter extends ArrayAdapter<Track> {
 
 	private final SoundRecording mSoundRecording;
 	private final PlayerServiceHelper mServiceHelper;
 	private final Animation mVinylAnimation;
 
-	public TrackArrayAdapter(Context context, SoundRecording soundRecording, PlayerServiceHelper serviceHelper) {
-		super(context, R.layout.item_track, soundRecording.getTracks());
+	public TrackLvAdapter(Context context, SoundRecording soundRecording, PlayerServiceHelper serviceHelper) {
+		super(context, R.layout.item_track_lv, soundRecording.getTracks());
 		this.mSoundRecording = soundRecording;
 		this.mServiceHelper = serviceHelper;
-		mVinylAnimation = AnimationUtils.loadAnimation(context, R.anim.rotation);
-		mVinylAnimation.setRepeatCount(Animation.INFINITE);
+		this.mVinylAnimation = AnimationUtils.loadAnimation(context, R.anim.rotation);
+		this.mVinylAnimation.setRepeatCount(Animation.INFINITE);
 	}
 
 	@Override
@@ -31,11 +31,11 @@ public class TrackArrayAdapter extends ArrayAdapter<Track> {
 		View rowView = convertView;
 		if (rowView == null) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			rowView = inflater.inflate(R.layout.item_track, parent, false);
-			TrackArrayViewholder viewHolder = new TrackArrayViewholder(getContext(), rowView, mServiceHelper);
+			rowView = inflater.inflate(R.layout.item_track_lv, parent, false);
+			TrackLvViewholder viewHolder = new TrackLvViewholder(getContext(), rowView, mServiceHelper);
 			rowView.setTag(viewHolder);
 		}
-		TrackArrayViewholder holder = (TrackArrayViewholder) rowView.getTag();
+		TrackLvViewholder holder = (TrackLvViewholder) rowView.getTag();
 		holder.bind(mSoundRecording, position);
 		return rowView;
 	}

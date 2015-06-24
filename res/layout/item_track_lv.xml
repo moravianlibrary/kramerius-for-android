@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:minHeight="64dp"
     android:padding="10dp"
-    android:background="@drawable/track_inactive">
+    android:background="@drawable/track_lv_inactive">
 
     <ImageView
         android:id="@+id/track_vinyl"
