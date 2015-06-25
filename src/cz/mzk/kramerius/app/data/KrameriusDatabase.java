@@ -30,6 +30,11 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME_EXTERNAL = Environment
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius4.db";
 
+	private static final String INDEX_INSTITUTION_SIGLA = InstitutuinEntry.TABLE_NAME + "_"
+			+ InstitutuinEntry.COLUMN_SIGLA;
+	private static final String INDEX_LANGUAGE_CODE = LanguageEntry.TABLE_NAME + "_" + LanguageEntry.COLUMN_CODE;
+	private static final String INDEX_RELATOR_CODE = RelatorEntry.TABLE_NAME + "_" + RelatorEntry.COLUMN_CODE;
+
 	private Context mContext;
 
 	public KrameriusDatabase(Context context) {
@@ -40,34 +45,41 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		final String SQL_CREATE_INSTITUTION_SIGLA_INDEX = "CREATE INDEX " + InstitutuinEntry.TABLE_NAME + "_"
-				+ InstitutuinEntry.COLUMN_SIGLA + " on " + InstitutuinEntry.TABLE_NAME + "("
-				+ InstitutuinEntry.COLUMN_SIGLA + ");";
+		db.execSQL(buildStatementCreateTable(InstitutuinEntry.TABLE_NAME, DATABASE_VERSION));
+		db.execSQL(buildStatementCreateIndex(INDEX_INSTITUTION_SIGLA, DATABASE_VERSION));
 
-		final String SQL_CREATE_LANGUAGE_CODE_INDEX = "CREATE INDEX " + LanguageEntry.TABLE_NAME + "_"
-				+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
-				+ ");";
+		db.execSQL(buildStatementCreateTable(LanguageEntry.TABLE_NAME, DATABASE_VERSION));
+		db.execSQL(buildStatementCreateIndex(INDEX_LANGUAGE_CODE, DATABASE_VERSION));
 
-		final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
-				+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
+		db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, DATABASE_VERSION));
+		db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, DATABASE_VERSION));
 
-		db.execSQL(buildCreateTableStatement(InstitutuinEntry.TABLE_NAME, DATABASE_VERSION));
-		db.execSQL(SQL_CREATE_INSTITUTION_SIGLA_INDEX);
-
-		db.execSQL(buildCreateTableStatement(LanguageEntry.TABLE_NAME, DATABASE_VERSION));
-		db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
-
-		db.execSQL(buildCreateTableStatement(RelatorEntry.TABLE_NAME, DATABASE_VERSION));
-		db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
-
-		db.execSQL(buildCreateTableStatement(HistoryEntry.TABLE_NAME, DATABASE_VERSION));
+		db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, DATABASE_VERSION));
 
 		populateFrom(db, R.raw.institution);
 		populateFrom(db, R.raw.languages);
 		populateFrom(db, R.raw.relators);
 	}
 
-	private String buildCreateTableStatement(String tableName, int dbVersion) {
+	private String buildStatementCreateIndex(String indexName, int dbVersion) {
+		if (indexName.equals(INDEX_INSTITUTION_SIGLA)) {
+			return "CREATE INDEX " + indexName + " on "//
+					+ InstitutuinEntry.TABLE_NAME + "("//
+					+ InstitutuinEntry.COLUMN_SIGLA//
+					+ ");";
+		} else if (indexName.equals(INDEX_LANGUAGE_CODE)) {
+			return "CREATE INDEX " + indexName + " on "//
+					+ LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE + ");";
+		} else if (indexName.equals(INDEX_RELATOR_CODE)) {
+			return "CREATE INDEX " + indexName + " on "//
+					+ RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
+		} else {
+			throw new IllegalArgumentException("unknown index " + indexName);
+		}
+
+	}
+
+	private String buildStatementCreateTable(String tableName, int dbVersion) {
 		if (tableName.equals(HistoryEntry.TABLE_NAME)) {
 			return "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" //
 					+ HistoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
@@ -106,45 +118,37 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		int version = oldVersion;
 		switch (version) {
-		case DATABASE_VERSION_INITIAL: {
-			final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
-					+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE
-					+ ");";
-			db.execSQL(buildCreateTableStatement(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
-			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
+		case DATABASE_VERSION_INITIAL:
+			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
+			db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, DATABASE_VERSION_RELATORS));
 			populateFrom(db, R.raw.relators_old_v2);
 
 			version = DATABASE_VERSION_RELATORS;
-		}
+
 		case DATABASE_VERSION_RELATORS:
-			db.execSQL(buildCreateTableStatement(HistoryEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
+			db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
+
 			version = DATABASE_VERSION_HISTORY;
+
 		case DATABASE_VERSION_HISTORY:
-			db.execSQL("DROP INDEX IF EXISTS " + LanguageEntry.TABLE_NAME + "_" + LanguageEntry.COLUMN_CODE);
+			db.execSQL("DROP INDEX IF EXISTS " + INDEX_LANGUAGE_CODE);
 			db.execSQL("DROP TABLE IF EXISTS " + LanguageEntry.TABLE_NAME);
 
-			final String SQL_CREATE_LANGUAGE_CODE_INDEX = "CREATE INDEX " + LanguageEntry.TABLE_NAME + "_"
-					+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
-					+ ");";
-
-			db.execSQL(buildCreateTableStatement(LanguageEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
-			db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
+			db.execSQL(buildStatementCreateTable(LanguageEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
+			db.execSQL(buildStatementCreateIndex(INDEX_LANGUAGE_CODE, DATABASE_VERSION_LOCALE_LANGUAGES));
 			populateFrom(db, R.raw.languages);
+
 			version = DATABASE_VERSION_LOCALE_LANGUAGES;
 
-		case DATABASE_VERSION_LOCALE_LANGUAGES: {
-			db.execSQL("DROP INDEX IF EXISTS " + RelatorEntry.TABLE_NAME + "_" + RelatorEntry.COLUMN_CODE);
+		case DATABASE_VERSION_LOCALE_LANGUAGES:
+			db.execSQL("DROP INDEX IF EXISTS " + INDEX_RELATOR_CODE);
 			db.execSQL("DROP TABLE IF EXISTS " + RelatorEntry.TABLE_NAME);
 
-			final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
-					+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE
-					+ ");";
-
-			db.execSQL(buildCreateTableStatement(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
-			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
+			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
+			db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, DATABASE_VERSION_RELATORS));
 			populateFrom(db, R.raw.relators);
+
 			version = DATABASE_VERSION_LOCALE_RELATORS;
-		}
 		}
 	}
 
