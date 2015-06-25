@@ -159,30 +159,30 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 				String srAuthor = srItem.getAuthor();
 				if (srAuthor == null) {
 					Metadata modsMetadata = K5ConnectorFactory.getConnector().getModsMetadata(
-							SoundRecordingActivity.this, mPid);
+							SoundRecordingActivity.this, srItem.getPid());
 					List<Author> modsAuthors = modsMetadata.getAuthors();
 					if (modsAuthors != null && !modsAuthors.isEmpty()) {
 						Author author = modsAuthors.get(0);
 						srAuthor = author.getName();
 					}
 				}
-				List<Track> tracks = getAllTracks(srTitle);
-				return new SoundRecording(mPid, srTitle, srAuthor, tracks);
+				List<Track> tracks = getAllTracks(srTitle, srItem.getPid());
+				return new SoundRecording(srItem.getPid(), srTitle, srAuthor, tracks);
 			}
 
-			private List<Track> getAllTracks(String srTitle) {
+			private List<Track> getAllTracks(String srTitle, String srPid) {
 				List<Item> directTrackItems = K5ConnectorFactory.getConnector().getChildren(
-						SoundRecordingActivity.this, mPid, ModelUtil.TRACK);
-				List<Track> tracks = toTracks(directTrackItems, mPid, srTitle, null, null);
+						SoundRecordingActivity.this, srPid, ModelUtil.TRACK);
+				List<Track> tracks = toTracks(directTrackItems, srPid, srTitle, null, null);
 
 				List<Item> soundUnitItems = K5ConnectorFactory.getConnector().getChildren(SoundRecordingActivity.this,
-						mPid, ModelUtil.SOUND_UNIT);
+						srPid, ModelUtil.SOUND_UNIT);
 				for (Item suItem : soundUnitItems) {
 					String suTitle = suItem.getTitle();
 					String suPId = suItem.getPid();
 					List<Item> suTrackItems = K5ConnectorFactory.getConnector().getChildren(
 							SoundRecordingActivity.this, suItem.getPid(), ModelUtil.TRACK);
-					List<Track> suTracks = toTracks(suTrackItems, mPid, srTitle, suPId, suTitle);
+					List<Track> suTracks = toTracks(suTrackItems, srPid, srTitle, suPId, suTitle);
 					for (Track track : suTracks) {
 						if (!tracks.contains(track)) {
 							tracks.add(track);
@@ -277,12 +277,8 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 	@Override
 	protected void onSaveInstanceState(Bundle bundle) {
 		bundle.putString(EXTRA_PID, mPid);
-		if (mSoundRecording != null) {
-			bundle.putParcelable(EXTRA_SOUND_RECORDING, mSoundRecording);
-		}
-		if (mSoundRecordingItem != null) {
-			bundle.putParcelable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
-		}
+		bundle.putParcelable(EXTRA_SOUND_RECORDING, mSoundRecording);
+		bundle.putParcelable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
 		super.onSaveInstanceState(bundle);
 	}
 
@@ -332,7 +328,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 			public void run() {
 				if (mBinder != null && mSoundRecording != null) {
 					String activeSoundRecordingPid = mBinder.getSoundRecordingId();
-					if (activeSoundRecordingPid != null && activeSoundRecordingPid.equals(mPid)) {
+					if (activeSoundRecordingPid != null && activeSoundRecordingPid.equals(mSoundRecording.getPid())) {
 						isThisSoundRecording = true;
 						// update visulised track
 						Track currentTrack = mBinder.getCurrentTrack();
@@ -441,10 +437,12 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 			intent.putExtras(bundle);
 			startService(intent);
 		} else if (v == mActionbarBtnInfo) {
-			Intent intent = new Intent(this, MetadataActivity.class);
-			intent.putExtra(EXTRA_PID, mPid);
-			startActivity(intent);
+			String pid = mPid != null ? mPid : (mSoundRecording != null ? mSoundRecording.getPid() : null);
+			if (pid != null) {
+				Intent intent = new Intent(this, MetadataActivity.class);
+				intent.putExtra(EXTRA_PID, pid);
+				startActivity(intent);
+			}
 		}
 	}
-
 }
