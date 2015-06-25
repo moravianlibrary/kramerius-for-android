@@ -108,6 +108,7 @@ public class HistoryFragment extends BaseFragment implements OnPopupMenuSelected
 						.pid(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_PID)))
 						.parentPid(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_PARENT_PID)))
 						.timestamp(c.getLong(c.getColumnIndex(HistoryEntry.COLUMN_TIMESTAMP)))
+						.model(c.getString(c.getColumnIndex(HistoryEntry.COLUMN_MODEL)))
 						.popupListener(HistoryFragment.this)
 						.build(mOptions);
 

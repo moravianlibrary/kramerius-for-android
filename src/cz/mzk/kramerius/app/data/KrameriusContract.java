@@ -79,7 +79,8 @@ public class KrameriusContract {
 		public static final String COLUMN_TITLE = "title";
 		public static final String COLUMN_SUBTITLE = "subtitle";
 		public static final String COLUMN_TIMESTAMP = "timestamp";
-
+		public static final String COLUMN_MODEL = "model";
+		
 		public static Uri buildHistoryUri(long id) {
 			return ContentUris.withAppendedId(CONTENT_URI, id);
 		}
@@ -92,7 +93,7 @@ public class KrameriusContract {
 		
 		public static final String[] PROJECTION = {
 			COLUMN_DOMAIN, COLUMN_PID, COLUMN_PARENT_PID, COLUMN_TITLE,
-			COLUMN_SUBTITLE, COLUMN_TIMESTAMP
+			COLUMN_SUBTITLE, COLUMN_TIMESTAMP, COLUMN_MODEL
 		};
 		
 		

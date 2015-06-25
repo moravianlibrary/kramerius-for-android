@@ -691,6 +691,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
 		cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
 		cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+		cv.put(HistoryEntry.COLUMN_MODEL, ModelUtil.PAGE);
 
 		if (insert) {
 			getContentResolver().insert(HistoryEntry.CONTENT_URI, cv);

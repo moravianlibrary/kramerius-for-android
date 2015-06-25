@@ -30,6 +30,7 @@ public class RecentCard extends Card {
 	private String subtitle;
 	private String pid;
 	private String parentPid;
+	private String model;
 	private long timestamp;
 
 	public RecentCard(Context context) {
@@ -44,6 +45,11 @@ public class RecentCard extends Card {
 
 	public RecentCard popupListener(OnPopupMenuSelectedListener listener) {
 		mOnPopupMenuSelectedListener = listener;
+		return this;
+	}
+
+	public RecentCard model(String model) {
+		this.model = model;
 		return this;
 	}
 
@@ -76,7 +82,8 @@ public class RecentCard extends Card {
 		Item item = new Item();
 		item.setPid(pid);
 		item.setTitle(title);
-		item.setModel(ModelUtil.PAGE);
+		item.setModel(model);
+		item.setRootPid(parentPid);
 		return item;
 	}
 

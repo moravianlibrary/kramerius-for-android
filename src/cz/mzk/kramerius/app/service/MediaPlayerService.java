@@ -2,13 +2,16 @@ package cz.mzk.kramerius.app.service;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -20,11 +23,14 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.app.NotificationCompat.Builder;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.api.K5Api;
+import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.model.SoundRecording;
 import cz.mzk.kramerius.app.model.Track;
 import cz.mzk.kramerius.app.service.MediaPlayerWithState.State;
 import cz.mzk.kramerius.app.service.NotificationThumbnailManager.DownloadHandler;
 import cz.mzk.kramerius.app.ui.SoundRecordingActivity;
+import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class MediaPlayerService extends Service {
 
@@ -165,6 +171,7 @@ public class MediaPlayerService extends Service {
 				LOGGER.info("play: already playing, ignoring");
 			} else {// other track
 				LOGGER.fine("play: playing");
+				putToHistory();
 				mMediaPlayer.reset();
 				prepareMediaPlayerAndPlay();
 			}
@@ -542,6 +549,39 @@ public class MediaPlayerService extends Service {
 
 	State getState() {
 		return mMediaPlayer != null ? mMediaPlayer.getState() : null;
+	}
+
+	private void putToHistory() {
+		Track track = getCurrentTrack();
+		if (track == null) {
+			return;
+		}
+		String domain = K5Api.getDomain(this);
+		Cursor c = getContentResolver().query(HistoryEntry.CONTENT_URI, new String[] { HistoryEntry._ID },
+				HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+				new String[] { domain, track.getSoundRecordingPid() }, null);
+		boolean inserted = true;
+		if (c.moveToFirst()) {
+			inserted = false;
+		}
+		c.close();
+
+		ContentValues cv = new ContentValues();
+		cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
+		cv.put(HistoryEntry.COLUMN_PARENT_PID, track.getSoundRecordingPid());
+		cv.put(HistoryEntry.COLUMN_PID, track.getPid());
+		cv.put(HistoryEntry.COLUMN_TITLE, track.getSoundRecordingTitle());
+		cv.put(HistoryEntry.COLUMN_MODEL, ModelUtil.TRACK);
+		cv.put(HistoryEntry.COLUMN_SUBTITLE, track.getTitle());
+		cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+		if (inserted) {
+			getContentResolver().insert(HistoryEntry.CONTENT_URI, cv);
+		} else {
+			getContentResolver().update(HistoryEntry.CONTENT_URI, cv,
+					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
+					new String[] { domain, track.getSoundRecordingPid() });
+		}
+
 	}
 
 }

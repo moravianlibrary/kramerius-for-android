@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
@@ -15,6 +17,7 @@ import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
+import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class KrameriusDatabase extends SQLiteOpenHelper {
 
@@ -23,13 +26,15 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION_HISTORY = 3;
 	private static final int DATABASE_VERSION_LOCALE_LANGUAGES = 4;
 	private static final int DATABASE_VERSION_LOCALE_RELATORS = 5;
+	private static final int DATABASE_VERSION_HISTORY_MODEL = 6;
 
-	private static final int DATABASE_VERSION = DATABASE_VERSION_LOCALE_RELATORS;
+	private static final int DATABASE_VERSION = DATABASE_VERSION_HISTORY_MODEL;
 
 	private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
 	private static final String DATABASE_NAME_EXTERNAL = Environment
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius4.db";
 
+	private static final String TABLE_TMP = "tmp";
 	private static final String INDEX_INSTITUTION_SIGLA = InstitutuinEntry.TABLE_NAME + "_"
 			+ InstitutuinEntry.COLUMN_SIGLA;
 	private static final String INDEX_LANGUAGE_CODE = LanguageEntry.TABLE_NAME + "_" + LanguageEntry.COLUMN_CODE;
@@ -80,15 +85,28 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 	private String buildStatementCreateTable(String tableName, int dbVersion) {
 		if (tableName.equals(HistoryEntry.TABLE_NAME)) {
-			return "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" //
-					+ HistoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
-					+ HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "//
-					+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "//
-					+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "//
-					+ HistoryEntry.COLUMN_TITLE + " TEXT, "//
-					+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "//
-					+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL"//
-					+ ");";
+			if (dbVersion < DATABASE_VERSION_HISTORY_MODEL) {
+				return "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" //
+						+ HistoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
+						+ HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "//
+						+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "//
+						+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "//
+						+ HistoryEntry.COLUMN_TITLE + " TEXT, "//
+						+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "//
+						+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL"//
+						+ ");";
+			} else {
+				return "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" //
+						+ HistoryEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
+						+ HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "//
+						+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "//
+						+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "//
+						+ HistoryEntry.COLUMN_TITLE + " TEXT, "//
+						+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "//
+						+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL, "//
+						+ HistoryEntry.COLUMN_MODEL + " TEXT NOT NULL "//
+						+ ");";
+			}
 		} else if (tableName.equals(RelatorEntry.TABLE_NAME)) {
 			if (dbVersion < DATABASE_VERSION_LOCALE_RELATORS) {
 				return "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" //
@@ -165,6 +183,34 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			populateFrom(db, R.raw.relators);
 
 			version++;
+
+		case DATABASE_VERSION_LOCALE_RELATORS:
+			// history - adding attribute 'model' (present data transformed)
+			// SQLite doesn't implement ALTER TABLE ADD CONSTRAINT (http: // www.sqlite.org/omitted.html)
+			// So I can't add nullable column model, update all records with "page" and set column model to not nullable.
+			db.execSQL("ALTER TABLE " + HistoryEntry.TABLE_NAME + " RENAME TO " + TABLE_TMP + ";");
+			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, version + 1));
+			String[] columns = new String[] {//
+			HistoryEntry.COLUMN_DOMAIN,//
+					HistoryEntry.COLUMN_PARENT_PID,//
+					HistoryEntry.COLUMN_PID,//
+					HistoryEntry.COLUMN_SUBTITLE,//
+					HistoryEntry.COLUMN_TIMESTAMP,//
+					HistoryEntry.COLUMN_TITLE };
+			Cursor cursor = db.query(TABLE_TMP, columns, null, null, null, null, null);
+			while (!cursor.isAfterLast()) {
+				ContentValues values = new ContentValues();
+				int index = 0;
+				values.put(HistoryEntry.COLUMN_DOMAIN, cursor.getString(index++));
+				values.put(HistoryEntry.COLUMN_MODEL, ModelUtil.PAGE);
+				values.put(HistoryEntry.COLUMN_PARENT_PID, cursor.getString(index++));
+				values.put(HistoryEntry.COLUMN_PID, cursor.getString(index++));
+				values.put(HistoryEntry.COLUMN_SUBTITLE, cursor.getString(index++));
+				values.put(HistoryEntry.COLUMN_TIMESTAMP, cursor.getInt(index++));
+				values.put(HistoryEntry.COLUMN_TITLE, cursor.getString(index++));
+				db.insert(HistoryEntry.TABLE_NAME, null, values);
+			}
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP);
 		}
 	}
 

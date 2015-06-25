@@ -96,20 +96,25 @@ public class ModelUtil {
 
 	public static void startActivityByModel(Activity activity, Item item) {
 		Intent intent = null;
-		if (ModelUtil.SOUND_RECORDING.equals(item.getModel())) {
+		if (TRACK.equals(item.getModel())) {
 			intent = new Intent(activity, SoundRecordingActivity.class);
-			intent.putExtra(SoundRecordingActivity.EXTRA_SOUND_RECORDING_ITEM, item);
-		} else if (ModelUtil.PERIODICAL.equals(item.getModel())) {
-			intent = new Intent(activity, PeriodicalActivity.class);
-		} else if (ModelUtil.PERIODICAL_VOLUME.equals(item.getModel())) {
-			intent = new Intent(activity, PeriodicalActivity.class);
+			intent.putExtra(BaseActivity.EXTRA_PID, item.getRootPid());
 		} else {
-			intent = new Intent(activity, PageActivity.class);
-			// if(item.isPrivate()) {
-			// intent.putExtra(PageActivity.EXTRA_SECURE, true);
-			// }
+			if (SOUND_RECORDING.equals(item.getModel())) {
+				intent = new Intent(activity, SoundRecordingActivity.class);
+				intent.putExtra(SoundRecordingActivity.EXTRA_SOUND_RECORDING_ITEM, item);
+			} else if (PERIODICAL.equals(item.getModel())) {
+				intent = new Intent(activity, PeriodicalActivity.class);
+			} else if (PERIODICAL_VOLUME.equals(item.getModel())) {
+				intent = new Intent(activity, PeriodicalActivity.class);
+			} else {
+				intent = new Intent(activity, PageActivity.class);
+				// if(item.isPrivate()) {
+				// intent.putExtra(PageActivity.EXTRA_SECURE, true);
+				// }
+			}
+			intent.putExtra(BaseActivity.EXTRA_PID, item.getPid());
 		}
-		intent.putExtra(BaseActivity.EXTRA_PID, item.getPid());
 		activity.startActivity(intent);
 	}
 
