@@ -16,7 +16,7 @@ public class KrameriusContract {
 	public static final String PATH_HISTORY = "history";
 
 
-	public static final class InstitutuinEntry implements BaseColumns {
+	public static final class InstitutionEntry implements BaseColumns {
 
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_INSTITUTION).build();
 

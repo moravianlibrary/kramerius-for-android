@@ -14,7 +14,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
-import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.InstitutionEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
 import cz.mzk.kramerius.app.util.ModelUtil;
@@ -35,8 +35,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/kramerius4.db";
 
 	private static final String TABLE_TMP = "tmp";
-	private static final String INDEX_INSTITUTION_SIGLA = InstitutuinEntry.TABLE_NAME + "_"
-			+ InstitutuinEntry.COLUMN_SIGLA;
+	private static final String INDEX_INSTITUTION_SIGLA = InstitutionEntry.TABLE_NAME + "_"
+			+ InstitutionEntry.COLUMN_SIGLA;
 	private static final String INDEX_LANGUAGE_CODE = LanguageEntry.TABLE_NAME + "_" + LanguageEntry.COLUMN_CODE;
 	private static final String INDEX_RELATOR_CODE = RelatorEntry.TABLE_NAME + "_" + RelatorEntry.COLUMN_CODE;
 
@@ -50,7 +50,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// institution
-		db.execSQL(buildStatementCreateTable(InstitutuinEntry.TABLE_NAME, DATABASE_VERSION));
+		db.execSQL(buildStatementCreateTable(InstitutionEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(buildStatementCreateIndex(INDEX_INSTITUTION_SIGLA, DATABASE_VERSION));
 		populateFrom(db, R.raw.institution);
 		// language
@@ -68,8 +68,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	private String buildStatementCreateIndex(String indexName, int dbVersion) {
 		if (indexName.equals(INDEX_INSTITUTION_SIGLA)) {
 			return "CREATE INDEX " + indexName + " on "//
-					+ InstitutuinEntry.TABLE_NAME + "("//
-					+ InstitutuinEntry.COLUMN_SIGLA//
+					+ InstitutionEntry.TABLE_NAME + "("//
+					+ InstitutionEntry.COLUMN_SIGLA//
 					+ ");";
 		} else if (indexName.equals(INDEX_LANGUAGE_CODE)) {
 			return "CREATE INDEX " + indexName + " on "//
@@ -122,11 +122,11 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 						+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" //
 						+ ");";
 			}
-		} else if (tableName.equals(InstitutuinEntry.TABLE_NAME)) {
-			return "CREATE TABLE " + KrameriusContract.InstitutuinEntry.TABLE_NAME + " (" + InstitutuinEntry._ID
+		} else if (tableName.equals(InstitutionEntry.TABLE_NAME)) {
+			return "CREATE TABLE " + KrameriusContract.InstitutionEntry.TABLE_NAME + " (" + InstitutionEntry._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT," //
-					+ InstitutuinEntry.COLUMN_SIGLA + " TEXT NOT NULL, "//
-					+ InstitutuinEntry.COLUMN_NAME + " TEXT NOT NULL"//
+					+ InstitutionEntry.COLUMN_SIGLA + " TEXT NOT NULL, "//
+					+ InstitutionEntry.COLUMN_NAME + " TEXT NOT NULL"//
 					+ ");";
 		} else if (tableName.equals(LanguageEntry.TABLE_NAME)) {
 			return "CREATE TABLE " + LanguageEntry.TABLE_NAME + " ("//

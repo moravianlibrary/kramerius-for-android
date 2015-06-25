@@ -39,7 +39,7 @@ public class KrameriusProvider extends ContentProvider {
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
 		case INSTITUTION:
-			return KrameriusContract.InstitutuinEntry.CONTENT_TYPE;
+			return KrameriusContract.InstitutionEntry.CONTENT_TYPE;
 		case LANGUAGE:
 			return KrameriusContract.LanguageEntry.CONTENT_TYPE;
 		case RELATOR:
@@ -83,7 +83,7 @@ public class KrameriusProvider extends ContentProvider {
 		Cursor cursor;
 		switch (sUriMatcher.match(uri)) {
 		case INSTITUTION:
-			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.InstitutuinEntry.TABLE_NAME, projection,
+			cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.InstitutionEntry.TABLE_NAME, projection,
 					selection, selectionArgs, null, null, sortOrder);
 			break;
 		case LANGUAGE:

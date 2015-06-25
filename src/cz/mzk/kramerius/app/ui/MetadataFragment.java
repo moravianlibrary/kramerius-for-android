@@ -28,7 +28,7 @@ import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.data.KrameriusContract;
-import cz.mzk.kramerius.app.data.KrameriusContract.InstitutuinEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.InstitutionEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
 import cz.mzk.kramerius.app.metadata.Author;
@@ -361,11 +361,11 @@ public class MetadataFragment extends BaseFragment {
 
 		if (location.getPhysicalLocation() != null && !location.getPhysicalLocation().isEmpty()
 				&& getActivity() != null) {
-			Cursor c = getActivity().getContentResolver().query(KrameriusContract.InstitutuinEntry.CONTENT_URI,
-					new String[] { InstitutuinEntry.COLUMN_NAME }, InstitutuinEntry.COLUMN_SIGLA + "=?",
+			Cursor c = getActivity().getContentResolver().query(KrameriusContract.InstitutionEntry.CONTENT_URI,
+					new String[] { InstitutionEntry.COLUMN_NAME }, InstitutionEntry.COLUMN_SIGLA + "=?",
 					new String[] { location.getPhysicalLocation() }, null);
 			if (c.moveToFirst()) {
-				String phyciscalLocation = c.getString(c.getColumnIndex(InstitutuinEntry.COLUMN_NAME));
+				String phyciscalLocation = c.getString(c.getColumnIndex(InstitutionEntry.COLUMN_NAME));
 				addKeyValueView(getString(R.string.metadata_location_physical), phyciscalLocation);
 			}
 			c.close();
