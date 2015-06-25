@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build.VERSION;
 import android.os.Environment;
 import android.text.TextUtils;
 import cz.mzk.kramerius.app.R;
@@ -40,89 +41,86 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		final String SQL_CREATE_INSTITUTION_TABLE = "CREATE TABLE " + KrameriusContract.InstitutuinEntry.TABLE_NAME
-				+ " (" + InstitutuinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + InstitutuinEntry.COLUMN_SIGLA
-				+ " TEXT NOT NULL, " + InstitutuinEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
-
 		final String SQL_CREATE_INSTITUTION_SIGLA_INDEX = "CREATE INDEX " + InstitutuinEntry.TABLE_NAME + "_"
 				+ InstitutuinEntry.COLUMN_SIGLA + " on " + InstitutuinEntry.TABLE_NAME + "("
 				+ InstitutuinEntry.COLUMN_SIGLA + ");";
-
-		final String SQL_CREATE_LANGUAGE_TABLE = "CREATE TABLE " + LanguageEntry.TABLE_NAME + " (" + LanguageEntry._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + LanguageEntry.COLUMN_CODE + " TEXT NOT NULL, "
-				+ LanguageEntry.COLUMN_NAME + " TEXT NOT NULL, " 
-				+ LanguageEntry.COLUMN_LANG + " TEXT NOT NULL" 				
-				+ ");";
 
 		final String SQL_CREATE_LANGUAGE_CODE_INDEX = "CREATE INDEX " + LanguageEntry.TABLE_NAME + "_"
 				+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
 				+ ");";
 
-		final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
-				+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," 
-				+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" 
-				+ ");";
-
 		final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
 				+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
-
-		
-		final String SQL_CREATE_HISTORY_TABLE = "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" + HistoryEntry._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
-				+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
-				+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
-				+ HistoryEntry.COLUMN_TITLE + " TEXT, "
-				+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "
-				+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
 		
 		
-		db.execSQL(SQL_CREATE_INSTITUTION_TABLE);
+		db.execSQL(buildCreateTableStatement(InstitutuinEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(SQL_CREATE_INSTITUTION_SIGLA_INDEX);
 
-		db.execSQL(SQL_CREATE_LANGUAGE_TABLE);
+		db.execSQL(buildCreateTableStatement(LanguageEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
 
-		db.execSQL(SQL_CREATE_RELATOR_TABLE);
+		db.execSQL(buildCreateTableStatement(RelatorEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
 
-		db.execSQL(SQL_CREATE_HISTORY_TABLE);
+		db.execSQL(buildCreateTableStatement(HistoryEntry.TABLE_NAME, DATABASE_VERSION));
 		
 		populateFrom(db, R.raw.institution);
 		populateFrom(db, R.raw.languages);
 		populateFrom(db, R.raw.relators);
 	}
+	
+	/**
+	 * TODO: parametr VERSION
+	 * @param tableName
+	 * @return
+	 */
+	private String buildCreateTableStatement(String tableName, int dbVersion){
+		if(tableName.equals(HistoryEntry.TABLE_NAME)){
+			return "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" + HistoryEntry._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
+					+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
+					+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
+					+ HistoryEntry.COLUMN_TITLE + " TEXT, "
+					+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "				
+					+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
+		}else if (tableName.equals(RelatorEntry.TABLE_NAME)){
+			return "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
+					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," 
+					+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" 
+					+ ");";
+		}else if (tableName.equals(InstitutuinEntry.TABLE_NAME)){
+			return "CREATE TABLE " + KrameriusContract.InstitutuinEntry.TABLE_NAME
+					+ " (" + InstitutuinEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + InstitutuinEntry.COLUMN_SIGLA
+					+ " TEXT NOT NULL, " + InstitutuinEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
+		}else if(tableName.equals(LanguageEntry.TABLE_NAME)){
+			return "CREATE TABLE " + LanguageEntry.TABLE_NAME + " (" + LanguageEntry._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + LanguageEntry.COLUMN_CODE + " TEXT NOT NULL, "
+					+ LanguageEntry.COLUMN_NAME + " TEXT NOT NULL, " 
+					+ LanguageEntry.COLUMN_LANG + " TEXT NOT NULL" 				
+					+ ");";
+		}
+		throw new IllegalArgumentException("unknown table " + tableName);
+	}
+	
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		int version = oldVersion;
 		switch (version) {
 		case DATABASE_VERSION_INITIAL: {
-			final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
-					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
-					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL" + ");";
-
 			final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
 					+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE
 					+ ");";
-			db.execSQL(SQL_CREATE_RELATOR_TABLE);
+			db.execSQL(buildCreateTableStatement(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
 			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
 			populateFrom(db, R.raw.relators_old_v2);
 
 			version = DATABASE_VERSION_RELATORS;
 		}
-		case DATABASE_VERSION_RELATORS:
-			final String SQL_CREATE_HISTORY_TABLE = "CREATE TABLE " + HistoryEntry.TABLE_NAME + " (" + HistoryEntry._ID
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + HistoryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
-				+ HistoryEntry.COLUMN_PID + " TEXT NOT NULL, "
-				+ HistoryEntry.COLUMN_PARENT_PID + " TEXT NOT NULL, "
-				+ HistoryEntry.COLUMN_TITLE + " TEXT, "
-				+ HistoryEntry.COLUMN_SUBTITLE + " TEXT, "				
-				+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL" + ");";
-			db.execSQL(SQL_CREATE_HISTORY_TABLE);
-
+		case DATABASE_VERSION_RELATORS: 
+			db.execSQL(buildCreateTableStatement(HistoryEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
 			version = DATABASE_VERSION_HISTORY;
-		
 		case DATABASE_VERSION_HISTORY:
 			db.execSQL("DROP INDEX IF EXISTS " + LanguageEntry.TABLE_NAME + "_"
 					+ LanguageEntry.COLUMN_CODE);	
@@ -131,12 +129,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			final String SQL_CREATE_LANGUAGE_CODE_INDEX = "CREATE INDEX " + LanguageEntry.TABLE_NAME + "_"
 					+ LanguageEntry.COLUMN_CODE + " on " + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE
 					+ ");";
-			final String SQL_CREATE_LANGUAGE_TABLE = "CREATE TABLE " + LanguageEntry.TABLE_NAME + " (" + LanguageEntry._ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + LanguageEntry.COLUMN_CODE + " TEXT NOT NULL, "
-			+ LanguageEntry.COLUMN_NAME + " TEXT NOT NULL, " 
-			+ LanguageEntry.COLUMN_LANG + " TEXT NOT NULL" 				
-			+ ");";
-			db.execSQL(SQL_CREATE_LANGUAGE_TABLE);
+			
+			db.execSQL(buildCreateTableStatement(LanguageEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
 			db.execSQL(SQL_CREATE_LANGUAGE_CODE_INDEX);
 			populateFrom(db, R.raw.languages);			
 			version = DATABASE_VERSION_LOCALE_LANGUAGES;
@@ -146,16 +140,10 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 					+ RelatorEntry.COLUMN_CODE);	
 			db.execSQL("DROP TABLE IF EXISTS " + RelatorEntry.TABLE_NAME);			
 			
-			final String SQL_CREATE_RELATOR_TABLE = "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" + RelatorEntry._ID
-					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "
-					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," 
-					+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" 
-					+ ");";
-
 			final String SQL_CREATE_RELATOR_CODE_INDEX = "CREATE INDEX " + RelatorEntry.TABLE_NAME + "_"
 					+ RelatorEntry.COLUMN_CODE + " on " + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
 
-			db.execSQL(SQL_CREATE_RELATOR_TABLE);
+			db.execSQL(buildCreateTableStatement(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
 			db.execSQL(SQL_CREATE_RELATOR_CODE_INDEX);
 			populateFrom(db, R.raw.relators);
 			version = DATABASE_VERSION_LOCALE_RELATORS;
