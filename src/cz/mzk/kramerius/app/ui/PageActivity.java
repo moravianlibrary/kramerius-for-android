@@ -681,27 +681,20 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			insert = false;
 		}
 		c.close();
+
+		ContentValues cv = new ContentValues();
+		cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
+		cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentItem.getPid());
+		if (mPageList != null && mCurrentPage < mPageList.size()) {
+			cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
+		}
+		cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
+		cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
+		cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+
 		if (insert) {
-			ContentValues cv = new ContentValues();
-			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
-			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentItem.getPid());
-			if (mPageList != null && mCurrentPage < mPageList.size()) {
-				cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
-			}
-			cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
-			cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
-			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
 			getContentResolver().insert(HistoryEntry.CONTENT_URI, cv);
 		} else {
-			ContentValues cv = new ContentValues();
-			cv.put(HistoryEntry.COLUMN_DOMAIN, domain);
-			cv.put(HistoryEntry.COLUMN_PARENT_PID, mParentItem.getPid());
-			if (mPageList != null && mCurrentPage < mPageList.size()) {
-				cv.put(HistoryEntry.COLUMN_PID, mPageList.get(mCurrentPage).getPid());
-			}
-			cv.put(HistoryEntry.COLUMN_TITLE, mTitle);
-			cv.put(HistoryEntry.COLUMN_SUBTITLE, mSubtitle);
-			cv.put(HistoryEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
 			getContentResolver().update(HistoryEntry.CONTENT_URI, cv,
 					HistoryEntry.COLUMN_DOMAIN + "=? AND " + HistoryEntry.COLUMN_PARENT_PID + " =?",
 					new String[] { domain, mParentItem.getPid() });
