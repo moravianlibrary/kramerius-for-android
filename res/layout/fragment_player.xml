@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="true"
             android:visibility="visible"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+            style="@style/PlayerIndeterminateProgressBar" />
 
         <SeekBar
             android:id="@+id/seekBar_known_length"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="false"
             android:visibility="invisible"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+            style="@style/MySeekBar" />
 
         <SeekBar
             android:id="@+id/seekBar_unknown_length"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:indeterminate="false"
             android:visibility="invisible"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+            style="@style/MySeekBar" />
 
     </FrameLayout>
 

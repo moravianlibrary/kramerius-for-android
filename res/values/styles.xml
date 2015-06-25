@@ -36,6 +36,10 @@
         <item name="android:paddingRight">16dip</item>
     </style>
 
+    <!-- style="@style/Widget.AppCompat.ProgressBar.Horizontal" -->
+    <style name="PlayerIndeterminateProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+    </style>
+
     <style name="MyButton">
         <item name="android:paddingLeft">@dimen/button_padding_left</item>
         <item name="android:paddingRight">@dimen/button_padding_right</item>
