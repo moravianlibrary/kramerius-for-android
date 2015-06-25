@@ -44,21 +44,20 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-
+		// institution
 		db.execSQL(buildStatementCreateTable(InstitutuinEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(buildStatementCreateIndex(INDEX_INSTITUTION_SIGLA, DATABASE_VERSION));
-
+		populateFrom(db, R.raw.institution);
+		// language
 		db.execSQL(buildStatementCreateTable(LanguageEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(buildStatementCreateIndex(INDEX_LANGUAGE_CODE, DATABASE_VERSION));
-
+		populateFrom(db, R.raw.languages);
+		// relator
 		db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, DATABASE_VERSION));
 		db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, DATABASE_VERSION));
-
-		db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, DATABASE_VERSION));
-
-		populateFrom(db, R.raw.institution);
-		populateFrom(db, R.raw.languages);
 		populateFrom(db, R.raw.relators);
+		// history
+		db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, DATABASE_VERSION));
 	}
 
 	private String buildStatementCreateIndex(String indexName, int dbVersion) {
@@ -157,7 +156,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 
 		case DATABASE_VERSION_LOCALE_LANGUAGES:
 
-			// relators - adding attribute 'lang' (with data loss)
+			// relators - adding attribute 'lang'
 			db.execSQL("DROP INDEX IF EXISTS " + INDEX_RELATOR_CODE);
 			db.execSQL("DROP TABLE IF EXISTS " + RelatorEntry.TABLE_NAME);
 
