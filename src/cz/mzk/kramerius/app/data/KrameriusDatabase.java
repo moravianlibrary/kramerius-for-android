@@ -91,12 +91,20 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 					+ HistoryEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL"//
 					+ ");";
 		} else if (tableName.equals(RelatorEntry.TABLE_NAME)) {
-			return "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" //
-					+ RelatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
-					+ RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "//
-					+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," //
-					+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" //
-					+ ");";
+			if (dbVersion < DATABASE_VERSION_LOCALE_RELATORS) {
+				return "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" //
+						+ RelatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
+						+ RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "//
+						+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," //
+						+ ");";
+			} else {
+				return "CREATE TABLE " + RelatorEntry.TABLE_NAME + " (" //
+						+ RelatorEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"//
+						+ RelatorEntry.COLUMN_CODE + " TEXT NOT NULL, "//
+						+ RelatorEntry.COLUMN_NAME + " TEXT NOT NULL," //
+						+ RelatorEntry.COLUMN_LANG + " TEXT NOT NULL" //
+						+ ");";
+			}
 		} else if (tableName.equals(InstitutuinEntry.TABLE_NAME)) {
 			return "CREATE TABLE " + KrameriusContract.InstitutuinEntry.TABLE_NAME + " (" + InstitutuinEntry._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT," //
@@ -119,36 +127,45 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 		int version = oldVersion;
 		switch (version) {
 		case DATABASE_VERSION_INITIAL:
-			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
-			db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, DATABASE_VERSION_RELATORS));
+
+			// relators
+			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, version + 1));
+			db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, version + 1));
 			populateFrom(db, R.raw.relators_old_v2);
 
-			version = DATABASE_VERSION_RELATORS;
+			version++;
 
 		case DATABASE_VERSION_RELATORS:
-			db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
 
-			version = DATABASE_VERSION_HISTORY;
+			// histories
+			db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, version + 1));
+
+			version++;
 
 		case DATABASE_VERSION_HISTORY:
+
+			// is this really necessary? table & index don't seem to be created in previous versions
 			db.execSQL("DROP INDEX IF EXISTS " + INDEX_LANGUAGE_CODE);
 			db.execSQL("DROP TABLE IF EXISTS " + LanguageEntry.TABLE_NAME);
 
-			db.execSQL(buildStatementCreateTable(LanguageEntry.TABLE_NAME, DATABASE_VERSION_LOCALE_LANGUAGES));
-			db.execSQL(buildStatementCreateIndex(INDEX_LANGUAGE_CODE, DATABASE_VERSION_LOCALE_LANGUAGES));
+			// languages
+			db.execSQL(buildStatementCreateTable(LanguageEntry.TABLE_NAME, version + 1));
+			db.execSQL(buildStatementCreateIndex(INDEX_LANGUAGE_CODE, version + 1));
 			populateFrom(db, R.raw.languages);
 
-			version = DATABASE_VERSION_LOCALE_LANGUAGES;
+			version++;
 
 		case DATABASE_VERSION_LOCALE_LANGUAGES:
+
+			// relators - adding attribute 'lang' (with data loss)
 			db.execSQL("DROP INDEX IF EXISTS " + INDEX_RELATOR_CODE);
 			db.execSQL("DROP TABLE IF EXISTS " + RelatorEntry.TABLE_NAME);
 
-			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, DATABASE_VERSION_RELATORS));
-			db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, DATABASE_VERSION_RELATORS));
+			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, version + 1));
+			db.execSQL(buildStatementCreateIndex(INDEX_RELATOR_CODE, version + 1));
 			populateFrom(db, R.raw.relators);
 
-			version = DATABASE_VERSION_LOCALE_RELATORS;
+			version++;
 		}
 	}
 
