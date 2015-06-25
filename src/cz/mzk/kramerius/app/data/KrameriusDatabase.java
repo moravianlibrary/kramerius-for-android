@@ -189,7 +189,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 			// SQLite doesn't implement ALTER TABLE ADD CONSTRAINT (http: // www.sqlite.org/omitted.html)
 			// So I can't add nullable column model, update all records with "page" and set column model to not nullable.
 			db.execSQL("ALTER TABLE " + HistoryEntry.TABLE_NAME + " RENAME TO " + TABLE_TMP + ";");
-			db.execSQL(buildStatementCreateTable(RelatorEntry.TABLE_NAME, version + 1));
+			db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, version + 1));
 			String[] columns = new String[] {//
 			HistoryEntry.COLUMN_DOMAIN,//
 					HistoryEntry.COLUMN_PARENT_PID,//
