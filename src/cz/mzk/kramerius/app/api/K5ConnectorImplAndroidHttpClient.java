@@ -301,7 +301,7 @@ public class K5ConnectorImplAndroidHttpClient implements K5Connector {
 	}
 
 	@Override
-	public List<Item> getVirtualCollctions(Context context) {
+	public List<Item> getVirtualCollections(Context context) {
 		try {
 			List<Item> list = new ArrayList<Item>();
 			HttpGet request = new HttpGet(K5Api.getVirtualCollectionsPath(context));

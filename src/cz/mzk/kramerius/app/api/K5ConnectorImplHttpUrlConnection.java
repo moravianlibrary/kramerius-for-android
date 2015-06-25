@@ -340,7 +340,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
 	}
 
 	@Override
-	public List<Item> getVirtualCollctions(Context context) {
+	public List<Item> getVirtualCollections(Context context) {
 		// return legacyConnector.getVirtualCollctions(context);
 		try {
 			String url = K5Api.getVirtualCollectionsPath(context);

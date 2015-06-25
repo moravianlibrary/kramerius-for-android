@@ -81,7 +81,7 @@ public class VirtualCollectionsFragment extends BaseFragment {
 
 		@Override
 		protected List<Item> doInBackground(Void... params) {
-			return K5ConnectorFactory.getConnector().getVirtualCollctions(tContext);
+			return K5ConnectorFactory.getConnector().getVirtualCollections(tContext);
 		}
 
 		@Override

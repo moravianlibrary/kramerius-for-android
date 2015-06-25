@@ -25,7 +25,7 @@ public interface K5Connector {
 
 	public abstract List<Item> getChildren(Context context, String pid);
 
-	public abstract List<Item> getVirtualCollctions(Context context);
+	public abstract List<Item> getVirtualCollections(Context context);
 
 	public abstract User getUserInfo(Context context);
 
