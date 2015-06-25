@@ -198,17 +198,21 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
 					HistoryEntry.COLUMN_TIMESTAMP,//
 					HistoryEntry.COLUMN_TITLE };
 			Cursor cursor = db.query(TABLE_TMP, columns, null, null, null, null, null);
-			while (!cursor.isAfterLast()) {
-				ContentValues values = new ContentValues();
-				int index = 0;
-				values.put(HistoryEntry.COLUMN_DOMAIN, cursor.getString(index++));
-				values.put(HistoryEntry.COLUMN_MODEL, ModelUtil.PAGE);
-				values.put(HistoryEntry.COLUMN_PARENT_PID, cursor.getString(index++));
-				values.put(HistoryEntry.COLUMN_PID, cursor.getString(index++));
-				values.put(HistoryEntry.COLUMN_SUBTITLE, cursor.getString(index++));
-				values.put(HistoryEntry.COLUMN_TIMESTAMP, cursor.getInt(index++));
-				values.put(HistoryEntry.COLUMN_TITLE, cursor.getString(index++));
-				db.insert(HistoryEntry.TABLE_NAME, null, values);
+			boolean notEmpty = cursor.moveToFirst();
+			if (notEmpty) {
+				while (!cursor.isAfterLast()) {
+					ContentValues values = new ContentValues();
+					int index = 0;
+					values.put(HistoryEntry.COLUMN_DOMAIN, cursor.getString(index++));
+					values.put(HistoryEntry.COLUMN_MODEL, ModelUtil.PAGE);
+					values.put(HistoryEntry.COLUMN_PARENT_PID, cursor.getString(index++));
+					values.put(HistoryEntry.COLUMN_PID, cursor.getString(index++));
+					values.put(HistoryEntry.COLUMN_SUBTITLE, cursor.getString(index++));
+					values.put(HistoryEntry.COLUMN_TIMESTAMP, cursor.getInt(index++));
+					values.put(HistoryEntry.COLUMN_TITLE, cursor.getString(index++));
+					db.insert(HistoryEntry.TABLE_NAME, null, values);
+					cursor.moveToNext();
+				}
 			}
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP);
 		}
