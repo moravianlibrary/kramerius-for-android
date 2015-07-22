@@ -32,6 +32,9 @@ proguard/
 # backups
 *~
 
+#Project properties
+project.properties
+
 # Temporary files
 /data/
 /temp/

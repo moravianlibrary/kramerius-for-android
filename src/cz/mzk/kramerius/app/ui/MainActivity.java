@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 				}
 			});
 
-			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+			mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close) {
 
 				public void onDrawerClosed(View view) {
 					getSupportActionBar().setTitle(mTitle);

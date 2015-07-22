@@ -13,6 +13,7 @@ import org.dom4j.Node;
 import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
 
+
 import android.util.Log;
 import cz.mzk.kramerius.app.metadata.Author;
 import cz.mzk.kramerius.app.metadata.Cartographics;
