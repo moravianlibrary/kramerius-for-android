@@ -15,12 +15,6 @@ public class DomainUtil {
 		private static final long serialVersionUID = -8100284677714939192L;
 		{
 
-			// add(new Domain(true, "Moravská zemská knihovna", "http", "kramerius.mzk.cz", R.drawable.logo_mzk));
-			// add(new Domain(true, "Národní digitální knihovna", "http", "krameriusndktest.mzk.cz", R.drawable.logo_ndk));
-			// add(new Domain(true, "Knihovna Akademie věd ČR", "https", "kramerius.lib.cas.cz", R.drawable.logo_knav));
-			// add(new Domain(true, "Docker MZK (http)", "http", "docker.mzk.cz", R.drawable.logo_mzk));
-			// add(new Domain(true, "Docker MZK (https)", "https", "docker.mzk.cz", R.drawable.logo_mzk));
-
 			add(new Domain(true, "Moravská zemská knihovna", "http", "kramerius.mzk.cz", R.drawable.logo_mzk));
 			add(new Domain(true, "Národní digitální knihovna", "http", "krameriusndktest.mzk.cz", R.drawable.logo_ndk));
 			add(new Domain(true, "Jihočeská vědecká knihovna v Českých Budějovicích", "http", "kramerius.cbvk.cz",
@@ -29,7 +23,8 @@ public class DomainUtil {
 					R.drawable.logo_vkol));
 			add(new Domain(true, "Studijní a vědecká knihovna v Hradci Králové", "http", "kramerius4.svkhk.cz",
 					R.drawable.logo_svkhk));
-
+			add(new Domain(true, "Městská knihovna Česká Třebová", "http", "k5.digiknihovna.cz",
+					R.drawable.logo_mkct));
 			add(new Domain(false, "Krajská knihovna Karlovy Vary", "http", "k4.kr-karlovarsky.cz", R.drawable.logo_kkkv));
 			add(new Domain(false, "Knihovna Akademie věd ČR", "http", "kramerius.lib.cas.cz", R.drawable.logo_knav));
 			add(new Domain(false, "Knihovna Západočeského muzea v Plzni", "http", "kramerius.zcm.cz",
