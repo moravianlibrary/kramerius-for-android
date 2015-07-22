@@ -283,7 +283,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			return;
 		}
 		mPageViewerFragment.setEventListener(this);
-		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
+		/*String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
 		String[] vms = getResources().getStringArray(R.array.view_mode_values);
 		if (vms[0].equals(vm)) {
@@ -294,7 +294,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_CENTER);
 		} else if (vms[3].equals(vm)) {
 			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP);
-		}
+		}*/
+		mPageViewerFragment.setViewMode(ViewMode.FIT_TO_SCREEN);
 		setBackgroundColor();
 		String domain = K5Api.getDomain(this);
 		if (mPageViewerFragment != null) {
@@ -577,10 +578,11 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else if ("black".equals(bgColorValue)) {
 			color = Color.BLACK;
 		}
-		String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
-		String[] vms = getResources().getStringArray(R.array.view_mode_values);
+		//String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
+		//		getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
+		//String[] vms = getResources().getStringArray(R.array.view_mode_values);
 		ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
+		/*
 		if (vms[1].equals(vm)) {
 			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_LEFT_VERTICAL_TOP;
 		} else if (vms[2].equals(vm)) {
@@ -588,7 +590,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else if (vms[3].equals(vm)) {
 			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP;
 		}
-
+		*/
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 		mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
 				viewMode, this);

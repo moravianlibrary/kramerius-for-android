@@ -27,7 +27,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
+		//bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
 		bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_viewer_bg_color_key)));
 		findPreference(getString(R.string.pref_advanced_button_key)).setOnPreferenceClickListener(
 				new Preference.OnPreferenceClickListener() {

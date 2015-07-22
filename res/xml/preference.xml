@@ -28,14 +28,7 @@
             android:defaultValue="@string/pref_bookmark_default"
             android:key="@string/pref_bookmark_key"
             android:summary="@string/pref_bookmark_summary"
-            android:title="@string/pref_bookmark_title" />        
-        
-        <ListPreference
-            android:defaultValue="@string/pref_view_mode_default"
-            android:entries="@array/view_mode_entries"
-            android:entryValues="@array/view_mode_values"
-            android:key="@string/pref_view_mode_key"
-            android:title="@string/pref_view_mode_title" />
+            android:title="@string/pref_bookmark_title" />                      
         
         <ListPreference
             android:defaultValue="@string/pref_viewer_bg_color_default"
