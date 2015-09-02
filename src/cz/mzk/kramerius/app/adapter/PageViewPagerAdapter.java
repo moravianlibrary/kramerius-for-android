@@ -6,10 +6,9 @@ import java.util.List;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
+import android.view.ViewGroup;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.model.Item;
-import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment;
 
 public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
@@ -17,19 +16,17 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
 	private List<Item> mPages;
 	private String mDomain;
 	private int mBackground;
-	private EventListener mEventListener;
 	private ViewMode mViewMode;
 	
 	HashMap<Integer, SinglePageViewerFragment> mPageReferenceMap;
 	
     
-	public PageViewPagerAdapter(FragmentManager fragmentManager, String domain, List<Item> pages, int bgColor, ViewMode viewMode, EventListener eventListener) {
+	public PageViewPagerAdapter(FragmentManager fragmentManager, String domain, List<Item> pages, int bgColor, ViewMode viewMode) {
         super(fragmentManager);
         mPages = pages;
         mDomain = domain;
         mBackground = bgColor;
         mViewMode = viewMode;
-        mEventListener = eventListener;
         mPageReferenceMap = new HashMap<Integer, SinglePageViewerFragment>();
     }
 
@@ -44,12 +41,16 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
 
 
     public SinglePageViewerFragment getFragment(int key) {
-        return mPageReferenceMap.get(key);
+    	return mPageReferenceMap.get(key);
     }    
     
-    
-    public void destroyItem(View container, int position, Object object) {
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
         super.destroyItem(container, position, object);
+        SinglePageViewerFragment f = mPageReferenceMap.get(position); 
+        if(f != null) {
+        	f.onDestroy();
+        }
         mPageReferenceMap.remove(position);
     }
     

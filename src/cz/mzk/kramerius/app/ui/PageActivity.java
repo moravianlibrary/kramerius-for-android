@@ -222,7 +222,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 		});
 
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close) {
 
 			public void onDrawerClosed(View view) {
 				supportInvalidateOptionsMenu();
@@ -385,13 +385,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void loadPage(boolean fromPager) {
-		//
-		// if (mPageViewerFragment == null || !mPageViewerFragment.isPopulated() || mPageList == null || mPageList.isEmpty()) {
-		// return; } clearMessages(); mPageViewerFragment.showPage(mCurrentPage);
-		//
-		// mIndex.setText((mCurrentPage + 1) + "/" + mPageViewerFragment.getNumberOfPage()); mSeekBar.setProgress(mCurrentPage);
-		//
-
 		if (mPageList == null || mPageList.isEmpty()) {
 			return;
 		}
@@ -559,6 +552,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	}
 
 	private void init() {
+		Log.d("PAGE", "PAGE init()");
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
@@ -593,10 +587,9 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		*/
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 		mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
-				viewMode, this);
+				viewMode);
 		mViewPager.setAdapter(mPagerAdapter);
-
-		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
 			public void onPageSelected(int index) {
@@ -617,15 +610,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 			}
 		});
 
-		if (mCurrentPage != 0) {
-			loadPage();
-		}
-
-		/*
-		 * @Override public boolean onTouch(View v, MotionEvent event) { v.getParent().requestDisallowInterceptTouchEvent(true);
-		 * return false; } });
-		 */
-
+		loadPage();
+		
 		if (mIsPdf) {
 			hidePageSelection();
 			mListButton.setVisibility(View.GONE);
