@@ -119,7 +119,6 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	private String mTitle;
 	private boolean mComplexTitle;
 
-	private IPageViewerFragment mPageViewerFragment;
 	private ViewGroup mContainer;
 
 	private ViewerMenuFragment mMenuFragment;
@@ -134,7 +133,6 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	private String mPid;
 
-	private View mImageViewerContainer;
 	private View mPdfViewerContainer;
 
 	private boolean mIsPdf;
@@ -167,8 +165,6 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		mViewerWrapper = (FrameLayout) findViewById(R.id.page_viewer_wrapper);
 		mMessageContainer = (FrameLayout) findViewById(R.id.page_message_container);
 
-		mImageViewerContainer = findViewById(R.id.fragmentImageViewerContainer);
-		mImageViewerContainer.setVisibility(View.GONE);
 		mPdfViewerContainer = findViewById(R.id.fragmentPdfViewerContainer);
 		mPdfViewerContainer.setVisibility(View.GONE);
 		mViewerWrapper.setVisibility(View.INVISIBLE);
@@ -260,7 +256,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	}
 
 	
-	
+	/*
 	private void initViewerFragment(boolean pdf) {
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
 				R.id.fragmentPdfViewer);
@@ -281,18 +277,6 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			return;
 		}
 		mPageViewerFragment.setEventListener(this);
-		/*String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
-		String[] vms = getResources().getStringArray(R.array.view_mode_values);
-		if (vms[0].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.FIT_TO_SCREEN);
-		} else if (vms[1].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_LEFT_VERTICAL_TOP);
-		} else if (vms[2].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_CENTER);
-		} else if (vms[3].equals(vm)) {
-			mPageViewerFragment.setViewMode(ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP);
-		}*/
 		mPageViewerFragment.setViewMode(ViewMode.FIT_TO_SCREEN);
 		setBackgroundColor();
 		String domain = K5Api.getDomain(this);
@@ -300,7 +284,10 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mPageViewerFragment.populate(domain, itemsToPids());
 		}
 	}
-
+	*/
+	
+	
+	/*
 	private List<String> itemsToPids() {
 		List<String> pids = new ArrayList<String>();
 		if (mPageList != null) {
@@ -310,7 +297,9 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		}
 		return pids;
 	}
-
+	*/
+	
+	/*
 	private void setBackgroundColor() {
 		if (mPageViewerFragment == null) {
 			return;
@@ -323,6 +312,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mPageViewerFragment.setBackgroundColor(Color.BLACK);
 		}
 	}
+	*/
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -387,6 +377,9 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			return;
 		}
 		clearMessages();
+		if(mViewerWrapper.getVisibility() != View.VISIBLE) {
+			mViewerWrapper.setVisibility(View.VISIBLE);
+		}
 		if (!fromPager) {
 			mViewPager.setCurrentItem(mCurrentPage);
 		}
@@ -617,11 +610,11 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		mViewerWrapper.setVisibility(View.VISIBLE);
-		if (PrefUtils.isFirstViewerVisit(this)) {
-			new MaterialDialog.Builder(this).title(R.string.dialog_viewer_first_visit_title)
-					.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
-
-		}
+		//if (PrefUtils.isFirstViewerVisit(this)) {
+		//	new MaterialDialog.Builder(this).title(R.string.dialog_viewer_first_visit_title)
+		//			.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
+		//
+		//}
 
 	}
 
@@ -776,6 +769,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	private void showWarningMessage(int message, int buttonText, final onWarningButtonClickedListener callback,
 			boolean hideAfterClick) {
+		mViewerWrapper.setVisibility(View.INVISIBLE);
 		mMessageContainer.removeAllViews();
 		mMessageContainer.setVisibility(View.VISIBLE);
 		MessageUtils.inflateMessage(this, mMessageContainer, getString(message), getString(buttonText), callback,
@@ -1180,6 +1174,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	@Override
 	public void onPageChanged(int index) {
+		/*
 		int pageCount = 0;
 		if (mPageViewerFragment != null) {
 			pageCount = mPageViewerFragment.getNumberOfPage();
@@ -1188,6 +1183,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		clearMessages();
 		mIndex.setText((mCurrentPage + 1) + "/" + pageCount);
 		mSeekBar.setProgress(mCurrentPage);
+		*/
 	}
 
 	@Override

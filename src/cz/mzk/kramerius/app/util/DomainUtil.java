@@ -25,10 +25,10 @@ public class DomainUtil {
 					R.drawable.logo_svkhk));
 			add(new Domain(true, "Městská knihovna Česká Třebová", "http", "k5.digiknihovna.cz",
 					R.drawable.logo_mkct));
-			add(new Domain(true, "Krajská knihovna Františka Bartoše ve Zlíně", "http", "dlib.kfbz.cz",
-					R.drawable.logo_kfbz));
 			add(new Domain(true, "Severočeská vědecká knihovna v Ústí nad Labem", "http", "kramerius4.svkul.cz",
 					R.drawable.logo_svkul));			
+			add(new Domain(true, "Krajská knihovna Františka Bartoše ve Zlíně", "http", "dlib.kfbz.cz",
+					R.drawable.logo_kfbz));			
 			
 			add(new Domain(false, "Krajská knihovna Karlovy Vary", "http", "k4.kr-karlovarsky.cz", R.drawable.logo_kkkv));
 			add(new Domain(false, "Knihovna Akademie věd ČR", "http", "kramerius.lib.cas.cz", R.drawable.logo_knav));

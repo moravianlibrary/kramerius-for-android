@@ -97,6 +97,9 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	}
 
 	public boolean isSwipeEnabled() {
+		if(mTiledImageView == null) {
+			return true;
+		}
 		return mTiledImageView.getInitialScaleFactor() >= mTiledImageView.getTotalScaleFactor();
 	}
 
