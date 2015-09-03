@@ -111,7 +111,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 	private Item mParentItem;
 
 	private View mListButton;
-	// private View mMetadataButton;
 
 	private PageSelectionFragment mPageSelectionFragment;
 	private boolean mListShown;
@@ -191,9 +190,6 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		mSeekBar.setOnSeekBarChangeListener(this);
 		mListButton = findViewById(R.id.page_list);
 		mListButton.setOnClickListener(this);
-		// mMetadataButton = findViewById(R.id.page_metadata);
-		// mMetadataButton.setOnClickListener(this);
-
 		mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
 		mLoaderAnimation.setRepeatCount(Animation.INFINITE);
 
@@ -263,6 +259,8 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 	}
 
+	
+	
 	private void initViewerFragment(boolean pdf) {
 		IPageViewerFragment pdfFragment = (IPageViewerFragment) getFragmentManager().findFragmentById(
 				R.id.fragmentPdfViewer);
@@ -551,19 +549,27 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		}
 	}
 
-	private void init() {
-		Log.d("PAGE", "PAGE init()");
+	
+	@Override
+	public void onResume() {
+	    super.onResume();
+	    setToolbarTitle();
+	}
+	
+	private void setToolbarTitle() {
+		if(mToolbar == null || mTitle == null) {
+			return;
+		}
 		if (mComplexTitle) {
 			mToolbar.setTitle(mTitle);
 			mToolbar.setSubtitle(mSubtitle);
 		} else {
 			mToolbar.setTitle(mTitle);
 		}
-
-		/*
-		 * initViewerFragment(mIsPdf); if(mPageViewerFragment == null) { return; }
-		 */
-
+	}
+	
+	private void init() {
+		setToolbarTitle();
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				getString(R.string.pref_viewer_bg_color_key), getString(R.string.pref_viewer_bg_color_default));
 		int color = Color.BLACK;
@@ -572,19 +578,7 @@ public class PageActivity extends ActionBarActivity implements OnClickListener, 
 		} else if ("black".equals(bgColorValue)) {
 			color = Color.BLACK;
 		}
-		//String vm = PreferenceManager.getDefaultSharedPreferences(this).getString(
-		//		getString(R.string.pref_view_mode_key), getString(R.string.pref_view_mode_default));
-		//String[] vms = getResources().getStringArray(R.array.view_mode_values);
 		ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
-		/*
-		if (vms[1].equals(vm)) {
-			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_LEFT_VERTICAL_TOP;
-		} else if (vms[2].equals(vm)) {
-			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_CENTER;
-		} else if (vms[3].equals(vm)) {
-			viewMode = ViewMode.NO_FREE_SPACE_ALIGN_HORIZONTAL_CENTER_VERTICAL_TOP;
-		}
-		*/
 		mViewPager = (ViewPager) findViewById(R.id.viewPager);
 		mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
 				viewMode);
