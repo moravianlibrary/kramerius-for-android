@@ -67,11 +67,12 @@ import cz.mzk.kramerius.app.util.PrefUtils;
 import cz.mzk.kramerius.app.util.ScreenUtil;
 import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
-import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
-import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
+import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
+import cz.mzk.kramerius.app.viewer.PdfViewerFragment.PdfListener;
+import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment.PageEventListener;
 
 public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,
-		OnPageNumberSelected, ViewerMenuListener, EventListener {
+		OnPageNumberSelected, ViewerMenuListener, PageEventListener, PdfListener {
 
 	private static final int PDF_CONNECTION_TIMEOUT = 5000;
 	private static final int PDF_DATA_READ_TIMEOUT = 0;// unlimited
@@ -134,6 +135,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	private String mPid;
 
 	private View mPdfViewerContainer;
+	private PdfViewerFragment mPdfViewerFragment;
 
 	private boolean mIsPdf;
 	private int mPdfStatus;
@@ -383,6 +385,13 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		if (!fromPager) {
 			mViewPager.setCurrentItem(mCurrentPage);
 		}
+		refreshPageNavigation();
+	}
+	
+	private void refreshPageNavigation() {
+		if(mPageList == null) {
+			return;
+		}
 		mIndex.setText((mCurrentPage + 1) + "/" + mPageList.size());
 		mSeekBar.setProgress(mCurrentPage);
 	}
@@ -571,38 +580,49 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		} else if ("black".equals(bgColorValue)) {
 			color = Color.BLACK;
 		}
-		ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
-		mViewPager = (ViewPager) findViewById(R.id.viewPager);
-		mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
-				viewMode);
-		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-			@Override
-			public void onPageSelected(int index) {
-				mCurrentPage = index;
-				loadPage(true);
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		loadPage();
 		
+		if(mIsPdf) {
+			mPdfViewerFragment = (PdfViewerFragment) getFragmentManager().findFragmentById(R.id.fragmentPdfViewer);
+			mPdfViewerContainer.setVisibility(View.VISIBLE);
+			mPdfViewerFragment.setBackgroundColor(color);
+			mPdfViewerFragment.setEventListener(this);
+			mPdfViewerFragment.populate(mCurrentPage);						
+		} else {
+			ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
+			mViewPager = (ViewPager) findViewById(R.id.viewPager);
+			mViewPager.setVisibility(View.VISIBLE);
+			mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
+					viewMode);
+			mViewPager.setAdapter(mPagerAdapter);
+			mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+	
+				@Override
+				public void onPageSelected(int index) {
+					mCurrentPage = index;
+					loadPage(true);
+				}
+	
+				@Override
+				public void onPageScrolled(int arg0, float arg1, int arg2) {
+					// TODO Auto-generated method stub
+	
+				}
+	
+				@Override
+				public void onPageScrollStateChanged(int arg0) {
+					// TODO Auto-generated method stub
+	
+				}
+			});
+	
+			loadPage();
+		}
 		if (mIsPdf) {
 			hidePageSelection();
 			mListButton.setVisibility(View.GONE);
+			mMenuFragment.setDownloadType(ViewerMenuFragment.DOWNLOAD_PDF);
 		} else {
+			mMenuFragment.setDownloadType(ViewerMenuFragment.DOWNLOAD_PAGE);
 			mPageSelectionFragment.setOnPageNumberSelected(PageActivity.this);
 			mPageSelectionFragment.assignItems(mPageList);
 			mListButton.setVisibility(View.VISIBLE);
@@ -610,6 +630,10 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		mViewerWrapper.setVisibility(View.VISIBLE);
+	
+
+			
+		
 		//if (PrefUtils.isFirstViewerVisit(this)) {
 		//	new MaterialDialog.Builder(this).title(R.string.dialog_viewer_first_visit_title)
 		//			.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
@@ -725,7 +749,11 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		mSeekPosition.setVisibility(View.GONE);
 		if (mLastProgress > -1) {
 			mCurrentPage = mLastProgress;
-			loadPage();
+			if(mIsPdf) {
+				mPdfViewerFragment.showPage(mCurrentPage);
+			} else {
+				loadPage();
+			}
 		}
 
 	}
@@ -781,10 +809,6 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		mMessageContainer.setVisibility(View.GONE);
 	}
 
-	@Override
-	public void onReady() {
-		loadPage();
-	}
 
 	@Override
 	public void onAccessDenied() {
@@ -1173,24 +1197,31 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	}
 
 	@Override
-	public void onPageChanged(int index) {
-		/*
-		int pageCount = 0;
-		if (mPageViewerFragment != null) {
-			pageCount = mPageViewerFragment.getNumberOfPage();
-		}
-		mCurrentPage = index;
-		clearMessages();
-		mIndex.setText((mCurrentPage + 1) + "/" + pageCount);
-		mSeekBar.setProgress(mCurrentPage);
-		*/
-	}
-
-	@Override
 	public void onHelp() {
 		closeSlidingMenu();
 		Intent intent = new Intent(PageActivity.this, HelpActivity.class);
 		startActivity(intent);
+	}
+
+
+	@Override
+	public void onPdfPageChanged(int index) {
+		mCurrentPage = index;
+		refreshPageNavigation();		
+	}
+
+
+	@Override
+	public void onPdfReady() {		
+		refreshPageNavigation();
+		
+	}
+
+
+	@Override
+	public void onPdfSingleTap() {
+		mFullscreen = !mFullscreen;
+		setFullscreen(mFullscreen);
 	}
 
 }

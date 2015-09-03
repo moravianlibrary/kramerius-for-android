@@ -29,6 +29,7 @@
                 <FrameLayout
                     android:id="@+id/fragmentPdfViewerContainer"
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="match_parent" >
 
                     <fragment
@@ -40,6 +41,7 @@
 
                 <cz.mzk.kramerius.app.view.PageViewPager
                     android:id="@+id/viewPager"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
                 </cz.mzk.kramerius.app.view.PageViewPager>

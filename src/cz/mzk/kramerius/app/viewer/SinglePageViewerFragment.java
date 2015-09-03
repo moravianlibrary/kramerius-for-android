@@ -26,7 +26,6 @@ import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.util.VersionUtils;
-import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
 public class SinglePageViewerFragment extends Fragment implements OnTouchListener, ImageInitializationHandler,
 		SingleTapListener {
@@ -45,13 +44,26 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	private ViewGroup mImageViewContainer;
 
 	private GestureDetector mGestureDetector;
-	private EventListener mEventListener;
+	private PageEventListener mEventListener;
 
 	private ImageRequest mImageRequest;
 	private ViewMode mViewMode;
 	
 	private float mInitialImageScale = -1;
 
+	
+	public interface PageEventListener {
+		
+		public void onAccessDenied();
+
+		public void onNetworkError(Integer statusCode);
+
+		public void onInvalidDataError(String errorMessage);
+
+		public void onSingleTap(float x, float y, Rect boundingBox);
+	}
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,7 +105,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mEventListener = (EventListener) activity;
+			mEventListener = (PageEventListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + " must implement EventListener");
 		}

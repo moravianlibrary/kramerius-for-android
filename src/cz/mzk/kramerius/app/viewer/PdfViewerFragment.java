@@ -1,11 +1,9 @@
 package cz.mzk.kramerius.app.viewer;
 
 import java.io.File;
-import java.util.List;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +15,11 @@ import com.artifex.mupdfdemo.MuPDFCore;
 import com.artifex.mupdfdemo.MuPDFPageAdapter;
 import com.artifex.mupdfdemo.MuPDFReaderView;
 
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.util.Constants;
 import cz.mzk.kramerius.app.util.VersionUtils;
 
-public class PdfViewerFragment extends Fragment implements IPageViewerFragment, FilePicker.FilePickerSupport {
+
+public class PdfViewerFragment extends Fragment implements FilePicker.FilePickerSupport {
 
 	private static final String LOG_TAG = PdfViewerFragment.class.getSimpleName();
 
@@ -31,19 +29,22 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 	private MuPDFCore mPdfCore;
 	private MuPDFReaderView mPdfReaderView;
 
-	private String mDomain;
-	private String mPid;
-	private boolean mPopulated = false;
 	private ViewGroup mContainer;
 
-	private EventListener mEventListener;
+	private PdfListener mPdfListener;
 
+	public interface PdfListener {
+		public void onPdfPageChanged(int index);
+		public void onPdfReady();
+		public void onPdfSingleTap();
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			mDomain = savedInstanceState.getString(EXTRA_DOMAIN);
-			mPid = savedInstanceState.getString(EXTRA_PID);
+			//mDomain = savedInstanceState.getString(EXTRA_DOMAIN);
+			//mPid = savedInstanceState.getString(EXTRA_PID);
 		}
 	}
 
@@ -55,23 +56,16 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putString(EXTRA_DOMAIN, mDomain);
-		outState.putString(EXTRA_PID, mPid);
+		//outState.putString(EXTRA_DOMAIN, mDomain);
+		//outState.putString(EXTRA_PID, mPid);
 		super.onSaveInstanceState(outState);
 	}
 
-	@Override
-	public void setEventListener(EventListener eventListener) {
-		mEventListener = eventListener;
+	public void setEventListener(PdfListener listener) {
+		mPdfListener = listener;
 	}
 
-	@Override
-	public void populate(String domain, List<String> pagePids) {
-		if (pagePids != null && !pagePids.isEmpty()) {
-			mPid = pagePids.get(0);
-		}
-		mDomain = domain;
-
+	public void populate(int pageIndex) {
 		try {
 			File file = new File(getActivity().getFilesDir(), Constants.PDF_PATH);
 			mPdfCore = new MuPDFCore(getActivity(), file.getAbsolutePath());
@@ -90,16 +84,16 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 				if (mPdfCore == null) {
 					return;
 				}
-				if (mEventListener != null) {
-					mEventListener.onPageChanged(i);
+				if (mPdfListener != null) {
+					mPdfListener.onPdfPageChanged(i);
 				}
 				super.onMoveToChild(i);
 			}
 
 			@Override
 			protected void onTapMainDocArea() {
-				if (mEventListener != null) {
-					mEventListener.onSingleTap(-1, -1, null);
+				if (mPdfListener != null) {
+					mPdfListener.onPdfSingleTap();
 				}
 			}
 
@@ -112,23 +106,17 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 		mPdfReaderView.setAdapter(new MuPDFPageAdapter(getActivity(), this, mPdfCore));
 		mContainer.removeAllViews();
 		mContainer.addView(mPdfReaderView);
-		mPopulated = true;
-		if (mEventListener != null) {
-			mEventListener.onReady();
+		showPage(pageIndex);
+		if (mPdfListener != null) {
+			mPdfListener.onPdfReady();
 		}
 	}
 
-	@Override
-	public boolean isPopulated() {
-		return mPopulated;
-	}
-
-	@Override
+	
 	public int getCurrentPageIndex() {
 		return mPdfReaderView.getDisplayedViewIndex();
 	}
 
-	@Override
 	public void showPage(int pageIndex) {
 		if (pageIndex >= 0 && pageIndex < mPdfCore.countPages()) {
 			mPdfReaderView.setDisplayedViewIndex(pageIndex);
@@ -137,21 +125,14 @@ public class PdfViewerFragment extends Fragment implements IPageViewerFragment, 
 		}
 	}
 
-	@Override
 	public void setBackgroundColor(int color) {
 		mContainer.setBackgroundColor(color);
-	//	mPdfReaderView.setBackgroundColor(color);
 	}
 
-	@Override
-	public int getNumberOfPage() {
+	public int getNumberOfPages() {
 		return mPdfCore.countPages();
 	}
 
-	@Override
-	public void setViewMode(ViewMode mode) {
-		// TODO
-	}
 
 	@Override
 	public void performPickFor(FilePicker picker) {
