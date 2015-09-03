@@ -24,8 +24,8 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -70,7 +70,7 @@ import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment;
 import cz.mzk.kramerius.app.viewer.IPageViewerFragment.EventListener;
 
-public class PageActivity extends ActionBarActivity implements OnClickListener, OnSeekBarChangeListener,
+public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,
 		OnPageNumberSelected, ViewerMenuListener, EventListener {
 
 	private static final int PDF_CONNECTION_TIMEOUT = 5000;
