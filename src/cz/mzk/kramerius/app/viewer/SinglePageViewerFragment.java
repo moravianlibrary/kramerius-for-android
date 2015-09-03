@@ -41,6 +41,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	private View mContainer;
 	private View mProgressView;
 	private TiledImageView mTiledImageView;
+	private GestureImageView mGestureImageView;
 	private ViewGroup mImageViewContainer;
 
 	private GestureDetector mGestureDetector;
@@ -48,6 +49,8 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	private ImageRequest mImageRequest;
 	private ViewMode mViewMode;
+	
+	private float mInitialImageScale = -1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,8 +99,20 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		}
 	}
 
-	public boolean isSwipeEnabled() {
-		if(mTiledImageView == null) {
+	public boolean isSwipeEnabled() {		
+		if(mGestureImageView != null) {
+			float scale = mGestureImageView.getScale();
+			if(scale == 1.0f) {
+				return true;
+			} else {
+				if(mInitialImageScale == -1) {
+					mInitialImageScale = scale;
+					return true;
+				}
+			}
+			return mInitialImageScale == -1 || scale <= mInitialImageScale;			
+		}
+		if(mTiledImageView == null) {			
 			return true;
 		}
 		return mTiledImageView.getInitialScaleFactor() >= mTiledImageView.getTotalScaleFactor();
@@ -202,17 +217,18 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	private void inflateImage(Bitmap bitmap) {
 		if (getActivity() == null) {
 			return;
-		}
+		}		
+		mInitialImageScale = -1;
 		mImageViewContainer.removeAllViews();
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-		GestureImageView view = new GestureImageView(getActivity());
-		view.setImageBitmap(bitmap);
-		view.setLayoutParams(params);
-		view.setOnTouchListener(this);
-
-		mImageViewContainer.addView(view);
-		mImageViewContainer.setVisibility(View.VISIBLE);
+		mGestureImageView = new GestureImageView(getActivity());
+		mGestureImageView.setImageBitmap(bitmap);
+		mGestureImageView.setLayoutParams(params);
+		mGestureImageView.setOnTouchListener(this);
+		
+		mImageViewContainer.addView(mGestureImageView);
+		mImageViewContainer.setVisibility(View.VISIBLE);		
 	}
 
 	private void loadPageImageFromDatastream() {
