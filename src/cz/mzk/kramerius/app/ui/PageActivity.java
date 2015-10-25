@@ -69,6 +69,7 @@ import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment.PdfListener;
+import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment.PageEventListener;
 
 public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,
@@ -597,9 +598,15 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 	
 				@Override
-				public void onPageSelected(int index) {
+				public void onPageSelected(int index) {					
 					mCurrentPage = index;
 					loadPage(true);
+					/*if(mPagerAdapter != null) {
+						SinglePageViewerFragment f = mPagerAdapter.getFragment(index);
+						if(f != null) {
+							f.invalidateViewer();
+						}
+					}*/
 				}
 	
 				@Override

@@ -14,7 +14,7 @@ public class VersionUtils {
 	private static final String TYPE_ALPHA = "ALPHA";
 	private static final String TYPE_BETA = "BETA";
 
-	private static final int VERSION = DEV;
+	private static final int VERSION = BETA;
 
 	
 	public static boolean Debuggable() {
@@ -51,6 +51,9 @@ public class VersionUtils {
 	}	
 	
 	public static String getVersion(Context context) {
+		if(VERSION == BETA) {
+			return getVersionName(context);
+		}
 		return getVersionName(context) + "/" + getVersionType();
 	}
 	

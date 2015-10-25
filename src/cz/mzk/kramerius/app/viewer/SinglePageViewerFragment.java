@@ -62,7 +62,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 		public void onSingleTap(float x, float y, Rect boundingBox);
 	}
-	
+		
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +99,13 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		setBackgroundColor(mBackgroud);
 		showPage();
 		return view;
+	}
+	
+	public void invalidateViewer() {
+		if(mTiledImageView == null) {
+			return;
+		}
+		mTiledImageView.postInvalidateDelayed(100);		
 	}
 
 	@Override

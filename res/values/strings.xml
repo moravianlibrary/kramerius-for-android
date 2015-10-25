@@ -44,8 +44,7 @@
  	<string name="help_about_description">
         <![CDATA[     
         Kramerius is a digital library containing classical works, historical writings, old newspapers and magazines, map collections and other digitized documents from Czech libraries.
-		<br/><br/>This is a beta version of the Application.
-		<br/>If you have any questions, comments, ideas, or you encountered a bug, please contact us at <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
+		<br/><br/>If you have any questions, comments, ideas, or you encountered a bug, please contact us at <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
 		<br/><br/>The appliacition is developed by the <a href="http://www.mzk.cz">Moravian Library in Brno</a> 
     	]]></string>            
     
