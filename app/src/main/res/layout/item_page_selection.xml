@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="100dp"
+    android:padding="5dp" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/card_bg" />
+
+    <ImageView
+        android:id="@+id/page_selection_item_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:paddingBottom="4dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingTop="2dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/anim_loading" />
+
+    <TextView
+        android:id="@+id/page_selection_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:lines="1"
+        android:text="21"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:gravity="center"
+        android:background="#44000000"
+        android:textColor="@color/white"
+        android:textSize="15dp" />
+
+</RelativeLayout>

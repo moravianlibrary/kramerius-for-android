@@ -1,0 +1,125 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cz.mzk.kramerius.app">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name="cz.mzk.kramerius.app.KrameriusApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.LauncherActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="kramerius.mzk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.kr-olomoucky.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.cbvk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="krameriusndktest.mzk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius4.svkhk.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="k5.digiknihovna.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius4.svkul.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="dlib.kfbz.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.PeriodicalActivity"
+            android:label="@string/app_name"></activity>
+        <!--<activity
+            android:name="cz.mzk.kramerius.app.PageViewerActivity"
+            android:label="@string/app_name"></activity>-->
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.PageActivity"
+            android:label="@string/app_name"></activity>
+        <!--<activity
+            android:name="cz.mzk.kramerius.app.ui.SoundUnitActivity"
+            android:label="@string/app_name"></activity>-->
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.SoundRecordingActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.MetadataActivity"
+            android:label="@string/metadata_title"></activity>
+        <!--<activity
+            android:name="cz.mzk.kramerius.app.ui.PdfViewerActivity"
+            android:label="@string/app_name"></activity>-->
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.DomainActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.DomainDetailActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.VirtualCollectionActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.SearchResultActivity"
+            android:label="@string/search_result_title"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.SettingsActivity"
+            android:label="@string/settings_title"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.AdvancedSettingsActivity"
+            android:label="@string/advanced_settings_title"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.HelpActivity"
+            android:label="@string/help_title"></activity>
+        <activity
+            android:name="cz.mzk.kramerius.app.ui.InaccessibleDocumentActivity"
+            android:label="@string/inaccessible_document_title"></activity>
+
+        <provider
+            android:name="cz.mzk.kramerius.app.data.KrameriusProvider"
+            android:authorities="cz.mzk.kramerius.app.kramerius"
+            android:exported="false" />
+
+        <service
+            android:name="cz.mzk.kramerius.app.service.MediaPlayerService"
+            android:exported="false" />
+
+
+    </application>
+
+</manifest>

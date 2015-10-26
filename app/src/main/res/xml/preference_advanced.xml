@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:defaultValue="@string/pref_card_animation_default"
+        android:key="@string/pref_card_animation_key"
+        android:summary="@string/pref_card_animation_summary"
+        android:title="@string/pref_card_animation_title" />
+
+</PreferenceScreen>

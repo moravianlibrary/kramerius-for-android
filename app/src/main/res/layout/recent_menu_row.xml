@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_row_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingBottom="5dp"
+    android:paddingRight="8dp"
+    android:paddingTop="5dp" >
+
+    <ImageView
+        android:id="@+id/item_recent_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_recent_lightgrey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="34dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toLeftOf="@id/item_recent_icon"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/item_recent_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:lines="1"
+            android:singleLine="true"
+            android:text="TEST-title"
+            android:textColor="@color/grey"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/item_recent_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:lines="1"
+            android:singleLine="true"
+            android:text="TEST-subtitle"
+            android:textColor="@color/light_grey"
+            android:textSize="13dp" />
+    </LinearLayout>
+
+</RelativeLayout>

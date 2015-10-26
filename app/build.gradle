@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "cz.mzk.kramerius.app"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jni.srcDirs = []
+        }
+    }
+
+    //http://stackoverflow.com/questions/32153318/httpclient-wont-import-in-android-studio
+    useLibrary 'org.apache.http.legacy'
+
+    //useDeprecatedNdk=true
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1'
+
+    //https://github.com/mcxiaoke/android-volley (unofficial Volley distribution)
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+
+    //Card library
+    //https://github.com/gabrielemariotti/cardslib
+    //Core card library
+    compile 'com.github.gabrielemariotti.cards:library:1.9.1'
+    //Extra card library, it is required only if you want to use integrations with other libraries
+    compile 'com.github.gabrielemariotti.cards:library-extra:1.9.1'
+
+    //AndroidZoomifyViewer
+    //from local project, see settings.gradle
+    //compile project(':zoomify')
+    compile 'cz.mzk.androidzoomifyviewer:android-zoomify-viewer:1.0'
+
+    //Google analytics
+    //todo: https://github.com/moravianlibrary/kramerius-for-android/issues/204
+    compile files('libs/libGoogleAnalitycsServices.jar')
+
+    //Android Universal Image Loader
+    compile files('libs/universal-image-loader-1.9.2.jar')
+
+    //Dom4j
+    compile files('libs/dom4j-1.6.1.jar')
+
+    //SystemBarTint
+    //v eclipse projektu byla knihovna systembartitnt-1.0.4.jar Jenze k dnesnimu dni (26.10.2015) je na Githubu posledni verze 1.0.3
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+    //GestureImageView
+    compile files('libs/gesture-imageview.jar')
+
+}
