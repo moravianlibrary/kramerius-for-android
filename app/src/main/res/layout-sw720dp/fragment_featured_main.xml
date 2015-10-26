@@ -1,0 +1,151 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:id="@+id/featured_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/featured_custom"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/main_featured_text" />
+
+                <Button
+                    android:id="@+id/featured_custom_expand"
+                    style="@style/MyButton"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"                    
+                    android:text="@string/featured_show_all"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/featured_custom_again"
+                    style="@style/MyButton"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"                    
+                    android:text="@string/warn_load_again"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/featured_custom_loader"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img_loader"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/featured_custom_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/warn_data_loading_failed"
+                android:textColor="@color/grey"
+                android:visibility="gone" />
+
+            <it.gmariotti.cardslib.library.view.CardGridView
+                android:id="@+id/featured_custom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="180dp"
+                android:gravity="center"
+                android:horizontalSpacing="3dp"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="3dp"
+                card:list_card_layout_resourceID="@layout/list_card" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:id="@+id/featured_newest_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/featured_newest"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="@dimen/main_featured_text" />
+
+                <Button
+                    android:id="@+id/featured_newest_expand"
+					style="@style/MyButton"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/featured_show_all"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/featured_newest_again"
+					style="@style/MyButton"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/warn_load_again"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/featured_newest_loader"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img_loader"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/featured_newest_warning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/warn_data_loading_failed"
+                android:textColor="@color/grey"
+                android:visibility="gone" />
+
+            <it.gmariotti.cardslib.library.view.CardGridView
+                android:id="@+id/featured_newest"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="180dp"
+                android:gravity="center"
+                android:horizontalSpacing="3dp"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="3dp"
+                card:list_card_layout_resourceID="@layout/list_card" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

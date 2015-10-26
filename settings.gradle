@@ -1,0 +1,5 @@
+include ':app'
+
+//AndroidZoomifyViewer - local project. See build.gradle (app)
+/*include 'zoomify'
+project(':zoomify').projectDir = new File(settingsDir, '../AndroidZoomifyViewer/lib')*/

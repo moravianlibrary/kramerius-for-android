@@ -1,8 +1,0 @@
-<it.gmariotti.cardslib.library.view.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_cardId"
-    style="@style/grid_card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:divider="@android:color/transparent"
-    card:card_layout_resourceID="@layout/view_card_vc" />
