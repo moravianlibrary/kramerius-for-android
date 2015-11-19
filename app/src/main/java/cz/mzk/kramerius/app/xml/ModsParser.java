@@ -1,6 +1,7 @@
 package cz.mzk.kramerius.app.xml;
 
 import android.util.Log;
+import android.util.LruCache;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -23,15 +24,24 @@ import cz.mzk.kramerius.app.metadata.TitleInfo;
 public class ModsParser extends XmlParser {
 
     private static final String TAG = ModsParser.class.getName();
+    private static final boolean CACHING_ENABLED = true;
+    private static final int CACHE_SIZE = 3;
+    private static final LruCache<String, ModsParser> INSTANCE_CACHE = CACHING_ENABLED ? new LruCache<String, ModsParser>(CACHE_SIZE) : null;
+
     private final Metadata mMetadata;
 
-
     public static Metadata getMetadata(String modsUrl) {
-        // TODO: 19.11.15 caching instances, at least single one
-        ModsParser instance = new ModsParser(modsUrl);
-        return instance.getMetadata();
+        if (CACHING_ENABLED) {
+            ModsParser instance = INSTANCE_CACHE.get(modsUrl);
+            if (instance == null) {
+                instance = new ModsParser(modsUrl);
+                INSTANCE_CACHE.put(modsUrl, instance);
+            }
+            return instance.getMetadata();
+        } else {
+            return new ModsParser(modsUrl).getMetadata();
+        }
     }
-
 
     public ModsParser(String modsUrl) {
         Log.v(TAG, "initalizing mods parser from: " + modsUrl);
