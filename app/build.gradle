@@ -51,7 +51,7 @@ dependencies {
     //AndroidZoomifyViewer
     //from local project, see settings.gradle
     //compile project(':zoomify')
-    compile 'cz.mzk.androidzoomifyviewer:android-zoomify-viewer:1.0'
+    compile 'cz.mzk.androidzoomifyviewer:android-zoomify-viewer:1.1.0'
 
     //Google analytics
     //todo: https://github.com/moravianlibrary/kramerius-for-android/issues/204
