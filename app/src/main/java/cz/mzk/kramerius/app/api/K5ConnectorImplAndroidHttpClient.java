@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,6 +31,7 @@ import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
+import cz.mzk.kramerius.app.xml.AltoParser;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
 /**
@@ -556,6 +558,13 @@ public class K5ConnectorImplAndroidHttpClient implements K5Connector {
 			metadata.setPid(pid);
 		}
 		return metadata;
+	}
+
+	@Override
+	public Set<AltoParser.TextBox> getTextBoxes(Context context, String pagePid, String searchQuery) {
+		String url = K5Api.getAltoStreamPath(context, pagePid);
+		String[] searchTokens = searchQuery.split(" ");
+		return AltoParser.getTextBlocks(url, searchTokens);
 	}
 
 }

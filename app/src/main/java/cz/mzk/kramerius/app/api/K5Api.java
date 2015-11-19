@@ -42,6 +42,7 @@ public class K5Api {
 	private static final String PATH_CHILDREN = "children";
 	private static final String PATH_STREAM = "streams";
 	private static final String PATH_MODS = "BIBLIO_MODS";
+	private static final String PATH_ALTO = "ALTO";
 	// private static final String PATH_MP3 = "MP3";
 	private static final String PATH_IMG = "img";
 	private static final String PATH_THUMB = "thumb";
@@ -217,6 +218,10 @@ public class K5Api {
 
 	public static String getModsStreamPath(Context context, String pid) {
 		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MODS).build().toString();
+	}
+
+	public static String getAltoStreamPath(Context context, String pid) {
+		return getStreamUri(context, pid).buildUpon().appendPath(PATH_ALTO).build().toString();
 	}
 
 	public static String getAudioStreamPath(Context context, String pid, AudioFormat format) {
