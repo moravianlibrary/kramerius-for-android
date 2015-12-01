@@ -20,12 +20,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.polites.android.GestureImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import cz.mzk.androidzoomifyviewer.rectangles.FramingRectangle;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHandler;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.util.VersionUtils;
+import cz.mzk.kramerius.app.xml.AltoParser;
 
 public class SinglePageViewerFragment extends Fragment implements OnTouchListener, ImageInitializationHandler,
 		SingleTapListener {
@@ -48,12 +54,12 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	private ImageRequest mImageRequest;
 	private ViewMode mViewMode;
-	
+
 	private float mInitialImageScale = -1;
 
-	
+
 	public interface PageEventListener {
-		
+
 		public void onAccessDenied();
 
 		public void onNetworkError(Integer statusCode);
@@ -62,8 +68,8 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 		public void onSingleTap(float x, float y, Rect boundingBox);
 	}
-		
-	
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,6 +92,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_single_page_viewer, container, false);
 		mContainer = view.findViewById(R.id.container);
 		mContainer.setOnTouchListener(this);
@@ -100,12 +107,12 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		showPage();
 		return view;
 	}
-	
+
 	public void invalidateViewer() {
 		if(mTiledImageView == null) {
 			return;
 		}
-		mTiledImageView.postInvalidateDelayed(100);		
+		mTiledImageView.postInvalidateDelayed(100);
 	}
 
 	@Override
@@ -118,7 +125,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		}
 	}
 
-	public boolean isSwipeEnabled() {		
+	public boolean isSwipeEnabled() {
 		if(mGestureImageView != null) {
 			float scale = mGestureImageView.getScale();
 			if(scale == 1.0f) {
@@ -129,9 +136,9 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 					return true;
 				}
 			}
-			return mInitialImageScale == -1 || scale <= mInitialImageScale;			
+			return mInitialImageScale == -1 || scale <= mInitialImageScale;
 		}
-		if(mTiledImageView == null) {			
+		if(mTiledImageView == null) {
 			return true;
 		}
 		return mTiledImageView.getInitialScaleFactor() >= mTiledImageView.getTotalScaleFactor();
@@ -174,6 +181,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		mTiledImageView.loadImage(url.toString());
 	}
 
+	// TODO: 1.12.15 Move to K5Api
 	private String buildZoomifyBaseUrl(String pid) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("http://");
@@ -236,7 +244,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	private void inflateImage(Bitmap bitmap) {
 		if (getActivity() == null) {
 			return;
-		}		
+		}
 		mInitialImageScale = -1;
 		mImageViewContainer.removeAllViews();
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -245,9 +253,9 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		mGestureImageView.setImageBitmap(bitmap);
 		mGestureImageView.setLayoutParams(params);
 		mGestureImageView.setOnTouchListener(this);
-		
+
 		mImageViewContainer.addView(mGestureImageView);
-		mImageViewContainer.setVisibility(View.VISIBLE);		
+		mImageViewContainer.setVisibility(View.VISIBLE);
 	}
 
 	private void loadPageImageFromDatastream() {
@@ -333,6 +341,25 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	public String getPagePid(int pageIndex) {
 		return "";
+	}
+
+	public void setTextBoxes(Set<AltoParser.TextBox> boxes){
+		Log.v(TAG, "setTextBoxes");
+		if(mTiledImageView != null) {
+			if (boxes == null) {
+				Log.v(TAG, "boxes is null");
+				mTiledImageView.setFramingRectangles(null);
+			} else {
+				List<FramingRectangle> rects = new ArrayList<>(boxes.size());
+				for (AltoParser.TextBox box : boxes) {
+					rects.add(new FramingRectangle(box.getRectangle(), new FramingRectangle.Border(R.color.text_box_border, 1), R.color.text_box_filling));
+				}
+				Log.v(TAG, String.format("framing rectangles: %d", rects.size()));
+				mTiledImageView.setFramingRectangles(rects);
+			}
+		}else{
+			Log.w(TAG, "mTiledImageView is null");
+		}
 	}
 
 	private void setViewMode(ViewMode mode) {

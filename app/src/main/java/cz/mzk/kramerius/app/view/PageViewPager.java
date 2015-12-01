@@ -34,7 +34,8 @@ public class PageViewPager extends ViewPager {
 			return false;
 		}
 		PageViewPagerAdapter adapter =  (PageViewPagerAdapter) getAdapter();
-		SinglePageViewerFragment fragmanet = adapter.getFragment(c);
+		//SinglePageViewerFragment fragmanet = adapter.getFragment(c);
+		SinglePageViewerFragment fragmanet =(SinglePageViewerFragment)adapter.getItem(c);
 		if(fragmanet == null) {
 			return true;
 		}
