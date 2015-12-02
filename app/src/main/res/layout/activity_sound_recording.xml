@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/cz.mzk.kramerius.app"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -107,7 +107,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:elevation="@dimen/toolbar_elevation"
-                tools:ignore="UnusedAttribute" />
+                tools:ignore="UnusedAttribute"
+                tools:layout="@layout/fragment_player" />
 
             <!-- Select player version by commenting/uncommenting ListView/RecyclerView -->
 

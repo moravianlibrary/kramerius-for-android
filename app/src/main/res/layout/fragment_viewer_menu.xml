@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:kramerius="http://schemas.android.com/apk/res/cz.mzk.kramerius.app"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
@@ -21,16 +21,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
-            kramerius:menuIcon="@drawable/ic_settings_grey"
-            kramerius:menuTitle="@string/viewer_menu_settings" />
+            app:menuIcon="@drawable/ic_settings_grey"
+            app:menuTitle="@string/viewer_menu_settings" />
 
         <cz.mzk.kramerius.app.view.MenuItemWidget
             android:id="@+id/menu_help"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
-            kramerius:menuIcon="@drawable/ic_help_grey"
-            kramerius:menuTitle="@string/main_menu_help" />
+            app:menuIcon="@drawable/ic_help_grey"
+            app:menuTitle="@string/main_menu_help" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,16 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
-            kramerius:menuIcon="@drawable/ic_home_grey"
-            kramerius:menuTitle="@string/viewer_menu_home" />
+            app:menuIcon="@drawable/ic_home_grey"
+            app:menuTitle="@string/viewer_menu_home" />
 
         <cz.mzk.kramerius.app.view.MenuItemWidget
             android:id="@+id/menu_download"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
-            kramerius:menuIcon="@drawable/ic_download_grey"
-            kramerius:menuTitle="@string/viewer_menu_download" />
+            app:menuIcon="@drawable/ic_download_grey"
+            app:menuTitle="@string/viewer_menu_download" />
 
         <cz.mzk.kramerius.app.view.MenuItemWidget
             android:id="@+id/menu_screen_lock"
@@ -62,9 +62,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
             android:clickable="true"
-            kramerius:menuIcon="@drawable/ic_screen_rotation_grey"
-            kramerius:menuIconSelected="@drawable/ic_screen_lock_rotation_green"
-            kramerius:menuTitle="@string/viewer_menu_screen_lock" />
+            app:menuIcon="@drawable/ic_screen_rotation_grey"
+            app:menuIconSelected="@drawable/ic_screen_lock_rotation_green"
+            app:menuTitle="@string/viewer_menu_screen_lock" />
 
         <cz.mzk.kramerius.app.view.MenuItemWidget
             android:id="@+id/menu_search_on_page"
@@ -72,9 +72,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_menu"
             android:clickable="true"
-            kramerius:menuIcon="@drawable/ic_search_grey"
-            kramerius:menuIconSelected="@drawable/ic_search_green"
-            kramerius:menuTitle="@string/viewer_menu_search" />
+            app:menuIcon="@drawable/ic_search_grey"
+            app:menuIconSelected="@drawable/ic_search_green"
+            app:menuTitle="@string/viewer_menu_search" />
 
         <View
             android:layout_width="match_parent"
@@ -87,8 +87,7 @@
             android:layout_height="match_parent"
             android:background="#fafafa"
             android:divider="#e8e8e8"
-            android:dividerHeight="1dp" >
-        </ListView>
+            android:dividerHeight="1dp"></ListView>
     </LinearLayout>
 
 </RelativeLayout>
