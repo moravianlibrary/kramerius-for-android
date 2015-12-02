@@ -93,7 +93,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView");
+		Log.v(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_single_page_viewer, container, false);
 		mContainer = view.findViewById(R.id.container);
 		mContainer.setOnTouchListener(this);
@@ -102,6 +102,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		mTiledImageView = (TiledImageView) view.findViewById(R.id.tiledImageView);
 		mTiledImageView.setImageInitializationHandler(this);
 		mTiledImageView.setSingleTapListener(this);
+		mTiledImageView.setFramingRectangles(mRects);
 		mImageViewContainer = (ViewGroup) view.findViewById(R.id.imageContainer);
 		setViewMode(mViewMode);
 		setBackgroundColor(mBackgroud);
@@ -334,22 +335,21 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		return "";
 	}
 
+
+	private List<FramingRectangle> mRects = null;
+
 	public void setTextBoxes(Set<AltoParser.TextBox> boxes){
-		Log.v(TAG, "setTextBoxes");
-		if(mTiledImageView != null) {
-			if (boxes == null) {
-				Log.v(TAG, "boxes is null");
-				mTiledImageView.setFramingRectangles(null);
-			} else {
-				List<FramingRectangle> rects = new ArrayList<>(boxes.size());
-				for (AltoParser.TextBox box : boxes) {
-					rects.add(new FramingRectangle(box.getRectangle(), new FramingRectangle.Border(R.color.text_box_border, 1), R.color.text_box_filling));
-				}
-				Log.v(TAG, String.format("framing rectangles: %d", rects.size()));
-				mTiledImageView.setFramingRectangles(rects);
+		if(boxes!=null) {
+			mRects = new ArrayList<>(boxes.size());
+			for (AltoParser.TextBox box : boxes) {
+				mRects.add(new FramingRectangle(box.getRectangle(), new FramingRectangle.Border(R.color.text_box_border, 1), R.color.text_box_filling));
 			}
+			//Log.v(TAG, String.format("framing rectangles: %d", mRects.size()));
 		}else{
-			Log.w(TAG, "mTiledImageView is null");
+			mRects = null;
+		}
+		if(mTiledImageView!=null){
+			mTiledImageView.setFramingRectangles(mRects);
 		}
 	}
 

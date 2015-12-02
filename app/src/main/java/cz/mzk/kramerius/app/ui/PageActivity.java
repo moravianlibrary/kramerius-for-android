@@ -8,7 +8,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.content.ContentValues;
@@ -59,6 +61,7 @@ import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.dialog.MaterialDialog;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
+import cz.mzk.kramerius.app.search.TextboxProvider;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
 import cz.mzk.kramerius.app.util.Constants;
@@ -75,7 +78,7 @@ import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment.PageEventListener;
 import cz.mzk.kramerius.app.xml.AltoParser;
 
 public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,
-		OnPageNumberSelected, ViewerMenuListener, PageEventListener, PdfListener {
+		OnPageNumberSelected, ViewerMenuListener, PageEventListener, PdfListener, TextboxProvider {
 
 	private static final int PDF_CONNECTION_TIMEOUT = 5000;
 	private static final int PDF_DATA_READ_TIMEOUT = 0;// unlimited
@@ -145,6 +148,8 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	private PageViewPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
+    // TODO: 2.12.15 serializace
+    private Map<Integer,Set<AltoParser.TextBox>> mTextboxMap = new HashMap<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -409,7 +414,9 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		startActivity(intent);
 	}
 
-	// TODO: tenhle task by se mel nekde ukladat a zabijet s cancel(true), jinak nam tam zustane viset treba dlouhe stahovani pdf
+
+
+    // TODO: tenhle task by se mel nekde ukladat a zabijet s cancel(true), jinak nam tam zustane viset treba dlouhe stahovani pdf
 	class LoadPagesTask extends AsyncTask<String, Void, ParentChildrenPair> {
 
 		private Context tContext;
@@ -595,7 +602,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mViewPager = (ViewPager) findViewById(R.id.viewPager);
 			mViewPager.setVisibility(View.VISIBLE);
 			mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
-					viewMode);
+					viewMode, this);
 			mViewPager.setAdapter(mPagerAdapter);
 			mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -1265,10 +1272,20 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			@Override
 			protected void onPostExecute(Set<AltoParser.TextBox> textBoxes) {
 				if(textBoxes!=null && !textBoxes.isEmpty()){
-					mPagerAdapter.setTextBoxes(mCurrentPage, textBoxes);
+					mTextboxMap.put(mCurrentPage, textBoxes);
+                    mPagerAdapter.refreshFragment(mCurrentPage);
 				}
 
 			}
 		}.execute();
+    }
+
+
+    @Override
+    public Set<AltoParser.TextBox> getTextBoxes(int pagePosition) {
+		Set<AltoParser.TextBox> result =  mTextboxMap.get(pagePosition);
+		String sizeStr = result == null? "null": String.valueOf(result.size());
+		//Log.d(LOG_TAG, String.format("getTextBoxes for page %d: %s", pagePosition, sizeStr));
+		return result;
     }
 }
