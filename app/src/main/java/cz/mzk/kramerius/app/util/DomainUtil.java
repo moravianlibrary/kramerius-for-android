@@ -1,9 +1,9 @@
 package cz.mzk.kramerius.app.util;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.Context;
 
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
@@ -49,7 +49,7 @@ public class DomainUtil {
             // add(new Domain("INCAD", "Test INCAD", "http", "sluzby.incad.cz/vmkramerius", R.drawable.logo_incad));
             add(new Domain(false, "Moravská zemská knihovna - Docker", "https", "docker.mzk.cz (https)", R.drawable.logo_mzk));
             add(new Domain(false, "Moravská zemská knihovna - Demo", "http", "krameriusdemo.mzk.cz",
-                    R.drawable.logo_mzk));  
+                    R.drawable.logo_mzk));
         }
     };
 

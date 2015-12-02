@@ -1,7 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.util.logging.Logger;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.PendingIntent;
@@ -16,6 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import java.util.logging.Logger;
+
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.service.MediaPlayerService;
 import cz.mzk.kramerius.app.service.MediaPlayerWithState.State;

@@ -5,173 +5,173 @@ import java.util.List;
 
 public class Metadata {
 
-	private String pid;
+    private String pid;
 
-	private String issn;
-	private String isbn;
-	private String ccnb;
-	private String oclc;
+    private String issn;
+    private String isbn;
+    private String ccnb;
+    private String oclc;
 
-	private boolean privateDocument;
-	
-	private Part part;
-	private TitleInfo titleInfo;
-	private Location location;
+    private boolean privateDocument;
 
-	private List<Author> authors;
-	private List<Publisher> publishers;
+    private Part part;
+    private TitleInfo titleInfo;
+    private Location location;
 
-	private List<String> notes;
+    private List<Author> authors;
+    private List<Publisher> publishers;
 
-	private List<String> languages;
-	private List<String> keywords;
-	private String docAbstract;
+    private List<String> notes;
 
-	private PhysicalDescription physicalDescription;
-	private Cartographics cartographics;
+    private List<String> languages;
+    private List<String> keywords;
+    private String docAbstract;
 
-	public Metadata() {
-		notes = new ArrayList<String>();
-		authors = new ArrayList<Author>();
-		publishers = new ArrayList<Publisher>();
-		languages = new ArrayList<String>();
-		keywords = new ArrayList<String>();
-	}
+    private PhysicalDescription physicalDescription;
+    private Cartographics cartographics;
 
-	public boolean isDocument() {
-		return privateDocument;
-	}
-	
-	public void setPrivateDocument(boolean isPrivate) {
-		privateDocument = isPrivate;
-	}
-	
-	public String getPid() {
-		return pid;
-	}
+    public Metadata() {
+        notes = new ArrayList<String>();
+        authors = new ArrayList<Author>();
+        publishers = new ArrayList<Publisher>();
+        languages = new ArrayList<String>();
+        keywords = new ArrayList<String>();
+    }
 
-	public void setPid(String pid) {
-		this.pid = pid;
-	}
+    public boolean isDocument() {
+        return privateDocument;
+    }
 
-	public List<String> getNotes() {
-		return notes;
-	}
+    public void setPrivateDocument(boolean isPrivate) {
+        privateDocument = isPrivate;
+    }
 
-	public Cartographics getCartographics() {
-		return cartographics;
-	}
+    public String getPid() {
+        return pid;
+    }
 
-	public void setCartographics(Cartographics cartographics) {
-		this.cartographics = cartographics;
-	}
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
 
-	public PhysicalDescription getPhysicalDescription() {
-		return physicalDescription;
-	}
+    public List<String> getNotes() {
+        return notes;
+    }
 
-	public void setPhysicalDescription(PhysicalDescription physicalDescription) {
-		this.physicalDescription = physicalDescription;
-	}
+    public Cartographics getCartographics() {
+        return cartographics;
+    }
 
-	public void addLanguage(String language) {
-		languages.add(language);
-	}
+    public void setCartographics(Cartographics cartographics) {
+        this.cartographics = cartographics;
+    }
 
-	public List<String> getLanguages() {
-		return languages;
-	}
+    public PhysicalDescription getPhysicalDescription() {
+        return physicalDescription;
+    }
 
-	public void addKayword(String keyword) {
-		keywords.add(keyword);
-	}
+    public void setPhysicalDescription(PhysicalDescription physicalDescription) {
+        this.physicalDescription = physicalDescription;
+    }
 
-	public List<String> getKeywords() {
-		return keywords;
-	}
+    public void addLanguage(String language) {
+        languages.add(language);
+    }
 
-	public void setAbstract(String a) {
-		docAbstract = a;
-	}
+    public List<String> getLanguages() {
+        return languages;
+    }
 
-	public String getAbstract() {
-		return docAbstract;
-	}
+    public void addKayword(String keyword) {
+        keywords.add(keyword);
+    }
 
-	public void setPart(Part part) {
-		this.part = part;
-	}
+    public List<String> getKeywords() {
+        return keywords;
+    }
 
-	public Part getPart() {
-		return part;
-	}
+    public void setAbstract(String a) {
+        docAbstract = a;
+    }
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+    public String getAbstract() {
+        return docAbstract;
+    }
 
-	public Location getLocation() {
-		return location;
-	}
+    public void setPart(Part part) {
+        this.part = part;
+    }
 
-	public void setTitleInfo(TitleInfo titleInfo) {
-		this.titleInfo = titleInfo;
-	}
+    public Part getPart() {
+        return part;
+    }
 
-	public TitleInfo getTitleInfo() {
-		return titleInfo;
-	}
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
-	public void addNote(String note) {
-		this.notes.add(note);
-	}
+    public Location getLocation() {
+        return location;
+    }
 
-	public String getIssn() {
-		return issn;
-	}
+    public void setTitleInfo(TitleInfo titleInfo) {
+        this.titleInfo = titleInfo;
+    }
 
-	public void setIssn(String issn) {
-		this.issn = issn;
-	}
+    public TitleInfo getTitleInfo() {
+        return titleInfo;
+    }
 
-	public String getCcnb() {
-		return ccnb;
-	}
+    public void addNote(String note) {
+        this.notes.add(note);
+    }
 
-	public String getOclc() {
-		return oclc;
-	}
+    public String getIssn() {
+        return issn;
+    }
 
-	public void setCcnb(String ccnb) {
-		this.ccnb = ccnb;
-	}
+    public void setIssn(String issn) {
+        this.issn = issn;
+    }
 
-	public void setOclc(String oclc) {
-		this.oclc = oclc;
-	}
+    public String getCcnb() {
+        return ccnb;
+    }
 
-	public String getIsbn() {
-		return isbn;
-	}
+    public String getOclc() {
+        return oclc;
+    }
 
-	public void setIsbn(String isbn) {
-		this.isbn = isbn;
-	}
+    public void setCcnb(String ccnb) {
+        this.ccnb = ccnb;
+    }
 
-	public void addAuthor(Author author) {
-		authors.add(author);
-	}
+    public void setOclc(String oclc) {
+        this.oclc = oclc;
+    }
 
-	public void addPublisher(Publisher publisher) {
-		publishers.add(publisher);
-	}
+    public String getIsbn() {
+        return isbn;
+    }
 
-	public List<Author> getAuthors() {
-		return authors;
-	}
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
-	public List<Publisher> getPublishers() {
-		return publishers;
-	}
+    public void addAuthor(Author author) {
+        authors.add(author);
+    }
+
+    public void addPublisher(Publisher publisher) {
+        publishers.add(publisher);
+    }
+
+    public List<Author> getAuthors() {
+        return authors;
+    }
+
+    public List<Publisher> getPublishers() {
+        return publishers;
+    }
 
 }

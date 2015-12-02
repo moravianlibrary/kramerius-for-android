@@ -1,105 +1,103 @@
 package cz.mzk.kramerius.app.metadata;
 
 public class Part {
-	private String pageNumber;
-	private String pageIndex;
-	private String volumeNumber;
-	private String issueNumber;
-	private String partNumber;
-	private String date;
-	private String text;
+    private String pageNumber;
+    private String pageIndex;
+    private String volumeNumber;
+    private String issueNumber;
+    private String partNumber;
+    private String date;
+    private String text;
 
-	public Part() {
+    public Part() {
 
-	}
-
-
-	public boolean isEmpty() {
-		return pageNumber == null && pageIndex == null && volumeNumber == null && partNumber == null && issueNumber == null && text == null && date == null;
-	}
+    }
 
 
-	public String getDate() {
-		return date;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
+    public boolean isEmpty() {
+        return pageNumber == null && pageIndex == null && volumeNumber == null && partNumber == null && issueNumber == null && text == null && date == null;
+    }
 
 
-	public String getPageNumber() {
-		return pageNumber;
-	}
+    public String getDate() {
+        return date;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
 
-	public String getPageIndex() {
-		return pageIndex;
-	}
+    public String getPageNumber() {
+        return pageNumber;
+    }
 
 
-	public String getVolumeNumber() {
-		return volumeNumber;
-	}
+    public String getPageIndex() {
+        return pageIndex;
+    }
 
 
-	public String getIssueNumber() {
-		return issueNumber;
-	}
+    public String getVolumeNumber() {
+        return volumeNumber;
+    }
 
 
-	public String getPartNumber() {
-		return partNumber;
-	}
+    public String getIssueNumber() {
+        return issueNumber;
+    }
 
 
-	public void setPageNumber(String pageNumber) {
-		this.pageNumber = pageNumber;
-	}
+    public String getPartNumber() {
+        return partNumber;
+    }
 
 
-	public void setPageIndex(String pageIndex) {
-		this.pageIndex = pageIndex;
-	}
+    public void setPageNumber(String pageNumber) {
+        this.pageNumber = pageNumber;
+    }
 
 
-	public void setVolumeNumber(String volumeNumber) {
-		this.volumeNumber = volumeNumber;
-	}
+    public void setPageIndex(String pageIndex) {
+        this.pageIndex = pageIndex;
+    }
 
 
-	public void setIssueNumber(String issueNumber) {
-		this.issueNumber = issueNumber;
-	}
+    public void setVolumeNumber(String volumeNumber) {
+        this.volumeNumber = volumeNumber;
+    }
 
 
-	public void setPartNumber(String partNumber) {
-		this.partNumber = partNumber;
-	}
-	
-	
-	
-	public String getIssueTitle() {
-		if((issueNumber == null || issueNumber.isEmpty()) && (partNumber == null || partNumber.isEmpty())) {
-			return "";
-		}		
-		if(issueNumber == null || issueNumber.isEmpty()) {
-			return partNumber;
-		}
-		if(partNumber != null && !partNumber.isEmpty()) {
-			issueNumber += "/" + partNumber;	
-		} 
-		return issueNumber;				
-	} 
-	
-	
+    public void setIssueNumber(String issueNumber) {
+        this.issueNumber = issueNumber;
+    }
+
+
+    public void setPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+    }
+
+
+    public String getIssueTitle() {
+        if ((issueNumber == null || issueNumber.isEmpty()) && (partNumber == null || partNumber.isEmpty())) {
+            return "";
+        }
+        if (issueNumber == null || issueNumber.isEmpty()) {
+            return partNumber;
+        }
+        if (partNumber != null && !partNumber.isEmpty()) {
+            issueNumber += "/" + partNumber;
+        }
+        return issueNumber;
+    }
+
 
 }

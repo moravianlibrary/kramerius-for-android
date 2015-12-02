@@ -5,46 +5,46 @@ import java.util.List;
 
 public class Author {
 
-	private String name;
-	private String date;
-	private List<String> roleCodes;
+    private String name;
+    private String date;
+    private List<String> roleCodes;
 
-	public Author() {
-		roleCodes = new ArrayList<String>();
-	}
+    public Author() {
+        roleCodes = new ArrayList<String>();
+    }
 
-	public Author(String name, String date) {
-		this();
-		this.name = name;
-		this.date = date;
-	}
-	
-	public void addRole(String role) {
-		roleCodes.add(role);
-	}
-	
-	public List<String> getRoleCodes() {
-		return roleCodes;
-	}
+    public Author(String name, String date) {
+        this();
+        this.name = name;
+        this.date = date;
+    }
 
-	public boolean isEmpty() {
-		return name == null && date == null && roleCodes.isEmpty();
-	}
+    public void addRole(String role) {
+        roleCodes.add(role);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public List<String> getRoleCodes() {
+        return roleCodes;
+    }
 
-	public String getDate() {
-		return date;
-	}
+    public boolean isEmpty() {
+        return name == null && date == null && roleCodes.isEmpty();
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
+    public String getDate() {
+        return date;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
 }

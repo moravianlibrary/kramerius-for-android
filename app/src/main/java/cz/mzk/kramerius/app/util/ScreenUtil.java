@@ -20,12 +20,12 @@ public class ScreenUtil {
 //	public static void setInsets(Activity context, View view) {
 //		setInsets(context, view, true);
 //	}
-	
-	public static void fullscreenInsets(Activity context, View view) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-			return;
-		}
-		view.setPadding(0, 0, 0, 0);
-	}
-	
+
+    public static void fullscreenInsets(Activity context, View view) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return;
+        }
+        view.setPadding(0, 0, 0, 0);
+    }
+
 }

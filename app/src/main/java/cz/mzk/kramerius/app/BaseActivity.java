@@ -8,50 +8,50 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class BaseActivity extends ActionBarActivity {
 
-	public static final String EXTRA_PID = "extra_pid";
-	public static final String EXTRA_TITLE = "extra_title";
-	public static final String EXTRA_DOMAIN = "extra_domain";
+    public static final String EXTRA_PID = "extra_pid";
+    public static final String EXTRA_TITLE = "extra_title";
+    public static final String EXTRA_DOMAIN = "extra_domain";
 
-	public static final int PHONE = 0;
-	public static final int TABLET = 1;
+    public static final int PHONE = 0;
+    public static final int TABLET = 1;
 
-	private int mDevice;
+    private int mDevice;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Configuration config = getResources().getConfiguration();
-		if (config.smallestScreenWidthDp >= 720) {
-			mDevice = TABLET;
-			//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-		} else {
-			mDevice = PHONE;
-			//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
-		SystemBarTintManager tintManager = new SystemBarTintManager(this);
-		tintManager.setStatusBarTintEnabled(true);
-		tintManager.setStatusBarTintResource(R.color.status_bar);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Configuration config = getResources().getConfiguration();
+        if (config.smallestScreenWidthDp >= 720) {
+            mDevice = TABLET;
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            mDevice = PHONE;
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.status_bar);
+    }
 
-	public int getDevice() {
-		return mDevice;
-	}
+    public int getDevice() {
+        return mDevice;
+    }
 
-	public boolean isPhone() {
-		return mDevice == PHONE;
-	}
+    public boolean isPhone() {
+        return mDevice == PHONE;
+    }
 
-	public boolean isTablet() {
-		return mDevice == TABLET;
-	}
-	
-	public boolean isLandscape() {
-		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-	}
+    public boolean isTablet() {
+        return mDevice == TABLET;
+    }
 
-	public boolean isPortrait() {
-		return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-	}
-	
-	
+    public boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    public boolean isPortrait() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+
 }

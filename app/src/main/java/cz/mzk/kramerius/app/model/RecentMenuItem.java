@@ -1,46 +1,45 @@
 package cz.mzk.kramerius.app.model;
 
 public class RecentMenuItem {
-	
-	private String title;
-	private String subtitle;
-	private String pid;
 
-	
-	public RecentMenuItem() {
-		
-	}
+    private String title;
+    private String subtitle;
+    private String pid;
 
 
-	public String getTitle() {
-		return title;
-	}
+    public RecentMenuItem() {
+
+    }
 
 
-	public String getSubtitle() {
-		return subtitle;
-	}
+    public String getTitle() {
+        return title;
+    }
 
 
-	public String getPid() {
-		return pid;
-	}
+    public String getSubtitle() {
+        return subtitle;
+    }
 
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public String getPid() {
+        return pid;
+    }
 
 
-	public void setSubtitle(String subtitle) {
-		this.subtitle = subtitle;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
 
-	public void setPid(String pid) {
-		this.pid = pid;
-	}
-	
-	
-	
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+
 }

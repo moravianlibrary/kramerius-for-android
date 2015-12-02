@@ -2,38 +2,38 @@ package cz.mzk.kramerius.app.metadata;
 
 public class MetadataWrapper {
 
-	private Metadata metadata;
-	private String model;
-	private boolean documentPrivate;
+    private Metadata metadata;
+    private String model;
+    private boolean documentPrivate;
 
-	public MetadataWrapper(Metadata metadata, String model, boolean documentPrivate) {
-		this.metadata = metadata;
-		this.model = model;
-		this.documentPrivate = documentPrivate;
-	}
-	
-	public Metadata getMetadata() {
-		return metadata;
-	}
+    public MetadataWrapper(Metadata metadata, String model, boolean documentPrivate) {
+        this.metadata = metadata;
+        this.model = model;
+        this.documentPrivate = documentPrivate;
+    }
 
-	public String getModel() {
-		return model;
-	}
+    public Metadata getMetadata() {
+        return metadata;
+    }
 
-	public boolean isDocumentPrivate() {
-		return documentPrivate;
-	}
+    public String getModel() {
+        return model;
+    }
 
-	public void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
-	}
+    public boolean isDocumentPrivate() {
+        return documentPrivate;
+    }
 
-	public void setModel(String model) {
-		this.model = model;
-	}
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
 
-	public void setDocumentPrivate(boolean documentPrivate) {
-		this.documentPrivate = documentPrivate;
-	}
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setDocumentPrivate(boolean documentPrivate) {
+        this.documentPrivate = documentPrivate;
+    }
 
 }

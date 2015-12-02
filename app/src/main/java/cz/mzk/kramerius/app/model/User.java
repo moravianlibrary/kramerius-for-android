@@ -5,58 +5,56 @@ import java.util.List;
 
 public class User {
 
-	private String firstName;
-	private String surname;
-	private String login;
-	private String password;
-	
-	private List<String> roles;
-	
-	public User() {
-		roles = new ArrayList<String>();
-	}
+    private String firstName;
+    private String surname;
+    private String login;
+    private String password;
 
-	public String getFirstName() {
-		return firstName;
-	}
+    private List<String> roles;
 
-	public String getSurname() {
-		return surname;
-	}
+    public User() {
+        roles = new ArrayList<String>();
+    }
 
-	public String getLogin() {
-		return login;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public List<String> getRoles() {
-		return roles;
-	}
+    public String getSurname() {
+        return surname;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getLogin() {
+        return login;
+    }
 
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
+    public List<String> getRoles() {
+        return roles;
+    }
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void addRole(String role) {
-		this.roles.add(role);
-	}
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	
-	
-	
+    public void addRole(String role) {
+        this.roles.add(role);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
 }

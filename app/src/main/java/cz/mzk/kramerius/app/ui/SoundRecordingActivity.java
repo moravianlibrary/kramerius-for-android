@@ -1,11 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Logger;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +26,12 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.google.analytics.tracking.android.EasyTracker;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Logger;
+
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.TrackLvAdapter;
@@ -53,396 +53,402 @@ import cz.mzk.kramerius.app.viewer.VolleyRequestManager;
 
 public class SoundRecordingActivity extends BaseActivity implements OnClickListener {
 
-	public static interface PlayerServiceHelper {
-		public Track getCurrentTrackId();
+    public static interface PlayerServiceHelper {
+        public Track getCurrentTrackId();
 
-		boolean isPlayingNow();
-	}
+        boolean isPlayingNow();
+    }
 
-	private static final Logger LOGGER = Logger.getLogger(SoundRecordingActivity.class.getSimpleName());
+    private static final Logger LOGGER = Logger.getLogger(SoundRecordingActivity.class.getSimpleName());
 
-	private static final String EXTRA_SOUND_RECORDING = "sound_recording";
-	public static final String EXTRA_SOUND_RECORDING_ITEM = "sound_recording_item";
+    private static final String EXTRA_SOUND_RECORDING = "sound_recording";
+    public static final String EXTRA_SOUND_RECORDING_ITEM = "sound_recording_item";
 
-	// data
-	private String mPid;
-	private Item mSoundRecordingItem;
-	private SoundRecording mSoundRecording;
-	// views
-	private ImageView mActionbarThumb;
-	private TextView mActionbarTitle;
-	private TextView mActionbarAuthor;
-	private ImageView mActionbarBtnInfo;
+    // data
+    private String mPid;
+    private Item mSoundRecordingItem;
+    private SoundRecording mSoundRecording;
+    // views
+    private ImageView mActionbarThumb;
+    private TextView mActionbarTitle;
+    private TextView mActionbarAuthor;
+    private ImageView mActionbarBtnInfo;
 
-	private ProgressBar mProgressBar;
-	private View mContent;
-	private ImageView mBtnPlayAll;
-	private RecyclerView mTracksRv;
-	private ListView mTracksLv;
-	private PlayerFragment mPlayerFragment;
-	// other
-	private TrackRvAdapter mTracksRvAdapter;
-	private TrackLvAdapter mTracksLvAdapter;
+    private ProgressBar mProgressBar;
+    private View mContent;
+    private ImageView mBtnPlayAll;
+    private RecyclerView mTracksRv;
+    private ListView mTracksLv;
+    private PlayerFragment mPlayerFragment;
+    // other
+    private TrackRvAdapter mTracksRvAdapter;
+    private TrackLvAdapter mTracksLvAdapter;
 
-	private AsyncTask<String, Void, Bitmap> mFetchThumbBitmapTask;
-	private Timer mPlayerTimer;
-	private TimerTask mPlayerTask;
-	private MediaPlayerServiceBinder mBinder = null;
-	private ServiceConnection mServiceConnection = new ServiceConnection() {
+    private AsyncTask<String, Void, Bitmap> mFetchThumbBitmapTask;
+    private Timer mPlayerTimer;
+    private TimerTask mPlayerTask;
+    private MediaPlayerServiceBinder mBinder = null;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
 
-		@Override
-		public void onServiceConnected(ComponentName className, IBinder service) {
-			mBinder = (MediaPlayerServiceBinder) service;
-		}
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            mBinder = (MediaPlayerServiceBinder) service;
+        }
 
-		@Override
-		public void onServiceDisconnected(ComponentName arg0) {
-			mBinder = null;
-		}
-	};
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBinder = null;
+        }
+    };
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sound_recording);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setTitle(R.string.app_name);
-		getSupportActionBar().setHomeButtonEnabled(false);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sound_recording);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.app_name);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-		// load views
-		mActionbarThumb = (ImageView) findViewById(R.id.thumb);
-		mActionbarTitle = (TextView) findViewById(R.id.title);
-		mActionbarAuthor = (TextView) findViewById(R.id.author);
-		mActionbarBtnInfo = (ImageView) findViewById(R.id.btnInfo);
-		mActionbarBtnInfo.setOnClickListener(this);
-		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-		mContent = findViewById(R.id.content);
-		mBtnPlayAll = (ImageView) findViewById(R.id.btnPlayAll);
-		mBtnPlayAll.setOnClickListener(this);
-		View tracksView = findViewById(R.id.tracks);
-		if (tracksView != null) {
-			if (tracksView instanceof RecyclerView) {
-				mTracksRv = (RecyclerView) tracksView;
-			} else if (tracksView instanceof ListView) {
-				mTracksLv = (ListView) tracksView;
-			}
-		}
+        // load views
+        mActionbarThumb = (ImageView) findViewById(R.id.thumb);
+        mActionbarTitle = (TextView) findViewById(R.id.title);
+        mActionbarAuthor = (TextView) findViewById(R.id.author);
+        mActionbarBtnInfo = (ImageView) findViewById(R.id.btnInfo);
+        mActionbarBtnInfo.setOnClickListener(this);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mContent = findViewById(R.id.content);
+        mBtnPlayAll = (ImageView) findViewById(R.id.btnPlayAll);
+        mBtnPlayAll.setOnClickListener(this);
+        View tracksView = findViewById(R.id.tracks);
+        if (tracksView != null) {
+            if (tracksView instanceof RecyclerView) {
+                mTracksRv = (RecyclerView) tracksView;
+            } else if (tracksView instanceof ListView) {
+                mTracksLv = (ListView) tracksView;
+            }
+        }
 
-		mPlayerFragment = (PlayerFragment) getFragmentManager().findFragmentById(R.id.playerFragment);
-		// load data
-		if (savedInstanceState != null) {
-			loadData(savedInstanceState);
-		} else {
-			loadData(getIntent().getExtras());
-		}
-		if (mSoundRecording != null) {
-			inflateViews();
-		} else {
-			fetchDataAsync();
-		}
-	}
+        mPlayerFragment = (PlayerFragment) getFragmentManager().findFragmentById(R.id.playerFragment);
+        // load data
+        if (savedInstanceState != null) {
+            loadData(savedInstanceState);
+        } else {
+            loadData(getIntent().getExtras());
+        }
+        if (mSoundRecording != null) {
+            inflateViews();
+        } else {
+            fetchDataAsync();
+        }
+    }
 
-	private void fetchDataAsync() {
-		new AsyncTask<Item, Void, SoundRecording>() {
+    private void fetchDataAsync() {
+        new AsyncTask<Item, Void, SoundRecording>() {
 
-			@Override
-			protected SoundRecording doInBackground(Item... params) {
-				Item srItem = params[0];
-				if (srItem == null) {
-					// item obtained like this does not include author(s)
-					// see http://kramerius.mzk.cz/search/api/v5.0/item/uuid%3A6f840b85-e6b3-49f1-9710-71aed0beca47
-					srItem = K5ConnectorFactory.getConnector().getItem(SoundRecordingActivity.this, mPid);
-				}
-				String srTitle = srItem.getTitle();
-				String srAuthor = srItem.getAuthor();
-				if (srAuthor == null) {
-					Metadata modsMetadata = K5ConnectorFactory.getConnector().getModsMetadata(
-							SoundRecordingActivity.this, srItem.getPid());
-					List<Author> modsAuthors = modsMetadata.getAuthors();
-					if (modsAuthors != null && !modsAuthors.isEmpty()) {
-						Author author = modsAuthors.get(0);
-						srAuthor = author.getName();
-					}
-				}
-				List<Track> tracks = getAllTracks(srTitle, srItem.getPid());
-				return new SoundRecording(srItem.getPid(), srTitle, srAuthor, tracks);
-			}
+            @Override
+            protected SoundRecording doInBackground(Item... params) {
+                Item srItem = params[0];
+                if (srItem == null) {
+                    // item obtained like this does not include author(s)
+                    // see http://kramerius.mzk.cz/search/api/v5.0/item/uuid%3A6f840b85-e6b3-49f1-9710-71aed0beca47
+                    srItem = K5ConnectorFactory.getConnector().getItem(SoundRecordingActivity.this, mPid);
+                }
+                String srTitle = srItem.getTitle();
+                String srAuthor = srItem.getAuthor();
+                if (srAuthor == null) {
+                    Metadata modsMetadata = K5ConnectorFactory.getConnector().getModsMetadata(
+                            SoundRecordingActivity.this, srItem.getPid());
+                    List<Author> modsAuthors = modsMetadata.getAuthors();
+                    if (modsAuthors != null && !modsAuthors.isEmpty()) {
+                        Author author = modsAuthors.get(0);
+                        srAuthor = author.getName();
+                    }
+                }
+                List<Track> tracks = getAllTracks(srTitle, srItem.getPid());
+                return new SoundRecording(srItem.getPid(), srTitle, srAuthor, tracks);
+            }
 
-			private List<Track> getAllTracks(String srTitle, String srPid) {
-				List<Item> directTrackItems = K5ConnectorFactory.getConnector().getChildren(
-						SoundRecordingActivity.this, srPid, ModelUtil.TRACK);
-				List<Track> tracks = toTracks(directTrackItems, srPid, srTitle, null, null);
+            private List<Track> getAllTracks(String srTitle, String srPid) {
+                List<Item> directTrackItems = K5ConnectorFactory.getConnector().getChildren(
+                        SoundRecordingActivity.this, srPid, ModelUtil.TRACK);
+                List<Track> tracks = toTracks(directTrackItems, srPid, srTitle, null, null);
 
-				List<Item> soundUnitItems = K5ConnectorFactory.getConnector().getChildren(SoundRecordingActivity.this,
-						srPid, ModelUtil.SOUND_UNIT);
-				for (Item suItem : soundUnitItems) {
-					String suTitle = suItem.getTitle();
-					String suPId = suItem.getPid();
-					List<Item> suTrackItems = K5ConnectorFactory.getConnector().getChildren(
-							SoundRecordingActivity.this, suItem.getPid(), ModelUtil.TRACK);
-					List<Track> suTracks = toTracks(suTrackItems, srPid, srTitle, suPId, suTitle);
-					for (Track track : suTracks) {
-						if (!tracks.contains(track)) {
-							tracks.add(track);
-						}
-					}
-				}
-				return tracks;
-			}
+                List<Item> soundUnitItems = K5ConnectorFactory.getConnector().getChildren(SoundRecordingActivity.this,
+                        srPid, ModelUtil.SOUND_UNIT);
+                for (Item suItem : soundUnitItems) {
+                    String suTitle = suItem.getTitle();
+                    String suPId = suItem.getPid();
+                    List<Item> suTrackItems = K5ConnectorFactory.getConnector().getChildren(
+                            SoundRecordingActivity.this, suItem.getPid(), ModelUtil.TRACK);
+                    List<Track> suTracks = toTracks(suTrackItems, srPid, srTitle, suPId, suTitle);
+                    for (Track track : suTracks) {
+                        if (!tracks.contains(track)) {
+                            tracks.add(track);
+                        }
+                    }
+                }
+                return tracks;
+            }
 
-			private List<Track> toTracks(List<Item> trackItems, String srPid, String srTitle, String suPid,
-					String suTitle) {
-				List<Track> result = new ArrayList<Track>(trackItems.size());
-				for (Item item : trackItems) {
-					result.add(new Track(item.getPid(), item.getTitle(), srPid, srTitle, suPid, suTitle));
-				}
-				return result;
-			}
+            private List<Track> toTracks(List<Item> trackItems, String srPid, String srTitle, String suPid,
+                                         String suTitle) {
+                List<Track> result = new ArrayList<Track>(trackItems.size());
+                for (Item item : trackItems) {
+                    result.add(new Track(item.getPid(), item.getTitle(), srPid, srTitle, suPid, suTitle));
+                }
+                return result;
+            }
 
-			protected void onPostExecute(SoundRecording result) {
-				mSoundRecording = result;
-				inflateViews();
-			};
+            protected void onPostExecute(SoundRecording result) {
+                mSoundRecording = result;
+                inflateViews();
+            }
 
-		}.execute(mSoundRecordingItem);
-	}
+            ;
 
-	private void inflateViews() {
-		mActionbarTitle.setText(mSoundRecording.getTitle());
-		getSupportActionBar().setTitle(mSoundRecording.getTitle());
-		if (mSoundRecording.getAuthor() != null) {
-			mActionbarAuthor.setText(mSoundRecording.getAuthor());
-		}
-		getSupportActionBar().setSubtitle(mSoundRecording.getAuthor());
-		if (mTracksRv != null) {
-			mTracksRvAdapter = new TrackRvAdapter(this, mSoundRecording, new PlayerServiceHelper() {
+        }.execute(mSoundRecordingItem);
+    }
 
-				@Override
-				public Track getCurrentTrackId() {
-					return mBinder != null ? mBinder.getCurrentTrack() : null;
-				}
+    private void inflateViews() {
+        mActionbarTitle.setText(mSoundRecording.getTitle());
+        getSupportActionBar().setTitle(mSoundRecording.getTitle());
+        if (mSoundRecording.getAuthor() != null) {
+            mActionbarAuthor.setText(mSoundRecording.getAuthor());
+        }
+        getSupportActionBar().setSubtitle(mSoundRecording.getAuthor());
+        if (mTracksRv != null) {
+            mTracksRvAdapter = new TrackRvAdapter(this, mSoundRecording, new PlayerServiceHelper() {
 
-				@Override
-				public boolean isPlayingNow() {
-					return State.STARTED == mBinder.getState();
-				}
+                @Override
+                public Track getCurrentTrackId() {
+                    return mBinder != null ? mBinder.getCurrentTrack() : null;
+                }
 
-			});
-			mTracksRv.setLayoutManager(new LinearLayoutManager(this));
-			mTracksRv.setAdapter(mTracksRvAdapter);
-		}
-		if (mTracksLv != null) {
-			mTracksLvAdapter = new TrackLvAdapter(this, mSoundRecording, new PlayerServiceHelper() {
+                @Override
+                public boolean isPlayingNow() {
+                    return State.STARTED == mBinder.getState();
+                }
 
-				@Override
-				public Track getCurrentTrackId() {
-					return mBinder != null ? mBinder.getCurrentTrack() : null;
-				}
+            });
+            mTracksRv.setLayoutManager(new LinearLayoutManager(this));
+            mTracksRv.setAdapter(mTracksRvAdapter);
+        }
+        if (mTracksLv != null) {
+            mTracksLvAdapter = new TrackLvAdapter(this, mSoundRecording, new PlayerServiceHelper() {
 
-				@Override
-				public boolean isPlayingNow() {
-					return State.STARTED == mBinder.getState();
-				}
+                @Override
+                public Track getCurrentTrackId() {
+                    return mBinder != null ? mBinder.getCurrentTrack() : null;
+                }
 
-			});
-			mTracksLv.setAdapter(mTracksLvAdapter);
-			mTracksLv.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public boolean isPlayingNow() {
+                    return State.STARTED == mBinder.getState();
+                }
 
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
-					intent.setAction(MediaPlayerService.ACTION_PLAY);
-					Bundle bundle = new Bundle();
-					bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
-					bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, position);
-					intent.putExtras(bundle);
-					startService(intent);
-				}
-			});
-		}
+            });
+            mTracksLv.setAdapter(mTracksLvAdapter);
+            mTracksLv.setOnItemClickListener(new OnItemClickListener() {
 
-		mProgressBar.setVisibility(View.INVISIBLE);
-		mContent.setVisibility(View.VISIBLE);
-		fetchThumbnail();
-	}
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
+                    intent.setAction(MediaPlayerService.ACTION_PLAY);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
+                    bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, position);
+                    intent.putExtras(bundle);
+                    startService(intent);
+                }
+            });
+        }
 
-	private void loadData(Bundle bundle) {
-		mPid = bundle.getString(EXTRA_PID);
-		mSoundRecording = (SoundRecording) bundle.getParcelable(EXTRA_SOUND_RECORDING);
-		mSoundRecordingItem = (Item) bundle.getParcelable(EXTRA_SOUND_RECORDING_ITEM);
-	}
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mContent.setVisibility(View.VISIBLE);
+        fetchThumbnail();
+    }
 
-	@Override
-	protected void onSaveInstanceState(Bundle bundle) {
-		bundle.putString(EXTRA_PID, mPid);
-		bundle.putParcelable(EXTRA_SOUND_RECORDING, mSoundRecording);
-		bundle.putParcelable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
-		super.onSaveInstanceState(bundle);
-	}
+    private void loadData(Bundle bundle) {
+        mPid = bundle.getString(EXTRA_PID);
+        mSoundRecording = (SoundRecording) bundle.getParcelable(EXTRA_SOUND_RECORDING);
+        mSoundRecordingItem = (Item) bundle.getParcelable(EXTRA_SOUND_RECORDING_ITEM);
+    }
 
-	protected void onStart() {
-		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this);
-		Intent intent = new Intent(this, MediaPlayerService.class);
-		bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-		fetchThumbnail();
-	};
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        bundle.putString(EXTRA_PID, mPid);
+        bundle.putParcelable(EXTRA_SOUND_RECORDING, mSoundRecording);
+        bundle.putParcelable(EXTRA_SOUND_RECORDING_ITEM, mSoundRecordingItem);
+        super.onSaveInstanceState(bundle);
+    }
 
-	private void fetchThumbnail() {
-		if (mActionbarThumb.getDrawable() == null && mSoundRecording != null) {
-			String url = K5Api.getThumbnailPath(this, mSoundRecording.getPid());
-			VolleyRequestManager.addToRequestQueue(new RedirectingImageRequest(url, new Response.Listener<Bitmap>() {
-				@Override
-				public void onResponse(Bitmap bitmap) {
-					inflateImage(bitmap);
-				}
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);
+        Intent intent = new Intent(this, MediaPlayerService.class);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        fetchThumbnail();
+    }
 
-				private void inflateImage(Bitmap fetched) {
-					if (fetched != null) {
-						Bitmap scaled = BitmapUtil.scaleBitmap(fetched,
-								getResources().getDimensionPixelSize(R.dimen.sound_recording_thumb_width),
-								getResources().getDimensionPixelSize(R.dimen.sound_recording_thumb_height));
-						if (scaled != null) {
-							mActionbarThumb.setImageBitmap(scaled);
-							Drawable drawable = new BitmapDrawable(getResources(), scaled);
-							getSupportActionBar().setIcon(drawable);
-						}
-					}
-				}
-			}, null));
-		}
-	}
+    ;
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mPlayerTimer = new Timer();
-		mPlayerTask = new TimerTask() {
-			boolean isThisSoundRecording = false;
-			private Track visulisedAsCurrent;
-			private State lastState = null;
+    private void fetchThumbnail() {
+        if (mActionbarThumb.getDrawable() == null && mSoundRecording != null) {
+            String url = K5Api.getThumbnailPath(this, mSoundRecording.getPid());
+            VolleyRequestManager.addToRequestQueue(new RedirectingImageRequest(url, new Response.Listener<Bitmap>() {
+                @Override
+                public void onResponse(Bitmap bitmap) {
+                    inflateImage(bitmap);
+                }
 
-			@Override
-			public void run() {
-				if (mBinder != null && mSoundRecording != null) {
-					String activeSoundRecordingPid = mBinder.getSoundRecordingId();
-					if (activeSoundRecordingPid != null && activeSoundRecordingPid.equals(mSoundRecording.getPid())) {
-						isThisSoundRecording = true;
-						// update visulised track
-						Track currentTrack = mBinder.getCurrentTrack();
-						if (currentTrack == null) {
-							if (visulisedAsCurrent != null) {
-								visulisedAsCurrent = null;
-								invalidateRecyclerView();
-								// LOGGER.info("current track is null, visualisedAsCurrent!=null");
-							}
-						} else {
-							if (!currentTrack.equals(visulisedAsCurrent)) {// zmena hrajiciho tracku
-								visulisedAsCurrent = currentTrack;
-								lastState = mBinder.getState();
-								// LOGGER.info("zmena aktivniho tracku");
-								invalidateRecyclerView();
-							} else {
-								State state = mBinder.getState();
-								if (state != lastState) {// zmena stavu prehravace, potrebuju zastavit/spustit animaci
-									// LOGGER.info("zmena stavu");
-									lastState = state;
-									invalidateRecyclerView();
-								}
-							}
-						}
-						// update player
-						updatePlayer(true, mBinder.getState(), mBinder.getCurrentPosition(), mBinder.getDuration());
-						// toast in case of error
-						if (mBinder.hasFailed()) {
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									Toast.makeText(SoundRecordingActivity.this, "error playing track",
-											Toast.LENGTH_SHORT).show();
-								}
-							});
-						}
-					} else {
-						updatePlayer(false, null, null, null);
-						if (isThisSoundRecording) {
-							isThisSoundRecording = false;
-							visulisedAsCurrent = null;
-						}
-					}
-				}
-			}
+                private void inflateImage(Bitmap fetched) {
+                    if (fetched != null) {
+                        Bitmap scaled = BitmapUtil.scaleBitmap(fetched,
+                                getResources().getDimensionPixelSize(R.dimen.sound_recording_thumb_width),
+                                getResources().getDimensionPixelSize(R.dimen.sound_recording_thumb_height));
+                        if (scaled != null) {
+                            mActionbarThumb.setImageBitmap(scaled);
+                            Drawable drawable = new BitmapDrawable(getResources(), scaled);
+                            getSupportActionBar().setIcon(drawable);
+                        }
+                    }
+                }
+            }, null));
+        }
+    }
 
-			private void updatePlayer(final boolean enabled, final State state, final Integer currentTime,
-					final Integer totalTime) {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mPlayerFragment.update(enabled, state, currentTime, totalTime);
-						mBtnPlayAll.setVisibility(enabled ? View.GONE : View.VISIBLE);
-					}
-				});
-			}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPlayerTimer = new Timer();
+        mPlayerTask = new TimerTask() {
+            boolean isThisSoundRecording = false;
+            private Track visulisedAsCurrent;
+            private State lastState = null;
 
-			private void invalidateRecyclerView() {
-				LOGGER.info("invalidating");
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (mTracksRvAdapter != null) {
-							mTracksRvAdapter.notifyDataSetChanged();
-						}
-						if (mTracksLvAdapter != null) {
-							mTracksLvAdapter.notifyDataSetChanged();
-						}
-					}
-				});
-			}
-		};
-		mPlayerTimer.scheduleAtFixedRate(mPlayerTask, 0, 200);// 5x za sekundu
-	}
+            @Override
+            public void run() {
+                if (mBinder != null && mSoundRecording != null) {
+                    String activeSoundRecordingPid = mBinder.getSoundRecordingId();
+                    if (activeSoundRecordingPid != null && activeSoundRecordingPid.equals(mSoundRecording.getPid())) {
+                        isThisSoundRecording = true;
+                        // update visulised track
+                        Track currentTrack = mBinder.getCurrentTrack();
+                        if (currentTrack == null) {
+                            if (visulisedAsCurrent != null) {
+                                visulisedAsCurrent = null;
+                                invalidateRecyclerView();
+                                // LOGGER.info("current track is null, visualisedAsCurrent!=null");
+                            }
+                        } else {
+                            if (!currentTrack.equals(visulisedAsCurrent)) {// zmena hrajiciho tracku
+                                visulisedAsCurrent = currentTrack;
+                                lastState = mBinder.getState();
+                                // LOGGER.info("zmena aktivniho tracku");
+                                invalidateRecyclerView();
+                            } else {
+                                State state = mBinder.getState();
+                                if (state != lastState) {// zmena stavu prehravace, potrebuju zastavit/spustit animaci
+                                    // LOGGER.info("zmena stavu");
+                                    lastState = state;
+                                    invalidateRecyclerView();
+                                }
+                            }
+                        }
+                        // update player
+                        updatePlayer(true, mBinder.getState(), mBinder.getCurrentPosition(), mBinder.getDuration());
+                        // toast in case of error
+                        if (mBinder.hasFailed()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(SoundRecordingActivity.this, "error playing track",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } else {
+                        updatePlayer(false, null, null, null);
+                        if (isThisSoundRecording) {
+                            isThisSoundRecording = false;
+                            visulisedAsCurrent = null;
+                        }
+                    }
+                }
+            }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mPlayerTask.cancel();
-		mPlayerTimer.cancel();
-	}
+            private void updatePlayer(final boolean enabled, final State state, final Integer currentTime,
+                                      final Integer totalTime) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPlayerFragment.update(enabled, state, currentTime, totalTime);
+                        mBtnPlayAll.setVisibility(enabled ? View.GONE : View.VISIBLE);
+                    }
+                });
+            }
 
-	protected void onStop() {
-		super.onStop();
-		EasyTracker.getInstance(this).activityStart(this);
-		// cancel loading thumbnail
-		if (mFetchThumbBitmapTask != null) {
-			mFetchThumbBitmapTask.cancel(true);
-			mFetchThumbBitmapTask = null;
-		}
-		// unbind from the service
-		if (mBinder != null) {
-			unbindService(mServiceConnection);
-			mBinder = null;
-		}
-	};
+            private void invalidateRecyclerView() {
+                LOGGER.info("invalidating");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mTracksRvAdapter != null) {
+                            mTracksRvAdapter.notifyDataSetChanged();
+                        }
+                        if (mTracksLvAdapter != null) {
+                            mTracksLvAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
+        };
+        mPlayerTimer.scheduleAtFixedRate(mPlayerTask, 0, 200);// 5x za sekundu
+    }
 
-	@Override
-	public void onClick(View v) {
-		if (v == mBtnPlayAll) {
-			Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
-			intent.setAction(MediaPlayerService.ACTION_PLAY);
-			Bundle bundle = new Bundle();
-			bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
-			bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, 0);
-			intent.putExtras(bundle);
-			startService(intent);
-		} else if (v == mActionbarBtnInfo) {
-			String pid = mPid != null ? mPid : (mSoundRecording != null ? mSoundRecording.getPid() : null);
-			if (pid != null) {
-				Intent intent = new Intent(this, MetadataActivity.class);
-				intent.putExtra(EXTRA_PID, pid);
-				startActivity(intent);
-			}
-		}
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPlayerTask.cancel();
+        mPlayerTimer.cancel();
+    }
+
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStart(this);
+        // cancel loading thumbnail
+        if (mFetchThumbBitmapTask != null) {
+            mFetchThumbBitmapTask.cancel(true);
+            mFetchThumbBitmapTask = null;
+        }
+        // unbind from the service
+        if (mBinder != null) {
+            unbindService(mServiceConnection);
+            mBinder = null;
+        }
+    }
+
+    ;
+
+    @Override
+    public void onClick(View v) {
+        if (v == mBtnPlayAll) {
+            Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
+            intent.setAction(MediaPlayerService.ACTION_PLAY);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
+            bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, 0);
+            intent.putExtras(bundle);
+            startService(intent);
+        } else if (v == mActionbarBtnInfo) {
+            String pid = mPid != null ? mPid : (mSoundRecording != null ? mSoundRecording.getPid() : null);
+            if (pid != null) {
+                Intent intent = new Intent(this, MetadataActivity.class);
+                intent.putExtra(EXTRA_PID, pid);
+                startActivity(intent);
+            }
+        }
+    }
 }
