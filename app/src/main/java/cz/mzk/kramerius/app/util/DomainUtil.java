@@ -33,7 +33,7 @@ public class DomainUtil {
                     R.drawable.logo_kfbz));
 
             add(new Domain(false, "Krajská knihovna Karlovy Vary", "http", "k4.kr-karlovarsky.cz", R.drawable.logo_kkkv));
-            add(new Domain(false, "Knihovna Akademie věd ČR", "http", "kramerius.lib.cas.cz", R.drawable.logo_knav));
+            add(new Domain(false, "Knihovna Akademie věd ČR (https)", "https", "kramerius.lib.cas.cz", R.drawable.logo_knav));
             add(new Domain(false, "Knihovna Západočeského muzea v Plzni", "http", "kramerius.zcm.cz",
                     R.drawable.logo_zcm));
             add(new Domain(false, "Univerzita Karlova v Praze - Fakulta sociálních věd", "http",
@@ -47,7 +47,7 @@ public class DomainUtil {
                     R.drawable.logo_svkkl));
             add(new Domain(false, "Česká digitální knihovna", "http", "cdk.lib.cas.cz", R.drawable.logo_cdk));
             // add(new Domain("INCAD", "Test INCAD", "http", "sluzby.incad.cz/vmkramerius", R.drawable.logo_incad));
-            add(new Domain(false, "Moravská zemská knihovna - Docker", "https", "docker.mzk.cz (https)", R.drawable.logo_mzk));
+            add(new Domain(false, "Moravská zemská knihovna - Docker (https)", "https", "docker.mzk.cz", R.drawable.logo_mzk));
             add(new Domain(false, "Moravská zemská knihovna - Demo", "http", "krameriusdemo.mzk.cz",
                     R.drawable.logo_mzk));
         }
