@@ -8,9 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import android.content.ContentValues;
@@ -61,6 +59,7 @@ import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.dialog.MaterialDialog;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
+import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.search.TextboxProvider;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
@@ -75,10 +74,10 @@ import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment.PdfListener;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment.PageEventListener;
-import cz.mzk.kramerius.app.xml.AltoParser;
+
 
 public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,
-		OnPageNumberSelected, ViewerMenuListener, PageEventListener, PdfListener, TextboxProvider {
+		OnPageNumberSelected, ViewerMenuListener, PageEventListener, PdfListener {
 
 	private static final int PDF_CONNECTION_TIMEOUT = 5000;
 	private static final int PDF_DATA_READ_TIMEOUT = 0;// unlimited
@@ -95,6 +94,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
 	private static final String EXTRA_PDF = "extra_pdf";
 	private static final String EXTRA_PDF_STATUS = "extra_pdf_status";
+	private static final String EXTRA_TEXTBOX_PROVIDER = "extra_textbox_provider";
 
 	private static final int MENU_DETAILS = 101;
 
@@ -148,8 +148,8 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	private PageViewPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
-    // TODO: 2.12.15 serializace
-    private Map<Integer,Set<AltoParser.TextBox>> mTextboxMap = new HashMap<>();
+    private TextboxProvider mTextboxProvider = new TextboxProvider();
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -253,6 +253,9 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mFullscreen = savedInstanceState.getBoolean(EXTRA_FULLSCREEN);
 			mIsPdf = savedInstanceState.getBoolean(EXTRA_PDF);
 			mPdfStatus = savedInstanceState.getInt(EXTRA_PDF_STATUS);
+			mTextboxProvider = savedInstanceState.getParcelable(EXTRA_TEXTBOX_PROVIDER);
+			//Log.e("test", "activity: loaded textBoxProvider from savedState, size: " + mTextboxProvider.size() + "boxes: " + mTextboxProvider.toTextboxCountString());
+
 			if (!mFullscreen) {
 				setFullscreen(false);
 			}
@@ -337,6 +340,8 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		outState.putBoolean(EXTRA_PDF, mIsPdf);
 		outState.putInt(EXTRA_PDF_STATUS, mPdfStatus);
+		//Log.e("test", "activity: saving textBoxProvider onSaveInstanceState, size: " + mTextboxProvider.size());
+		outState.putParcelable(EXTRA_TEXTBOX_PROVIDER, mTextboxProvider);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -598,11 +603,14 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mPdfViewerFragment.setEventListener(this);
 			mPdfViewerFragment.populate(mCurrentPage);
 		} else {
+			mPagerAdapter = null;
 			ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
 			mViewPager = (ViewPager) findViewById(R.id.viewPager);
 			mViewPager.setVisibility(View.VISIBLE);
+			//Log.e("test", "activity: initializing PageViewPagerAdapter");
 			mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
-					viewMode, this);
+					viewMode, mTextboxProvider);
+			//mPagerAdapter.refreshFragments();
 			mViewPager.setAdapter(mPagerAdapter);
 			mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -1262,30 +1270,22 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	private void searchOnPage(final String query){
         final String pagePid = mPageList.get(mCurrentPage).getPid();
-		new AsyncTask<Void, Void, Set<AltoParser.TextBox>>(){
+		new AsyncTask<Void, Void, Set<TextBox>>(){
 
 			@Override
-			protected Set<AltoParser.TextBox> doInBackground(Void... params) {
+			protected Set<TextBox> doInBackground(Void... params) {
 				return K5ConnectorFactory.getConnector().getTextBoxes(PageActivity.this, pagePid,query);
 			}
 
 			@Override
-			protected void onPostExecute(Set<AltoParser.TextBox> textBoxes) {
+			protected void onPostExecute(Set<TextBox> textBoxes) {
 				if(textBoxes!=null && !textBoxes.isEmpty()){
-					mTextboxMap.put(mCurrentPage, textBoxes);
-                    mPagerAdapter.refreshFragment(mCurrentPage);
+					//Log.e("test", "activity: setting textBoxes");
+					mTextboxProvider.setTextBoxes(mCurrentPage, textBoxes);
+					mPagerAdapter.refreshFragment(mCurrentPage);
 				}
 
 			}
 		}.execute();
-    }
-
-
-    @Override
-    public Set<AltoParser.TextBox> getTextBoxes(int pagePosition) {
-		Set<AltoParser.TextBox> result =  mTextboxMap.get(pagePosition);
-		String sizeStr = result == null? "null": String.valueOf(result.size());
-		//Log.d(LOG_TAG, String.format("getTextBoxes for page %d: %s", pagePosition, sizeStr));
-		return result;
     }
 }

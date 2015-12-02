@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cz.mzk.kramerius.app.search.TextBox;
+
 /**
  * Created by Martin Řehánek on 19.11.15.
  */
@@ -135,22 +137,4 @@ public class AltoParser extends XmlParser {
         return results;
     }
 
-    public static class TextBox {
-
-        private final String mNormalizedString;
-        private final Rect mRectangle;
-
-        public TextBox(String normalizedString, Rect rectangle) {
-            mNormalizedString = normalizedString;
-            mRectangle = rectangle;
-        }
-
-        public String getNormalizedString() {
-            return mNormalizedString;
-        }
-
-        public Rect getRectangle() {
-            return mRectangle;
-        }
-    }
 }

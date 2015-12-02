@@ -31,8 +31,8 @@ import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
+import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.util.VersionUtils;
-import cz.mzk.kramerius.app.xml.AltoParser;
 
 public class SinglePageViewerFragment extends Fragment implements OnTouchListener, ImageInitializationHandler,
 		SingleTapListener {
@@ -73,6 +73,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		//Log.e("test", "fragment: onCreate");
 		super.onCreate(savedInstanceState);
 		mDomain = getArguments().getString("domain");
 		mPid = getArguments().getString("pid");
@@ -81,6 +82,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	}
 
 	public static SinglePageViewerFragment newInstance(String domain, String pid, int backgroud, ViewMode viewMode) {
+		//Log.e("test", "fragment: newInstance");
 		SinglePageViewerFragment fragment = new SinglePageViewerFragment();
 		Bundle args = new Bundle();
 		args.putString("domain", domain);
@@ -93,6 +95,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		//Log.e("test", "fragment: onCreateView");
 		Log.v(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_single_page_viewer, container, false);
 		mContainer = view.findViewById(R.id.container);
@@ -338,10 +341,10 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
 	private List<FramingRectangle> mRects = null;
 
-	public void setTextBoxes(Set<AltoParser.TextBox> boxes){
+	public void setTextBoxes(Set<TextBox> boxes){
 		if(boxes!=null) {
 			mRects = new ArrayList<>(boxes.size());
-			for (AltoParser.TextBox box : boxes) {
+			for (TextBox box : boxes) {
 				mRects.add(new FramingRectangle(box.getRectangle(), new FramingRectangle.Border(R.color.text_box_border, 1), R.color.text_box_filling));
 			}
 			//Log.v(TAG, String.format("framing rectangles: %d", mRects.size()));

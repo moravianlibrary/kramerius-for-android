@@ -9,7 +9,7 @@ import android.util.Pair;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
-import cz.mzk.kramerius.app.xml.AltoParser;
+import cz.mzk.kramerius.app.search.TextBox;
 
 public interface K5Connector {
 
@@ -43,6 +43,6 @@ public interface K5Connector {
 
 	public abstract Metadata getModsMetadata(Context context, String pid);
 
-	public abstract Set<AltoParser.TextBox> getTextBoxes(Context context, String pagePid, String searchQuery);
+	public abstract Set<TextBox> getTextBoxes(Context context, String pagePid, String searchQuery);
 
 }

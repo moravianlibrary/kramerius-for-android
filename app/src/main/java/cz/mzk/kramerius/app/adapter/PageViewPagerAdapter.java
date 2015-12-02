@@ -11,9 +11,9 @@ import android.util.Log;
 import android.view.ViewGroup;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.model.Item;
+import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.search.TextboxProvider;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment;
-import cz.mzk.kramerius.app.xml.AltoParser;
 
 public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
 
@@ -28,6 +28,7 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
 
     public PageViewPagerAdapter(FragmentManager fragmentManager, String domain, List<Item> pages, int bgColor, ViewMode viewMode, TextboxProvider textboxProvider) {
         super(fragmentManager);
+        //Log.e("test", "adapter: constructor");
         mPages = pages;
         mDomain = domain;
         mBackground = bgColor;
@@ -42,9 +43,15 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
         	return 0;
         }
     	return mPages.size();
-
     }
 
+    public Object instantiateItem(ViewGroup container, int position) {
+        SinglePageViewerFragment fragment = (SinglePageViewerFragment) super.instantiateItem(container,position);
+        //Log.e("test", "adapter: instantiating item, position: " + position);
+        mPageReferenceMap.put(position, fragment);
+        fragment.setTextBoxes(mTextboxProvider.getTextBoxes(position));
+        return fragment;
+    }
 
     public SinglePageViewerFragment getFragment(int key) {
     	return mPageReferenceMap.get(key);
@@ -52,6 +59,7 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        //Log.e("test", "adapter: destroyItem " + position);
         super.destroyItem(container, position, object);
         //Log.d(TAG, "destroyItem, position : " + position);
         SinglePageViewerFragment f = mPageReferenceMap.get(position);
@@ -63,7 +71,8 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Set<AltoParser.TextBox> textBoxes = mTextboxProvider.getTextBoxes(position);
+        //Log.e("test", "adapter: getItem " + position);
+        Set<TextBox> textBoxes = mTextboxProvider.getTextBoxes(position);
         SinglePageViewerFragment fragment = mPageReferenceMap.get(position);
         //Log.v(TAG, String.format("getItem, position: %d, hit: %b, boxes: %s",position, fragment!=null, textBoxes == null? "null" : String.valueOf(textBoxes.size())));
         if(fragment == null){
@@ -75,7 +84,8 @@ public class PageViewPagerAdapter  extends FragmentStatePagerAdapter {
    }
 
     public void refreshFragment(int position) {
-        Set<AltoParser.TextBox> textBoxes = mTextboxProvider.getTextBoxes(position);
+        //Log.e("test", "adapter: refreshing fragment " + position);
+        Set<TextBox> textBoxes = mTextboxProvider.getTextBoxes(position);
         //Log.v(TAG, String.format("refreshFragment, position: %d, boxes: %s",position,  textBoxes == null? "null" : String.valueOf(textBoxes.size())));
         SinglePageViewerFragment fragment = mPageReferenceMap.get(position);
         if(fragment!=null) {

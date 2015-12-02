@@ -28,6 +28,7 @@ import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.SearchQuery;
+import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
@@ -561,7 +562,7 @@ public class K5ConnectorImplAndroidHttpClient implements K5Connector {
 	}
 
 	@Override
-	public Set<AltoParser.TextBox> getTextBoxes(Context context, String pagePid, String searchQuery) {
+	public Set<TextBox> getTextBoxes(Context context, String pagePid, String searchQuery) {
 		String url = K5Api.getAltoStreamPath(context, pagePid);
 		String[] searchTokens = searchQuery.split(" ");
 		return AltoParser.getTextBlocks(url, searchTokens);
