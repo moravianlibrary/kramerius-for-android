@@ -30,6 +30,7 @@ import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHand
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.xml.AltoParser;
 
@@ -177,18 +178,8 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 		}
 		hideViews();
 		mProgressView.setVisibility(View.VISIBLE);
-		String url = buildZoomifyBaseUrl(mPid);
+		String url = K5Api.getZoomifyBaseUrl(getActivity(), mPid);
 		mTiledImageView.loadImage(url.toString());
-	}
-
-	// TODO: 1.12.15 Move to K5Api
-	private String buildZoomifyBaseUrl(String pid) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("http://");
-		builder.append(mDomain).append('/');
-		builder.append("search/zoomify/");
-		builder.append(pid).append('/');
-		return builder.toString();
 	}
 
 	private void hideViews() {
@@ -311,7 +302,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 	public void onImagePropertiesDataTransferError(String imagePropertiesUrl, String errorMessage) {
 		// Log.d(TAG, "onImagePropertiesDataTransferError");
 		hideViews();
-		Log.d("onImagePropertiesDataTransferError", imagePropertiesUrl + " - " + errorMessage);
+		Log.d("onImgPropDataTransErr", imagePropertiesUrl + " - " + errorMessage);
 		if (mEventListener != null) {
 			mEventListener.onNetworkError(null);
 		}

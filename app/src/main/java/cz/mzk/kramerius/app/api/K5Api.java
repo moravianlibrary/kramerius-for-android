@@ -70,7 +70,7 @@ public class K5Api {
 				.putString(context.getString(R.string.pref_protocol_key), protocol).commit();
 		K5ConnectorFactory.getConnector().restart();
 	}
-	
+
 	private static void killAudioPlayerIfDomainChanged(Context context, String domain) {
         if (!domain.equals(getDomain(context))) {
             PendingIntent intent = MediaPlayerService.buildStopServicePendingIntent(context);
@@ -262,6 +262,16 @@ public class K5Api {
 		return getBaseUri(context).buildUpon().appendPath(PATH_IMG).appendQueryParameter(PARAM_PID, pid)
 				.appendQueryParameter(PARAM_STREAM, STREAM_IMG_FULL).appendQueryParameter(PARAM_ACTION, ACTION_RAW)
 				.build().toString();
+	}
+
+
+	public static String getZoomifyBaseUrl(Context context, String pagePid) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getProtocol(context)).append("://");
+		builder.append(getDomain(context)).append('/');
+		builder.append("search/zoomify/");
+		builder.append(pagePid).append('/');
+		return builder.toString();
 	}
 
 }
