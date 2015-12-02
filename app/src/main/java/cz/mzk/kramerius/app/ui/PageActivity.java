@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,6 +28,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -57,6 +59,8 @@ import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.dialog.MaterialDialog;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.ParentChildrenPair;
+import cz.mzk.kramerius.app.search.TextBox;
+import cz.mzk.kramerius.app.search.TextboxProvider;
 import cz.mzk.kramerius.app.ui.PageSelectionFragment.OnPageNumberSelected;
 import cz.mzk.kramerius.app.ui.ViewerMenuFragment.ViewerMenuListener;
 import cz.mzk.kramerius.app.util.Constants;
@@ -69,8 +73,8 @@ import cz.mzk.kramerius.app.util.TextUtil;
 import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment.PdfListener;
-import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment.PageEventListener;
+
 
 public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,
 		OnPageNumberSelected, ViewerMenuListener, PageEventListener, PdfListener {
@@ -90,6 +94,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	private static final String EXTRA_FULLSCREEN = "extra_fullscreen";
 	private static final String EXTRA_PDF = "extra_pdf";
 	private static final String EXTRA_PDF_STATUS = "extra_pdf_status";
+	private static final String EXTRA_TEXTBOX_PROVIDER = "extra_textbox_provider";
 
 	private static final int MENU_DETAILS = 101;
 
@@ -143,6 +148,8 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 
 	private PageViewPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
+    private TextboxProvider mTextboxProvider = new TextboxProvider();
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +253,9 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mFullscreen = savedInstanceState.getBoolean(EXTRA_FULLSCREEN);
 			mIsPdf = savedInstanceState.getBoolean(EXTRA_PDF);
 			mPdfStatus = savedInstanceState.getInt(EXTRA_PDF_STATUS);
+			mTextboxProvider = savedInstanceState.getParcelable(EXTRA_TEXTBOX_PROVIDER);
+			//Log.e("test", "activity: loaded textBoxProvider from savedState, size: " + mTextboxProvider.size() + "boxes: " + mTextboxProvider.toTextboxCountString());
+
 			if (!mFullscreen) {
 				setFullscreen(false);
 			}
@@ -330,6 +340,8 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		outState.putBoolean(EXTRA_FULLSCREEN, mFullscreen);
 		outState.putBoolean(EXTRA_PDF, mIsPdf);
 		outState.putInt(EXTRA_PDF_STATUS, mPdfStatus);
+		//Log.e("test", "activity: saving textBoxProvider onSaveInstanceState, size: " + mTextboxProvider.size());
+		outState.putParcelable(EXTRA_TEXTBOX_PROVIDER, mTextboxProvider);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -388,7 +400,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		}
 		refreshPageNavigation();
 	}
-	
+
 	private void refreshPageNavigation() {
 		if(mPageList == null) {
 			return;
@@ -407,7 +419,9 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		startActivity(intent);
 	}
 
-	// TODO: tenhle task by se mel nekde ukladat a zabijet s cancel(true), jinak nam tam zustane viset treba dlouhe stahovani pdf
+
+
+    // TODO: tenhle task by se mel nekde ukladat a zabijet s cancel(true), jinak nam tam zustane viset treba dlouhe stahovani pdf
 	class LoadPagesTask extends AsyncTask<String, Void, ParentChildrenPair> {
 
 		private Context tContext;
@@ -552,13 +566,13 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		}
 	}
 
-	
+
 	@Override
 	public void onResume() {
 	    super.onResume();
 	    setToolbarTitle();
 	}
-	
+
 	private void setToolbarTitle() {
 		if(mToolbar == null || mTitle == null) {
 			return;
@@ -570,7 +584,7 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 			mToolbar.setTitle(mTitle);
 		}
 	}
-	
+
 	private void init() {
 		setToolbarTitle();
 		String bgColorValue = PreferenceManager.getDefaultSharedPreferences(this).getString(
@@ -581,24 +595,27 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		} else if ("black".equals(bgColorValue)) {
 			color = Color.BLACK;
 		}
-		
+
 		if(mIsPdf) {
 			mPdfViewerFragment = (PdfViewerFragment) getFragmentManager().findFragmentById(R.id.fragmentPdfViewer);
 			mPdfViewerContainer.setVisibility(View.VISIBLE);
 			mPdfViewerFragment.setBackgroundColor(color);
 			mPdfViewerFragment.setEventListener(this);
-			mPdfViewerFragment.populate(mCurrentPage);						
+			mPdfViewerFragment.populate(mCurrentPage);
 		} else {
+			mPagerAdapter = null;
 			ViewMode viewMode = ViewMode.FIT_TO_SCREEN;
 			mViewPager = (ViewPager) findViewById(R.id.viewPager);
 			mViewPager.setVisibility(View.VISIBLE);
+			//Log.e("test", "activity: initializing PageViewPagerAdapter");
 			mPagerAdapter = new PageViewPagerAdapter(getSupportFragmentManager(), K5Api.getDomain(this), mPageList, color,
-					viewMode);
+					viewMode, mTextboxProvider);
+			//mPagerAdapter.refreshFragments();
 			mViewPager.setAdapter(mPagerAdapter);
 			mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-	
+
 				@Override
-				public void onPageSelected(int index) {					
+				public void onPageSelected(int index) {
 					mCurrentPage = index;
 					loadPage(true);
 					/*if(mPagerAdapter != null) {
@@ -608,20 +625,20 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 						}
 					}*/
 				}
-	
+
 				@Override
 				public void onPageScrolled(int arg0, float arg1, int arg2) {
 					// TODO Auto-generated method stub
-	
+
 				}
-	
+
 				@Override
 				public void onPageScrollStateChanged(int arg0) {
 					// TODO Auto-generated method stub
-	
+
 				}
 			});
-	
+
 			loadPage();
 		}
 		if (mIsPdf) {
@@ -637,10 +654,10 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		mSeekBar.setMax(mPageList.size() - 1);
 		mSeekBar.setProgress(mCurrentPage);
 		mViewerWrapper.setVisibility(View.VISIBLE);
-	
 
-			
-		
+
+
+
 		//if (PrefUtils.isFirstViewerVisit(this)) {
 		//	new MaterialDialog.Builder(this).title(R.string.dialog_viewer_first_visit_title)
 		//			.content(R.string.dialog_viewer_first_visit_content).positiveText(R.string.gen_ok).build().show();
@@ -1214,14 +1231,13 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 	@Override
 	public void onPdfPageChanged(int index) {
 		mCurrentPage = index;
-		refreshPageNavigation();		
+		refreshPageNavigation();
 	}
 
 
 	@Override
-	public void onPdfReady() {		
+	public void onPdfReady() {
 		refreshPageNavigation();
-		
 	}
 
 
@@ -1231,4 +1247,45 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
 		setFullscreen(mFullscreen);
 	}
 
+	@Override
+	public void onSearch() {
+		closeSlidingMenu();
+		if (mCurrentPage < mPageList.size()) {
+			new com.afollestad.materialdialogs.MaterialDialog.Builder(this)
+					.title(R.string.dialog_search_on_page_title)
+                    .neutralText(R.string.gen_cancel)
+					.positiveText(R.string.gen_search)
+                    .cancelable(true)
+					.inputType(InputType.TYPE_CLASS_TEXT)
+					.input(getResources().getString(R.string.dialog_search_on_page_hint),null, new com.afollestad.materialdialogs.MaterialDialog.InputCallback() {
+						@Override
+						public void onInput(com.afollestad.materialdialogs.MaterialDialog dialog, CharSequence input) {
+							if (input.length() != 0) {
+								searchOnPage(input.toString());
+							}
+						}
+					}).show();
+		}
+	}
+
+	private void searchOnPage(final String query){
+        final String pagePid = mPageList.get(mCurrentPage).getPid();
+		new AsyncTask<Void, Void, Set<TextBox>>(){
+
+			@Override
+			protected Set<TextBox> doInBackground(Void... params) {
+				return K5ConnectorFactory.getConnector().getTextBoxes(PageActivity.this, pagePid,query);
+			}
+
+			@Override
+			protected void onPostExecute(Set<TextBox> textBoxes) {
+				if(textBoxes!=null && !textBoxes.isEmpty()){
+					//Log.e("test", "activity: setting textBoxes");
+					mTextboxProvider.setTextBoxes(mCurrentPage, textBoxes);
+					mPagerAdapter.refreshFragment(mCurrentPage);
+				}
+
+			}
+		}.execute();
+    }
 }

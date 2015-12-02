@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.ViewerMenuArrayAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
@@ -42,6 +44,7 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 	private MenuItemWidget mDownload;
 	private boolean mScreenLock = false;
 	private MenuItemWidget mScreenLockView;
+	private MenuItemWidget mSearch;
 	
 	private int mDownloadType = DOWNLOAD_NOTHING;
 
@@ -64,6 +67,8 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 		mDownload.setOnClickListener(this);
 		mScreenLockView = (MenuItemWidget) view.findViewById(R.id.menu_screen_lock);
 		mScreenLockView.setOnClickListener(this);
+		mSearch = (MenuItemWidget) view.findViewById(R.id.menu_search_on_page);
+		mSearch.setOnClickListener(this);
 		refreshDownloadType();
 		mListView = (ListView) view.findViewById(R.id.menu_list);
 		populateMenuList();
@@ -146,6 +151,8 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 
 		public void onDownload();
 
+		public void onSearch();
+
 	}
 
 	@Override
@@ -173,6 +180,9 @@ public class ViewerMenuFragment extends Fragment implements OnClickListener {
 				Analytics.sendEvent(getActivity(), "page_menu", "action", "Download");
 				mCallback.onDownload();
 			}
+		} else if (v == mSearch){
+			// TODO: 19.11.15 Analytics event?
+			mCallback.onSearch();
 		}
 	}
 

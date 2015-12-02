@@ -2,12 +2,14 @@ package cz.mzk.kramerius.app.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.util.Pair;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.search.TextBox;
 
 public interface K5Connector {
 
@@ -40,5 +42,7 @@ public interface K5Connector {
 	public abstract Map<String, Boolean> getUserRights(Context context, String name, String password);
 
 	public abstract Metadata getModsMetadata(Context context, String pid);
+
+	public abstract Set<TextBox> getTextBoxes(Context context, String pagePid, String searchQuery);
 
 }

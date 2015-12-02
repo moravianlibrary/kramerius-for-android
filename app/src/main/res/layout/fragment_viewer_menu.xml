@@ -66,6 +66,16 @@
             kramerius:menuIconSelected="@drawable/ic_screen_lock_rotation_green"
             kramerius:menuTitle="@string/viewer_menu_screen_lock" />
 
+        <cz.mzk.kramerius.app.view.MenuItemWidget
+            android:id="@+id/menu_search_on_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_menu"
+            android:clickable="true"
+            kramerius:menuIcon="@drawable/ic_search_grey"
+            kramerius:menuIconSelected="@drawable/ic_search_green"
+            kramerius:menuTitle="@string/viewer_menu_search" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

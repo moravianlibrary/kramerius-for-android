@@ -5,6 +5,7 @@ import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class PageViewPager extends ViewPager {
@@ -34,7 +35,9 @@ public class PageViewPager extends ViewPager {
 			return false;
 		}
 		PageViewPagerAdapter adapter =  (PageViewPagerAdapter) getAdapter();
-		SinglePageViewerFragment fragmanet = adapter.getFragment(c);
+		//SinglePageViewerFragment fragmanet = adapter.getFragment(c);
+		//Log.e("test", "viewPager: getItem " + c);
+		SinglePageViewerFragment fragmanet =(SinglePageViewerFragment)adapter.getItem(c);
 		if(fragmanet == null) {
 			return true;
 		}

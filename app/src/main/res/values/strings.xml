@@ -192,8 +192,11 @@
     <string name="dialog_download_pdf_title">Download document</string>
  	<string name="dialog_download_pdf_content">The PDF document will be downloaded to the Kramerius folder.\nWould you like to download the document?</string>
     <string name="dialog_download_pdf_private_title">Inaccessible document</string>
- 	<string name="dialog_download_pdf_private_content">The PDF document is publicly inaccessible.\nWe are sorry, the document cannot be downloaded.</string> 	    
- 		
+ 	<string name="dialog_download_pdf_private_content">The PDF document is publicly inaccessible.\nWe are sorry, the document cannot be downloaded.</string>
+
+    <string name="dialog_search_on_page_title">Search on page</string>
+    <string name="dialog_search_on_page_hint">Enter expression</string>
+
     <string name="dialog_viewer_first_visit_title">Hint</string>
  	<string name="dialog_viewer_first_visit_content">To turn on/off the fullscreen mode, tap to the middle of the screen.\n\nTo go to the previous/next page, tap to the left/right edge of the screen or use volume up/down hardware buttons.</string>
     	
@@ -202,6 +205,7 @@
     <string name="viewer_menu_settings">Settings</string>    
     <string name="viewer_menu_recent">Recent</string>
     <string name="viewer_menu_screen_lock">Screen Lock</string>
+    <string name="viewer_menu_search">Search on page</string>
     <string name="viewer_menu_download">Download Page</string>
     <string name="viewer_menu_download_pdf">Download document</string>
         
@@ -227,6 +231,7 @@
     <string name="gen_no">No</string>
     <string name="gen_again">Again</string>
     <string name="gen_cancel">Cancel</string>
+    <string name="gen_search">Search</string>
     
     <string name="warn_data_loading_failed">Failed to load data.</string>
 	<string name="warn_pdf_loading_failed">Failed to load the PDF document.</string>

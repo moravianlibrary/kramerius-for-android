@@ -42,6 +42,7 @@ public class K5Api {
 	private static final String PATH_CHILDREN = "children";
 	private static final String PATH_STREAM = "streams";
 	private static final String PATH_MODS = "BIBLIO_MODS";
+	private static final String PATH_ALTO = "ALTO";
 	// private static final String PATH_MP3 = "MP3";
 	private static final String PATH_IMG = "img";
 	private static final String PATH_THUMB = "thumb";
@@ -69,7 +70,7 @@ public class K5Api {
 				.putString(context.getString(R.string.pref_protocol_key), protocol).commit();
 		K5ConnectorFactory.getConnector().restart();
 	}
-	
+
 	private static void killAudioPlayerIfDomainChanged(Context context, String domain) {
         if (!domain.equals(getDomain(context))) {
             PendingIntent intent = MediaPlayerService.buildStopServicePendingIntent(context);
@@ -219,6 +220,10 @@ public class K5Api {
 		return getStreamUri(context, pid).buildUpon().appendPath(PATH_MODS).build().toString();
 	}
 
+	public static String getAltoStreamPath(Context context, String pid) {
+		return getStreamUri(context, pid).buildUpon().appendPath(PATH_ALTO).build().toString();
+	}
+
 	public static String getAudioStreamPath(Context context, String pid, AudioFormat format) {
 		// tyhle verze neumi range
 		// return "http://kramerius.mzk.cz/search/api/v5.0/item/" + pid + "/streams/OGG";
@@ -257,6 +262,16 @@ public class K5Api {
 		return getBaseUri(context).buildUpon().appendPath(PATH_IMG).appendQueryParameter(PARAM_PID, pid)
 				.appendQueryParameter(PARAM_STREAM, STREAM_IMG_FULL).appendQueryParameter(PARAM_ACTION, ACTION_RAW)
 				.build().toString();
+	}
+
+
+	public static String getZoomifyBaseUrl(Context context, String pagePid) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getProtocol(context)).append("://");
+		builder.append(getDomain(context)).append('/');
+		builder.append("search/zoomify/");
+		builder.append(pagePid).append('/');
+		return builder.toString();
 	}
 
 }

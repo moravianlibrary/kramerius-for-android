@@ -190,8 +190,11 @@
     <string name="dialog_download_pdf_title">Stáhnout dokument</string>
  	<string name="dialog_download_pdf_content">PDF dokument bude stažen do adresáře Kramerius.\nPřejete si stáhnout dokument?</string>
     <string name="dialog_download_pdf_private_title">Nepřístupný dokument</string>
- 	<string name="dialog_download_pdf_private_content">PDF dokument není veřejně přístupný. Litujeme, ale dokument není možné stáhnout.</string> 	    
-    
+    <string name="dialog_download_pdf_private_content">PDF dokument není veřejně přístupný. Litujeme, ale dokument není možné stáhnout.</string>
+
+    <string name="dialog_search_on_page_title">Hledání na stránce</string>
+    <string name="dialog_search_on_page_hint">Zadejte hledaný výraz</string>
+
     <string name="dialog_viewer_first_visit_title">Tip</string>
     <string name="dialog_viewer_first_visit_content">Tapnutím doprostřed obrazovky vypnete/zapnete celoobrazovkový režim.\n\nPřechod na předchozí/další stránku provedete tapnutím do levé/pravé části obrazovky nebo hardwarovými tlačíty pro ovládání hlasitosti.</string>
  	
@@ -200,6 +203,7 @@
     <string name="viewer_menu_settings">Nastavení</string>    
     <string name="viewer_menu_recent">Naposledy otevřené</string>
     <string name="viewer_menu_screen_lock">Zámek obrazovky</string>
+    <string name="viewer_menu_search">Hledat na stránce</string>
     <string name="viewer_menu_download">Stáhnout stránku</string>
     <string name="viewer_menu_download_pdf">Stáhnou dokument</string>
     
@@ -228,6 +232,7 @@
     <string name="gen_no">Ne</string>
     <string name="gen_again">Opakovat</string>
     <string name="gen_cancel">Zrušit</string>
+    <string name="gen_search">Hledat</string>
     
     
     <string name="warn_data_loading_failed">Nepodařilo se načíst data.</string>

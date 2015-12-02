@@ -47,9 +47,9 @@ public class DomainUtil {
                     R.drawable.logo_svkkl));
             add(new Domain(false, "Česká digitální knihovna", "http", "cdk-test.lib.cas.cz", R.drawable.logo_cdk));
             // add(new Domain("INCAD", "Test INCAD", "http", "sluzby.incad.cz/vmkramerius", R.drawable.logo_incad));
-            add(new Domain(false, "Moravská zemská knihovna - Docker", "http", "docker.mzk.cz", R.drawable.logo_mzk));
+            add(new Domain(false, "Moravská zemská knihovna - Docker", "https", "docker.mzk.cz (https)", R.drawable.logo_mzk));
             add(new Domain(false, "Moravská zemská knihovna - Demo", "http", "krameriusdemo.mzk.cz",
-                    R.drawable.logo_mzk));
+                    R.drawable.logo_mzk));  
         }
     };
 

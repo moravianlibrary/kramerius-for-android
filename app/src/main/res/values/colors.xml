@@ -65,7 +65,9 @@
     <color name="track_rv_inactive_presed">#f8f8f8</color>
     <color name="track_rv_active">#f3f3f3</color>
 
-
+    <!-- text boxes for visualising search results -->
+    <color name="text_box_filling">#603AAFDE</color>
+    <color name="text_box_border">#3AAFDE</color>
 
 
 </resources>
