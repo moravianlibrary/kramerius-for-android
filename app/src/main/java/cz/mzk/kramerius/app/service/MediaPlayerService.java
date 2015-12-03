@@ -97,17 +97,30 @@ public class MediaPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
-        if (mMediaPlayer == null) {
-            initMediaPlayer();
-        }
         handleIntent(intent);
+
+        //return Service.START_NOT_STICKY;
+        // START_NOT_STICKY doesn't work. This way if app/service process is killed, Service.onDestroy() is not being called.
+        // So there is no place from where to remove the notification.
+        // Only solution seems to be to let system restart the service (which can take about 1-3 seconds) with default START_STICKY.
+        // So service (with whole app context) is reinitialized and service recieves onStartCommand() with null intetnt.
+        // Then we can finally remove the notification and stop service once again with stopSelf().
+
         return super.onStartCommand(intent, flags, startId);
     }
 
     private void handleIntent(Intent intent) {
         if (intent == null || intent.getAction() == null) {
-            Log.w(TAG, "intent null or no action, ignoring");
+            //just to make sure notification disappears after app killed even if START_NOT_STICKY is implemented incorrectly
+            Log.w(TAG, "intent null or no action, stopping playback");
+            if (mMediaPlayer != null && mMediaPlayer.canStop()) {
+                mMediaPlayer.stop();
+            }
+            stopServiceAndClearNotifications();
         } else {
+            if (mMediaPlayer == null) {
+                initMediaPlayer();
+            }
             String action = intent.getAction();
             // Log.i(TAG,"action: " + action);
             if (action.equals(ACTION_PLAY)) {
@@ -148,7 +161,7 @@ public class MediaPlayerService extends Service {
                 if (mMediaPlayer.canStop()) {
                     mMediaPlayer.stop();
                 }
-                stopServiceAndCleanNotifications();
+                stopServiceAndClearNotifications();
             }
         }
     }
@@ -223,7 +236,7 @@ public class MediaPlayerService extends Service {
         }
     }
 
-    private void stopServiceAndCleanNotifications() {
+    private void stopServiceAndClearNotifications() {
         Log.i(TAG, "canceling notifications");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
@@ -234,10 +247,12 @@ public class MediaPlayerService extends Service {
         if (cache != null) {
             cache.flush();
         }
-        Log.d(TAG, "releasing media player");
-        mMediaPlayer.release();
-        Log.d(TAG, "clearing data");
-        mMediaPlayer = null;
+        if (mMediaPlayer != null) {
+            Log.d(TAG, "releasing media player");
+            mMediaPlayer.release();
+            Log.d(TAG, "clearing data");
+            mMediaPlayer = null;
+        }
         mSoundRecording = null;
         Log.i(TAG, "stopping service");
         stopSelf();
@@ -402,7 +417,7 @@ public class MediaPlayerService extends Service {
                     skipToNext();
                 } else {
                     Log.i(TAG, "no more tracks in playlist");
-                    stopServiceAndCleanNotifications();
+                    stopServiceAndClearNotifications();
                 }
             }
 
@@ -487,7 +502,7 @@ public class MediaPlayerService extends Service {
         } else {
             mFailed = true;
             Log.i(TAG, "prepareMediaPlayerAndPlay: cannot prepare now, canceling (state=" + getState() + ")");
-            // stopServiceAndCleanNotifications();
+            // stopServiceAndClearNotifications();
             showNotificationWithoutPrimaryAction();
         }
     }
@@ -495,6 +510,7 @@ public class MediaPlayerService extends Service {
     private void showNotification(Integer centralActionIcon, int centralActionTitleResource, String centralAction) {
         Notification notification = buildNotification(buildNotificationAction(centralActionIcon,
                 centralActionTitleResource, centralAction));
+        Log.d(TAG, "showNotification");
         // TODO: zvolit mezi backgroundService a foregroundService
         // background service
         // muze byt zabita systemem a casto se tak stava pri opusteni aplikace

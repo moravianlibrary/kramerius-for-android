@@ -28,6 +28,8 @@ public class KrameriusApplication extends Application {
         VolleyRequestManager.initialize(this);
     }
 
+
+
     /**
      * This is used by plain HttpURLConnection (not Volley)
      */
