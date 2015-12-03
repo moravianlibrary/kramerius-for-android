@@ -10,8 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -34,8 +32,7 @@ import java.util.TimerTask;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
-import cz.mzk.kramerius.app.adapter.TrackLvAdapter;
-import cz.mzk.kramerius.app.adapter.TrackRvAdapter;
+import cz.mzk.kramerius.app.adapter.TrackAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.metadata.Author;
@@ -77,13 +74,10 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
     private ProgressBar mProgressBar;
     private View mContent;
     private ImageView mBtnPlayAll;
-    private RecyclerView mTracksRv;
-    private ListView mTracksLv;
+    private ListView mTracks;
     private PlayerFragment mPlayerFragment;
     // other
-    private TrackRvAdapter mTracksRvAdapter;
-    private TrackLvAdapter mTracksLvAdapter;
-
+    private TrackAdapter mTracksAdapter;
     private AsyncTask<String, Void, Bitmap> mFetchThumbBitmapTask;
     private Timer mPlayerTimer;
     private TimerTask mPlayerTask;
@@ -122,14 +116,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
         mContent = findViewById(R.id.content);
         mBtnPlayAll = (ImageView) findViewById(R.id.btnPlayAll);
         mBtnPlayAll.setOnClickListener(this);
-        View tracksView = findViewById(R.id.tracks);
-        if (tracksView != null) {
-            if (tracksView instanceof RecyclerView) {
-                mTracksRv = (RecyclerView) tracksView;
-            } else if (tracksView instanceof ListView) {
-                mTracksLv = (ListView) tracksView;
-            }
-        }
+        mTracks = (ListView) findViewById(R.id.tracks);
 
         mPlayerFragment = (PlayerFragment) getFragmentManager().findFragmentById(R.id.playerFragment);
         // load data
@@ -219,53 +206,33 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
             mActionbarAuthor.setText(mSoundRecording.getAuthor());
         }
         getSupportActionBar().setSubtitle(mSoundRecording.getAuthor());
-        if (mTracksRv != null) {
-            mTracksRvAdapter = new TrackRvAdapter(this, mSoundRecording, new PlayerServiceHelper() {
+        mTracksAdapter = new TrackAdapter(this, mSoundRecording, new PlayerServiceHelper() {
 
-                @Override
-                public Track getCurrentTrackId() {
-                    return mBinder != null ? mBinder.getCurrentTrack() : null;
-                }
+            @Override
+            public Track getCurrentTrackId() {
+                return mBinder != null ? mBinder.getCurrentTrack() : null;
+            }
 
-                @Override
-                public boolean isPlayingNow() {
-                    return State.STARTED == mBinder.getState();
-                }
+            @Override
+            public boolean isPlayingNow() {
+                return State.STARTED == mBinder.getState();
+            }
 
-            });
-            mTracksRv.setLayoutManager(new LinearLayoutManager(this));
-            mTracksRv.setAdapter(mTracksRvAdapter);
-        }
-        if (mTracksLv != null) {
-            mTracksLvAdapter = new TrackLvAdapter(this, mSoundRecording, new PlayerServiceHelper() {
+        });
+        mTracks.setAdapter(mTracksAdapter);
+        mTracks.setOnItemClickListener(new OnItemClickListener() {
 
-                @Override
-                public Track getCurrentTrackId() {
-                    return mBinder != null ? mBinder.getCurrentTrack() : null;
-                }
-
-                @Override
-                public boolean isPlayingNow() {
-                    return State.STARTED == mBinder.getState();
-                }
-
-            });
-            mTracksLv.setAdapter(mTracksLvAdapter);
-            mTracksLv.setOnItemClickListener(new OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
-                    intent.setAction(MediaPlayerService.ACTION_PLAY);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
-                    bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, position);
-                    intent.putExtras(bundle);
-                    startService(intent);
-                }
-            });
-        }
-
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
+                intent.setAction(MediaPlayerService.ACTION_PLAY);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(MediaPlayerService.EXTRA_PLAY_SOUND_RECORDING, mSoundRecording);
+                bundle.putInt(MediaPlayerService.EXTRA_PLAY_POSITION, position);
+                intent.putExtras(bundle);
+                startService(intent);
+            }
+        });
         mProgressBar.setVisibility(View.INVISIBLE);
         mContent.setVisibility(View.VISIBLE);
         fetchThumbnail();
@@ -396,12 +363,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (mTracksRvAdapter != null) {
-                            mTracksRvAdapter.notifyDataSetChanged();
-                        }
-                        if (mTracksLvAdapter != null) {
-                            mTracksLvAdapter.notifyDataSetChanged();
-                        }
+                        mTracksAdapter.notifyDataSetChanged();
                     }
                 });
             }

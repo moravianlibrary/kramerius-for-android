@@ -54,16 +54,11 @@
     <color name="metadata_key">@color/light_grey</color>
     <color name="metadata_divider">#d5d5d5</color>
 
-    <!-- list view version -->
-    <color name="track_lv_inactive">#d9d9d9</color>
-    <color name="track_lv_inactive_presed">#d0d0d0</color>
-    <color name="track_lv_active">#c0c0c0</color>
-    <color name="track_lv_devider">#a9a9a9</color>
-
-    <!-- recycler view version -->
-    <color name="track_rv_inactive">#ffffff</color>
-    <color name="track_rv_inactive_presed">#f8f8f8</color>
-    <color name="track_rv_active">#f3f3f3</color>
+    <!--audio player-->
+    <color name="track_inactive">#ffffff</color>
+    <color name="track_inactive_presed">#f5f5f5</color>
+    <color name="track_active">#E3F2FD</color>
+    <color name="track_divider">#a9a9a9</color>
 
     <!-- text boxes for visualising search results -->
     <color name="text_box_filling">#603AAFDE</color>

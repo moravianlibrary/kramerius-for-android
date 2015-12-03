@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg">
+    android:background="@color/bg"
+    android:orientation="vertical">
 
     <!-- tohle tu jen nechavam na porovnani, jestli to je dobre nastylovane -->
     <!-- pouzil jsem precejen vlastni layout kvuli nemoznosti nastavit padding pro ikonu -->
     <include
+        layout="@layout/view_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/view_toolbar"
         android:visibility="gone" />
 
     <android.support.v7.widget.Toolbar
@@ -37,17 +36,17 @@
                 android:id="@+id/thumb"
                 android:layout_width="@dimen/sound_recording_thumb_width"
                 android:layout_height="@dimen/sound_recording_thumb_height"
-                android:scaleType="fitCenter"
-                android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitCenter"
                 tools:ignore="RtlHardcoded" />
 
             <ImageView
                 android:id="@+id/btnInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_margin="4dp"
                 android:src="@drawable/ic_action_info_outline"
                 tools:ignore="RtlHardcoded" />
@@ -55,26 +54,26 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_centerVertical="true"
-                android:paddingLeft="10dp"
-                android:layout_toRightOf="@id/thumb"
                 android:layout_toLeftOf="@id/btnInfo"
+                android:layout_toRightOf="@id/thumb"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
                 tools:ignore="RtlHardcoded">
 
                 <TextView
                     android:id="@+id/title"
+                    style="@style/ActionBar.TitleText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="1"
-                    style="@style/ActionBar.TitleText" />
+                    android:lines="1" />
 
                 <TextView
                     android:id="@+id/author"
+                    style="@style/ActionBar.SubtitleText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="1"
-                    style="@style/ActionBar.SubtitleText" />
+                    android:lines="1" />
 
             </LinearLayout>
 
@@ -110,25 +109,16 @@
                 tools:ignore="UnusedAttribute"
                 tools:layout="@layout/fragment_player" />
 
-            <!-- Select player version by commenting/uncommenting ListView/RecyclerView -->
-
-            <!-- <ListView -->
-            <!-- android:id="@+id/tracks" -->
-            <!-- android:layout_width="match_parent" -->
-            <!-- android:layout_height="wrap_content" -->
-            <!-- android:layout_alignParentTop="true" -->
-            <!-- android:layout_above="@id/playerFragment" -->
-            <!-- android:divider="@color/track_lv_devider" -->
-            <!-- android:dividerHeight="1dp" -->
-            <!-- android:footerDividersEnabled="true" -->
-            <!-- tools:ignore="UnusedAttribute" /> -->
-
-            <android.support.v7.widget.RecyclerView
+            <ListView
                 android:id="@+id/tracks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_above="@id/playerFragment"
                 android:layout_alignParentTop="true"
-                android:layout_above="@id/playerFragment" />
+                android:divider="@color/track_divider"
+                android:dividerHeight="1dp"
+                android:footerDividersEnabled="true"
+                tools:ignore="UnusedAttribute" />
 
             <ImageView
                 android:id="@+id/btnPlayAll"
@@ -139,8 +129,8 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/fab_background"
-                android:padding="25dp"
                 android:clickable="true"
+                android:padding="25dp"
                 android:src="@drawable/ic_play_arrow_white_36dp"
                 android:visibility="gone"
                 tools:ignore="RtlHardcoded" />

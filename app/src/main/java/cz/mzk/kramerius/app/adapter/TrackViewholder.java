@@ -16,7 +16,7 @@ import cz.mzk.kramerius.app.model.SoundRecording;
 import cz.mzk.kramerius.app.model.Track;
 import cz.mzk.kramerius.app.ui.SoundRecordingActivity.PlayerServiceHelper;
 
-public class TrackLvViewholder {
+public class TrackViewholder {
 
     private final Context mContext;
     private final PlayerServiceHelper mServiceHelper;
@@ -30,7 +30,7 @@ public class TrackLvViewholder {
     private SoundRecording mSoundRecording;
     private int mPosition;
 
-    public TrackLvViewholder(Context context, View itemView, PlayerServiceHelper serviceHelper) {
+    public TrackViewholder(Context context, View itemView, PlayerServiceHelper serviceHelper) {
         this.mContext = context;
         this.mServiceHelper = serviceHelper;
         mRoot = itemView;
@@ -58,7 +58,7 @@ public class TrackLvViewholder {
             mSubtitle.setVisibility(View.GONE);
         }
         if (isCurrentTrackActive()) {
-            setBackgroundDrawable(R.drawable.track_lv_active);
+            setBackgroundDrawable(R.drawable.track_active);
             mVinyl.setVisibility(View.VISIBLE);
             if (mServiceHelper.isPlayingNow()) {
                 Animation animation = mVinyl.getAnimation();
@@ -69,7 +69,7 @@ public class TrackLvViewholder {
                 mVinyl.clearAnimation();
             }
         } else {
-            setBackgroundDrawable(R.drawable.track_lv_inactive);
+            setBackgroundDrawable(R.drawable.track_inactive);
             mVinyl.setVisibility(View.GONE);
             mVinyl.clearAnimation();
         }

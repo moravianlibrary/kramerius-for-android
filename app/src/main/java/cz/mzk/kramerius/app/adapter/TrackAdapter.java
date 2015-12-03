@@ -13,14 +13,14 @@ import cz.mzk.kramerius.app.model.SoundRecording;
 import cz.mzk.kramerius.app.model.Track;
 import cz.mzk.kramerius.app.ui.SoundRecordingActivity.PlayerServiceHelper;
 
-public class TrackLvAdapter extends ArrayAdapter<Track> {
+public class TrackAdapter extends ArrayAdapter<Track> {
 
     private final SoundRecording mSoundRecording;
     private final PlayerServiceHelper mServiceHelper;
     private final Animation mVinylAnimation;
 
-    public TrackLvAdapter(Context context, SoundRecording soundRecording, PlayerServiceHelper serviceHelper) {
-        super(context, R.layout.item_track_lv, soundRecording.getTracks());
+    public TrackAdapter(Context context, SoundRecording soundRecording, PlayerServiceHelper serviceHelper) {
+        super(context, R.layout.item_track, soundRecording.getTracks());
         this.mSoundRecording = soundRecording;
         this.mServiceHelper = serviceHelper;
         this.mVinylAnimation = AnimationUtils.loadAnimation(context, R.anim.rotation);
@@ -32,11 +32,11 @@ public class TrackLvAdapter extends ArrayAdapter<Track> {
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.item_track_lv, parent, false);
-            TrackLvViewholder viewHolder = new TrackLvViewholder(getContext(), rowView, mServiceHelper);
+            rowView = inflater.inflate(R.layout.item_track, parent, false);
+            TrackViewholder viewHolder = new TrackViewholder(getContext(), rowView, mServiceHelper);
             rowView.setTag(viewHolder);
         }
-        TrackLvViewholder holder = (TrackLvViewholder) rowView.getTag();
+        TrackViewholder holder = (TrackViewholder) rowView.getTag();
         holder.bind(mSoundRecording, position);
         return rowView;
     }
