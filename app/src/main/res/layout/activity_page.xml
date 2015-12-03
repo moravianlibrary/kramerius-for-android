@@ -104,7 +104,8 @@
                     android:layout_centerVertical="true"
                     android:layout_margin="5dp"
                     android:layout_toLeftOf="@id/page_index"
-                    android:layout_toRightOf="@id/page_list" />
+                    android:layout_toRightOf="@id/page_list"
+                    style="@style/MySeekBar"/>
             </RelativeLayout>
 
             <TextView
