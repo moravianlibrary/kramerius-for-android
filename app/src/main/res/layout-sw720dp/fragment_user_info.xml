@@ -2,13 +2,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="60dp" >
+    android:padding="60dp">
 
     <LinearLayout
         android:id="@+id/userInfo_basic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/userInfo_basic"
         android:orientation="vertical"
-        android:paddingLeft="150dp" >
+        android:paddingLeft="150dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,8 +88,7 @@
             android:id="@+id/userInfo_roles"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
+            android:orientation="vertical"></LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -98,7 +97,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:paddingRight="50dp" >
+        android:paddingRight="50dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -110,14 +109,13 @@
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/userInfo_rights"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
-            </LinearLayout>
+                android:orientation="vertical"></LinearLayout>
         </ScrollView>
     </LinearLayout>
 

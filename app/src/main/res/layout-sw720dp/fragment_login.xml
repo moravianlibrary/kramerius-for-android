@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="60dp" >
+    android:padding="60dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,17 +39,17 @@
         android:text="Přihlásit"
         android:textColor="#ffffff"
         android:textSize="20dp" />
-    
-    
+
+
     <TextView
-        android:id="@+id/login_message"         
+        android:id="@+id/login_message"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="bottom"
-		android:textSize="22dp"
-		android:text="SSpatne zadane jmeno nebo heslo"
-		android:textColor="#aa4444"        
-        
+        android:text="SSpatne zadane jmeno nebo heslo"
+        android:textColor="#aa4444"
+        android:textSize="22dp"
+
         />
 
 </LinearLayout>

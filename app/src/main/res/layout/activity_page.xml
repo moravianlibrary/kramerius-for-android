@@ -3,34 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
+        layout="@layout/view_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_toolbar" />
+        android:layout_height="wrap_content" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/page_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="0dp" >
+            android:padding="0dp">
 
             <FrameLayout
                 android:id="@+id/page_viewer_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <FrameLayout
                     android:id="@+id/fragmentPdfViewerContainer"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
 
                     <fragment
                         android:id="@+id/fragmentPdfViewer"
@@ -41,17 +41,15 @@
 
                 <cz.mzk.kramerius.app.view.PageViewPager
                     android:id="@+id/viewPager"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </cz.mzk.kramerius.app.view.PageViewPager>
+                    android:layout_height="match_parent"
+                    android:visibility="gone"></cz.mzk.kramerius.app.view.PageViewPager>
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/page_message_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-            </FrameLayout>
+                android:layout_height="match_parent"></FrameLayout>
 
             <ImageView
                 android:id="@+id/page_loader"
@@ -78,7 +76,7 @@
                 android:clickable="true"
                 android:elevation="3dp"
                 android:paddingLeft="0dp"
-                android:paddingRight="10dp" >
+                android:paddingRight="10dp">
 
                 <ImageView
                     android:id="@+id/page_list"
@@ -99,13 +97,13 @@
 
                 <SeekBar
                     android:id="@+id/page_seekBar"
+                    style="@style/MySeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_margin="5dp"
                     android:layout_toLeftOf="@id/page_index"
-                    android:layout_toRightOf="@id/page_list"
-                    style="@style/MySeekBar"/>
+                    android:layout_toRightOf="@id/page_list" />
             </RelativeLayout>
 
             <TextView

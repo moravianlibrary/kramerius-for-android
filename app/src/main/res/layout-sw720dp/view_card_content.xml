@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingLeft="2dp"
-    android:paddingBottom="1dp" >
+    android:paddingBottom="1dp"
+    android:paddingLeft="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp" >
+        android:layout_height="25dp">
 
         <TextView
             android:id="@+id/grid_item_author"
@@ -29,14 +29,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp" >
+        android:layout_height="20dp">
 
         <ImageView
             android:id="@+id/grid_item_modeIcon"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_centerVertical="true"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY" />
 
         <ImageView
             android:id="@+id/grid_item_lockIcon"
@@ -53,8 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/grid_item_modeIcon"
             android:layout_toLeftOf="@id/grid_item_lockIcon"
+            android:layout_toRightOf="@id/grid_item_modeIcon"
             android:lines="1"
             android:paddingLeft="5dp"
             android:textColor="@color/color_primary"

@@ -15,10 +15,10 @@
         <item name="android:textSelectHandleLeft">@drawable/mytheme_text_select_handle_left</item>
         <item name="android:textSelectHandleRight">@drawable/mytheme_text_select_handle_right</item>
         <item name="android:textSelectHandle">@drawable/mytheme_text_select_handle_middle</item>
-        
+
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionModeOverlay">true</item>
-        
+
     </style>
 
 

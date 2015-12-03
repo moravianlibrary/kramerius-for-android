@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:compat="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -8,13 +7,13 @@
     android:layout_gravity="center"
     android:layout_marginBottom="@dimen/search_card_margin_bottom"
     android:layout_marginTop="@dimen/search_card_margin_top"
-    compat:cardElevation="@dimen/search_card_elevation"
-    compat:cardCornerRadius="@dimen/search_card_corner" >
+    compat:cardCornerRadius="@dimen/search_card_corner"
+    compat:cardElevation="@dimen/search_card_elevation">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/search_card_padding" >
+        android:padding="@dimen/search_card_padding">
 
         <ImageView
             android:id="@+id/search_filter_delete"

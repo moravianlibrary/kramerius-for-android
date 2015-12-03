@@ -4,5 +4,5 @@
     <item android:drawable="@drawable/img_fab" android:state_selected="true"></item>
     <item android:drawable="@drawable/img_fab_pressed" android:state_pressed="true"></item>
     <item android:drawable="@drawable/img_fab"></item>
-      
+
 </selector>

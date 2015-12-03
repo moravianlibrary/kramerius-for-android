@@ -1,22 +1,22 @@
 <resources>
 
-  
+
     <dimen name="main_featured_text">24dp</dimen>
-    
+
     <dimen name="button_corner">2dp</dimen>
     <dimen name="button_padding_left">20dp</dimen>
     <dimen name="button_padding_right">20dp</dimen>
     <dimen name="button_height">28dp</dimen>
     <dimen name="button_text">15dp</dimen>
-    
+
     <dimen name="button_warning_height">44dp</dimen>
-    <dimen name="button_warning_text">19dp</dimen>    
-    <dimen name="button_warning_margin_top">15dp</dimen>    
-    
+    <dimen name="button_warning_text">19dp</dimen>
+    <dimen name="button_warning_margin_top">15dp</dimen>
+
     <dimen name="warning_message_text">19dp</dimen>
-    
-    
+
+
     <dimen name="help_content_padding">20dp</dimen>
     <dimen name="help_menu_top">10dp</dimen>
-    
+
 </resources>

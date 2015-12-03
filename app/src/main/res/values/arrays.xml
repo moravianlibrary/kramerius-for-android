@@ -48,7 +48,7 @@
     <string-array name="search_fulltext_filter_entries">
         <item name="doctype">@string/search_filter_doctype</item>
         <item name="year">@string/search_filter_year</item>
-        <item name="fulltext">@string/search_filter_fulltext</item>        
+        <item name="fulltext">@string/search_filter_fulltext</item>
     </string-array>
     <string-array name="search_type_entries">
         <item name="0">@string/search_type_basic</item>

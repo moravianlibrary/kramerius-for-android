@@ -2,30 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
+        layout="@layout/view_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_toolbar" />
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg" >
+        android:background="@color/bg">
 
         <FrameLayout
             android:id="@+id/help_menu"
             android:layout_width="300dp"
-            android:layout_height="match_parent">
-        </FrameLayout>
+            android:layout_height="match_parent"></FrameLayout>
 
         <FrameLayout
             android:id="@+id/help_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/help_menu" >
-        </FrameLayout>
+            android:layout_toRightOf="@id/help_menu"></FrameLayout>
 
         <View
             android:layout_width="1dp"

@@ -1,18 +1,17 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    
-   <PreferenceCategory android:title="@string/pref_category_basic" >
+
+    <PreferenceCategory android:title="@string/pref_category_basic">
         <CheckBoxPreference
             android:defaultValue="@string/pref_public_only_default"
             android:key="@string/pref_public_only_key"
             android:summary="@string/pref_public_only_summary"
             android:title="@string/pref_public_only_title" />
-        
+
     </PreferenceCategory>
-       
-    
-    
-    <PreferenceCategory android:title="@string/pref_category_viewer" >
+
+
+    <PreferenceCategory android:title="@string/pref_category_viewer">
         <CheckBoxPreference
             android:defaultValue="@string/pref_hardware_buttons_default"
             android:key="@string/pref_hardware_buttons_key"
@@ -28,25 +27,25 @@
             android:defaultValue="@string/pref_bookmark_default"
             android:key="@string/pref_bookmark_key"
             android:summary="@string/pref_bookmark_summary"
-            android:title="@string/pref_bookmark_title" />                      
-        
+            android:title="@string/pref_bookmark_title" />
+
         <ListPreference
             android:defaultValue="@string/pref_viewer_bg_color_default"
             android:entries="@array/viewer_bg_color_entries"
             android:entryValues="@array/viewer_bg_color_values"
             android:key="@string/pref_viewer_bg_color_key"
             android:summary="@string/pref_viewer_bg_color_summary"
-            android:title="@string/pref_viewer_bg_color_title" />        
-        
+            android:title="@string/pref_viewer_bg_color_title" />
+
     </PreferenceCategory>
-   
-    
-    <PreferenceCategory android:title="@string/pref_category_advanced" >
+
+
+    <PreferenceCategory android:title="@string/pref_category_advanced">
         <Preference
             android:key="@string/pref_advanced_button_key"
             android:title="@string/pref_advanced_button_title" />
-        
+
     </PreferenceCategory>
-    
+
 
 </PreferenceScreen>

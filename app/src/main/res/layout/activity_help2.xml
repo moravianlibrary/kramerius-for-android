@@ -2,12 +2,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
+        layout="@layout/view_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/view_toolbar" />
+        android:layout_height="wrap_content" />
 
     <fragment
         android:id="@+id/settings_fragment"
