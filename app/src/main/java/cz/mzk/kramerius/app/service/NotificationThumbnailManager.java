@@ -2,11 +2,10 @@ package cz.mzk.kramerius.app.service;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.Response;
-
-import java.util.logging.Logger;
 
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
@@ -24,7 +23,7 @@ public class NotificationThumbnailManager {
         public void onDownloaded();
     }
 
-    private static final Logger LOGGER = Logger.getLogger(NotificationThumbnailManager.class.getSimpleName());
+    private static final String TAG = NotificationThumbnailManager.class.getSimpleName();
 
     private final Context mContext;
     private final LruCache<String, Bitmap> mBmpCache = new LruCache<String, Bitmap>(3);
@@ -34,7 +33,7 @@ public class NotificationThumbnailManager {
     private boolean mStopped = false;
 
     public NotificationThumbnailManager(Context context) {
-        LOGGER.info("initializing");
+        Log.i(TAG, "constructor");
         this.mContext = context;
         // TODO: use size for expanded_large_icon in MediaStyle when it is available somehow
         // see http://stackoverflow.com/questions/27984766/size-of-mediastyle-largeicon
@@ -46,7 +45,7 @@ public class NotificationThumbnailManager {
     }
 
     public Bitmap getBitmap(Context context, Track track, DownloadHandler handler) {
-        LOGGER.fine("getBitmap");
+        Log.d(TAG, "getBitmap");
         String thumbUrl = K5Api.getThumbnailPath(context, track.getSoundRecordingPid());
         if (thumbUrl != null && !thumbUrl.isEmpty()) {
             Bitmap bitmap = mBmpCache.get(thumbUrl);
@@ -57,7 +56,7 @@ public class NotificationThumbnailManager {
                 return getDefaultThumb(context);
             }
         } else {
-            LOGGER.warning("no url, ignoring");
+            Log.w(TAG, "no url, ignoring");
             return getDefaultThumb(context);
         }
     }

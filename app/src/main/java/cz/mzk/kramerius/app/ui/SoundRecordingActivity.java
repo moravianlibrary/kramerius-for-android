@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
@@ -59,7 +59,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
         boolean isPlayingNow();
     }
 
-    private static final Logger LOGGER = Logger.getLogger(SoundRecordingActivity.class.getSimpleName());
+    private static final String TAG = SoundRecordingActivity.class.getSimpleName();
 
     private static final String EXTRA_SOUND_RECORDING = "sound_recording";
     public static final String EXTRA_SOUND_RECORDING_ITEM = "sound_recording_item";
@@ -103,6 +103,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sound_recording);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -340,18 +341,18 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
                             if (visulisedAsCurrent != null) {
                                 visulisedAsCurrent = null;
                                 invalidateRecyclerView();
-                                // LOGGER.info("current track is null, visualisedAsCurrent!=null");
+                                // Log.i(TAG, "current track is null, visualisedAsCurrent!=null");
                             }
                         } else {
                             if (!currentTrack.equals(visulisedAsCurrent)) {// zmena hrajiciho tracku
                                 visulisedAsCurrent = currentTrack;
                                 lastState = mBinder.getState();
-                                // LOGGER.info("zmena aktivniho tracku");
+                                // Log.i(TAG, "zmena aktivniho tracku");
                                 invalidateRecyclerView();
                             } else {
                                 State state = mBinder.getState();
                                 if (state != lastState) {// zmena stavu prehravace, potrebuju zastavit/spustit animaci
-                                    // LOGGER.info("zmena stavu");
+                                    // Log.i(TAG, "zmena stavu");
                                     lastState = state;
                                     invalidateRecyclerView();
                                 }
@@ -391,7 +392,7 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
             }
 
             private void invalidateRecyclerView() {
-                LOGGER.info("invalidating");
+                Log.i(TAG, "invalidating");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -410,12 +411,14 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
 
     @Override
     protected void onPause() {
+        Log.i(TAG, "onPause");
         super.onPause();
         mPlayerTask.cancel();
         mPlayerTimer.cancel();
     }
 
     protected void onStop() {
+        Log.i(TAG, "onStop");
         super.onStop();
         EasyTracker.getInstance(this).activityStart(this);
         // cancel loading thumbnail
@@ -430,7 +433,15 @@ public class SoundRecordingActivity extends BaseActivity implements OnClickListe
         }
     }
 
-    ;
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy");
+        super.onDestroy();
+        //making sure the notification disappears
+        /*Intent intent = new Intent(getApplicationContext(), MediaPlayerService.class);
+        intent.setAction(MediaPlayerService.ACTION_STOP);
+        startService(intent);*/
+    }
 
     @Override
     public void onClick(View v) {

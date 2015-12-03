@@ -14,7 +14,7 @@ import cz.mzk.kramerius.app.model.Track.AudioFormat;
 
 public class MediaPlayerWithState {
 
-    // private static final Logger LOGGER = Logger.getLogger(MediaPlayerWithState.class.getSimpleName());
+    private static final String TAG = MediaPlayerWithState.class.getSimpleName();
 
     public enum State {
         IDLE, INITIALIZED, PREPARING, PREPARED, STARTED, STOPPED, PAUSED, PLAYBACK_COMPLETE, END, ERROR;
@@ -26,7 +26,7 @@ public class MediaPlayerWithState {
     private Integer mDuration = null;
 
     private void setState(State state) {
-        // LOGGER.info("state: " + state);
+        // Log.i(TAG,"state: " + state);
         this.mState = state;
     }
 
@@ -41,7 +41,7 @@ public class MediaPlayerWithState {
     }
 
     public synchronized void reset() {
-        // LOGGER.fine("resetting");
+        // Log.d(TAG,"resetting");
         mPlayer.reset();
         mTrackPid = null;
         mDuration = null;
@@ -49,7 +49,7 @@ public class MediaPlayerWithState {
     }
 
     public synchronized void release() {
-        // LOGGER.fine("releasing");
+        // Log.d(TAG,"releasing");
         mPlayer.release();
         mTrackPid = null;
         mDuration = null;
@@ -58,7 +58,7 @@ public class MediaPlayerWithState {
 
     public synchronized void setDataSource(Context context, String trackPid) throws IllegalArgumentException,
             SecurityException, IllegalStateException, IOException {
-        // LOGGER.fine("setting data source");
+        // Log.d(TAG,"setting data source");
         this.mTrackPid = trackPid;
         setAvailableDatasource(context);
     }
@@ -138,25 +138,25 @@ public class MediaPlayerWithState {
     ;
 
     public synchronized void prepareAsync() throws IllegalStateException {
-        // LOGGER.fine("preparing async");
+        // Log.d(TAG,"preparing async");
         mPlayer.prepareAsync();
         setState(State.PREPARING);
     }
 
     public synchronized void start() throws IllegalStateException {
-        // LOGGER.fine("starting");
+        // Log.d(TAG,"starting");
         mPlayer.start();
         setState(State.STARTED);
     }
 
     public synchronized void pause() throws IllegalStateException {
-        // LOGGER.fine("pausing");
+        // Log.d(TAG,"pausing");
         mPlayer.pause();
         setState(State.PAUSED);
     }
 
     public synchronized void stop() throws IllegalStateException {
-        // LOGGER.fine("stopping");
+        // Log.d(TAG,"stopping");
         mPlayer.stop();
         setState(State.STOPPED);
     }
@@ -203,7 +203,7 @@ public class MediaPlayerWithState {
      * @return
      */
     public synchronized Integer getDuration() {
-        // LOGGER.info("getDuration, state: " + state);
+        // Log.i(TAG,"getDuration, state: " + state);
         // if (state == State.PREPARED || state == State.STARTED || state == State.PAUSED || state == State.STOPPED
         // || state == State.PLAYBACK_COMPLETE) {
         // return player.getDuration();
@@ -214,7 +214,7 @@ public class MediaPlayerWithState {
     }
 
     public synchronized void seekTo(int timeMs) {
-        // LOGGER.fine("seeking");
+        // Log.d(TAG,"seeking");
         if (mState == State.PREPARED || mState == State.STARTED || mState == State.PAUSED
                 || mState == State.PLAYBACK_COMPLETE) {
             mPlayer.seekTo(timeMs);

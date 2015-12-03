@@ -18,9 +18,9 @@ import android.net.http.HttpResponseCache;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.app.NotificationCompat.Builder;
+import android.util.Log;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.R;
@@ -35,7 +35,8 @@ import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class MediaPlayerService extends Service {
 
-    private static final Logger LOGGER = Logger.getLogger(MediaPlayerService.class.getSimpleName());
+    private static final String TAG = MediaPlayerService.class.getSimpleName();
+
     public static final int SERVICE_PI_REQ_CODE = 4321;
     public static final int ACTIVITY_PI_REQ_CODE = 1234;
     private static final int NOTIFICATION_ID = 1;
@@ -71,8 +72,9 @@ public class MediaPlayerService extends Service {
     public IBinder onBind(Intent intent) {
         // Note: Unlike the activity lifecycle callback methods, you are not required to call the superclass implementation of
         // these callback methods.
-        LOGGER.fine("onBind");
+        Log.d(TAG, "onBind");
         return mBinder;
+
     }
 
     public boolean consumeFailed() {
@@ -86,6 +88,7 @@ public class MediaPlayerService extends Service {
 
     @Override
     public void onCreate() {
+        Log.d(TAG, "onCreate");
         super.onCreate();
         mThumbMgr = new NotificationThumbnailManager(this);
         mBinder = new MediaPlayerServiceBinder(this);
@@ -93,6 +96,7 @@ public class MediaPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
         if (mMediaPlayer == null) {
             initMediaPlayer();
         }
@@ -102,10 +106,10 @@ public class MediaPlayerService extends Service {
 
     private void handleIntent(Intent intent) {
         if (intent == null || intent.getAction() == null) {
-            LOGGER.warning("intent null or no action, ignoring");
+            Log.w(TAG, "intent null or no action, ignoring");
         } else {
             String action = intent.getAction();
-            // LOGGER.info("action: " + action);
+            // Log.i(TAG,"action: " + action);
             if (action.equals(ACTION_PLAY)) {
                 Track currentTrack = getCurrentTrack();
                 SoundRecording newSoundRecording = (SoundRecording) intent
@@ -155,23 +159,23 @@ public class MediaPlayerService extends Service {
 
     private void resume() {
         if (mMediaPlayer.canStart()) {
-            LOGGER.fine("resume: resuming");
+            Log.d(TAG, "resume: resuming");
             mMediaPlayer.start();
             showNotification(NOTIFICATION_ACTION_ICON_PAUSE, R.string.audioplayer_notification_btn_pause, ACTION_PAUSE);
         } else {
-            LOGGER.warning("resume: cannot resume, state: " + mMediaPlayer.getState());
+            Log.w(TAG, "resume: cannot resume, state: " + mMediaPlayer.getState());
         }
     }
 
     private void play() {
         Track currentTrack = getCurrentTrack();
         if (currentTrack == null) {
-            LOGGER.warning("play: cannot play - no track available");
+            Log.w(TAG, "play: cannot play - no track available");
         } else {
             if (currentTrack.getPid().equals(mMediaPlayer.getTrackPid())) {
-                LOGGER.info("play: already playing, ignoring");
+                Log.i(TAG, "play: already playing, ignoring");
             } else {// other track
-                LOGGER.fine("play: playing");
+                Log.d(TAG, "play: playing");
                 putToHistory();
                 mMediaPlayer.reset();
                 prepareMediaPlayerAndPlay();
@@ -181,22 +185,22 @@ public class MediaPlayerService extends Service {
 
     private void pause() {
         if (mMediaPlayer.canPause()) {
-            LOGGER.fine("pause: pausing");
+            Log.d(TAG, "pause: pausing");
             mMediaPlayer.pause();
             showNotification(NOTIFICATION_ACTION_ICON_PLAY, R.string.audioplayer_notification_btn_play, ACTION_RESUME);
         } else {
-            LOGGER.warning("pause: cannot pause, state: " + mMediaPlayer.getState());
+            Log.w(TAG, "pause: cannot pause, state: " + mMediaPlayer.getState());
         }
     }
 
     private void skipToPrevious() {
         if (canSkipToPrevious()) {
-            LOGGER.fine("skipToPrevious: skipping");
+            Log.d(TAG, "skipToPrevious: skipping");
             mCurrentTrackIndex--;
             mMediaPlayer.reset();
             prepareMediaPlayerAndPlay();
         } else {
-            LOGGER.warning("skipToPrevious: no previous track");
+            Log.w(TAG, "skipToPrevious: no previous track");
         }
     }
 
@@ -210,32 +214,32 @@ public class MediaPlayerService extends Service {
 
     private void skipToNext() {
         if (canSkipToNext()) {
-            LOGGER.fine("skipToNext: skipping");
+            Log.d(TAG, "skipToNext: skipping");
             mCurrentTrackIndex++;
             mMediaPlayer.reset();
             prepareMediaPlayerAndPlay();
         } else {
-            LOGGER.warning("skipToNext: no next track");
+            Log.w(TAG, "skipToNext: no next track");
         }
     }
 
     private void stopServiceAndCleanNotifications() {
-        LOGGER.info("canceling notifications");
+        Log.i(TAG, "canceling notifications");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NOTIFICATION_ID);
-        LOGGER.fine("stoping thumb manager");
+        Log.d(TAG, "stoping thumb manager");
         mThumbMgr.stop();
-        LOGGER.fine("flushing http cache");
+        Log.d(TAG, "flushing http cache");
         HttpResponseCache cache = HttpResponseCache.getInstalled();
         if (cache != null) {
             cache.flush();
         }
-        LOGGER.fine("releasing media player");
+        Log.d(TAG, "releasing media player");
         mMediaPlayer.release();
-        LOGGER.fine("clearing data");
+        Log.d(TAG, "clearing data");
         mMediaPlayer = null;
         mSoundRecording = null;
-        LOGGER.info("stopping service");
+        Log.i(TAG, "stopping service");
         stopSelf();
     }
 
@@ -315,7 +319,7 @@ public class MediaPlayerService extends Service {
             @Override
             public void onDownloaded() {
                 State state = getState();
-                LOGGER.info("onDownloaded, state: " + state);
+                Log.i(TAG, "onDownloaded, state: " + state);
                 if (state != null) {
                     switch (state) {
                         case STARTED:
@@ -328,7 +332,7 @@ public class MediaPlayerService extends Service {
                             break;
                         default:
                             showNotificationWithoutPrimaryAction();
-                            LOGGER.info("bitmap downloades, state " + state + ", not reloading notification");
+                            Log.i(TAG, "bitmap downloades, state " + state + ", not reloading notification");
                     }
                 }
             }
@@ -387,17 +391,17 @@ public class MediaPlayerService extends Service {
     }
 
     private void initMediaPlayer() {
-        LOGGER.info("initializing media player");
+        Log.i(TAG, "initializing media player");
         mMediaPlayer = new MediaPlayerWithState();
         mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
-                LOGGER.info("onCompletion");
+                Log.i(TAG, "onCompletion");
                 if (canSkipToNext()) {
                     skipToNext();
                 } else {
-                    LOGGER.info("no more tracks in playlist");
+                    Log.i(TAG, "no more tracks in playlist");
                     stopServiceAndCleanNotifications();
                 }
             }
@@ -409,7 +413,7 @@ public class MediaPlayerService extends Service {
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 String errorType = toErrorType(what);
                 String extraCode = toExtraCode(extra);
-                LOGGER.severe("error: " + errorType + ": " + extraCode);
+                Log.e(TAG, "error: " + errorType + ": " + extraCode);
                 // return false;
                 mMediaPlayer.release();
                 mMediaPlayer = null;
@@ -471,18 +475,18 @@ public class MediaPlayerService extends Service {
 
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    LOGGER.fine("media player prepared, starting");
+                    Log.d(TAG, "media player prepared, starting");
                     mMediaPlayer.start();
                     showNotification(NOTIFICATION_ACTION_ICON_PAUSE, R.string.audioplayer_notification_btn_pause,
                             ACTION_PAUSE);
                 }
             });
-            LOGGER.info("preparing media player (async)");
+            Log.i(TAG, "preparing media player (async)");
             mMediaPlayer.prepareAsync();
             showNotificationWithoutPrimaryAction();
         } else {
             mFailed = true;
-            LOGGER.info("prepareMediaPlayerAndPlay: cannot prepare now, canceling (state=" + getState() + ")");
+            Log.i(TAG, "prepareMediaPlayerAndPlay: cannot prepare now, canceling (state=" + getState() + ")");
             // stopServiceAndCleanNotifications();
             showNotificationWithoutPrimaryAction();
         }
@@ -515,13 +519,13 @@ public class MediaPlayerService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        LOGGER.fine("onUnbind");
+        Log.d(TAG, "onUnbind");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
-        // LOGGER.info("onDestroy");
+        Log.i(TAG, "onDestroy");
         super.onDestroy();
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
