@@ -41,12 +41,11 @@
     <string name="help_about_app_copyright">Copyright © 2014 Moravská zemská knihovna</string>
     <string name="help_about_description">
         <![CDATA[                
-        Kramerius je digitální knihovna, díky které můžete prohlížet díla, která již nepodléhají autorskému zákonu. 
-        <br/>Naleznete zde klasická díla, historické spisy, staré noviny a časopisy, kolekce map a další digitalizované dokumenty. 
-        <br/><br/>Máte-li jakékoliv připomínky, otázky, nápady, nebo jste našli chybu, kontaktujte nás na <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>
+        Aplikace zpřístupňuje digitální fondy českých knihoven, které využívají systém Kramerius.
+        <br/>Najdete zde dokumenty, které již nepodléhají autorskému zákonu - beletrii, staré noviny a časopisy, archiválie, rukopisy, kolekce map, gramodesky a další.
+        <br/><br/>Máte-li jakékoliv připomínky, otázky nebo nápady, kontaktujte nás prosím na <a href="mailto:developer@mzk.cz">developer@mzk.cz</a>.
         <br/><br/>Aplikaci vyvíjí <a href="http://www.mzk.cz">Moravská zemská knihovna v Brně</a> 
     	]]></string>
-
 
     <string name="metadata_title">Podrobnosti</string>
     <string name="domain_title">Zdroj dat</string>
