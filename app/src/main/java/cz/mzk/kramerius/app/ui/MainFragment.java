@@ -53,6 +53,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
     private View mLoaderCustom;
     private TextView mCustomWarning;
     private View mCustomAgainButton;
+    private View mCustomContainer;
 
     private List<Item> mNewestList;
     private CardGridView mNewestGridView;
@@ -98,7 +99,7 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
         mNewestAgainButton.setOnClickListener(this);
         mCustomAgainButton = view.findViewById(R.id.featured_custom_again);
         mCustomAgainButton.setOnClickListener(this);
-
+        mCustomContainer = view.findViewById(R.id.featured_custom_container);
         mNewestWarning = (TextView) view.findViewById(R.id.featured_newest_warning);
         mCustomWarning = (TextView) view.findViewById(R.id.featured_custom_warning);
 
@@ -164,16 +165,27 @@ public class MainFragment extends BaseFragment implements OnClickListener, OnOpe
         protected void onPostExecute(List<Item> result) {
             if (tType == K5Api.FEED_CUSTOM) {
                 stopLoaderAnimation(mLoaderCustom);
-                if (getActivity() == null || result == null) {
+                if (getActivity() == null) {
+                    return;
+                }
+                if (result == null) {
                     mCustomAgainButton.setVisibility(View.VISIBLE);
                     mCustomWarning.setVisibility(View.VISIBLE);
                     return;
                 }
-                mCustomList = new ArrayList<Item>();
-                fillList(result, mCustomList);
+                if(result.size() > 0) {
+                    mCustomList = new ArrayList<Item>();
+                    fillList(result, mCustomList);
+                } else {
+                    mCustomContainer.setVisibility(View.GONE);
+                    return;
+                }
             } else if (tType == K5Api.FEED_NEWEST) {
                 stopLoaderAnimation(mLoaderNewest);
-                if (getActivity() == null || result == null) {
+                if (getActivity() == null) {
+                    return;
+                }
+                if (result == null) {
                     mNewestAgainButton.setVisibility(View.VISIBLE);
                     mNewestWarning.setVisibility(View.VISIBLE);
                     return;

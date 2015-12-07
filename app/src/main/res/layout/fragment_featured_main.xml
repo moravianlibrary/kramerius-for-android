@@ -15,77 +15,85 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/featured_custom_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
-                <TextView
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/featured_custom"
-                    android:textColor="@color/dark_grey"
-                    android:textSize="@dimen/main_featured_text" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp">
 
-                <Button
-                    android:id="@+id/featured_custom_expand"
-                    style="@style/MyButton"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/featured_show_all"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/featured_custom"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="@dimen/main_featured_text" />
+
+                    <Button
+                        android:id="@+id/featured_custom_expand"
+                        style="@style/MyButton"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/featured_show_all"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/featured_custom_again"
+                        style="@style/MyButton"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/warn_load_again"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/featured_custom_loader"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/img_loader"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/featured_custom_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/warn_data_loading_failed"
+                    android:textColor="@color/grey"
                     android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/featured_custom_again"
-                    style="@style/MyButton"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/warn_load_again"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/featured_custom_loader"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_horizontal"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/img_loader"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/featured_custom_warning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/warn_data_loading_failed"
-                android:textColor="@color/grey"
-                android:visibility="gone" />
-
-            <it.gmariotti.cardslib.library.view.CardGridView
-                android:id="@+id/featured_custom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:horizontalSpacing="2dp"
-                android:listSelector="@android:color/transparent"
-                android:numColumns="1"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="3dp"
-                app:list_card_layout_resourceID="@layout/list_card" />
+                <it.gmariotti.cardslib.library.view.CardGridView
+                    android:id="@+id/featured_custom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="2dp"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="1"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="3dp"
+                    app:list_card_layout_resourceID="@layout/list_card" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginRight="10dp">
 
                 <TextView
                     android:layout_width="match_parent"

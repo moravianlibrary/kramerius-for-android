@@ -33,8 +33,7 @@ public class DomainUtil {
             add(new Domain(true, "Univerzita Karlova v Praze - Fakulta sociálních věd", "http", "kramerius.fsv.cuni.cz", R.drawable.logo_cuni_fsv));
             add(new Domain(true, "Knihovna Akademie věd ČR", "http", "kramerius.lib.cas.cz", R.drawable.logo_knav));
             add(new Domain(true, "Krajská vědecká knihovna v Liberci", "http", "kramerius.kvkli.cz", R.drawable.logo_kvkli));
-            add(new Domain(true, "Ústav zemědělské ekonomiky a informací", "http", "kramerius.uzei.cz", R.drawable.logo_uzei));
-
+            add(new Domain(true, "Knihovna Antonína Švehly", "http", "kramerius.uzei.cz", R.drawable.logo_uzei));
 
             add(new Domain(false, "Moravskoslezská vědecká knihovna v Ostravě", "http", "camea.svkos.cz", R.drawable.logo_svkos));
             add(new Domain(false, "Mendelova univerzita v Brně", "http", "kramerius4.mendelu.cz", R.drawable.logo_mendelu));
@@ -45,7 +44,6 @@ public class DomainUtil {
             add(new Domain(false, "Univerzitná knižnica v Bratislave", "http", "pc139.ulib.sk", LOGO_DEFAULT));
             add(new Domain(false, "Výzkumný ústav geodetický, topografický a kartografický", "http", "knihovna-test.vugtk.cz", LOGO_DEFAULT));
             add(new Domain(false, "Studijní a vědecká knihovna Plzeňského kraje", "http", "k4.svkpl.cz", R.drawable.logo_svkpk));
-
             add(new Domain(false, "Knihovna Západočeského muzea v Plzni", "http", "kramerius.zcm.cz", R.drawable.logo_zcm));
             add(new Domain(false, "Městská knihovna v Praze", "http", "kramerius4.mlp.cz", R.drawable.logo_mlp));
             add(new Domain(false, "Národní knihovna", "http", "kramerius4.nkp.cz", R.drawable.logo_nkp));
