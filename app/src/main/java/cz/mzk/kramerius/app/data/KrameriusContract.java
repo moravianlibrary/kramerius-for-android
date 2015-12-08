@@ -14,7 +14,7 @@ public class KrameriusContract {
     public static final String PATH_LANGUAGE = "language";
     public static final String PATH_RELATOR = "relator";
     public static final String PATH_HISTORY = "history";
-
+    public static final String PATH_CACHE= "cache";
 
     public static final class InstitutionEntry implements BaseColumns {
 
@@ -47,6 +47,30 @@ public class KrameriusContract {
         public static final String COLUMN_LANG = "lang";
 
     }
+
+    public static final class CacheEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CACHE).build();
+
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY_URI + "/" + PATH_CACHE;
+
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY_URI + "/" + PATH_CACHE;
+
+        public static final String TABLE_NAME = "cache";
+
+        public static final String COLUMN_URL = "url";
+        public static final String COLUMN_RESPONSE = "response";
+
+        public static Uri buildCacheUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static long getId(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(1));
+        }
+
+    }
+
 
     public static final class RelatorEntry implements BaseColumns {
 

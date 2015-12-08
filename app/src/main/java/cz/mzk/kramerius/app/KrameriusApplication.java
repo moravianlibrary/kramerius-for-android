@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import javax.net.ssl.HttpsURLConnection;
 
 import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
+import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.ssl.SSLSocketFactoryProvider;
 import cz.mzk.kramerius.app.viewer.VolleyRequestManager;
 
@@ -26,8 +27,8 @@ public class KrameriusApplication extends Application {
         setupHttpUrlConnection(this);
         TiledImageView.initialize(this);
         VolleyRequestManager.initialize(this);
+        clearAppCache();
     }
-
 
 
     /**
@@ -55,5 +56,9 @@ public class KrameriusApplication extends Application {
         } catch (Exception e) {
             Log.e(TAG, "error initializing SSL Socket factory", e);
         }
+    }
+
+    private void clearAppCache() {
+        getContentResolver().delete(KrameriusContract.CacheEntry.CONTENT_URI, null, null);
     }
 }

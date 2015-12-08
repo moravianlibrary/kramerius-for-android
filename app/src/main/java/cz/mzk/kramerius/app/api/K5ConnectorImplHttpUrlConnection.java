@@ -1,6 +1,8 @@
 package cz.mzk.kramerius.app.api;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
@@ -23,14 +25,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.util.LangUtils;
+import cz.mzk.kramerius.app.util.Logger;
 import cz.mzk.kramerius.app.util.ModelUtil;
-import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.xml.AltoParser;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
@@ -148,11 +151,8 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         try {
             List<Item> list = new ArrayList<Item>();
             String url = K5Api.getFeedPath(context, feed, limit, policy, model);
-            if (VersionUtils.Debuggable()) {
-                Log.d(LOG_TAG, "request: " + url + ", " + feed);
-            }
-            String jsonString = downloadText(url);
-
+            Logger.debug(LOG_TAG, "request: " + url + ", " + feed);
+            String jsonString = getResponse(context, url);
             JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
             JSONArray data = json.getJSONArray(K5Constants.DATA);
             for (int i = 0; i < data.length(); i++) {
@@ -243,14 +243,10 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         // return legacyConnector.getItem(context, pid, domain);
         try {
             String url = K5Api.getItemPath(context, pid);
-            if (VersionUtils.Debuggable()) {
-                Log.d(LOG_TAG, "getItem - Request:" + url);
-            }
+            Logger.debug(LOG_TAG, "getItem - Request:" + url);
             url.replace(K5Api.getDomain(context), domain);
             String jsonString = downloadText(url);
-            if (VersionUtils.Debuggable()) {
-                Log.d(LOG_TAG, "getItem - Response:" + jsonString);
-            }
+            Logger.debug(LOG_TAG, "getItem - Response:" + jsonString);
             JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
             Item item = new Item();
             item.setPid(jsonItem.optString(K5Constants.PID));
@@ -345,10 +341,9 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
 
     @Override
     public List<Item> getVirtualCollections(Context context) {
-        // return legacyConnector.getVirtualCollctions(context);
         try {
             String url = K5Api.getVirtualCollectionsPath(context);
-            String jsonString = downloadText(url);
+            String jsonString = getResponse(context, url);
             JSONArray data = (JSONArray) new JSONTokener(jsonString).nextValue();
             List<Item> list = new ArrayList<Item>();
             for (int i = 0; i < data.length(); i++) {
@@ -420,9 +415,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         // return legacyConnector.getSearchResult(context, query, start, rows);
         try {
             String url = K5Api.getSearchPath(context, query, start, rows);
-            if (VersionUtils.Debuggable()) {
-                Log.d(LOG_TAG, "query - search: " + url);
-            }
+            Logger.debug(LOG_TAG, "query - search: " + url);
             Map<String, String> headers = new HashMap<String, String>() {
                 {
                     put("accept", "application/json");
@@ -430,9 +423,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
             };
 
             String jsonString = downloadText(url, headers);
-            if (VersionUtils.Debuggable()) {
-                Log.d(LOG_TAG, "search result:" + jsonString);
-            }
+            Logger.debug(LOG_TAG, "search result:" + jsonString);
             JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
             JSONObject responseJson = json.optJSONObject("response");
             if (responseJson == null) {
@@ -488,9 +479,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         // return legacyConnector.getDoctypeCount(context, type);
         try {
             String url = K5Api.getDoctypeCountPath(context, type);
-            if (VersionUtils.Debuggable()) {
-                Log.d(LOG_TAG, "query:" + url);
-            }
+            Logger.debug(LOG_TAG, "query:" + url);
             Map<String, String> headers = new HashMap<String, String>() {
                 {
                     put("accept", "application/json");
@@ -606,6 +595,42 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         String url = K5Api.getAltoStreamPath(context, pagePid);
         String[] searchTokens = searchQuery.split(" ");
         return AltoParser.getTextBlocks(url, searchTokens);
+    }
+
+
+    private String getResponse(Context context, String url) {
+        String response = cacheLookup(context, url);
+        if(response == null) {
+            response = downloadText(url);
+            addToCache(context, url, response);
+        }
+        return response;
+    }
+
+
+    private String cacheLookup(Context context, String url) {
+        Logger.debug(LOG_TAG, "Cache lookup: " + url);
+        String response = null;
+        Cursor c = context.getContentResolver().query(KrameriusContract.CacheEntry.CONTENT_URI,
+                new String[]{KrameriusContract.CacheEntry.COLUMN_RESPONSE},
+                KrameriusContract.CacheEntry.COLUMN_URL + "=?",
+                new String[]{url}, null);
+        if(c.moveToFirst()) {
+            response = c.getString(0);
+        }
+        c.close();
+        return response;
+    }
+
+    private void addToCache(Context context, String url, String response) {
+        Logger.debug(LOG_TAG, "Adding to cache: " + url + "\n" + response);
+        if(url == null || response == null) {
+            return;
+        }
+        ContentValues cv = new ContentValues();
+        cv.put(KrameriusContract.CacheEntry.COLUMN_URL, url);
+        cv.put(KrameriusContract.CacheEntry.COLUMN_RESPONSE, response);
+        context.getContentResolver().insert(KrameriusContract.CacheEntry.CONTENT_URI, cv);
     }
 
 }

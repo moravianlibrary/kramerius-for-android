@@ -15,6 +15,7 @@ public class KrameriusProvider extends ContentProvider {
     private static final int LANGUAGE = 110;
     private static final int RELATOR = 120;
     private static final int HISTORY = 130;
+    private static final int CACHE = 140;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -27,12 +28,26 @@ public class KrameriusProvider extends ContentProvider {
         matcher.addURI(authority, KrameriusContract.PATH_LANGUAGE, LANGUAGE);
         matcher.addURI(authority, KrameriusContract.PATH_RELATOR, RELATOR);
         matcher.addURI(authority, KrameriusContract.PATH_HISTORY, HISTORY);
+        matcher.addURI(authority, KrameriusContract.PATH_CACHE, CACHE);
         return matcher;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException("Unknown uri: " + uri);
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int delCount = 0;
+        switch (match) {
+            case CACHE:
+                delCount = db.delete(
+                        KrameriusContract.CacheEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        return delCount;
     }
 
     @Override
@@ -47,6 +62,8 @@ public class KrameriusProvider extends ContentProvider {
                 return KrameriusContract.RelatorEntry.CONTENT_TYPE;
             case HISTORY:
                 return KrameriusContract.HistoryEntry.CONTENT_TYPE;
+            case CACHE:
+                return KrameriusContract.CacheEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri:" + uri);
         }
@@ -62,6 +79,15 @@ public class KrameriusProvider extends ContentProvider {
                 long id = db.insert(HistoryEntry.TABLE_NAME, null, values);
                 if (id > 0) {
                     returnUri = HistoryEntry.buildHistoryUri(id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
+            case CACHE: {
+                long id = db.insert(KrameriusContract.CacheEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = KrameriusContract.CacheEntry.buildCacheUri(id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -97,6 +123,10 @@ public class KrameriusProvider extends ContentProvider {
                 break;
             case HISTORY:
                 cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.HistoryEntry.TABLE_NAME, projection,
+                        selection, selectionArgs, null, null, sortOrder);
+                break;
+            case CACHE:
+                cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.CacheEntry.TABLE_NAME, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 break;
             default:

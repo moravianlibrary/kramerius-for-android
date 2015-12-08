@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.data.KrameriusContract.CacheEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.InstitutionEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
@@ -28,8 +29,9 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION_LOCALE_LANGUAGES = 4;
     private static final int DATABASE_VERSION_LOCALE_RELATORS = 5;
     private static final int DATABASE_VERSION_HISTORY_MODEL = 6;
+    private static final int DATABASE_VERSION_CHACHE = 7;
 
-    private static final int DATABASE_VERSION = DATABASE_VERSION_HISTORY_MODEL;
+    private static final int DATABASE_VERSION = DATABASE_VERSION_CHACHE;
 
     private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
     private static final String DATABASE_NAME_EXTERNAL = Environment
@@ -40,6 +42,7 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
             + InstitutionEntry.COLUMN_SIGLA;
     private static final String INDEX_LANGUAGE_CODE = LanguageEntry.TABLE_NAME + "_" + LanguageEntry.COLUMN_CODE;
     private static final String INDEX_RELATOR_CODE = RelatorEntry.TABLE_NAME + "_" + RelatorEntry.COLUMN_CODE;
+    private static final String INDEX_CACHE_URL = CacheEntry.TABLE_NAME + "_" + CacheEntry.COLUMN_URL;
 
     private Context mContext;
 
@@ -64,24 +67,27 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
         populateFrom(db, R.raw.relators);
         // history
         db.execSQL(buildStatementCreateTable(HistoryEntry.TABLE_NAME, DATABASE_VERSION));
+        //cache
+        db.execSQL(buildStatementCreateTable(CacheEntry.TABLE_NAME, DATABASE_VERSION));
+        db.execSQL(buildStatementCreateIndex(INDEX_CACHE_URL, DATABASE_VERSION));
     }
 
     private String buildStatementCreateIndex(String indexName, int dbVersion) {
         if (indexName.equals(INDEX_INSTITUTION_SIGLA)) {
-            return "CREATE INDEX " + indexName + " on "//
-                    + InstitutionEntry.TABLE_NAME + "("//
-                    + InstitutionEntry.COLUMN_SIGLA//
-                    + ");";
+            return buildStatementCreateIndex(indexName, InstitutionEntry.TABLE_NAME, InstitutionEntry.COLUMN_SIGLA);
         } else if (indexName.equals(INDEX_LANGUAGE_CODE)) {
-            return "CREATE INDEX " + indexName + " on "//
-                    + LanguageEntry.TABLE_NAME + "(" + LanguageEntry.COLUMN_CODE + ");";
+            return buildStatementCreateIndex(indexName, LanguageEntry.TABLE_NAME, LanguageEntry.COLUMN_CODE);
         } else if (indexName.equals(INDEX_RELATOR_CODE)) {
-            return "CREATE INDEX " + indexName + " on "//
-                    + RelatorEntry.TABLE_NAME + "(" + RelatorEntry.COLUMN_CODE + ");";
+            return buildStatementCreateIndex(indexName, RelatorEntry.TABLE_NAME, RelatorEntry.COLUMN_CODE);
+        } else if (indexName.equals(INDEX_CACHE_URL)) {
+            return buildStatementCreateIndex(indexName, CacheEntry.TABLE_NAME, CacheEntry.COLUMN_URL);
         } else {
             throw new IllegalArgumentException("unknown index " + indexName);
         }
+    }
 
+    private String buildStatementCreateIndex(String name, String table, String column) {
+        return "CREATE INDEX " + name + " on " + table + "(" + column + ");";
     }
 
     private String buildStatementCreateTable(String tableName, int dbVersion) {
@@ -135,6 +141,12 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
                     + LanguageEntry.COLUMN_CODE + " TEXT NOT NULL, "//
                     + LanguageEntry.COLUMN_NAME + " TEXT NOT NULL, " //
                     + LanguageEntry.COLUMN_LANG + " TEXT NOT NULL" //
+                    + ");";
+        } else if (tableName.equals(CacheEntry.TABLE_NAME)) {
+            return "CREATE TABLE " + CacheEntry.TABLE_NAME + " ("
+                    + CacheEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + CacheEntry.COLUMN_URL + " TEXT NOT NULL, "
+                    + CacheEntry.COLUMN_RESPONSE + " TEXT"
                     + ");";
         }
         throw new IllegalArgumentException("unknown table " + tableName);
@@ -216,6 +228,13 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
                     }
                 }
                 db.execSQL("DROP TABLE IF EXISTS " + TABLE_TMP);
+                version++;
+            case DATABASE_VERSION_HISTORY_MODEL:
+                db.execSQL("DROP INDEX IF EXISTS " + INDEX_CACHE_URL);
+                db.execSQL("DROP TABLE IF EXISTS " + CacheEntry.TABLE_NAME);
+                db.execSQL(buildStatementCreateTable(CacheEntry.TABLE_NAME, version + 1));
+                db.execSQL(buildStatementCreateIndex(INDEX_CACHE_URL, version + 1));
+                version++;
         }
     }
 
