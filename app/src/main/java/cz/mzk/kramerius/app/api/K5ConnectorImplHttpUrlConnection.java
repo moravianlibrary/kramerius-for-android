@@ -152,7 +152,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
             List<Item> list = new ArrayList<Item>();
             String url = K5Api.getFeedPath(context, feed, limit, policy, model);
             Logger.debug(LOG_TAG, "request: " + url + ", " + feed);
-            String jsonString = getResponse(context, url);
+            String jsonString = getResponse(context, url, true);
             JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
             JSONArray data = json.getJSONArray(K5Constants.DATA);
             for (int i = 0; i < data.length(); i++) {
@@ -204,19 +204,17 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
 
     @Override
     public List<Pair<String, String>> getHierarychy(Context context, String pid) {
-        // return legacyConnector.getHierarychy(context, pid);
         try {
             String url = K5Api.getItemPath(context, pid);
-            String jsonString = downloadText(url);
+            String jsonString = getResponse(context, url, true);
             JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
             List<Pair<String, String>> hierarchy = new ArrayList<Pair<String, String>>();
-
             JSONArray a = jsonItem.optJSONArray(K5Constants.CONTEXT);
             if (a == null) {
                 hierarchy.add(new Pair<String, String>(jsonItem.optString(K5Constants.PID), jsonItem
                         .optString(K5Constants.MODEL)));
             } else {
-                if (a.length() == 1 && a.get(0) instanceof JSONArray) {
+                if (a.length() > 0 && a.get(0) instanceof JSONArray) {
                     a = (JSONArray) a.get(0);
                 }
                 for (int i = 0; i < a.length(); i++) {
@@ -245,7 +243,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
             String url = K5Api.getItemPath(context, pid);
             Logger.debug(LOG_TAG, "getItem - Request:" + url);
             url.replace(K5Api.getDomain(context), domain);
-            String jsonString = downloadText(url);
+            String jsonString = getResponse(context, url, true);
             Logger.debug(LOG_TAG, "getItem - Response:" + jsonString);
             JSONObject jsonItem = (JSONObject) new JSONTokener(jsonString).nextValue();
             Item item = new Item();
@@ -295,7 +293,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         // return legacyConnector.getChildren(context, pid, modelFilter);
         try {
             String url = K5Api.getChildrenPath(context, pid);
-            String jsonString = downloadText(url);
+            String jsonString = getResponse(context, url);
             JSONArray data = (JSONArray) new JSONTokener(jsonString).nextValue();
             List<Item> list = new ArrayList<Item>();
             for (int i = 0; i < data.length(); i++) {
@@ -343,7 +341,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
     public List<Item> getVirtualCollections(Context context) {
         try {
             String url = K5Api.getVirtualCollectionsPath(context);
-            String jsonString = getResponse(context, url);
+            String jsonString = getResponse(context, url, true);
             JSONArray data = (JSONArray) new JSONTokener(jsonString).nextValue();
             List<Item> list = new ArrayList<Item>();
             for (int i = 0; i < data.length(); i++) {
@@ -597,8 +595,15 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return AltoParser.getTextBlocks(url, searchTokens);
     }
 
-
     private String getResponse(Context context, String url) {
+        return getResponse(context, url, false);
+    }
+
+    private String getResponse(Context context, String url, boolean tryCache) {
+        Logger.debug(LOG_TAG, "REQUEST: " + url);
+        if(!tryCache) {
+            return downloadText(url);
+        }
         String response = cacheLookup(context, url);
         if(response == null) {
             response = downloadText(url);

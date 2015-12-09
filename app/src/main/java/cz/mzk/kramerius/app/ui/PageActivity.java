@@ -461,15 +461,19 @@ public class PageActivity extends AppCompatActivity implements OnClickListener, 
             if (ModelUtil.PERIODICAL_ITEM.equals(item.getModel())) {
                 List<Pair<String, String>> hierarchy = K5ConnectorFactory.getConnector().getHierarychy(tContext,
                         item.getPid());
-                for (int i = 0; i < hierarchy.size(); i++) {
-                    if (ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
-                        Item parent = K5ConnectorFactory.getConnector().getItem(tContext, hierarchy.get(i).first);
-                        if (parent != null) {
-                            item.setTitle(getString(R.string.metadata_periodical_volume) + " "
-                                    + parent.getVolumeTitle() + ", " + getString(R.string.metadata_periodical_item)
-                                    + " " + item.getIssueTitle());
+                Item parent = null;
+                if(hierarchy != null) {
+                    for (int i = 0; i < hierarchy.size(); i++) {
+                        if (ModelUtil.PERIODICAL_VOLUME.equals(hierarchy.get(i).second)) {
+                            parent = K5ConnectorFactory.getConnector().getItem(tContext, hierarchy.get(i).first);
+                            break;
                         }
                     }
+                }
+                if (parent != null) {
+                    item.setTitle(getString(R.string.metadata_periodical_volume) + " "
+                            + parent.getVolumeTitle() + ", " + getString(R.string.metadata_periodical_item)
+                            + " " + item.getIssueTitle());
                 }
             }
             int status = K5Api.STATUS_UNKNOWN;
