@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.ssl.SSLSocketFactoryProvider;
 import cz.mzk.kramerius.app.viewer.VolleyRequestManager;
@@ -25,7 +24,6 @@ public class KrameriusApplication extends Application {
         super.onCreate();
         initHttpCache();
         setupHttpUrlConnection(this);
-        TiledImageView.initialize(this);
         VolleyRequestManager.initialize(this);
         clearAppCache();
     }

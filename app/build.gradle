@@ -50,10 +50,10 @@ dependencies {
     //Extra card library, it is required only if you want to use integrations with other libraries
     compile 'com.github.gabrielemariotti.cards:library-extra:1.9.1'
 
-    //AndroidZoomifyViewer
+    //TiledImageView
     //from local project, see settings.gradle
-    //compile project(':zoomify')
-    compile 'cz.mzk.androidzoomifyviewer:android-zoomify-viewer:1.2.0'
+    //compile project(':tiledImageView')
+    compile 'cz.mzk.tiledimageview:tiled-image-view:2.0.0'
 
     //Google analytics
     //todo: https://github.com/moravianlibrary/kramerius-for-android/issues/204

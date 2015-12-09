@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.search.TextboxProvider;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment;
+import cz.mzk.tiledimageview.TiledImageView.ViewMode;
 
 public class PageViewPagerAdapter extends FragmentStatePagerAdapter {
 

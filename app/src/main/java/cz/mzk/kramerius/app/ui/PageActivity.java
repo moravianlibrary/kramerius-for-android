@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.BaseFragment.onWarningButtonClickedListener;
 import cz.mzk.kramerius.app.R;
@@ -74,6 +73,7 @@ import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment;
 import cz.mzk.kramerius.app.viewer.PdfViewerFragment.PdfListener;
 import cz.mzk.kramerius.app.viewer.SinglePageViewerFragment.PageEventListener;
+import cz.mzk.tiledimageview.TiledImageView.ViewMode;
 
 
 public class PageActivity extends AppCompatActivity implements OnClickListener, OnSeekBarChangeListener,

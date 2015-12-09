@@ -24,17 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import cz.mzk.androidzoomifyviewer.rectangles.FramingRectangle;
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView;
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ImageInitializationHandler;
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.SingleTapListener;
-import cz.mzk.androidzoomifyviewer.viewer.TiledImageView.ViewMode;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.util.VersionUtils;
+import cz.mzk.tiledimageview.TiledImageView;
+import cz.mzk.tiledimageview.TiledImageView.MetadataInitializationHandler;
+import cz.mzk.tiledimageview.TiledImageView.SingleTapListener;
+import cz.mzk.tiledimageview.TiledImageView.ViewMode;
+import cz.mzk.tiledimageview.images.TiledImageProtocol;
+import cz.mzk.tiledimageview.rectangles.FramingRectangle;
 
-public class SinglePageViewerFragment extends Fragment implements OnTouchListener, ImageInitializationHandler,
+public class SinglePageViewerFragment extends Fragment implements OnTouchListener, MetadataInitializationHandler,
         SingleTapListener {
 
     private static final String TAG = SinglePageViewerFragment.class.getSimpleName();
@@ -55,6 +56,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
 
     private ImageRequest mImageRequest;
     private ViewMode mViewMode;
+    private List<FramingRectangle> mRects = null;
 
     private float mInitialImageScale = -1;
 
@@ -103,7 +105,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
         mProgressView = view.findViewById(R.id.progressView);
         mProgressView.setOnTouchListener(this);
         mTiledImageView = (TiledImageView) view.findViewById(R.id.tiledImageView);
-        mTiledImageView.setImageInitializationHandler(this);
+        mTiledImageView.setMetadataInitializationHandler(this);
         mTiledImageView.setSingleTapListener(this);
         mTiledImageView.setFramingRectangles(mRects);
         mImageViewContainer = (ViewGroup) view.findViewById(R.id.imageContainer);
@@ -183,7 +185,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
         hideViews();
         mProgressView.setVisibility(View.VISIBLE);
         String url = K5Api.getZoomifyBaseUrl(getActivity(), mPid);
-        mTiledImageView.loadImage(url.toString());
+        mTiledImageView.loadImage(TiledImageProtocol.ZOOMIFY, url.toString());
     }
 
     private void hideViews() {
@@ -193,7 +195,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     }
 
     @Override
-    public void onImagePropertiesProcessed() {
+    public void onMetadataInitialized() {
         hideViews();
         mTiledImageView.setVisibility(View.VISIBLE);
     }
@@ -205,7 +207,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     }
 
     @Override
-    public void onImagePropertiesUnhandableResponseCodeError(String imagePropertiesUrl, int responseCode) {
+    public void onMetadataUnhandableResponseCode(String imagePropertiesUrl, int responseCode) {
         if (VersionUtils.Debuggable()) {
             Log.d(TAG, "onImagePropertiesUnhandableResponseCodeError, code: " + responseCode);
         }
@@ -294,7 +296,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     }
 
     @Override
-    public void onImagePropertiesRedirectionLoopError(String imagePropertiesUrl, int redirections) {
+    public void onMetadataRedirectionLoop(String imagePropertiesUrl, int redirections) {
         // Log.d(TAG, "onImagePropertiesRedirectionLoopError");
         hideViews();
         if (mEventListener != null) {
@@ -303,7 +305,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     }
 
     @Override
-    public void onImagePropertiesDataTransferError(String imagePropertiesUrl, String errorMessage) {
+    public void onMetadataDataTransferError(String imagePropertiesUrl, String errorMessage) {
         // Log.d(TAG, "onImagePropertiesDataTransferError");
         hideViews();
         Log.d("onImgPropDataTransErr", imagePropertiesUrl + " - " + errorMessage);
@@ -313,7 +315,7 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     }
 
     @Override
-    public void onImagePropertiesInvalidDataError(String imagePropertiesUrl, String errorMessage) {
+    public void onMetadataInvalidData(String imagePropertiesUrl, String errorMessage) {
         // Log.d(TAG, "onImagePropertiesInvalidDataError");
         hideViews();
         if (mEventListener != null) {
@@ -337,9 +339,6 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     public String getPagePid(int pageIndex) {
         return "";
     }
-
-
-    private List<FramingRectangle> mRects = null;
 
     public void setTextBoxes(Set<TextBox> boxes) {
         if (boxes != null) {

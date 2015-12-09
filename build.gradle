@@ -17,6 +17,11 @@ allprojects {
         jcenter()
         //for afollestad material-dialogs
         maven { url "https://jitpack.io" }
+
+        //jenom docasne, nez zverejni cz.mzk.tiledimageview:tiled-image-view na jcenter
+        maven {
+            url "http://dl.bintray.com/rzeh4n/maven"
+        }
     }
 }
 
