@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cz.mzk.kramerius.app.metadata.Metadata;
+import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.SearchQuery;
@@ -80,6 +81,10 @@ public class K5ConnectorImplAndroidHttpClient implements K5Connector {
         item.setRootTitle(title);
         list.add(item);
         return item;
+    }
+
+    public boolean reloadTestLibraries(Context context) {
+        return true;
     }
 
     @Override

@@ -1,21 +1,28 @@
 package cz.mzk.kramerius.app.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.mzk.kramerius.app.BaseActivity;
+import cz.mzk.kramerius.app.KrameriusApplication;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.DomainCard;
 import cz.mzk.kramerius.app.card.DomainCard.OnDomainPopupListener;
+import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
@@ -55,6 +62,9 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
             case android.R.id.home:
                 finish();
                 return true;
+            case 999:
+                refreshLibraries();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -88,6 +98,17 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
         }
         mAdapter = new CardArrayAdapter(this, cards);
         CardUtils.setAnimationAdapter(mAdapter, mList);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean allDomains = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_all_sources), false);
+        if(allDomains) {
+            MenuItem item = menu.add(Menu.NONE, 999, Menu.NONE, "Obnovit");
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            item.setIcon(android.R.drawable.ic_menu_add);
+        }
+        return true;
     }
 
     @Override
@@ -126,5 +147,32 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
         Analytics.sendEvent(this, "domain_detail", domain.getDomain(), "from_popup");
         onDomainDetail(domain);
     }
+
+
+    private void refreshLibraries() {
+        new GetLibrariesTask().execute();
+    }
+
+
+    class GetLibrariesTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return K5ConnectorFactory.getConnector().reloadTestLibraries(DomainActivity.this);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if(result) {
+                onLibrariesReloaded();
+            }
+        }
+    }
+
+    private void onLibrariesReloaded() {
+        KrameriusApplication.getInstance().reloadLibraries();
+        populate();
+    }
+
 
 }

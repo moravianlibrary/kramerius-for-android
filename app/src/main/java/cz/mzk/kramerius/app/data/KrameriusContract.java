@@ -15,6 +15,7 @@ public class KrameriusContract {
     public static final String PATH_RELATOR = "relator";
     public static final String PATH_HISTORY = "history";
     public static final String PATH_CACHE= "cache";
+    public static final String PATH_LIBRARY = "library";
 
     public static final class InstitutionEntry implements BaseColumns {
 
@@ -118,7 +119,28 @@ public class KrameriusContract {
                 COLUMN_DOMAIN, COLUMN_PID, COLUMN_PARENT_PID, COLUMN_TITLE,
                 COLUMN_SUBTITLE, COLUMN_TIMESTAMP, COLUMN_MODEL
         };
+    }
 
+    public static final class LibraryEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_LIBRARY).build();
+
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY_URI + "/" + PATH_LIBRARY;
+
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY_URI + "/"
+                + PATH_LIBRARY;
+
+        public static final String TABLE_NAME = "library";
+
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_DOMAIN = "domain";
+        public static final String COLUMN_PROTOCOL = "protocol";
+        public static final String COLUMN_CODE = "code";
+        public static final String COLUMN_LOCKED = "locked";
+
+        public static Uri buildLibraryUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
 
     }
 

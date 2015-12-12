@@ -16,6 +16,7 @@ public class KrameriusProvider extends ContentProvider {
     private static final int RELATOR = 120;
     private static final int HISTORY = 130;
     private static final int CACHE = 140;
+    private static final int LIBRARY = 150;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -29,6 +30,7 @@ public class KrameriusProvider extends ContentProvider {
         matcher.addURI(authority, KrameriusContract.PATH_RELATOR, RELATOR);
         matcher.addURI(authority, KrameriusContract.PATH_HISTORY, HISTORY);
         matcher.addURI(authority, KrameriusContract.PATH_CACHE, CACHE);
+        matcher.addURI(authority, KrameriusContract.PATH_LIBRARY, LIBRARY);
         return matcher;
     }
 
@@ -41,6 +43,12 @@ public class KrameriusProvider extends ContentProvider {
             case CACHE:
                 delCount = db.delete(
                         KrameriusContract.CacheEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+            case LIBRARY:
+                delCount = db.delete(
+                        KrameriusContract.LibraryEntry.TABLE_NAME,
                         selection,
                         selectionArgs);
                 break;
@@ -64,6 +72,8 @@ public class KrameriusProvider extends ContentProvider {
                 return KrameriusContract.HistoryEntry.CONTENT_TYPE;
             case CACHE:
                 return KrameriusContract.CacheEntry.CONTENT_TYPE;
+            case LIBRARY:
+                return KrameriusContract.LibraryEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri:" + uri);
         }
@@ -88,6 +98,15 @@ public class KrameriusProvider extends ContentProvider {
                 long id = db.insert(KrameriusContract.CacheEntry.TABLE_NAME, null, values);
                 if (id > 0) {
                     returnUri = KrameriusContract.CacheEntry.buildCacheUri(id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
+            case LIBRARY: {
+                long id = db.insert(KrameriusContract.LibraryEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = KrameriusContract.LibraryEntry.buildLibraryUri(id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -127,6 +146,10 @@ public class KrameriusProvider extends ContentProvider {
                 break;
             case CACHE:
                 cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.CacheEntry.TABLE_NAME, projection,
+                        selection, selectionArgs, null, null, sortOrder);
+                break;
+            case LIBRARY:
+                cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.LibraryEntry.TABLE_NAME, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 break;
             default:

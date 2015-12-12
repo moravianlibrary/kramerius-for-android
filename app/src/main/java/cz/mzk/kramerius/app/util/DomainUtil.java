@@ -5,12 +5,13 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.mzk.kramerius.app.KrameriusApplication;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Domain;
 
 public class DomainUtil {
-
+/*
     private static List<Domain> DOMAINS = new ArrayList<Domain>() {
         private static final long serialVersionUID = -8100284677714939192L;
         private static final int LOGO_DEFAULT = R.mipmap.ic_launcher;
@@ -23,7 +24,7 @@ public class DomainUtil {
             add(new Domain(true, "Vědecká knihovna v Olomouci", "http", "kramerius.kr-olomoucky.cz", R.drawable.logo_vkol));
             add(new Domain(true, "Studijní a vědecká knihovna v Hradci Králové", "http", "kramerius4.svkhk.cz", R.drawable.logo_svkhk));
             add(new Domain(true, "Městská knihovna Česká Třebová", "http", "k5.digiknihovna.cz", R.drawable.logo_mkct));
-            add(new Domain(true, "Severočeská vědecká knihovna v Ústí nad Labem", "http", "kramerius4.svkul.cz", R.drawable.logo_svkul));
+            add(new Domain(true, "Severočeská vědecká knihovna v Ústí nad Labem", "http", "kramerius.svkul.cz", R.drawable.logo_svkul));
             add(new Domain(true, "Krajská knihovna Františka Bartoše ve Zlíně", "http", "dlib.kfbz.cz", R.drawable.logo_kfbz));
 
             add(new Domain(true, "Digitální studovna Ministerstva obrany ČR", "http", "kramerius.army.cz", R.drawable.logo_dsmo));
@@ -54,14 +55,15 @@ public class DomainUtil {
             add(new Domain(false, "Moravská zemská knihovna - Demo", "http", "krameriusdemo.mzk.cz", R.drawable.logo_mzk));
         }
     };
-
+*/
     private static List<Domain> getDomains() {
-        return DOMAINS;
+        //return DOMAINS;
+        return KrameriusApplication.getInstance().getLibraries();
     }
 
-    public static List<Domain> getAllDomains() {
-        return DOMAINS;
-    }
+//    public static List<Domain> getAllDomains() {
+//        return DOMAINS;
+//    }
 
     public static List<Domain> getUnlockedDomains() {
         List<Domain> list = new ArrayList<Domain>();
@@ -75,7 +77,7 @@ public class DomainUtil {
 
     public static List<Domain> getDomains(boolean all) {
         if (all) {
-            return getAllDomains();
+            return getDomains();
         } else {
             return getUnlockedDomains();
         }

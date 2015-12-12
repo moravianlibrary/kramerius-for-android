@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cz.mzk.kramerius.app.metadata.Metadata;
+import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.TextBox;
@@ -45,5 +46,7 @@ public interface K5Connector {
     public abstract Metadata getModsMetadata(Context context, String pid);
 
     public abstract Set<TextBox> getTextBoxes(Context context, String pagePid, String searchQuery);
+
+    public abstract boolean reloadTestLibraries(Context context);
 
 }

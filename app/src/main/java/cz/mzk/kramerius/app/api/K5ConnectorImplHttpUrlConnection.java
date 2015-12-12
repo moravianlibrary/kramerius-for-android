@@ -25,8 +25,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cz.mzk.kramerius.app.KrameriusApplication;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.metadata.Metadata;
+import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.SearchQuery;
@@ -594,6 +596,49 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         String[] searchTokens = searchQuery.split(" ");
         return AltoParser.getTextBlocks(url, searchTokens);
     }
+
+
+
+    @Override
+    public boolean reloadTestLibraries(Context context) {
+        context.getContentResolver().delete(KrameriusContract.LibraryEntry.CONTENT_URI, KrameriusContract.LibraryEntry.COLUMN_LOCKED + "=?", new String[]{String.valueOf(1)});
+        try {
+            String url = "https://registr-krameriu.herokuapp.com/libraries.json?android=2";
+            String jsonString = getResponse(context, url, false);
+            Logger.debug(LOG_TAG, "getLibraries - Response:" + jsonString);
+            JSONArray jsonArray = (JSONArray) new JSONTokener(jsonString).nextValue();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonItem = jsonArray.getJSONObject(i);
+                String name = jsonItem.optString("name");
+                String code = jsonItem.optString("code");
+                String libraryUrl = jsonItem.optString("url");
+                String protocol = libraryUrl.substring(0, libraryUrl.indexOf("://"));
+                String domain = libraryUrl.substring(libraryUrl.indexOf("://") + 3, libraryUrl.length());
+                Logger.debug(LOG_TAG, "getLibraries - name:" + name);
+                Logger.debug(LOG_TAG, "getLibraries - code:" + code);
+                Logger.debug(LOG_TAG, "getLibraries - libraryUrl:" + libraryUrl);
+                Logger.debug(LOG_TAG, "getLibraries - protocol:" + protocol);
+                Logger.debug(LOG_TAG, "getLibraries - domain:" + domain);
+
+                ContentValues cv = new ContentValues();
+                cv.put(KrameriusContract.LibraryEntry.COLUMN_NAME, name);
+                cv.put(KrameriusContract.LibraryEntry.COLUMN_PROTOCOL, protocol);
+                cv.put(KrameriusContract.LibraryEntry.COLUMN_DOMAIN, domain);
+                cv.put(KrameriusContract.LibraryEntry.COLUMN_CODE, code);
+                cv.put(KrameriusContract.LibraryEntry.COLUMN_LOCKED, 1);
+                context.getContentResolver().insert(KrameriusContract.LibraryEntry.CONTENT_URI, cv);
+            }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+
 
     private String getResponse(Context context, String url) {
         return getResponse(context, url, false);
