@@ -603,7 +603,7 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
     public boolean reloadTestLibraries(Context context) {
         context.getContentResolver().delete(KrameriusContract.LibraryEntry.CONTENT_URI, KrameriusContract.LibraryEntry.COLUMN_LOCKED + "=?", new String[]{String.valueOf(1)});
         try {
-            String url = "https://registr-krameriu.herokuapp.com/libraries.json?android=2";
+            String url = "https://registr-krameriu.herokuapp.com/libraries.json?android=1";
             String jsonString = getResponse(context, url, false);
             Logger.debug(LOG_TAG, "getLibraries - Response:" + jsonString);
             JSONArray jsonArray = (JSONArray) new JSONTokener(jsonString).nextValue();
