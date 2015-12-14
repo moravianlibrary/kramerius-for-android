@@ -53,7 +53,7 @@ dependencies {
     //TiledImageView
     //from local project, see settings.gradle
     //compile project(':tiledImageView')
-    compile 'cz.mzk.tiledimageview:tiled-image-view:2.0.0'
+    compile 'cz.mzk.tiledimageview:tiled-image-view:2.1.0'
 
     //Google analytics
     //todo: https://github.com/moravianlibrary/kramerius-for-android/issues/204

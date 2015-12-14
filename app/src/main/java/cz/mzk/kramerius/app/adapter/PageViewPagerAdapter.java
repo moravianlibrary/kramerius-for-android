@@ -83,6 +83,15 @@ public class PageViewPagerAdapter extends FragmentStatePagerAdapter {
         return fragment;
     }
 
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+        for (Integer pagePosition : mPageReferenceMap.keySet()) {
+            SinglePageViewerFragment fragment = mPageReferenceMap.get(pagePosition);
+            fragment.setTiledImageViewIsPrimaryInstance(pagePosition != position);
+        }
+    }
+
     public void refreshFragment(int position) {
         //Log.e("test", "adapter: refreshing fragment " + position);
         Set<TextBox> textBoxes = mTextboxProvider.getTextBoxes(position);

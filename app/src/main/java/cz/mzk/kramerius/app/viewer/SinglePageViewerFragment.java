@@ -29,13 +29,13 @@ import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.util.VersionUtils;
 import cz.mzk.tiledimageview.TiledImageView;
-import cz.mzk.tiledimageview.TiledImageView.MetadataInitializationHandler;
+import cz.mzk.tiledimageview.TiledImageView.MetadataInitializationListener;
 import cz.mzk.tiledimageview.TiledImageView.SingleTapListener;
 import cz.mzk.tiledimageview.TiledImageView.ViewMode;
 import cz.mzk.tiledimageview.images.TiledImageProtocol;
 import cz.mzk.tiledimageview.rectangles.FramingRectangle;
 
-public class SinglePageViewerFragment extends Fragment implements OnTouchListener, MetadataInitializationHandler,
+public class SinglePageViewerFragment extends Fragment implements OnTouchListener, MetadataInitializationListener,
         SingleTapListener {
 
     private static final String TAG = SinglePageViewerFragment.class.getSimpleName();
@@ -48,6 +48,8 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     private View mContainer;
     private View mProgressView;
     private TiledImageView mTiledImageView;
+    private boolean mTiledImageVievLowerQuality = false;
+
     private GestureImageView mGestureImageView;
     private ViewGroup mImageViewContainer;
 
@@ -59,6 +61,14 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
     private List<FramingRectangle> mRects = null;
 
     private float mInitialImageScale = -1;
+
+    public void setTiledImageViewIsPrimaryInstance(boolean lowerQuality) {
+        mTiledImageVievLowerQuality = lowerQuality;
+        if (mTiledImageView != null) {
+            mTiledImageView.setLowerQuality(lowerQuality);
+            mTiledImageView.invalidate();
+        }
+    }
 
 
     public interface PageEventListener {
@@ -105,9 +115,10 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
         mProgressView = view.findViewById(R.id.progressView);
         mProgressView.setOnTouchListener(this);
         mTiledImageView = (TiledImageView) view.findViewById(R.id.tiledImageView);
-        mTiledImageView.setMetadataInitializationHandler(this);
+        mTiledImageView.setMetadataInitializationListener(this);
         mTiledImageView.setSingleTapListener(this);
         mTiledImageView.setFramingRectangles(mRects);
+        mTiledImageView.setLowerQuality(mTiledImageVievLowerQuality);
         mImageViewContainer = (ViewGroup) view.findViewById(R.id.imageContainer);
         setViewMode(mViewMode);
         setBackgroundColor(mBackgroud);
@@ -321,6 +332,11 @@ public class SinglePageViewerFragment extends Fragment implements OnTouchListene
         if (mEventListener != null) {
             mEventListener.onInvalidDataError("imageProperties.xml: " + errorMessage);
         }
+    }
+
+    @Override
+    public void onCannotExecuteMetadataInitialization(String imageMetadataUrl) {
+        //should never happen
     }
 
     @Override
