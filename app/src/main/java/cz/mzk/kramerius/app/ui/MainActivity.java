@@ -6,9 +6,15 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +30,7 @@ import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
+import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
 import cz.mzk.kramerius.app.ui.MainFragment.OnFeaturedListener;
@@ -32,6 +39,7 @@ import cz.mzk.kramerius.app.ui.SearchFragment.OnSearchListener;
 import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
 import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.OnVirtualCollectionListener;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.PrefUtils;
 
@@ -64,11 +72,15 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
     private boolean mLastPublicOnly;
     private Spinner mSearchSpinner;
 
+    private View mContainer;
+    private boolean mNotifySelectedLibrary = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mContainer = findViewById(R.id.main_container);
         mTitle = getString(R.string.main_title);
         mDrawerTitle = R.string.main_menu_title;
 
@@ -112,11 +124,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
                 @Override
                 public void onClick(View view) {
 
-                    if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
-                        mDrawerLayout.closeDrawer(Gravity.START);
+                    if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                        mDrawerLayout.closeDrawer(Gravity.LEFT);
 
                     } else {
-                        mDrawerLayout.openDrawer(Gravity.START);
+                        mDrawerLayout.openDrawer(Gravity.LEFT);
                     }
                 }
             });
@@ -239,6 +251,8 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         mLastPublicOnly = publicOnly;
         mMainFragment.setCallback(this);
         mMainFragment.setOnItemSelectedListener(this);
+        //Domain domain = DomainUtil.getDomain(K5Api.getDomain(this));
+        //changeFragment(mMainFragment, FRAGMENT_HOME, domain.getTitle());
         changeFragment(mMainFragment, FRAGMENT_HOME, R.string.main_title);
     }
 
@@ -247,6 +261,19 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         super.onResume();
         if (mSelectedFragment == FRAGMENT_HOME && PrefUtils.isPublicOnly(this) != mLastPublicOnly) {
             onHome();
+        }
+        if(mNotifySelectedLibrary && !(isTablet() && isLandscape())) {
+            Domain domain = DomainUtil.getDomain(K5Api.getDomain(this));
+
+            SpannableStringBuilder snackbarText = new SpannableStringBuilder();
+            snackbarText.append("Vybraná knihovna: ");
+            int accentStart = snackbarText.length();
+            snackbarText.append(domain.getTitle());
+            snackbarText.setSpan(new ForegroundColorSpan(0xFF0073B2), accentStart, snackbarText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            snackbarText.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), accentStart, snackbarText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Snackbar.make(mContainer, snackbarText, Snackbar.LENGTH_LONG).show();
+            //Snackbar.make(mContainer, domain.getTitle(), Snackbar.LENGTH_LONG).show();
+            mNotifySelectedLibrary = false;
         }
     }
 
