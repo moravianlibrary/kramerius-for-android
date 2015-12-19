@@ -49,22 +49,7 @@ public class PeriodicalCard extends Card {
         MainCardHeader header = new MainCardHeader(getContext(), 1);
         header.setButtonOverflowVisible(true);
 
-        if (ModelUtil.PERIODICAL_VOLUME.equals(mItem.getModel())) {
-            String volumeNumber = mItem.getVolumeNumber();
-            if (volumeNumber == null || volumeNumber.isEmpty()) {
-                volumeNumber = mContext.getString(R.string.metadata_periodical_volume_unknown);
-            }
-            header.setTitle(mContext.getString(R.string.metadata_periodical_volume) + " " + volumeNumber);
-        } else if (ModelUtil.PERIODICAL_ITEM.equals(mItem.getModel())) {
-            String number = mItem.getIssueNumber();
-            if (number == null || number.isEmpty()) {
-                number = mItem.getPartNumber();
-            }
-            if (number == null || number.isEmpty()) {
-                number = mContext.getString(R.string.metadata_periodical_item_unknown);
-            }
-            header.setTitle(mContext.getString(R.string.metadata_periodical_item) + " " + number);
-        }
+        header.setTitle(getPrimaryTitle());
 
         header.setPopupMenu(R.menu.card_popup, new CardHeader.OnClickCardHeaderPopupMenuListener() {
             @Override
@@ -92,12 +77,12 @@ public class PeriodicalCard extends Card {
         TextView mainView = (TextView) view.findViewById(R.id.grid_item_author);
         TextView labelView = (TextView) view.findViewById(R.id.grid_item_type);
         ImageView iconView = (ImageView) view.findViewById(R.id.grid_item_modeIcon);
+        mainView.setText(getSecondaryTitle());
         if (ModelUtil.PERIODICAL_VOLUME.equals(mItem.getModel())) {
             String year = mItem.getYear();
             if (year == null || year.isEmpty()) {
                 year = mContext.getString(R.string.metadata_periodical_volume_date_unknown);
             }
-            mainView.setText(mContext.getString(R.string.metadata_periodical_volume_date).toUpperCase() + ": " + year);
             labelView.setText(mContext.getString(R.string.metadata_periodical_volume_open));
             iconView.setImageResource(R.drawable.ic_attach_green);
         } else if (ModelUtil.PERIODICAL_ITEM.equals(mItem.getModel())) {
@@ -105,7 +90,6 @@ public class PeriodicalCard extends Card {
             if (date == null || date.isEmpty()) {
                 date = mContext.getString(R.string.metadata_periodical_item_date_unknown);
             }
-            mainView.setText(mContext.getString(R.string.metadata_periodical_item_date).toUpperCase() + ": " + date);
             labelView.setText(mContext.getString(R.string.metadata_periodical_item_open));
             iconView.setImageResource(R.drawable.ic_book_green);
         }
@@ -117,5 +101,48 @@ public class PeriodicalCard extends Card {
             lock.setVisibility(View.GONE);
         }
     }
+
+
+
+    private String getPrimaryTitle() {
+        if (ModelUtil.PERIODICAL_VOLUME.equals(mItem.getModel())) {
+            String year = mItem.getYear();
+            if (year == null || year.isEmpty()) {
+                year = mContext.getString(R.string.metadata_periodical_volume_date_unknown);
+            }
+            //return mContext.getString(R.string.metadata_periodical_volume_date).toUpperCase() + ": " + year;
+            return year;
+        } else if (ModelUtil.PERIODICAL_ITEM.equals(mItem.getModel())) {
+            String date = mItem.getPeriodicalItemDate();
+            if (date == null || date.isEmpty()) {
+                date = mContext.getString(R.string.metadata_periodical_item_date_unknown);
+            }
+            //return mContext.getString(R.string.metadata_periodical_item_date).toUpperCase() + ": " + date;
+            return date;
+        }
+        return "";
+    }
+
+
+    private String getSecondaryTitle() {
+        if (ModelUtil.PERIODICAL_VOLUME.equals(mItem.getModel())) {
+            String volumeNumber = mItem.getVolumeNumber();
+            if (volumeNumber == null || volumeNumber.isEmpty()) {
+                volumeNumber = mContext.getString(R.string.metadata_periodical_volume_unknown);
+            }
+            return mContext.getString(R.string.metadata_periodical_volume) + " " + volumeNumber;
+        } else if (ModelUtil.PERIODICAL_ITEM.equals(mItem.getModel())) {
+            String number = mItem.getIssueNumber();
+            if (number == null || number.isEmpty()) {
+                number = mItem.getPartNumber();
+            }
+            if (number == null || number.isEmpty()) {
+                number = mContext.getString(R.string.metadata_periodical_item_unknown);
+            }
+            return mContext.getString(R.string.metadata_periodical_item) + " " + number;
+        }
+        return "";
+    }
+
 
 }
