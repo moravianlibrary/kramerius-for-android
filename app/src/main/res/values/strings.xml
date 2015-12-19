@@ -61,6 +61,7 @@
     <string name="main_menu_settings">Settings</string>
     <string name="main_menu_recent">Recent</string>
 
+    <string name="main_snackbar_message">Selected Library</string>
 
     <string name="featured_custom">Recommended for You</string>
     <string name="featured_newest">Newest</string>

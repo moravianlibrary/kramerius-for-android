@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -266,10 +265,11 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
             Domain domain = DomainUtil.getDomain(K5Api.getDomain(this));
 
             SpannableStringBuilder snackbarText = new SpannableStringBuilder();
-            snackbarText.append("Vybraná knihovna: ");
+            snackbarText.append(getString(R.string.main_snackbar_message));
+            snackbarText.append(": ");
             int accentStart = snackbarText.length();
             snackbarText.append(domain.getTitle());
-            snackbarText.setSpan(new ForegroundColorSpan(0xFF0073B2), accentStart, snackbarText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            snackbarText.setSpan(new ForegroundColorSpan(0xFF0083C2), accentStart, snackbarText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             snackbarText.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), accentStart, snackbarText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             Snackbar.make(mContainer, snackbarText, Snackbar.LENGTH_LONG).show();
             //Snackbar.make(mContainer, domain.getTitle(), Snackbar.LENGTH_LONG).show();
