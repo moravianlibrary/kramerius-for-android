@@ -267,14 +267,8 @@
     <string name="pref_viewer_bg_color_title">Barva pozadí</string>
     <string name="pref_viewer_bg_color_summary">Barva pozadí prohlížečky</string>
 
-    <string name="viewer_no_access_rights">Dokument není veřejně přístupný.</string>
-    <string name="viewer_network_error">Chyba v přenosu dat.</string>
-    <string name="viewer_invalid_data_error">Chyba v datech.</string>
-
     <string name="pref_public_only_title">Pouze veřejné dokumenty</string>
     <string name="pref_public_only_summary">Zobrazovat pouze veřejně přístupné dokumenty</string>
-
-    <string name="pref_advanced_button_title">Pokročilé volby</string>
 
     <string name="pref_card_animation_title">Animované karty</string>
     <string name="pref_card_animation_summary">Animovat zobrazní karet v seznamech</string>
