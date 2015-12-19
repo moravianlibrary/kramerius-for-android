@@ -271,8 +271,6 @@
     <string name="pref_public_only_title">Public documents only</string>
     <string name="pref_public_only_summary">Show only the publicly available documents</string>
 
-    <string name="pref_advanced_button_title">Advanced Settings</string>
-
     <string name="pref_card_animation_title">Card animations</string>
     <string name="pref_card_animation_summary">Use animation in card lists</string>
 
@@ -294,8 +292,7 @@
     <string name="pref_public_only_default" translatable="false">true</string>
     <string name="pref_public_only_key" translatable="false">p_public_only</string>
     <string name="pref_all_sources" translatable="false">p_all_sources</string>
-    <string name="pref_advanced_button_key" translatable="false">p_advanced_button</string>
-    <string name="pref_card_animation_default" translatable="false">true</string>
+    <string name="pref_card_animation_default" translatable="false">false</string>
     <string name="pref_card_animation_key" translatable="false">p_card_animation</string>
 
     <string name="ga_appview_about" translatable="false">About</string>

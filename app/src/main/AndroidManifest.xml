@@ -101,9 +101,6 @@
             android:name="cz.mzk.kramerius.app.ui.SettingsActivity"
             android:label="@string/settings_title"></activity>
         <activity
-            android:name="cz.mzk.kramerius.app.ui.AdvancedSettingsActivity"
-            android:label="@string/advanced_settings_title"></activity>
-        <activity
             android:name="cz.mzk.kramerius.app.ui.HelpActivity"
             android:label="@string/help_title"></activity>
         <activity

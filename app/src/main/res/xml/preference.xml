@@ -41,9 +41,12 @@
 
 
     <PreferenceCategory android:title="@string/pref_category_advanced">
-        <Preference
-            android:key="@string/pref_advanced_button_key"
-            android:title="@string/pref_advanced_button_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_card_animation_default"
+            android:key="@string/pref_card_animation_key"
+            android:summary="@string/pref_card_animation_summary"
+            android:title="@string/pref_card_animation_title" />
 
     </PreferenceCategory>
 

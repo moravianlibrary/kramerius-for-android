@@ -1,6 +1,5 @@
 package cz.mzk.kramerius.app.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -29,21 +28,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         View view = super.onCreateView(inflater, container, savedInstanceState);
         //bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_view_mode_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_viewer_bg_color_key)));
-        findPreference(getString(R.string.pref_advanced_button_key)).setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        onAdvancedSettings();
-                        return false;
-                    }
-                });
+
         initHack();
         return view;
-    }
-
-    private void onAdvancedSettings() {
-        Intent intent = new Intent(getActivity(), AdvancedSettingsActivity.class);
-        startActivity(intent);
     }
 
     private void initHack() {
