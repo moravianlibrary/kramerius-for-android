@@ -14,3 +14,4 @@ INSERT INTO [library] ([name], [protocol], [domain], [code]) VALUES ("Univerzita
 INSERT INTO [library] ([name], [protocol], [domain], [code]) VALUES ("Knihovna Akademie věd ČR", "http", "kramerius.lib.cas.cz", "knav");
 INSERT INTO [library] ([name], [protocol], [domain], [code]) VALUES ("Krajská vědecká knihovna v Liberci", "http", "kramerius.kvkli.cz", "kvkli");
 INSERT INTO [library] ([name], [protocol], [domain], [code]) VALUES ("Knihovna Antonína Švehly", "http", "kramerius.uzei.cz", "uzei");
+INSERT INTO [library] ([name], [protocol], [domain], [code]) VALUES ("Městská knihovna v Praze", "http", "kramerius4.mlp.cz", "mlp");
