@@ -50,7 +50,7 @@
     	]]></string>
 
     <string name="metadata_title">Details</string>
-    <string name="domain_title">Data Source</string>
+    <string name="domain_title">Available Libraries</string>
 
     <string name="main_menu_home">Home</string>
     <string name="main_menu_virtual_colections">Collections</string>
