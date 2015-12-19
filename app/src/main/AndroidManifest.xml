@@ -62,6 +62,46 @@
                     android:host="dlib.kfbz.cz"
                     android:pathPrefix="/search"
                     android:scheme="http" />
+                <data
+                    android:host="kramerius.army.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.techlib.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="library.nfa.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="k4.kr-karlovarsky.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.fsv.cuni.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.lib.cas.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.kvkli.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius.uzei.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius4.mendelu.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
+                <data
+                    android:host="kramerius4.mlp.cz"
+                    android:pathPrefix="/search"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
