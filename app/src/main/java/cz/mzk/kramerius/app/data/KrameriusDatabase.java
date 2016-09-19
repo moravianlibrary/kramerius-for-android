@@ -30,10 +30,11 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION_LOCALE_LANGUAGES = 4;
     private static final int DATABASE_VERSION_LOCALE_RELATORS = 5;
     private static final int DATABASE_VERSION_HISTORY_MODEL = 6;
-    private static final int DATABASE_VERSION_CHACHE = 7;
+    private static final int DATABASE_VERSION_CACHE = 7;
     private static final int DATABASE_VERSION_LIBRARY = 8;
+    private static final int DATABASE_VERSION_NEW_LIBRARIES = 9;
 
-    private static final int DATABASE_VERSION = DATABASE_VERSION_LIBRARY;
+    private static final int DATABASE_VERSION = DATABASE_VERSION_NEW_LIBRARIES;
 
     private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
     private static final String DATABASE_NAME_EXTERNAL = Environment
@@ -249,7 +250,12 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
                 db.execSQL(buildStatementCreateTable(CacheEntry.TABLE_NAME, version + 1));
                 db.execSQL(buildStatementCreateIndex(INDEX_CACHE_URL, version + 1));
                 version++;
-            case DATABASE_VERSION_CHACHE:
+            case DATABASE_VERSION_CACHE:
+                db.execSQL("DROP TABLE IF EXISTS " + LibraryEntry.TABLE_NAME);
+                db.execSQL(buildStatementCreateTable(LibraryEntry.TABLE_NAME, version + 1));
+                populateFrom(db, R.raw.libraries);
+                version++;
+            case DATABASE_VERSION_LIBRARY:
                 db.execSQL("DROP TABLE IF EXISTS " + LibraryEntry.TABLE_NAME);
                 db.execSQL(buildStatementCreateTable(LibraryEntry.TABLE_NAME, version + 1));
                 populateFrom(db, R.raw.libraries);
