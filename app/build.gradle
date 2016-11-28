@@ -68,8 +68,9 @@ dependencies {
     //Dom4j
     //artefakt z mavenu nefunguje, dostupna verze dom4j-1.6.1.jar pribaluje konfliktni tridy
     //compile 'dom4j:dom4j:1.6.1'
-    compile files('libs/dom4j-1.6.1.jar')
-    compile 'jaxen:jaxen:1.1.4'
+    //compile files('libs/dom4j-1.6.1.jar')
+    compile files('libs/dom4j-2.0.0.jar')
+    //compile 'jaxen:jaxen:1.1.4'
 
     //SystemBarTint
     //v eclipse projektu byla knihovna systembartitnt-1.0.4.jar Jenze k dnesnimu dni (26.10.2015) je na Githubu posledni verze 1.0.3

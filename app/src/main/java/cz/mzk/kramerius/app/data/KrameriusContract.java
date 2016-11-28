@@ -4,9 +4,11 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import cz.mzk.kramerius.app.BuildConfig;
+
 public class KrameriusContract {
 
-    public static final String AUTHORITY_URI = "cz.mzk.kramerius.app.kramerius";
+    public static final String AUTHORITY_URI = BuildConfig.APPLICATION_ID + ".kramerius";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY_URI);
 
