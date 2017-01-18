@@ -16,6 +16,7 @@ public class KrameriusContract {
     public static final String PATH_LANGUAGE = "language";
     public static final String PATH_RELATOR = "relator";
     public static final String PATH_HISTORY = "history";
+    public static final String PATH_SEARCH = "search";
     public static final String PATH_CACHE= "cache";
     public static final String PATH_LIBRARY = "library";
 
@@ -143,7 +144,30 @@ public class KrameriusContract {
         public static Uri buildLibraryUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+    }
 
+
+    public static final class SearchEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_SEARCH).build();
+
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/" + AUTHORITY_URI + "/" + PATH_SEARCH;
+
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/" + AUTHORITY_URI + "/" + PATH_SEARCH;
+
+        public static final String TABLE_NAME = "search";
+
+        public static final String COLUMN_QUERY = "query";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+
+
+        public static Uri buildSearchUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static final String[] PROJECTION = {
+                COLUMN_QUERY, COLUMN_TIMESTAMP
+        };
     }
 
 }

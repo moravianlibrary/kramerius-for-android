@@ -20,6 +20,7 @@ import cz.mzk.kramerius.app.data.KrameriusContract.InstitutionEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LanguageEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.RelatorEntry;
 import cz.mzk.kramerius.app.data.KrameriusContract.LibraryEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.SearchEntry;
 import cz.mzk.kramerius.app.util.ModelUtil;
 
 public class KrameriusDatabase extends SQLiteOpenHelper {
@@ -33,8 +34,10 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION_CACHE = 7;
     private static final int DATABASE_VERSION_LIBRARY = 8;
     private static final int DATABASE_VERSION_NEW_LIBRARIES = 9;
+    private static final int DATABASE_VERSION_SEARCH_SUGGESTIONS = 10;
 
-    private static final int DATABASE_VERSION = DATABASE_VERSION_NEW_LIBRARIES;
+
+    private static final int DATABASE_VERSION = DATABASE_VERSION_SEARCH_SUGGESTIONS;
 
     private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
     private static final String DATABASE_NAME_EXTERNAL = Environment
@@ -76,6 +79,8 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
         // library
         db.execSQL(buildStatementCreateTable(LibraryEntry.TABLE_NAME, DATABASE_VERSION));
         populateFrom(db, R.raw.libraries);
+        // search
+        db.execSQL(buildStatementCreateTable(SearchEntry.TABLE_NAME, DATABASE_VERSION));
     }
 
     private String buildStatementCreateIndex(String indexName, int dbVersion) {
@@ -162,6 +167,12 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
                     + LibraryEntry.COLUMN_DOMAIN + " TEXT NOT NULL, "
                     + LibraryEntry.COLUMN_CODE + " TEXT NOT NULL, "
                     + LibraryEntry.COLUMN_LOCKED + " INTEGER DEFAULT 0"
+                    + ");";
+        } else if (tableName.equals(SearchEntry.TABLE_NAME)) {
+            return "CREATE TABLE " + SearchEntry.TABLE_NAME + " ("
+                    + SearchEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + SearchEntry.COLUMN_QUERY + " TEXT NOT NULL, "
+                    + SearchEntry.COLUMN_TIMESTAMP + " INTEGER NOT NULL"//
                     + ");";
         }
         throw new IllegalArgumentException("unknown table " + tableName);
@@ -259,6 +270,9 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE IF EXISTS " + LibraryEntry.TABLE_NAME);
                 db.execSQL(buildStatementCreateTable(LibraryEntry.TABLE_NAME, version + 1));
                 populateFrom(db, R.raw.libraries);
+                version++;
+            case DATABASE_VERSION_NEW_LIBRARIES:
+                db.execSQL(buildStatementCreateTable(SearchEntry.TABLE_NAME, version + 1));
                 version++;
         }
     }

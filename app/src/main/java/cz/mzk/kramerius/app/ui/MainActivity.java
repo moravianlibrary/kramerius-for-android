@@ -3,9 +3,11 @@ package cz.mzk.kramerius.app.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -36,6 +38,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.adapter.SearchSuggestionAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
+import cz.mzk.kramerius.app.data.KrameriusContract.SearchEntry;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
@@ -51,7 +54,6 @@ import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.PrefUtils;
 import cz.mzk.kramerius.app.view.MaterialSearchView;
 
-//import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
         OnFeaturedListener, OnItemSelectedListener, OnSearchListener, OnVirtualCollectionListener {
@@ -477,6 +479,14 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
     @Override
     public void onSearchQuery(String query) {
+        if (query == null || query.length() == 0) {
+            return;
+        }
+        ContentValues cv = new ContentValues();
+        cv.put(SearchEntry.COLUMN_QUERY, query);
+        cv.put(SearchEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+        getContentResolver().insert(SearchEntry.CONTENT_URI, cv);
+
         Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
         intent.putExtra(SearchResultActivity.EXTRA_QUERY, query);
         startActivity(intent);
@@ -546,8 +556,15 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
             }
             Logger.debug(LOG_TAG, "setting suggestions: " + suggestions);
             List<String> s = new ArrayList<>();
-            s.add("Hello");
-            s.add("World");
+            Cursor c = getContentResolver().query(SearchEntry.CONTENT_URI,
+                    new String[]{ SearchEntry.COLUMN_QUERY },
+                    SearchEntry.COLUMN_QUERY + " LIKE ? ",
+                    new String[]{ tQuery + "%" },
+                    SearchEntry.COLUMN_TIMESTAMP + " DESC");
+            while(c.moveToNext()) {
+                s.add(c.getString(0));
+            }
+            c.close();
             mSearchAdapter.refresh(tQuery, s, suggestions);
             if (mSearchAdapter.getCount() > 0) {
                 mSearchView.showSuggestions();

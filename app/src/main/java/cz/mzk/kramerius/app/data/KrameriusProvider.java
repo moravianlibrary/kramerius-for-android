@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import cz.mzk.kramerius.app.data.KrameriusContract.HistoryEntry;
+import cz.mzk.kramerius.app.data.KrameriusContract.SearchEntry;
 
 public class KrameriusProvider extends ContentProvider {
 
@@ -17,6 +18,7 @@ public class KrameriusProvider extends ContentProvider {
     private static final int HISTORY = 130;
     private static final int CACHE = 140;
     private static final int LIBRARY = 150;
+    private static final int SEARCH = 160;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -31,6 +33,7 @@ public class KrameriusProvider extends ContentProvider {
         matcher.addURI(authority, KrameriusContract.PATH_HISTORY, HISTORY);
         matcher.addURI(authority, KrameriusContract.PATH_CACHE, CACHE);
         matcher.addURI(authority, KrameriusContract.PATH_LIBRARY, LIBRARY);
+        matcher.addURI(authority, KrameriusContract.PATH_SEARCH, SEARCH);
         return matcher;
     }
 
@@ -74,6 +77,8 @@ public class KrameriusProvider extends ContentProvider {
                 return KrameriusContract.CacheEntry.CONTENT_TYPE;
             case LIBRARY:
                 return KrameriusContract.LibraryEntry.CONTENT_TYPE;
+            case SEARCH:
+                return KrameriusContract.SearchEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri:" + uri);
         }
@@ -89,6 +94,15 @@ public class KrameriusProvider extends ContentProvider {
                 long id = db.insert(HistoryEntry.TABLE_NAME, null, values);
                 if (id > 0) {
                     returnUri = HistoryEntry.buildHistoryUri(id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            }
+            case SEARCH: {
+                long id = db.insert(SearchEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = SearchEntry.buildSearchUri(id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -151,6 +165,10 @@ public class KrameriusProvider extends ContentProvider {
             case LIBRARY:
                 cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.LibraryEntry.TABLE_NAME, projection,
                         selection, selectionArgs, null, null, sortOrder);
+                break;
+            case SEARCH:
+                cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.SearchEntry.TABLE_NAME, projection,
+                        selection, selectionArgs, null, null, sortOrder, "5");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
