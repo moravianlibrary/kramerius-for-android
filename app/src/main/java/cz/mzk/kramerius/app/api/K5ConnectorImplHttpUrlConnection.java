@@ -25,10 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import cz.mzk.kramerius.app.KrameriusApplication;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.metadata.Metadata;
-import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.SearchQuery;
@@ -39,7 +37,7 @@ import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.xml.AltoParser;
 import cz.mzk.kramerius.app.xml.ModsParser;
 
-public class K5ConnectorImplHttpUrlConnection implements K5Connector {
+public class K5ConnectorImplHttpUrlConnection {
 
     private static final String LOG_TAG = K5ConnectorImplHttpUrlConnection.class.getName();
 
@@ -47,23 +45,11 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
     public static final int DATA_READ_TIMEOUT = 10000;
     public static final int MAX_REDIRECTIONS = 5;
 
-    // private K5Connector legacyConnector = new K5ConnectorImplDefaultHttpClient();
 
-    @Override
     public void restart() {
         // nothing here
     }
 
-    private Item addItemToList(List<Item> list, String pid, String model, String title) {
-        Item item = new Item();
-        item.setModel(model);
-        item.setPid(pid);
-        item.setRootPid(pid);
-        item.setTitle(title);
-        item.setRootTitle(title);
-        list.add(item);
-        return item;
-    }
 
     private String downloadText(String requestUrl, Map<String, String> headers) {
         return downloadText(requestUrl, headers, MAX_REDIRECTIONS);
@@ -147,7 +133,58 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         }
     }
 
-    @Override
+
+    private String getResponse(Context context, String url) {
+        return getResponse(context, url, false);
+    }
+
+    private String getResponse(Context context, String url, boolean tryCache) {
+        Logger.debug(LOG_TAG, "REQUEST: " + url);
+        if(!tryCache) {
+            return downloadText(url);
+        }
+        String response = cacheLookup(context, url);
+        if(response == null) {
+            response = downloadText(url);
+            addToCache(context, url, response);
+        }
+        return response;
+    }
+
+
+    private String cacheLookup(Context context, String url) {
+        Logger.debug(LOG_TAG, "Cache lookup: " + url);
+        String response = null;
+        Cursor c = context.getContentResolver().query(KrameriusContract.CacheEntry.CONTENT_URI,
+                new String[]{KrameriusContract.CacheEntry.COLUMN_RESPONSE},
+                KrameriusContract.CacheEntry.COLUMN_URL + "=?",
+                new String[]{url}, null);
+        if(c.moveToFirst()) {
+            response = c.getString(0);
+        }
+        c.close();
+        return response;
+    }
+
+    private void addToCache(Context context, String url, String response) {
+        Logger.debug(LOG_TAG, "Adding to cache: " + url + "\n" + response);
+        if(url == null || response == null) {
+            return;
+        }
+        ContentValues cv = new ContentValues();
+        cv.put(KrameriusContract.CacheEntry.COLUMN_URL, url);
+        cv.put(KrameriusContract.CacheEntry.COLUMN_RESPONSE, response);
+        context.getContentResolver().insert(KrameriusContract.CacheEntry.CONTENT_URI, cv);
+    }
+
+
+
+
+
+
+
+
+    // PUBLIC API
     public List<Item> getFeatured(Context context, int feed, int limit, String policy, String model) {
         // return legacyConnector.getFeatured(context, feed, limit, policy, model);
         try {
@@ -204,7 +241,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public List<Pair<String, String>> getHierarychy(Context context, String pid) {
         try {
             String url = K5Api.getItemPath(context, pid);
@@ -238,7 +274,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public Item getItem(Context context, String pid, String domain) {
         // return legacyConnector.getItem(context, pid, domain);
         try {
@@ -285,12 +320,10 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public Item getItem(Context context, String pid) {
         return getItem(context, pid, K5Api.getDomain(context));
     }
 
-    @Override
     public List<Item> getChildren(Context context, String pid, String modelFilter) {
         // return legacyConnector.getChildren(context, pid, modelFilter);
         try {
@@ -334,12 +367,10 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public List<Item> getChildren(Context context, String pid) {
         return getChildren(context, pid, null);
     }
 
-    @Override
     public List<Item> getVirtualCollections(Context context) {
         try {
             String url = K5Api.getVirtualCollectionsPath(context);
@@ -364,14 +395,12 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public User getUserInfo(Context context) {
         String userName = K5Api.getUser(context);
         String password = K5Api.getPassword(context);
         return getUserInfo(context, userName, password);
     }
 
-    @Override
     public User getUserInfo(Context context, String name, String password) {
         // return legacyConnector.getUserInfo(context, name, password);
         try {
@@ -410,7 +439,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public Pair<List<Item>, Integer> getSearchResult(Context context, String query, int start, int rows) {
         // return legacyConnector.getSearchResult(context, query, start, rows);
         try {
@@ -474,7 +502,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return null;
     }
 
-    @Override
     public int getDoctypeCount(Context context, String type) {
         // return legacyConnector.getDoctypeCount(context, type);
         try {
@@ -503,14 +530,12 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return -1;
     }
 
-    @Override
     public Map<String, Boolean> getUserRights(Context context) {
         String userName = K5Api.getUser(context);
         String password = K5Api.getPassword(context);
         return getUserRights(context, userName, password);
     }
 
-    @Override
     public Map<String, Boolean> getUserRights(Context context, String name, String password) {
         // return legacyConnector.getUserRights(context, name, password);
         Map<String, Boolean> rights = new HashMap<String, Boolean>();
@@ -545,41 +570,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
         return rights;
     }
 
-    // public Bitmap getFullImage(Context context, String pid) {
-    // String userName = K5Api.getUser(context);
-    // String password = K5Api.getPassword(context);
-    // final String basicAuth = "Basic "
-    // + Base64.encodeToString((userName + ":" + password).getBytes(),
-    // Base64.NO_WRAP);
-    // try {
-    // String requst = K5Api.getPreviewPath(context, pid);
-    // HttpGet request = new HttpGet(requst);
-    // HttpParams params = new BasicHttpParams();
-    // HttpConnectionParams.setConnectionTimeout(params, 60000);
-    // request.setParams(params);
-    // request.setHeader("Authorization", basicAuth);
-    // HttpResponse response = getClient().execute(request);
-    //
-    // Header[] h = response.getAllHeaders();
-    // for (int i = 0; i < h.length; i++) {
-    // Log.d(TAG, "header:" + h[i].getName() + ", " + h[i].getValue());
-    // }
-    //
-    // byte[] image = EntityUtils.toByteArray(response.getEntity());
-    //
-    // return BitmapFactory.decodeByteArray(image, 0, image.length);
-    //
-    // } catch (IllegalStateException e) {
-    // e.printStackTrace();
-    // } catch (ClientProtocolException e) {
-    // e.printStackTrace();
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // return null;
-    // }
-
-    @Override
     public Metadata getModsMetadata(Context context, String pid) {
         String url = K5Api.getModsStreamPath(context, pid);
         Metadata metadata = ModsParser.getMetadata(url);
@@ -590,7 +580,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
     }
 
 
-    @Override
     public Set<TextBox> getTextBoxes(Context context, String pagePid, String searchQuery) {
         String url = K5Api.getAltoStreamPath(context, pagePid);
         String[] searchTokens = searchQuery.split(" ");
@@ -598,8 +587,6 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
     }
 
 
-
-    @Override
     public boolean reloadTestLibraries(Context context) {
         context.getContentResolver().delete(KrameriusContract.LibraryEntry.CONTENT_URI, KrameriusContract.LibraryEntry.COLUMN_LOCKED + "=?", new String[]{String.valueOf(1)});
         try {
@@ -640,47 +627,60 @@ public class K5ConnectorImplHttpUrlConnection implements K5Connector {
 
 
 
-    private String getResponse(Context context, String url) {
-        return getResponse(context, url, false);
-    }
-
-    private String getResponse(Context context, String url, boolean tryCache) {
-        Logger.debug(LOG_TAG, "REQUEST: " + url);
-        if(!tryCache) {
-            return downloadText(url);
-        }
-        String response = cacheLookup(context, url);
-        if(response == null) {
-            response = downloadText(url);
-            addToCache(context, url, response);
-        }
-        return response;
-    }
 
 
-    private String cacheLookup(Context context, String url) {
-        Logger.debug(LOG_TAG, "Cache lookup: " + url);
-        String response = null;
-        Cursor c = context.getContentResolver().query(KrameriusContract.CacheEntry.CONTENT_URI,
-                new String[]{KrameriusContract.CacheEntry.COLUMN_RESPONSE},
-                KrameriusContract.CacheEntry.COLUMN_URL + "=?",
-                new String[]{url}, null);
-        if(c.moveToFirst()) {
-            response = c.getString(0);
+
+
+
+
+
+
+
+
+
+
+    public List<String> getSuggestions(Context context, String query, int limit) {
+        try {
+            String url = K5Api.getSuggestionsPath(context, query, limit);
+            Logger.debug(LOG_TAG, "query - suggestions: " + url);
+            Map<String, String> headers = new HashMap<String, String>() {
+                {
+                    put("accept", "application/json");
+                }
+            };
+            String jsonString = downloadText(url, headers);
+            Logger.debug(LOG_TAG, "suggestions result:" + jsonString);
+            JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
+            JSONObject responseJson = json.optJSONObject("response");
+            if (responseJson == null) {
+                return null;
+            }
+            JSONArray itemArray = responseJson.optJSONArray("docs");
+            if (itemArray == null) {
+                return null;
+            }
+            List<String> suggestions = new ArrayList<>();
+            for (int i = 0; i < itemArray.length(); i++) {
+                JSONObject itemJson = itemArray.getJSONObject(i);
+                String title = itemJson.optString("dc.title");
+                if (title != null && title.length() > 0) {
+                    Logger.debug(LOG_TAG, "adding suggestion: " + title);
+                    suggestions.add(title);
+                }
+            }
+            return suggestions;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        c.close();
-        return response;
+        return null;
     }
 
-    private void addToCache(Context context, String url, String response) {
-        Logger.debug(LOG_TAG, "Adding to cache: " + url + "\n" + response);
-        if(url == null || response == null) {
-            return;
-        }
-        ContentValues cv = new ContentValues();
-        cv.put(KrameriusContract.CacheEntry.COLUMN_URL, url);
-        cv.put(KrameriusContract.CacheEntry.COLUMN_RESPONSE, response);
-        context.getContentResolver().insert(KrameriusContract.CacheEntry.CONTENT_URI, cv);
-    }
+
+
+
 
 }

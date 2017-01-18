@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_container"
-    android:orientation="vertical">
+    android:id="@+id/main_container">
 
-    <include
-        layout="@layout/view_toolbar_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/main_drawer_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg">
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/main_content"
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="@dimen/toolbar_height"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:titleTextAppearance="@style/ActionBar.TitleText" />
 
-        <FrameLayout
-            android:id="@+id/main_menu"
-            android:layout_width="300dp"
+
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/main_drawer_layout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start" />
-    </android.support.v4.widget.DrawerLayout>
+            android:background="@color/bg">
 
-</LinearLayout>
+            <FrameLayout
+                android:id="@+id/main_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/main_menu"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start" />
+        </android.support.v4.widget.DrawerLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+    <FrameLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cz.mzk.kramerius.app.view.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+</FrameLayout>

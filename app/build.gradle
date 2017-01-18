@@ -76,6 +76,8 @@ dependencies {
     //GestureImageView
     compile files('libs/gesture-imageview.jar')
 
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+
     compile('com.github.afollestad.material-dialogs:core:0.8.5.1@aar') {
         transitive = true
     }

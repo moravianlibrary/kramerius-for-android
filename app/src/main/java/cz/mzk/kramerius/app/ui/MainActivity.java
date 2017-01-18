@@ -3,15 +3,19 @@ package cz.mzk.kramerius.app.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
@@ -19,16 +23,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 
 import com.google.analytics.tracking.android.EasyTracker;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.OnItemSelectedListener;
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.adapter.SearchSuggestionAdapter;
 import cz.mzk.kramerius.app.api.K5Api;
+import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.ui.LoginFragment.LoginListener;
@@ -39,14 +46,18 @@ import cz.mzk.kramerius.app.ui.UserInfoFragment.UserInfoListener;
 import cz.mzk.kramerius.app.ui.VirtualCollectionsFragment.OnVirtualCollectionListener;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.DomainUtil;
+import cz.mzk.kramerius.app.util.Logger;
 import cz.mzk.kramerius.app.util.ModelUtil;
 import cz.mzk.kramerius.app.util.PrefUtils;
+import cz.mzk.kramerius.app.view.MaterialSearchView;
+
+//import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 public class MainActivity extends BaseActivity implements MainMenuListener, LoginListener, UserInfoListener,
         OnFeaturedListener, OnItemSelectedListener, OnSearchListener, OnVirtualCollectionListener {
 
 
-    public static final String TAG = MainActivity.class.getName();
+    public static final String LOG_TAG = MainActivity.class.getName();
     public static final String CURRENT_FRAGMENT_KEY = "key_current_fragment";
 
 
@@ -69,10 +80,15 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
     private Toolbar mToolbar;
     private boolean mLastPublicOnly;
-    private Spinner mSearchSpinner;
 
     private View mContainer;
     private boolean mNotifySelectedLibrary = true;
+
+
+    private MaterialSearchView mSearchView;
+    private int mSuggestionsIndex = 0;
+    private SearchSuggestionAdapter mSearchAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,25 +104,12 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         FragmentTransaction transaction = fm.beginTransaction();
         if (fm.findFragmentByTag("menu_fragment") == null) {
             mMenuFragment = new MainMenuFragment();
-            //mMenuFragment.setCallback(this);
-            //transaction.replace(R.id.main_menu, mMenuFragment, "menu_fragment").commit();
         } else {
             mMenuFragment = (MainMenuFragment) fm.findFragmentByTag("menu_fragment");
-            //transaction.detach(mMenuFragment);
-            //transaction.replace(R.id.main_menu, mMenuFragment, "menu_fragment").commit();
-            //transaction.attach(mFragment);
         }
         mMenuFragment.setCallback(this);
         transaction.replace(R.id.main_menu, mMenuFragment, "menu_fragment");
         transaction.commit();
-
-		
-		
-		/*
-		mMenuFragment = new MainMenuFragment();
-		mMenuFragment.setCallback(this);
-		getFragmentManager().beginTransaction().replace(R.id.main_menu, mMenuFragment, "menu_fragment").commit();
-		*/
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -136,17 +139,17 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
                 public void onDrawerClosed(View view) {
                     getSupportActionBar().setTitle(mTitle);
-                    if (mSelectedFragment == FRAGMENT_SEARCH) {
-                        mSearchSpinner.setVisibility(View.VISIBLE);
-                    }
+//                    if (mSelectedFragment == FRAGMENT_SEARCH) {
+//                        mSearchSpinner.setVisibility(View.VISIBLE);
+//                    }
                     supportInvalidateOptionsMenu();
                 }
 
                 public void onDrawerOpened(View drawerView) {
                     getSupportActionBar().setTitle(mDrawerTitle);
-                    if (mSelectedFragment == FRAGMENT_SEARCH) {
-                        mSearchSpinner.setVisibility(View.GONE);
-                    }
+//                    if (mSelectedFragment == FRAGMENT_SEARCH) {
+//                        mSearchSpinner.setVisibility(View.GONE);
+//                    }
                     supportInvalidateOptionsMenu();
 
                 }
@@ -157,42 +160,57 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         }
         mLastPublicOnly = PrefUtils.isPublicOnly(this);
 
-        mSearchSpinner = (Spinner) findViewById(R.id.spinner);
-        //mSearchSpinner = new Spinner(this);
-        //mToolbar.addView(mSearchSpinner);
-
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mToolbar.getContext(),
-                R.array.search_type_entries, R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.item_spinner_toolbar);
-
-        mSearchSpinner.setAdapter(adapter);
-        mSearchSpinner.setVisibility(View.GONE);
-
-        mSearchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (mSelectedFragment == FRAGMENT_SEARCH) {
-                    int type = SearchFragment.TYPE_BASIC;
-                    if (position == 1) {
-                        type = SearchFragment.TYPE_FULLTEXT;
-                    }
-                    SearchFragment fragment = SearchFragment.getInstance(type);
-                    fragment.setOnSearchListener(MainActivity.this);
-                    changeFragment(fragment, FRAGMENT_SEARCH, R.string.search_title);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            }
-        });
-
         if (savedInstanceState != null) {
             resolveLastState(savedInstanceState.getInt(CURRENT_FRAGMENT_KEY, FRAGMENT_HOME));
         } else {
             onHome();
         }
+
+
+        mSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+        mSearchView.setVoiceSearch(true);
+        mSearchView.showVoice(true);
+        mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Logger.debug(LOG_TAG, "SEARCH: onQueryTextSubmit");
+                onSearchQuery(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Logger.debug(LOG_TAG, "SEARCH: onQueryTextChange");
+                mSuggestionsIndex++;
+                //new GetSuggestionsTask(MainActivity.this, newText, mSuggestionsIndex).execute();
+                new GetSuggestionsTask(MainActivity.this, newText, mSuggestionsIndex).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                return false;
+            }
+        });
+
+        mSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                Logger.debug(LOG_TAG, "SEARCH: onSearchViewShown");
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                Logger.debug(LOG_TAG, "SEARCH: onSearchViewClosed");
+            }
+        });
+        mSearchView.setSubmitOnClick(true);
+        mSearchAdapter = new SearchSuggestionAdapter(this);
+        mSearchView.setAdapter(mSearchAdapter);
+        mSearchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Logger.debug(LOG_TAG, "setOnItemClickListener");
+                mSearchView.setQuery((String) mSearchAdapter.getItem(position), true);
+            }
+        });
+
+
     }
 
 
@@ -261,7 +279,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         if (mSelectedFragment == FRAGMENT_HOME && PrefUtils.isPublicOnly(this) != mLastPublicOnly) {
             onHome();
         }
-        if(mNotifySelectedLibrary && !(isTablet() && isLandscape())) {
+        if (mNotifySelectedLibrary && !(isTablet() && isLandscape())) {
             Domain domain = DomainUtil.getDomain(K5Api.getDomain(this));
 
             SpannableStringBuilder snackbarText = new SpannableStringBuilder();
@@ -344,16 +362,16 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         }
         ft.replace(R.id.main_content, fragment).commit();
 
-        if (type == FRAGMENT_SEARCH) {
-            if (mSelectedFragment != type) {
-                mSearchSpinner.setSelection(0);
-            }
-            mSearchSpinner.setVisibility(View.VISIBLE);
-            refreshTitle("");
-        } else {
-            mSearchSpinner.setVisibility(View.GONE);
-            refreshTitle(title);
-        }
+//        if (type == FRAGMENT_SEARCH) {
+//            if (mSelectedFragment != type) {
+//                mSearchSpinner.setSelection(0);
+//            }
+//            mSearchSpinner.setVisibility(View.VISIBLE);
+//            refreshTitle("");
+//        } else {
+//            mSearchSpinner.setVisibility(View.GONE);
+//            refreshTitle(title);
+//        }
         mSelectedFragment = type;
         closeSlidingMenu();
     }
@@ -379,6 +397,10 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
     @Override
     public void onBackPressed() {
         if (closeSlidingMenu()) {
+            return;
+        }
+        if (mSearchView.isSearchOpen()) {
+            mSearchView.closeSearch();
             return;
         }
         if (mSelectedFragment != FRAGMENT_HOME) {
@@ -476,5 +498,81 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         fragment.setOnItemSelectedListener(this);
         changeFragment(fragment, FRAGMENT_RECENT, R.string.recent_title);
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        mSearchView.setMenuItem(item);
+
+        return true;
+    }
+
+
+    class GetSuggestionsTask extends AsyncTask<String, Void, List<String>> {
+
+        private Context tContext;
+        private String tQuery;
+        private int tIndex;
+
+        public GetSuggestionsTask(Context context, String query, int index) {
+            tContext = context;
+            tQuery = query;
+            if (tQuery != null) {
+                tQuery = tQuery.trim();
+            }
+            tIndex = index;
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected List<String> doInBackground(String... params) {
+            if (tQuery == null || tQuery.length() < 1) {
+                return new ArrayList<String>();
+            }
+            return K5ConnectorFactory.getConnector().getSuggestions(tContext, tQuery, 30);
+        }
+
+        @Override
+        protected void onPostExecute(List<String> suggestions) {
+            // mSuggestionsLoading = false;
+            if (tContext == null || mSearchView == null || suggestions == null || tIndex < mSuggestionsIndex) {
+                return;
+            }
+            Logger.debug(LOG_TAG, "setting suggestions: " + suggestions);
+            List<String> s = new ArrayList<>();
+            s.add("Hello");
+            s.add("World");
+            mSearchAdapter.refresh(tQuery, s, suggestions);
+            if (mSearchAdapter.getCount() > 0) {
+                mSearchView.showSuggestions();
+            } else {
+                mSearchView.dismissSuggestions();
+            }
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MaterialSearchView.REQUEST_VOICE && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (matches != null && matches.size() > 0) {
+                String searchWrd = matches.get(0);
+                if (!TextUtils.isEmpty(searchWrd)) {
+                    mSearchView.dismissSuggestions();
+                    mSearchView.setQuery(searchWrd, true);
+                }
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
 }
