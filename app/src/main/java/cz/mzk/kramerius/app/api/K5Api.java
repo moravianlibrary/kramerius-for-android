@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.model.Track.AudioFormat;
+import cz.mzk.kramerius.app.search.Query;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.service.MediaPlayerService;
 import cz.mzk.kramerius.app.util.DomainUtil;
@@ -248,6 +249,40 @@ public class K5Api {
                 .appendQueryParameter("start", String.valueOf(start))
                 .appendQueryParameter("rows", String.valueOf(rows)).build().toString();
     }
+
+
+    public static String getSearchResultsPath(Context context, Query query, int start, int rows) {
+        String fl = SearchQuery.PID + ","
+                    + SearchQuery.ROOT_PID + ","
+                    + SearchQuery.ROOT_TITLE + ","
+                    + SearchQuery.POLICY + ","
+                    + SearchQuery.AUTHOR + ","
+                    + SearchQuery.TITLE + ","
+                    + SearchQuery.MODEL + ","
+                    + SearchQuery.MIME_TYPE;
+        Uri.Builder builder =  getApiUri(context).buildUpon().appendPath(PATH_SEARCH)
+                .appendQueryParameter("fl", fl)
+                .appendQueryParameter("q", query.buildQuery());
+        if(query.hasQuery()) {
+            builder.appendQueryParameter("q1", query.getQuery());
+        }
+        return builder.appendQueryParameter("start", String.valueOf(start))
+                .appendQueryParameter("rows", String.valueOf(rows)).build().toString();
+    }
+
+    public static String getSearchFacetPath(Context context, Query query, String facet) {
+        String q = query.buildFacetQuery(facet);
+        return getApiUri(context).buildUpon().appendPath(PATH_SEARCH)
+                .appendQueryParameter("q", q)
+                .appendQueryParameter("facet", "true")
+                .appendQueryParameter("facet.field", facet)
+                .appendQueryParameter("facet.limit", "50")
+                .appendQueryParameter("rows", "0")
+                .appendQueryParameter("facet.mincount", "1")
+                .build().toString();
+    }
+
+
 
     public static String getSuggestionsPath(Context context, String query, int limit) {
         String fl = "dc.title";

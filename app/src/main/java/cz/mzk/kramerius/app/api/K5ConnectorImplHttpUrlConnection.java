@@ -29,6 +29,7 @@ import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.metadata.Metadata;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
+import cz.mzk.kramerius.app.search.Query;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.search.TextBox;
 import cz.mzk.kramerius.app.util.LangUtils;
@@ -501,6 +502,142 @@ public class K5ConnectorImplHttpUrlConnection {
         }
         return null;
     }
+
+
+
+
+
+    public Pair<List<Item>, Integer> getSearchResults(Context context, Query query, int start, int rows) {
+        try {
+            String url = K5Api.getSearchResultsPath(context, query, start, rows);
+            Logger.debug(LOG_TAG, "query - search: " + url);
+            Map<String, String> headers = new HashMap<String, String>() {
+                {
+                    put("accept", "application/json");
+                }
+            };
+            String jsonString = downloadText(url, headers);
+            Logger.debug(LOG_TAG, "search result:" + jsonString);
+            JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
+            JSONObject responseJson = json.optJSONObject("response");
+            if (responseJson == null) {
+                return null;
+            }
+            int numFound = responseJson.optInt("numFound");
+            JSONArray itemArray = responseJson.optJSONArray("docs");
+            if (itemArray == null) {
+                return null;
+            }
+            List<Item> items = new ArrayList<Item>();
+            for (int i = 0; i < itemArray.length(); i++) {
+                JSONObject itemJson = itemArray.getJSONObject(i);
+                Item item = new Item();
+                item.setPid(itemJson.optString(SearchQuery.PID));
+                item.setTitle(itemJson.optString(SearchQuery.TITLE));
+                item.setRootTitle(itemJson.optString(SearchQuery.ROOT_TITLE));
+                item.setRootPid(itemJson.optString(SearchQuery.ROOT_PID));
+                if ("application/pdf".equals(itemJson.optString(SearchQuery.MIME_TYPE))) {
+                    item.setPdf(K5Api.getPdfPath(context, item.getPid()));
+                }
+                JSONArray authors = itemJson.optJSONArray(SearchQuery.AUTHOR);
+                if (authors != null && authors.length() > 0) {
+                    item.setAuthor(authors.optString(0));
+                }
+                item.setPolicyPrivate("private".equals(itemJson.optString(SearchQuery.POLICY)));
+                item.setModel(itemJson.optString(SearchQuery.MODEL));
+                items.add(item);
+            }
+            return new Pair<List<Item>, Integer>(items, numFound);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
+
+    public Map<String, Integer> getSearchFacetResults(Context context, Query query, String facet) {
+        try {
+            String url = K5Api.getSearchFacetPath(context, query, facet);
+            Logger.debug(LOG_TAG, "query - facet-search: " + url);
+            Map<String, String> headers = new HashMap<String, String>() {
+                {
+                    put("accept", "application/json");
+                }
+            };
+            String jsonString = downloadText(url, headers);
+            Logger.debug(LOG_TAG, "search-facet result:" + jsonString);
+            JSONObject json = (JSONObject) new JSONTokener(jsonString).nextValue();
+            JSONObject o = json.optJSONObject("facet_counts").optJSONObject("facet_fields");
+            JSONArray a = o.optJSONArray(facet);
+            if (a == null) {
+                return null;
+            }
+            Map<String, Integer> map = new HashMap<>();
+            for (int i = 0; i < a.length(); i+=2) {
+                Logger.debug(LOG_TAG, a.getString(i));
+                map.put(a.getString(i), a.optInt(i+1));
+            }
+            return map;
+//
+//
+//                    facet_fields
+//
+//            {"response":{"docs":[],"numFound":255,"start":0},"responseHeader":{"QTime":42,"params":{"q":"dva AND level:0","facet.limit":"50","facet.field":"dostupnost","facet.mincount":"1","rows":"0","facet":"true","wt":"json"},"status":0},"facet_counts":
+//
+//
+// {"facet_queries":{},"facet_fields":{"dostupnost":["private",238,"public",17]},"facet_dates":{},"facet_ranges":{}}}
+//
+//            JSONObject responseJson = json.optJSONObject("response");
+//            if (responseJson == null) {
+//                return null;
+//            }
+//            int numFound = responseJson.optInt("numFound");
+//            JSONArray itemArray = responseJson.optJSONArray("docs");
+//            if (itemArray == null) {
+//                return null;
+//            }
+//            List<Item> items = new ArrayList<Item>();
+//            for (int i = 0; i < itemArray.length(); i++) {
+//                JSONObject itemJson = itemArray.getJSONObject(i);
+//                Item item = new Item();
+//                item.setPid(itemJson.optString(SearchQuery.PID));
+//                item.setTitle(itemJson.optString(SearchQuery.TITLE));
+//                item.setRootTitle(itemJson.optString(SearchQuery.ROOT_TITLE));
+//                item.setRootPid(itemJson.optString(SearchQuery.ROOT_PID));
+//                if ("application/pdf".equals(itemJson.optString(SearchQuery.MIME_TYPE))) {
+//                    item.setPdf(K5Api.getPdfPath(context, item.getPid()));
+//                }
+//                JSONArray authors = itemJson.optJSONArray(SearchQuery.AUTHOR);
+//                if (authors != null && authors.length() > 0) {
+//                    item.setAuthor(authors.optString(0));
+//                }
+//                item.setPolicyPrivate("private".equals(itemJson.optString(SearchQuery.POLICY)));
+//                item.setModel(itemJson.optString(SearchQuery.MODEL));
+//                items.add(item);
+//            }
+//            return new Pair<List<Item>, Integer>(items, numFound);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+
+
+
 
     public int getDoctypeCount(Context context, String type) {
         // return legacyConnector.getDoctypeCount(context, type);

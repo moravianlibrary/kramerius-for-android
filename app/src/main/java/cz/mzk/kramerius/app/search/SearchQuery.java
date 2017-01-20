@@ -11,6 +11,9 @@ public class SearchQuery {
         EXACT, SUBSTRING, STARTS, ENDS
     }
 
+    public static final String PID = "PID";
+    public static final String ROOT_PID = "root_pid";
+    public static final String ROOT_TITLE = "root_title";
     public static final String AUTHOR = "dc.creator";
     public static final String TITLE = "dc.title";
     public static final String LANGUAGE = "language";
@@ -18,6 +21,7 @@ public class SearchQuery {
     public static final String ISBN = "isbn";
     public static final String DDT = "ddt";
     public static final String MDT = "mdt";
+    public static final String MIME_TYPE = "img_full_mime";
     public static final String POLICY = "dostupnost";
     //public static final String MODEL = "document_type";
     public static final String MODEL = "fedora.model";

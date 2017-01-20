@@ -487,8 +487,8 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         cv.put(SearchEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
         getContentResolver().insert(SearchEntry.CONTENT_URI, cv);
 
-        Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
-        intent.putExtra(SearchResultActivity.EXTRA_QUERY, query);
+        Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+        intent.putExtra(SearchResultsActivity.EXTRA_QUERY, query);
         startActivity(intent);
     }
 

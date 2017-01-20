@@ -167,7 +167,7 @@ public class KrameriusProvider extends ContentProvider {
                         selection, selectionArgs, null, null, sortOrder);
                 break;
             case SEARCH:
-                cursor = mOpenHelper.getReadableDatabase().query(KrameriusContract.SearchEntry.TABLE_NAME, projection,
+                cursor = mOpenHelper.getReadableDatabase().query(true, KrameriusContract.SearchEntry.TABLE_NAME, projection,
                         selection, selectionArgs, null, null, sortOrder, "5");
                 break;
             default:
