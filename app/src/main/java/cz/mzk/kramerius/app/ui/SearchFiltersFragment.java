@@ -27,12 +27,12 @@ public class SearchFiltersFragment extends BaseFragment {
 
     private FilterListener mCallback;
 
-    private boolean mLoading;
-
     private LayoutInflater mInflater;
     private ViewGroup mAccessibilityWrapper;
     private ViewGroup mAuthorsWrapper;
     private ViewGroup mKeywordsWrapper;
+    private ViewGroup mDoctypesWrapper;
+
     private Query mQuery;
 
 
@@ -53,7 +53,6 @@ public class SearchFiltersFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mSearchQuery = getArguments().getString(EXTRA_QUERY, "*:*");
     }
 
     @Override
@@ -63,6 +62,8 @@ public class SearchFiltersFragment extends BaseFragment {
         mAccessibilityWrapper = (ViewGroup) view.findViewById(R.id.accessibility_wrapper);
         mAuthorsWrapper = (ViewGroup) view.findViewById(R.id.authors_wrapper);
         mKeywordsWrapper = (ViewGroup) view.findViewById(R.id.keywords_wrapper);
+        mDoctypesWrapper = (ViewGroup) view.findViewById(R.id.doctypes_wrapper);
+
         refresh();
 
         return view;
@@ -74,9 +75,12 @@ public class SearchFiltersFragment extends BaseFragment {
         mAccessibilityWrapper.removeAllViews();
         mAuthorsWrapper.removeAllViews();
         mKeywordsWrapper.removeAllViews();
+        mDoctypesWrapper.removeAllViews();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.POLICY).execute();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.AUTHOR_FACET).execute();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.KEYWORDS).execute();
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.MODEL).execute();
+
     }
 
 
@@ -92,7 +96,6 @@ public class SearchFiltersFragment extends BaseFragment {
 
         @Override
         protected void onPreExecute() {
-            startLoaderAnimation();
         }
 
         @Override
@@ -112,6 +115,8 @@ public class SearchFiltersFragment extends BaseFragment {
                 handleAuthors(result);
             } else if(SearchQuery.KEYWORDS.equals(tFacet)) {
                 handleKeywords(result);
+            } else if(SearchQuery.MODEL.equals(tFacet)) {
+                handleDoctypes(result);
             }
 //            //if (mFirst) {
 //            //	stopLoaderAnimation();
@@ -179,12 +184,22 @@ public class SearchFiltersFragment extends BaseFragment {
             addFilter(mAuthorsWrapper, h.value,SearchQuery.AUTHOR_FACET, h.value, h.count);
         }
     }
+
     private void handleKeywords(List<Hit> list) {
         if(list == null) {
             return;
         }
         for(Hit h : list) {
             addFilter(mKeywordsWrapper, h.value,SearchQuery.KEYWORDS, h.value, h.count);
+        }
+    }
+
+    private void handleDoctypes(List<Hit> list) {
+        if(list == null) {
+            return;
+        }
+        for(Hit h : list) {
+            addFilter(mDoctypesWrapper, getModelName(h.value), SearchQuery.MODEL, h.value, h.count);
         }
     }
 
@@ -233,11 +248,16 @@ public class SearchFiltersFragment extends BaseFragment {
 
 
 
-
-
-
-
-
+    private String getModelName(String value) {
+        String a = "models_" + value;
+        String packageName = getActivity().getPackageName();
+        int resId = getResources().getIdentifier(a, "string", packageName);
+        if(resId == 0) {
+            Logger.debug(LOG_TAG, "getStringResourceByName (" + value + ")");
+            return "";
+        }
+        return getString(resId);
+    }
 
 
 

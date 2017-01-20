@@ -20,6 +20,23 @@
     <string name="document_unknown">Unknown Type</string>
     <string name="document_all">All</string>
 
+    <string name="models_monograph">Books</string>
+    <string name="models_periodical">Newspapers</string>
+    <string name="models_map">Maps</string>
+    <string name="models_sheetmusic">Sheet Music</string>
+    <string name="models_graphic">Graphics</string>
+    <string name="models_archive">Archives</string>
+    <string name="models_soundrecording">Sound Recordings</string>
+    <string name="models_periodicalvolume">Periodical Volumes</string>
+    <string name="models_periodicalitem">Periodical Issues</string>
+    <string name="models_manuscript">Manuscripts</string>
+    <string name="models_page">Pages</string>
+    <string name="models_supplement">Supplements</string>
+    <string name="models_article">Articles</string>
+    <string name="models_internalpart">Internal Parts</string>
+    <string name="models_soundunit">Sound Units</string>
+    <string name="models_track">Tracks</string>
+
     <string name="main_title">Kramerius</string>
     <string name="main_menu_title">Kramerius</string>
     <string name="newest_title">Newest</string>

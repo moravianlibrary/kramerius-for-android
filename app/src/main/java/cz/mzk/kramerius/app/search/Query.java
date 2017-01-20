@@ -22,6 +22,8 @@ public class Query {
     private String accessibility = "public";
     private List<String> authors = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
+    private List<String> doctypes = new ArrayList<>();
+
 
 
 
@@ -71,6 +73,9 @@ public class Query {
         if(!keywords.isEmpty()) {
             q+= " AND " + SearchQuery.KEYWORDS + ":" + join(keywords);
         }
+        if(!doctypes.isEmpty()) {
+            q+= " AND " + SearchQuery.MODEL + ":" + join(doctypes);
+        }
         return q;
     }
 
@@ -91,6 +96,9 @@ public class Query {
         if(!SearchQuery.KEYWORDS.equals(facet) && !keywords.isEmpty()) {
             q+= " AND " + SearchQuery.KEYWORDS + ":" + join(keywords);
         }
+        if(!SearchQuery.MODEL.equals(facet) && !doctypes.isEmpty()) {
+            q+= " AND " + SearchQuery.MODEL + ":" + join(doctypes);
+        }
         return q;
     }
 
@@ -106,6 +114,9 @@ public class Query {
         }
         if(SearchQuery.KEYWORDS.equals(code)) {
             return keywords.contains(value);
+        }
+        if(SearchQuery.MODEL.equals(code)) {
+            return doctypes.contains(value);
         }
         return false;
     }
@@ -127,6 +138,10 @@ public class Query {
         }
         if(SearchQuery.KEYWORDS.equals(code)) {
             switchVelue(keywords, value);
+            return true;
+        }
+        if(SearchQuery.MODEL.equals(code)) {
+            switchVelue(doctypes, value);
             return true;
         }
         return false;

@@ -20,6 +20,22 @@
     <string name="document_unknown">Neznámý typ</string>
     <string name="document_all">Vše</string>
 
+    <string name="models_monograph">Knihy</string>
+    <string name="models_periodical">Noviny a časopisy</string>
+    <string name="models_map">Mapy</string>
+    <string name="models_sheetmusic">Hudebniny</string>
+    <string name="models_graphic">Grafiky</string>
+    <string name="models_archive">Archiválie</string>
+    <string name="models_soundrecording">Zvukové nahrávky</string>
+    <string name="models_periodicalvolume">Ročníky periodika</string>
+    <string name="models_periodicalitem">Čísla periodika</string>
+    <string name="models_manuscript">Rukopisy</string>
+    <string name="models_page">Stránky</string>
+    <string name="models_supplement">Přílohy</string>
+    <string name="models_article">Články</string>
+    <string name="models_internalpart">Vnitřní části</string>
+    <string name="models_soundunit">Alba</string>
+    <string name="models_track">Nahrávky</string>
 
     <string name="main_title">Kramerius</string>
     <string name="main_menu_title">Kramerius</string>

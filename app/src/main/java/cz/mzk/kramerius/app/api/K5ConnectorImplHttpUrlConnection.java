@@ -584,8 +584,11 @@ public class K5ConnectorImplHttpUrlConnection {
             }
             List<Hit> list = new ArrayList<>();
             for (int i = 0; i < a.length(); i+=2) {
-                Logger.debug(LOG_TAG, a.getString(i));
-                list.add(new Hit(a.getString(i), a.getInt(i+1)));
+                String v = a.getString(i);
+                int c = a.getInt(i+1);
+                if(v != null && v.trim().length() > 0) {
+                    list.add(new Hit(v, c));
+                }
             }
             return list;
 //
