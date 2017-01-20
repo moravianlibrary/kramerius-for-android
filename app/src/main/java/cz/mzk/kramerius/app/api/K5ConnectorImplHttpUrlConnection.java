@@ -24,9 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.metadata.Metadata;
+import cz.mzk.kramerius.app.model.Hit;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.model.User;
 import cz.mzk.kramerius.app.search.Query;
@@ -563,7 +565,7 @@ public class K5ConnectorImplHttpUrlConnection {
 
 
 
-    public Map<String, Integer> getSearchFacetResults(Context context, Query query, String facet) {
+    public List<Hit> getSearchFacetResults(Context context, Query query, String facet) {
         try {
             String url = K5Api.getSearchFacetPath(context, query, facet);
             Logger.debug(LOG_TAG, "query - facet-search: " + url);
@@ -580,12 +582,12 @@ public class K5ConnectorImplHttpUrlConnection {
             if (a == null) {
                 return null;
             }
-            Map<String, Integer> map = new HashMap<>();
+            List<Hit> list = new ArrayList<>();
             for (int i = 0; i < a.length(); i+=2) {
                 Logger.debug(LOG_TAG, a.getString(i));
-                map.put(a.getString(i), a.optInt(i+1));
+                list.add(new Hit(a.getString(i), a.getInt(i+1)));
             }
-            return map;
+            return list;
 //
 //
 //                    facet_fields

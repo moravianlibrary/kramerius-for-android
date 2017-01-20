@@ -15,6 +15,7 @@ public class SearchQuery {
     public static final String ROOT_PID = "root_pid";
     public static final String ROOT_TITLE = "root_title";
     public static final String AUTHOR = "dc.creator";
+    public static final String AUTHOR_FACET = "facet_autor";
     public static final String TITLE = "dc.title";
     public static final String LANGUAGE = "language";
     public static final String ISSN = "issn";

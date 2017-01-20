@@ -4,34 +4,34 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Map;
+import java.util.List;
 
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
+import cz.mzk.kramerius.app.model.Hit;
 import cz.mzk.kramerius.app.search.Query;
 import cz.mzk.kramerius.app.search.SearchQuery;
 import cz.mzk.kramerius.app.util.Logger;
 
 public class SearchFiltersFragment extends BaseFragment {
 
-//    private static final String EXTRA_QUERY = "extra_query";
 
     private static final String LOG_TAG = SearchFiltersFragment.class.getSimpleName();
 
-    //    private String mSearchQuery;
     private FilterListener mCallback;
 
     private boolean mLoading;
 
     private LayoutInflater mInflater;
     private ViewGroup mAccessibilityWrapper;
-
+    private ViewGroup mAuthorsWrapper;
     private Query mQuery;
 
 
@@ -60,6 +60,7 @@ public class SearchFiltersFragment extends BaseFragment {
         mInflater = inflater;
         View view = inflater.inflate(R.layout.fragment_search_filters, container, false);
         mAccessibilityWrapper = (ViewGroup) view.findViewById(R.id.accessibility_wrapper);
+        mAuthorsWrapper = (ViewGroup) view.findViewById(R.id.authors_wrapper);
         refresh();
 
         return view;
@@ -69,11 +70,13 @@ public class SearchFiltersFragment extends BaseFragment {
 
     private void refresh() {
         mAccessibilityWrapper.removeAllViews();
+        mAuthorsWrapper.removeAllViews();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.POLICY).execute();
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.AUTHOR_FACET).execute();
     }
 
 
-    class GetFiltersTask extends AsyncTask<Void, Void, Map<String, Integer>> {
+    class GetFiltersTask extends AsyncTask<Void, Void, List<Hit>> {
 
         private Context tContext;
         private String tFacet;
@@ -89,18 +92,20 @@ public class SearchFiltersFragment extends BaseFragment {
         }
 
         @Override
-        protected Map<String, Integer> doInBackground(Void... params) {
+        protected List<Hit> doInBackground(Void... params) {
             return K5ConnectorFactory.getConnector().getSearchFacetResults(tContext, mQuery, tFacet);
         }
 
         @Override
-        protected void onPostExecute(Map<String, Integer> result) {
+        protected void onPostExecute(List<Hit> result) {
             stopLoaderAnimation();
             if (getActivity() == null) {
                 return;
             }
             if(SearchQuery.POLICY.equals(tFacet)) {
                 handleAccessibility(result);
+            } else if(SearchQuery.AUTHOR_FACET.equals(tFacet)) {
+                handleAuthors(result);
             }
 //            //if (mFirst) {
 //            //	stopLoaderAnimation();
@@ -138,27 +143,40 @@ public class SearchFiltersFragment extends BaseFragment {
 
 
 
-    private void handleAccessibility(Map<String, Integer> map) {
-        if(map == null) {
+    private void handleAccessibility(List<Hit> list) {
+        if(list == null) {
             return;
         }
-
         int pu = 0;
         int pr = 0;
-        if(map.containsKey("public")) {
-            pu = map.get("public");
-        }
-        if(map.containsKey("private")) {
-            pr = map.get("private");
+        for(Hit h: list) {
+            if("public".equals(h.value)) {
+                pu = h.count;
+            } else if("private".equals(h.value)) {
+                pr = h.count;
+            }
         }
         int all = pu + pr;
-
         addFilter(mAccessibilityWrapper, "Pouze veřejné", SearchQuery.POLICY, "public", pu);
         addFilter(mAccessibilityWrapper, "Pouze neveřejné", SearchQuery.POLICY, "private", pr);
         addFilter(mAccessibilityWrapper, "Vše", SearchQuery.POLICY, "all", all);
 
     }
 
+
+
+    private void handleAuthors(List<Hit> list) {
+        if(list == null) {
+            return;
+        }
+        for(Hit h : list) {
+            addFilter(mAuthorsWrapper, h.value,SearchQuery.AUTHOR_FACET, h.value, h.count);
+        }
+//        addFilter(mAccessibilityWrapper, "Pouze veřejné", SearchQuery.POLICY, "public", pu);
+//        addFilter(mAccessibilityWrapper, "Pouze neveřejné", SearchQuery.POLICY, "private", pr);
+//        addFilter(mAccessibilityWrapper, "Vše", SearchQuery.POLICY, "all", all);
+
+    }
 
     private void addFilter(ViewGroup container, String title, String code, String value, int count) {
         View v = mInflater.inflate(R.layout.view_search_filter_item, container, false);

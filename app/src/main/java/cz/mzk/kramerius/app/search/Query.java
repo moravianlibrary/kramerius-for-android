@@ -1,5 +1,8 @@
 package cz.mzk.kramerius.app.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.mzk.kramerius.app.util.Logger;
 
 /**
@@ -12,12 +15,12 @@ public class Query {
     private static final String LOG_TAG = Query.class.getSimpleName();
 
     public static final String ACCESSIBILITY_ALL = "all";
-    public static final String ACCESSIBILITY_PUBLIC = "public";
-    public static final String ACCESSIBILITY_PRIVATE = "private";
+
+
 
     private String query;
-    private String accessibility = ACCESSIBILITY_PUBLIC;
-
+    private String accessibility = "public";
+    private List<String> authors = new ArrayList<>();
 
 
     public Query(String query) {
@@ -40,6 +43,18 @@ public class Query {
         return query != null;
     }
 
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    private void switchAuthor(String author) {
+        if(authors.contains(author)) {
+            authors.remove(author);
+        } else {
+            authors.add(author);
+        }
+    }
+
     public String buildQuery() {
         String q = "";
         if(hasQuery()) {
@@ -49,6 +64,9 @@ public class Query {
         }
         if(!ACCESSIBILITY_ALL.equals(getAccessibility())) {
             q+= " AND " + SearchQuery.POLICY + ":" + getAccessibility();
+        }
+        if(!authors.isEmpty()) {
+            q+= " AND " + SearchQuery.AUTHOR_FACET + ":" + join(authors);
         }
         return q;
     }
@@ -64,12 +82,11 @@ public class Query {
         if(!SearchQuery.POLICY.equals(facet) && !ACCESSIBILITY_ALL.equals(getAccessibility())) {
             q+= " AND " + SearchQuery.POLICY + ":" + getAccessibility();
         }
+        if(!SearchQuery.AUTHOR_FACET.equals(facet) && !authors.isEmpty()) {
+            q+= " AND " + SearchQuery.AUTHOR_FACET + ":" + join(authors);
+        }
         return q;
     }
-
-
-
-
 
 
 
@@ -77,6 +94,9 @@ public class Query {
         Logger.debug(LOG_TAG, "isActive - code: " + code + ", value: " + value);
         if(SearchQuery.POLICY.equals(code)) {
             return accessibility.equals(value);
+        }
+        if(SearchQuery.AUTHOR_FACET.equals(code)) {
+            return authors.contains(value);
         }
         return false;
     }
@@ -92,7 +112,41 @@ public class Query {
             setAccessibility(value);
             return true;
         }
+        if(SearchQuery.AUTHOR_FACET.equals(code)) {
+            switchAuthor(value);
+            return true;
+        }
         return false;
     }
+
+
+
+
+
+    private String join(List<String> list) {
+        if(list.isEmpty()) {
+            return "";
+        }
+        if(list.size() == 1) {
+            return escape(list.get(0));
+        }
+        String r = "(";
+        for(int i = 0; i < list.size() - 1; i++) {
+            r += escape(list.get(i)) + " OR ";
+        }
+        r += escape(list.get(list.size() - 1));
+        r+= ")";
+        return r;
+    }
+
+
+    private String escape(String s) {
+        if(s == null) {
+            return "";
+        }
+        return "\"" + s.replaceAll("\"", "%22") + "\"";
+    }
+
+
 
 }

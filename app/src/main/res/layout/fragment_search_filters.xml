@@ -44,6 +44,33 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#555"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="AUTOR"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:id="@+id/authors_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
 

@@ -276,7 +276,7 @@ public class K5Api {
                 .appendQueryParameter("q", q)
                 .appendQueryParameter("facet", "true")
                 .appendQueryParameter("facet.field", facet)
-                .appendQueryParameter("facet.limit", "50")
+                .appendQueryParameter("facet.limit", "15")
                 .appendQueryParameter("rows", "0")
                 .appendQueryParameter("facet.mincount", "1")
                 .build().toString();
