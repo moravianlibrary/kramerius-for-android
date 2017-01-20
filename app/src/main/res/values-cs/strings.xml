@@ -4,6 +4,8 @@
 
     <string name="app_name">Kramerius</string>
 
+    <string name="search_hint">Hledat ...</string>
+
     <string name="document_periodical">Noviny a časopisy</string>
     <string name="document_periodical_volume">Ročník periodika</string>
     <string name="document_periodical_item">Číslo periodika</string>

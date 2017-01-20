@@ -13,7 +13,7 @@
         android:id="@+id/search_filters_container"
         android:layout_below="@id/toolbar"
         android:layout_width="280dp"
-        android:background="#ccc"
+        android:background="#f0f0f0"
         android:layout_height="match_parent" />
 
     <View
@@ -21,11 +21,19 @@
         android:layout_toRightOf="@id/search_filters_container"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="#ddd"/>
+        android:background="#e8e8e8"/>
     <FrameLayout
         android:id="@+id/search_result_container"
         android:layout_toRightOf="@id/divider"
         android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+
+    <cz.mzk.kramerius.app.view.MaterialSearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

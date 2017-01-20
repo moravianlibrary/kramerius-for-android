@@ -4,6 +4,8 @@
 
     <string name="app_name">Kramerius</string>
 
+    <string name="search_hint">Search ...</string>
+
     <string name="document_periodical">News &amp; Magazines</string>
     <string name="document_periodical_volume">Periodical Volume</string>
     <string name="document_periodical_item">Issue Number</string>
