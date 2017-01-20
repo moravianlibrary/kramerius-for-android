@@ -52,19 +52,28 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
 
 
-        mSearchResultsFragment = new SearchResultsFragment(mQuery);
-        mSearchResultsFragment.setOnItemSelectedListener(this);
-        //mSearchResultsFragment.assignQuery(mQuery);
+        if(savedInstanceState == null) {
+            mSearchResultsFragment = new SearchResultsFragment();
+            mSearchResultsFragment.setQuery(mQuery);
+            mSearchResultsFragment.setOnItemSelectedListener(this);
 
-        mSearchFiltersFragment = new SearchFiltersFragment(mQuery);
-        mSearchFiltersFragment.setCallback(this);
+            mSearchFiltersFragment = new SearchFiltersFragment();
+            mSearchFiltersFragment.setQuery(mQuery);
+            mSearchFiltersFragment.setCallback(this);
 
 
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
+            ft.add(R.id.search_result_container, mSearchFiltersFragment, "tag_search_filters").commit();
+        } else {
+            mSearchResultsFragment = (SearchResultsFragment) getFragmentManager().findFragmentByTag("tag_search_results");
+            mSearchResultsFragment.setQuery(mQuery);
+            mSearchResultsFragment.setOnItemSelectedListener(this);
 
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.search_result_container, mSearchResultsFragment);
-        ft.add(R.id.search_result_container, mSearchFiltersFragment).commit();
+            mSearchFiltersFragment = (SearchFiltersFragment) getFragmentManager().findFragmentByTag("tag_search_filters");
+            mSearchFiltersFragment.setQuery(mQuery);
+            mSearchFiltersFragment.setCallback(this);
+        }
         setMode(false);
     }
 

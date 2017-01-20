@@ -1,7 +1,6 @@
 package cz.mzk.kramerius.app.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -39,9 +38,14 @@ public class SearchFiltersFragment extends BaseFragment {
     private Query mQuery;
 
 
-    public SearchFiltersFragment(Query query) {
+    public void setQuery(Query query) {
         mQuery = query;
     }
+
+    public SearchFiltersFragment() {
+    }
+
+
 
 
     public interface FilterListener {

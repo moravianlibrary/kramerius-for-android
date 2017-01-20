@@ -57,10 +57,12 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
 
     private View mNoResults;
 
-    public SearchResultsFragment(Query query) {
+    public void setQuery(Query query) {
         mQuery = query;
     }
 
+    public SearchResultsFragment() {
+    }
 
 
     public void refresh() {
