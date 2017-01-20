@@ -75,7 +75,7 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
         mNumFound = -1;
         mFirst = true;
         mLoading = true;
-        new GetResultTask(getActivity().getApplicationContext()).execute(mQuery);
+        new GetResultTask(getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mQuery);
     }
 
     public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
@@ -103,7 +103,7 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
         mNoResults.setVisibility(View.GONE);
         inflateLoader(container, inflater);
         mLoading = true;
-        new GetResultTask(getActivity().getApplicationContext()).execute(mQuery);
+        new GetResultTask(getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mQuery);
         return view;
     }
 
@@ -156,7 +156,7 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
 
                                 @Override
                                 public void onWarningButtonClicked() {
-                                    new GetResultTask(getActivity().getApplicationContext()).execute(mQuery);
+                                    new GetResultTask(getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mQuery);
                                 }
                             });
                 }
@@ -225,7 +225,7 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
         if (loadMore && hasMore) {
             mStart += mRows;
             mLoading = true;
-            new GetResultTask(getActivity().getApplicationContext()).execute(mQuery);
+            new GetResultTask(getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mQuery);
         }
     }
 

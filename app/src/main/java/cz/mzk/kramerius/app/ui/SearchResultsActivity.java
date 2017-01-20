@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -48,11 +47,6 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
         mQuery = new Query(query);
 
-        mSwitchBtn = (TextView) findViewById(R.id.switch_btn);
-        mSwitchBtn.setOnClickListener(this);
-
-
-
         if(savedInstanceState == null) {
             mSearchResultsFragment = new SearchResultsFragment();
             mSearchResultsFragment.setQuery(mQuery);
@@ -64,8 +58,15 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.add(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
-            ft.add(R.id.search_result_container, mSearchFiltersFragment, "tag_search_filters").commit();
+            if (getDevice() == TABLET && isLandscape()) {
+                ft.replace(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
+                ft.replace(R.id.search_filters_container, mSearchFiltersFragment, "tag_search_filters").commit();
+            } else {
+                mSwitchBtn = (TextView) findViewById(R.id.switch_btn);
+                mSwitchBtn.setOnClickListener(this);
+                ft.add(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
+                ft.add(R.id.search_result_container, mSearchFiltersFragment, "tag_search_filters").commit();
+            }
         } else {
             mSearchResultsFragment = (SearchResultsFragment) getFragmentManager().findFragmentByTag("tag_search_results");
             mSearchResultsFragment.setQuery(mQuery);
@@ -129,8 +130,12 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
 
     private void setMode(boolean inFilterMode) {
+        if(getDevice() == TABLET && isLandscape()) {
+            return;
+        }
         mFiltersMode = inFilterMode;
         if(inFilterMode) {
+
             mSwitchBtn.setText("Zpět na výsledky hledání");
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             //ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_left);

@@ -86,10 +86,10 @@ public class SearchFiltersFragment extends BaseFragment {
         mDoctypesWrapper.removeAllViews();
         mFiltersWrapper.removeAllViews();
         initFilters();
-        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.POLICY).execute();
-        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.AUTHOR_FACET).execute();
-        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.KEYWORDS).execute();
-        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.MODEL).execute();
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.POLICY).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.AUTHOR_FACET).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.KEYWORDS).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.MODEL).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
