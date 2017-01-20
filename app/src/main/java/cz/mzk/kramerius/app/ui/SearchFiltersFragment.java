@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public class SearchFiltersFragment extends BaseFragment {
     private ViewGroup mAuthorsWrapper;
     private ViewGroup mKeywordsWrapper;
     private ViewGroup mDoctypesWrapper;
+    private ViewGroup mFiltersWrapper;
+
 
     private Query mQuery;
 
@@ -63,6 +66,7 @@ public class SearchFiltersFragment extends BaseFragment {
         mAuthorsWrapper = (ViewGroup) view.findViewById(R.id.authors_wrapper);
         mKeywordsWrapper = (ViewGroup) view.findViewById(R.id.keywords_wrapper);
         mDoctypesWrapper = (ViewGroup) view.findViewById(R.id.doctypes_wrapper);
+        mFiltersWrapper = (ViewGroup) view.findViewById(R.id.filters_wrapper);
 
         refresh();
 
@@ -76,11 +80,12 @@ public class SearchFiltersFragment extends BaseFragment {
         mAuthorsWrapper.removeAllViews();
         mKeywordsWrapper.removeAllViews();
         mDoctypesWrapper.removeAllViews();
+        mFiltersWrapper.removeAllViews();
+        initFilters();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.POLICY).execute();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.AUTHOR_FACET).execute();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.KEYWORDS).execute();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.MODEL).execute();
-
     }
 
 
@@ -211,8 +216,8 @@ public class SearchFiltersFragment extends BaseFragment {
         titleView.setText(title);
         ((TextView) v.findViewById(R.id.title)).setText(String.valueOf(title));
         if(mQuery.isActive(code, value)) {
-            titleView.setTextColor(Color.BLUE);
-            countView.setTextColor(Color.BLUE);
+            titleView.setTextColor(0xff0073b2);
+            countView.setTextColor(0xff0073b2);
         }
 
         v.setTag(new Tag(code, value));
@@ -234,6 +239,7 @@ public class SearchFiltersFragment extends BaseFragment {
             refresh();
         }
     }
+
 
 
     public class Tag {
@@ -259,6 +265,42 @@ public class SearchFiltersFragment extends BaseFragment {
         return getString(resId);
     }
 
+
+
+
+
+    private void initFilters() {
+        if(mQuery.hasQuery()) {
+            addUsedFilter(mQuery.getQuery(), "q", mQuery.getQuery(), R.drawable.ic_search_grey);
+        }
+        for(String doctype : mQuery.getDoctypes()) {
+            addUsedFilter(getModelName(doctype), SearchQuery.MODEL, doctype, R.drawable.ic_attach_grey);
+        }
+        for(String author : mQuery.getAuthors()) {
+            addUsedFilter(author, SearchQuery.AUTHOR_FACET, author, R.drawable.ic_user_grey);
+        }
+        for(String keyword : mQuery.getKeywords()) {
+            addUsedFilter(keyword, SearchQuery.KEYWORDS, keyword, R.drawable.ic_label_grey);
+        }
+    }
+
+
+    private void addUsedFilter(String title, String code, String value, int iconRes) {
+        View v = mInflater.inflate(R.layout.view_search_used_filter_item, mFiltersWrapper, false);
+        ImageView iconView = (ImageView) v.findViewById(R.id.icon);
+        iconView.setImageResource(iconRes);
+        TextView titleView = (TextView) v.findViewById(R.id.title);
+        titleView.setText(title);
+        ((TextView) v.findViewById(R.id.title)).setText(String.valueOf(title));
+        v.setTag(new Tag(code, value));
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFilterSelected(v);
+            }
+        });
+        mFiltersWrapper.addView(v);
+    }
 
 
 }

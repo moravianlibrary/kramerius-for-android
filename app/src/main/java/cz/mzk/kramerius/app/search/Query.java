@@ -56,6 +56,19 @@ public class Query {
         }
     }
 
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public List<String> getDoctypes() {
+        return doctypes;
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
+
 
     public String buildQuery() {
         String q = "";
@@ -125,6 +138,10 @@ public class Query {
 
     public boolean change(String code, String value) {
         Logger.debug(LOG_TAG, "Change - code: " + code + ", value: " + value);
+        if("q".equals(code) && hasQuery()) {
+            query = null;
+            return true;
+        }
         if(SearchQuery.POLICY.equals(code)) {
             if(accessibility.equals(value)) {
                 return false;

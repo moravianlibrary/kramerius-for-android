@@ -55,30 +55,25 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
 
     private Query mQuery;
 
+    private View mNoResults;
+
     public SearchResultsFragment(Query query) {
         mQuery = query;
     }
 
-//
-//    public void assignQuery(Query query) {
-//        mQuery = query;
-//    }
-
 
 
     public void refresh() {
-        mAdapter.clear();
-        mAdapter.notifyDataSetChanged();
+        if(mAdapter != null) {
+            mAdapter.clear();
+            mAdapter.notifyDataSetChanged();
+        }
         mRows = 30;
         mStart = 0;
         mNumFound = -1;
         mFirst = true;
         mLoading = true;
         new GetResultTask(getActivity().getApplicationContext()).execute(mQuery);
-    }
-
-    public void refresh(Query query) {
-        new GetResultTask(getActivity().getApplicationContext()).execute(query);
     }
 
     public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
@@ -88,7 +83,6 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mSearchQuery = getArguments().getString(EXTRA_QUERY, "*:*");
     }
 
     @Override
@@ -103,6 +97,8 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
         View view = inflater.inflate(R.layout.fragment_card_grid, container, false);
         mCardGridView = (CardGridView) view.findViewById(R.id.card_grid);
         mCardGridView.setOnScrollListener(this);
+        mNoResults = view.findViewById(R.id.no_results);
+        mNoResults.setVisibility(View.GONE);
         inflateLoader(container, inflater);
         mLoading = true;
         new GetResultTask(getActivity().getApplicationContext()).execute(mQuery);
@@ -126,6 +122,7 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
         @Override
         protected void onPreExecute() {
             Logger.debug(LOG_TAG, "Start TASK");
+            mNoResults.setVisibility(View.GONE);
             if (mFirst) {
                 startLoaderAnimation();
             }
@@ -152,7 +149,6 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
             mLoading = false;
             if (result == null || result.first == null) {
                 if (mFirst) {
-
                     showWarningMessage(R.string.warn_data_loading_failed, R.string.gen_again,
                             new onWarningButtonClickedListener() {
 
@@ -165,7 +161,7 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
                 return;
             }
             if (result.second == 0) {
-                showWarningMessage(getString(R.string.warn_empty_result), null, null);
+                mNoResults.setVisibility(View.VISIBLE);
                 return;
             }
             mNumFound = result.second;
@@ -250,5 +246,6 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
     public void onPopupShareSelected(Item item) {
         ShareUtils.openShareIntent(getActivity(), item.getPid());
     }
+
 
 }
