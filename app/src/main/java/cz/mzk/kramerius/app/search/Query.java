@@ -21,6 +21,8 @@ public class Query {
     private String query;
     private String accessibility = "public";
     private List<String> authors = new ArrayList<>();
+    private List<String> keywords = new ArrayList<>();
+
 
 
     public Query(String query) {
@@ -43,17 +45,15 @@ public class Query {
         return query != null;
     }
 
-    public List<String> getAuthors() {
-        return authors;
-    }
 
-    private void switchAuthor(String author) {
-        if(authors.contains(author)) {
-            authors.remove(author);
+    private void switchVelue(List<String> list, String value) {
+        if(list.contains(value)) {
+            list.remove(value);
         } else {
-            authors.add(author);
+            list.add(value);
         }
     }
+
 
     public String buildQuery() {
         String q = "";
@@ -67,6 +67,9 @@ public class Query {
         }
         if(!authors.isEmpty()) {
             q+= " AND " + SearchQuery.AUTHOR_FACET + ":" + join(authors);
+        }
+        if(!keywords.isEmpty()) {
+            q+= " AND " + SearchQuery.KEYWORDS + ":" + join(keywords);
         }
         return q;
     }
@@ -85,6 +88,9 @@ public class Query {
         if(!SearchQuery.AUTHOR_FACET.equals(facet) && !authors.isEmpty()) {
             q+= " AND " + SearchQuery.AUTHOR_FACET + ":" + join(authors);
         }
+        if(!SearchQuery.KEYWORDS.equals(facet) && !keywords.isEmpty()) {
+            q+= " AND " + SearchQuery.KEYWORDS + ":" + join(keywords);
+        }
         return q;
     }
 
@@ -97,6 +103,9 @@ public class Query {
         }
         if(SearchQuery.AUTHOR_FACET.equals(code)) {
             return authors.contains(value);
+        }
+        if(SearchQuery.KEYWORDS.equals(code)) {
+            return keywords.contains(value);
         }
         return false;
     }
@@ -113,7 +122,11 @@ public class Query {
             return true;
         }
         if(SearchQuery.AUTHOR_FACET.equals(code)) {
-            switchAuthor(value);
+            switchVelue(authors, value);
+            return true;
+        }
+        if(SearchQuery.KEYWORDS.equals(code)) {
+            switchVelue(keywords, value);
             return true;
         }
         return false;

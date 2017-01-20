@@ -32,6 +32,7 @@ public class SearchFiltersFragment extends BaseFragment {
     private LayoutInflater mInflater;
     private ViewGroup mAccessibilityWrapper;
     private ViewGroup mAuthorsWrapper;
+    private ViewGroup mKeywordsWrapper;
     private Query mQuery;
 
 
@@ -61,6 +62,7 @@ public class SearchFiltersFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_search_filters, container, false);
         mAccessibilityWrapper = (ViewGroup) view.findViewById(R.id.accessibility_wrapper);
         mAuthorsWrapper = (ViewGroup) view.findViewById(R.id.authors_wrapper);
+        mKeywordsWrapper = (ViewGroup) view.findViewById(R.id.keywords_wrapper);
         refresh();
 
         return view;
@@ -71,8 +73,10 @@ public class SearchFiltersFragment extends BaseFragment {
     private void refresh() {
         mAccessibilityWrapper.removeAllViews();
         mAuthorsWrapper.removeAllViews();
+        mKeywordsWrapper.removeAllViews();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.POLICY).execute();
         new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.AUTHOR_FACET).execute();
+        new GetFiltersTask(getActivity().getApplicationContext(), SearchQuery.KEYWORDS).execute();
     }
 
 
@@ -106,6 +110,8 @@ public class SearchFiltersFragment extends BaseFragment {
                 handleAccessibility(result);
             } else if(SearchQuery.AUTHOR_FACET.equals(tFacet)) {
                 handleAuthors(result);
+            } else if(SearchQuery.KEYWORDS.equals(tFacet)) {
+                handleKeywords(result);
             }
 //            //if (mFirst) {
 //            //	stopLoaderAnimation();
@@ -172,10 +178,14 @@ public class SearchFiltersFragment extends BaseFragment {
         for(Hit h : list) {
             addFilter(mAuthorsWrapper, h.value,SearchQuery.AUTHOR_FACET, h.value, h.count);
         }
-//        addFilter(mAccessibilityWrapper, "Pouze veřejné", SearchQuery.POLICY, "public", pu);
-//        addFilter(mAccessibilityWrapper, "Pouze neveřejné", SearchQuery.POLICY, "private", pr);
-//        addFilter(mAccessibilityWrapper, "Vše", SearchQuery.POLICY, "all", all);
-
+    }
+    private void handleKeywords(List<Hit> list) {
+        if(list == null) {
+            return;
+        }
+        for(Hit h : list) {
+            addFilter(mKeywordsWrapper, h.value,SearchQuery.KEYWORDS, h.value, h.count);
+        }
     }
 
     private void addFilter(ViewGroup container, String title, String code, String value, int count) {
