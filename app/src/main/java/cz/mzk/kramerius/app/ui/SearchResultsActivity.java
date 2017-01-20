@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -25,7 +26,7 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
     private SearchFiltersFragment mSearchFiltersFragment;
 
     private boolean mFiltersMode;
-    private Button mSwitchBtn;
+    private TextView mSwitchBtn;
     private Query mQuery;
 
     @Override
@@ -47,7 +48,7 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
         mQuery = new Query(query);
 
-        mSwitchBtn = (Button) findViewById(R.id.switch_btn);
+        mSwitchBtn = (TextView) findViewById(R.id.switch_btn);
         mSwitchBtn.setOnClickListener(this);
 
 
