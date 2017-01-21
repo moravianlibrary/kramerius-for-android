@@ -33,11 +33,14 @@ public class Query {
 
 
 
-    public Query(String query) {
-        if(query.isEmpty()) {
+    public Query(String query, String collection) {
+        if(query == null || query.isEmpty()) {
             this.query = null;
         } else {
             this.query = query;
+        }
+        if(collection != null) {
+            collections.add(collection);
         }
     }
 

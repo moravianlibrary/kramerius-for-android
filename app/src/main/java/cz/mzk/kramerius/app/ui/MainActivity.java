@@ -482,11 +482,12 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         if (query == null) {// || query.length() == 0) {
             return;
         }
-        ContentValues cv = new ContentValues();
-        cv.put(SearchEntry.COLUMN_QUERY, query);
-        cv.put(SearchEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
-        getContentResolver().insert(SearchEntry.CONTENT_URI, cv);
-
+        if( query.length() > 0) {
+            ContentValues cv = new ContentValues();
+            cv.put(SearchEntry.COLUMN_QUERY, query);
+            cv.put(SearchEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+            getContentResolver().insert(SearchEntry.CONTENT_URI, cv);
+        }
         Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
         intent.putExtra(SearchResultsActivity.EXTRA_QUERY, query);
         startActivity(intent);
@@ -495,9 +496,12 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
     @Override
     public void onVirtualCollectionSelected(Item vc) {
         Analytics.sendEvent(this, "collection", "selected", vc.getTitle());
-        Intent intent = new Intent(MainActivity.this, VirtualCollectionActivity.class);
-        intent.putExtra(EXTRA_PID, vc.getPid());
-        intent.putExtra(EXTRA_TITLE, vc.getTitle());
+//        Intent intent = new Intent(MainActivity.this, VirtualCollectionActivity.class);
+//        intent.putExtra(EXTRA_PID, vc.getPid());
+//        intent.putExtra(EXTRA_TITLE, vc.getTitle());
+//        startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+        intent.putExtra(SearchResultsActivity.EXTRA_COLLECTION, vc.getPid());
         startActivity(intent);
     }
 

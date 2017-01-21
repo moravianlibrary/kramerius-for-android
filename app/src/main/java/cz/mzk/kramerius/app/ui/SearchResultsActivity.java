@@ -36,6 +36,8 @@ import cz.mzk.kramerius.app.view.MaterialSearchView;
 public class SearchResultsActivity extends BaseActivity implements View.OnClickListener, OnItemSelectedListener, SearchFiltersFragment.FilterListener {
 
     public static final String EXTRA_QUERY = "extra_query";
+    public static final String EXTRA_COLLECTION = "extra_collection";
+
     private static final String LOG_TAG = SearchResultsActivity.class.getSimpleName();
 
 
@@ -62,12 +64,13 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String query = getIntent().getStringExtra(EXTRA_QUERY);
-        if (query == null) {
-            finish();
-            return;
-        }
+        String collection = getIntent().getStringExtra(EXTRA_COLLECTION);
+//        if (query == null) {
+//            finish();
+//            return;
+//        }
 
-        mQuery = new Query(query);
+        mQuery = new Query(query, collection);
 
         if(savedInstanceState == null) {
             mSearchResultsFragment = new SearchResultsFragment();
@@ -322,14 +325,15 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
 
     public void onSearchQuery(String query) {
-        if (query == null || query.length() == 0) {
+        if (query == null) {// || query.length() == 0) {
             return;
         }
-        ContentValues cv = new ContentValues();
-        cv.put(KrameriusContract.SearchEntry.COLUMN_QUERY, query);
-        cv.put(KrameriusContract.SearchEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
-        getContentResolver().insert(KrameriusContract.SearchEntry.CONTENT_URI, cv);
-
+        if (query.length() > 0) {
+            ContentValues cv = new ContentValues();
+            cv.put(KrameriusContract.SearchEntry.COLUMN_QUERY, query);
+            cv.put(KrameriusContract.SearchEntry.COLUMN_TIMESTAMP, System.currentTimeMillis());
+            getContentResolver().insert(KrameriusContract.SearchEntry.CONTENT_URI, cv);
+        }
         Intent intent = new Intent(SearchResultsActivity.this, SearchResultsActivity.class);
         intent.putExtra(SearchResultsActivity.EXTRA_QUERY, query);
         startActivity(intent);
