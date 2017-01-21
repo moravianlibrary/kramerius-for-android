@@ -58,6 +58,19 @@ public class Query {
         }
     }
 
+
+    public boolean noFilters() {
+        return query == null &&
+                authors.isEmpty() &&
+                keywords.isEmpty() &&
+                doctypes.isEmpty() &&
+                languages.isEmpty() &&
+                collections.isEmpty();
+    }
+
+
+
+
     public List<String> getAuthors() {
         return authors;
     }

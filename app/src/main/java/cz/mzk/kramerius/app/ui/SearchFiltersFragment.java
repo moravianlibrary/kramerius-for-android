@@ -40,12 +40,10 @@ public class SearchFiltersFragment extends BaseFragment {
     private ViewGroup mCollectionsWrapper;
     private ViewGroup mLanguagesWrapper;
 
-
     private ViewGroup mFiltersWrapper;
-
+    private ViewGroup mFiltersContainer;
 
     private Query mQuery;
-
 
     private Map<String, String> mLanguageMap;
     private Map<String, String> mCollectionsMap;
@@ -64,7 +62,6 @@ public class SearchFiltersFragment extends BaseFragment {
         mContext = context;
         initLanguageMap(context);
     }
-
 
     public interface FilterListener {
         void onFilterChanged();
@@ -91,6 +88,7 @@ public class SearchFiltersFragment extends BaseFragment {
         mCollectionsWrapper = (ViewGroup) view.findViewById(R.id.collections_wrapper);
         mLanguagesWrapper = (ViewGroup) view.findViewById(R.id.languages_wrapper);
         mFiltersWrapper = (ViewGroup) view.findViewById(R.id.filters_wrapper);
+        mFiltersContainer = (ViewGroup) view.findViewById(R.id.filters_container);
 
         refresh();
 
@@ -328,9 +326,12 @@ public class SearchFiltersFragment extends BaseFragment {
 
 
 
-
-
     private void initFilters() {
+        if(mQuery.noFilters()) {
+            mFiltersContainer.setVisibility(View.GONE);
+        } else {
+            mFiltersContainer.setVisibility(View.VISIBLE);
+        }
         if(mQuery.hasQuery()) {
             addUsedFilter(mQuery.getQuery(), "q", mQuery.getQuery(), R.drawable.ic_search_grey);
         }
@@ -349,7 +350,7 @@ public class SearchFiltersFragment extends BaseFragment {
             addUsedFilter(keyword, SearchQuery.KEYWORDS, keyword, R.drawable.ic_label_grey);
         }
         for(String language : mQuery.getLanguages()) {
-            addUsedFilter(getLanguageName(language), SearchQuery.LANGUAGE, language, R.drawable.ic_star_grey);
+            addUsedFilter(getLanguageName(language), SearchQuery.LANGUAGE, language, R.drawable.ic_language_gray);
         }
     }
 
@@ -441,8 +442,6 @@ public class SearchFiltersFragment extends BaseFragment {
         }
     }
 
-
-    
 
 
 }
