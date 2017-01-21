@@ -479,7 +479,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
     @Override
     public void onSearchQuery(String query) {
-        if (query == null || query.length() == 0) {
+        if (query == null) {// || query.length() == 0) {
             return;
         }
         ContentValues cv = new ContentValues();

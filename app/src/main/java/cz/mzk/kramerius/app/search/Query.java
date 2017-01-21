@@ -34,7 +34,11 @@ public class Query {
 
 
     public Query(String query) {
-        this.query = query;
+        if(query.isEmpty()) {
+            this.query = null;
+        } else {
+            this.query = query;
+        }
     }
 
     public String getQuery() {

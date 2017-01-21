@@ -41,6 +41,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import cz.mzk.kramerius.app.R;
+import cz.mzk.kramerius.app.util.Logger;
 
 /**
  * @author Miguel Catalan Bañuls
@@ -267,7 +268,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     private void onSubmitQuery() {
         CharSequence query = mSearchSrcTextView.getText();
-        if (query != null && TextUtils.getTrimmedLength(query) > 0) {
+        if (query != null) {// && TextUtils.getTrimmedLength(query) > 0) {
             if (mOnQueryChangeListener == null || !mOnQueryChangeListener.onQueryTextSubmit(query.toString())) {
                 closeSearch();
                 mSearchSrcTextView.setText(null);
