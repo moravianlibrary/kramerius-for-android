@@ -33,7 +33,7 @@ public class Query {
 
 
 
-    public Query(String query, String collection) {
+    public Query(String query, String collection, boolean publicOnly) {
         if(query == null || query.isEmpty()) {
             this.query = null;
         } else {
@@ -41,6 +41,11 @@ public class Query {
         }
         if(collection != null) {
             collections.add(collection);
+        }
+        if(publicOnly) {
+            accessibility = "public";
+        } else {
+            accessibility = "all";
         }
     }
 

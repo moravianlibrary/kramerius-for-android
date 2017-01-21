@@ -127,6 +127,7 @@
                 android:id="@+id/menu_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@drawable/button_menu"
                 app:menuIcon="@drawable/ic_search_grey"
                 app:menuIconSelected="@drawable/ic_search_green"

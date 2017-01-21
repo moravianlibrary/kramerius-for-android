@@ -31,6 +31,7 @@ import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.search.Query;
 import cz.mzk.kramerius.app.util.Logger;
 import cz.mzk.kramerius.app.util.ModelUtil;
+import cz.mzk.kramerius.app.util.PrefUtils;
 import cz.mzk.kramerius.app.view.MaterialSearchView;
 
 public class SearchResultsActivity extends BaseActivity implements View.OnClickListener, OnItemSelectedListener, SearchFiltersFragment.FilterListener {
@@ -70,7 +71,7 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 //            return;
 //        }
 
-        mQuery = new Query(query, collection);
+        mQuery = new Query(query, collection, PrefUtils.isPublicOnly(this));
 
         if(savedInstanceState == null) {
             mSearchResultsFragment = new SearchResultsFragment();

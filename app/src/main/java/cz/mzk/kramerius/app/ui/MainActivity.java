@@ -431,9 +431,10 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
 
     @Override
     public void onSearch() {
-        SearchFragment fragment = SearchFragment.getInstance(SearchFragment.TYPE_BASIC);
-        fragment.setOnSearchListener(this);
-        changeFragment(fragment, FRAGMENT_SEARCH, R.string.search_title);
+
+//        SearchFragment fragment = SearchFragment.getInstance(SearchFragment.TYPE_BASIC);
+//        fragment.setOnSearchListener(this);
+//        changeFragment(fragment, FRAGMENT_SEARCH, R.string.search_title);
     }
 
     @Override
@@ -491,6 +492,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
         intent.putExtra(SearchResultsActivity.EXTRA_QUERY, query);
         startActivity(intent);
+        finish();
     }
 
     @Override
