@@ -23,6 +23,8 @@ public class Query {
     private List<String> authors = new ArrayList<>();
     private List<String> keywords = new ArrayList<>();
     private List<String> doctypes = new ArrayList<>();
+    private List<String> languages = new ArrayList<>();
+    private List<String> collections = new ArrayList<>();
 
 
 
@@ -68,6 +70,13 @@ public class Query {
         return keywords;
     }
 
+    public List<String> getLanguages() {
+        return keywords;
+    }
+
+    public List<String> getCollections() {
+        return keywords;
+    }
 
 
     public String buildQuery() {
@@ -88,6 +97,12 @@ public class Query {
         }
         if(!doctypes.isEmpty()) {
             q+= " AND " + SearchQuery.MODEL + ":" + join(doctypes);
+        }
+        if(!languages.isEmpty()) {
+            q+= " AND " + SearchQuery.LANGUAGE + ":" + join(languages);
+        }
+        if(!collections.isEmpty()) {
+            q+= " AND " + SearchQuery.COLLECTION + ":" + join(collections);
         }
         return q;
     }
@@ -112,6 +127,12 @@ public class Query {
         if(!SearchQuery.MODEL.equals(facet) && !doctypes.isEmpty()) {
             q+= " AND " + SearchQuery.MODEL + ":" + join(doctypes);
         }
+        if(!SearchQuery.LANGUAGE.equals(facet) && !languages.isEmpty()) {
+            q+= " AND " + SearchQuery.LANGUAGE + ":" + join(languages);
+        }
+        if(!SearchQuery.COLLECTION.equals(facet) && !collections.isEmpty()) {
+            q+= " AND " + SearchQuery.COLLECTION + ":" + join(collections);
+        }
         return q;
     }
 
@@ -130,6 +151,12 @@ public class Query {
         }
         if(SearchQuery.MODEL.equals(code)) {
             return doctypes.contains(value);
+        }
+        if(SearchQuery.LANGUAGE.equals(code)) {
+            return languages.contains(value);
+        }
+        if(SearchQuery.COLLECTION.equals(code)) {
+            return collections.contains(value);
         }
         return false;
     }
@@ -159,6 +186,14 @@ public class Query {
         }
         if(SearchQuery.MODEL.equals(code)) {
             switchVelue(doctypes, value);
+            return true;
+        }
+        if(SearchQuery.LANGUAGE.equals(code)) {
+            switchVelue(languages, value);
+            return true;
+        }
+        if(SearchQuery.COLLECTION.equals(code)) {
+            switchVelue(collections, value);
             return true;
         }
         return false;

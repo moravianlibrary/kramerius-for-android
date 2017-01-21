@@ -74,7 +74,7 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
             mSearchResultsFragment.setQuery(mQuery);
             mSearchResultsFragment.setOnItemSelectedListener(this);
 
-            mSearchFiltersFragment = new SearchFiltersFragment();
+            mSearchFiltersFragment = new SearchFiltersFragment(this);
             mSearchFiltersFragment.setQuery(mQuery);
             mSearchFiltersFragment.setCallback(this);
 
@@ -229,6 +229,8 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
             switchMode();
         }
     }
+
+
 
 
 
