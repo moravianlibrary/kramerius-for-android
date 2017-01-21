@@ -341,4 +341,17 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
         finish();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if (mSearchView.isSearchOpen()) {
+            mSearchView.closeSearch();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+
+
+
 }

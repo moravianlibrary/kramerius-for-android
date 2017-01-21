@@ -492,7 +492,7 @@ public class MainActivity extends BaseActivity implements MainMenuListener, Logi
         Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
         intent.putExtra(SearchResultsActivity.EXTRA_QUERY, query);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     @Override
