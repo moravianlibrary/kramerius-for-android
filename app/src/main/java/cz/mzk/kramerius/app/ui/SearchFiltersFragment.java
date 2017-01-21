@@ -4,14 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,17 +17,13 @@ import java.util.Map;
 import cz.mzk.kramerius.app.BaseFragment;
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
-import cz.mzk.kramerius.app.card.VirtualCollectionCard;
 import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.model.Hit;
 import cz.mzk.kramerius.app.model.Item;
 import cz.mzk.kramerius.app.search.Query;
 import cz.mzk.kramerius.app.search.SearchQuery;
-import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.LangUtils;
 import cz.mzk.kramerius.app.util.Logger;
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 
 public class SearchFiltersFragment extends BaseFragment {
 
@@ -157,7 +151,7 @@ public class SearchFiltersFragment extends BaseFragment {
             } else if(SearchQuery.MODEL.equals(tFacet)) {
                 handleDoctypes(result);
             } else if(SearchQuery.COLLECTION.equals(tFacet)) {
-                handleCollections(result);
+                handleCollections(result, false);
             } else if(SearchQuery.LANGUAGE.equals(tFacet)) {
                 handleLanguages(result);
             }
@@ -237,7 +231,7 @@ public class SearchFiltersFragment extends BaseFragment {
         }
     }
 
-    private void handleCollections(List<Hit> list) {
+    private void handleCollections(List<Hit> list, boolean fromPending) {
         if(list == null) {
             return;
         }
@@ -246,7 +240,12 @@ public class SearchFiltersFragment extends BaseFragment {
             new GetVirtualCollectionsTask(mContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             for (Hit h : list) {
-                addFilter(mCollectionsWrapper, mCollectionsMap.get(h.value), SearchQuery.COLLECTION, h.value, h.count);
+                addFilter(mCollectionsWrapper, getCollectionName(h.value), SearchQuery.COLLECTION, h.value, h.count);
+            }
+            if(fromPending) {
+                for (String collection : mQuery.getCollections()) {
+                    addUsedFilter(getCollectionName(collection), SearchQuery.COLLECTION, collection, R.drawable.ic_group_grey);
+                }
             }
         }
     }
@@ -341,8 +340,10 @@ public class SearchFiltersFragment extends BaseFragment {
         for(String author : mQuery.getAuthors()) {
             addUsedFilter(author, SearchQuery.AUTHOR_FACET, author, R.drawable.ic_user_grey);
         }
-        for(String collection : mQuery.getCollections()) {
-            addUsedFilter(collection, SearchQuery.COLLECTION, collection, R.drawable.ic_group_grey);
+        if(mCollectionsMap != null) {
+            for (String collection : mQuery.getCollections()) {
+                addUsedFilter(getCollectionName(collection), SearchQuery.COLLECTION, collection, R.drawable.ic_group_grey);
+            }
         }
         for(String keyword : mQuery.getKeywords()) {
             addUsedFilter(keyword, SearchQuery.KEYWORDS, keyword, R.drawable.ic_label_grey);
@@ -394,6 +395,15 @@ public class SearchFiltersFragment extends BaseFragment {
     }
 
 
+    private String getCollectionName(String code) {
+        if(mCollectionsMap.containsKey(code)) {
+            return mCollectionsMap.get(code);
+        } else {
+            return code;
+        }
+    }
+
+
     private void fillCollectionMap(List<Item> list) {
         if(list == null) {
             return;
@@ -403,16 +413,6 @@ public class SearchFiltersFragment extends BaseFragment {
             mCollectionsMap.put(item.getPid(), item.getTitle());
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -437,15 +437,12 @@ public class SearchFiltersFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<Item> result) {
             fillCollectionMap(result);
-            handleCollections(mPendingCollectionFilter);
+            handleCollections(mPendingCollectionFilter, true);
         }
-
     }
 
 
-
-
-
+    
 
 
 }

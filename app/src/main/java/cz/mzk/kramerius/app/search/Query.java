@@ -71,11 +71,11 @@ public class Query {
     }
 
     public List<String> getLanguages() {
-        return keywords;
+        return languages;
     }
 
     public List<String> getCollections() {
-        return keywords;
+        return collections;
     }
 
 
