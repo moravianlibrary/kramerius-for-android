@@ -286,7 +286,7 @@ public class K5Api {
 
     public static String getSuggestionsPath(Context context, String query, int limit) {
         String fl = "dc.title";
-        String q = "dc.title:" + query + "* AND " + Query.TOP_LEVEL_RESTRICTION + " AND (dostupnost:public^3 OR dostupnost:private)";
+        String q = "dc.title:" + query.replaceAll(":", "").replaceAll("\"", "") + "* AND " + Query.TOP_LEVEL_RESTRICTION + " AND (dostupnost:public^3 OR dostupnost:private)";
         String rows = String.valueOf(limit);
         return getApiUri(context).buildUpon().appendPath(PATH_SEARCH)
                 .appendQueryParameter("fl", fl)

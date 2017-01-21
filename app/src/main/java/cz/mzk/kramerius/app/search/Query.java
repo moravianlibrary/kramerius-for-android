@@ -140,7 +140,7 @@ public class Query {
     public String buildFacetQuery(String facet) {
         String q = "";
         if(hasQuery()) {
-            q = getQuery() + " AND " + Query.TOP_LEVEL_RESTRICTION;
+            q = escape(getQuery()) + " AND " + Query.TOP_LEVEL_RESTRICTION;
         } else {
             q = Query.TOP_LEVEL_RESTRICTION;
         }

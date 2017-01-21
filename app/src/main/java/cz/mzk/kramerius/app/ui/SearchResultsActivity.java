@@ -275,7 +275,7 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
         @Override
         protected List<String> doInBackground(String... params) {
             if (tQuery == null || tQuery.length() < 1) {
-                return new ArrayList<String>();
+                return new ArrayList<>();
             }
             return K5ConnectorFactory.getConnector().getSuggestions(tContext, tQuery, 30);
         }
