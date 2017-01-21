@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/main_container">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,8 +30,7 @@
             <FrameLayout
                 android:id="@+id/main_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </FrameLayout>
+                android:layout_height="match_parent"></FrameLayout>
 
             <FrameLayout
                 android:id="@+id/main_menu"
@@ -41,21 +40,11 @@
         </android.support.v4.widget.DrawerLayout>
 
 
-
     </LinearLayout>
 
-
-
-
-    <FrameLayout
-        android:id="@+id/toolbar_container"
+    <cz.mzk.kramerius.app.view.MaterialSearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <cz.mzk.kramerius.app.view.MaterialSearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

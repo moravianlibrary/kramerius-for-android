@@ -40,14 +40,8 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/toolbar_container"
+    <cz.mzk.kramerius.app.view.MaterialSearchView
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <cz.mzk.kramerius.app.view.MaterialSearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+        android:layout_height="wrap_content" />
 </FrameLayout>
