@@ -12,6 +12,10 @@ import cz.mzk.kramerius.app.util.Logger;
 public class Query {
 
 
+    public static final String TOP_LEVEL_RESTRICTION = "(fedora.model:monograph^4 OR fedora.model:periodical^4 OR fedora.model:map OR fedora.model:soundrecording OR fedora.model:graphic OR fedora.model:archive OR fedora.model:manuscript OR fedora.model:sheetmusic)";
+
+
+
     private static final String LOG_TAG = Query.class.getSimpleName();
 
     public static final String ACCESSIBILITY_ALL = "all";
@@ -95,9 +99,9 @@ public class Query {
     public String buildQuery() {
         String q = "";
         if(hasQuery()) {
-            q = "_query_:\"{!dismax qf='dc.title^1000 text^0.0001' v=$q1}\" AND level:0";
+            q = "_query_:\"{!dismax qf='dc.title^1000 text^0.0001' v=$q1}\" AND " + Query.TOP_LEVEL_RESTRICTION;
         } else {
-            q = "level:0";
+            q = Query.TOP_LEVEL_RESTRICTION;
         }
         if(!ACCESSIBILITY_ALL.equals(getAccessibility())) {
             q+= " AND " + SearchQuery.POLICY + ":" + getAccessibility();
@@ -124,9 +128,9 @@ public class Query {
     public String buildFacetQuery(String facet) {
         String q = "";
         if(hasQuery()) {
-            q = getQuery() + " AND level:0";
+            q = getQuery() + " AND " + Query.TOP_LEVEL_RESTRICTION;
         } else {
-            q = "level:0";
+            q = Query.TOP_LEVEL_RESTRICTION;
         }
         if(!SearchQuery.POLICY.equals(facet) && !ACCESSIBILITY_ALL.equals(getAccessibility())) {
             q+= " AND " + SearchQuery.POLICY + ":" + getAccessibility();
