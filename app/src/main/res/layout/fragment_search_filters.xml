@@ -17,8 +17,6 @@
             android:orientation="vertical">
 
 
-
-
             <LinearLayout
                 android:id="@+id/filters_container"
                 android:layout_width="match_parent"
@@ -32,7 +30,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="POUŽITÉ FILTRY"
+                    android:text="@string/search_used_filters"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 
@@ -46,9 +44,6 @@
             </LinearLayout>
 
 
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,7 +57,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="DOSTUPNOST"
+                    android:text="@string/search_accessibility"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 
@@ -76,11 +71,6 @@
             </LinearLayout>
 
 
-
-
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +84,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="TYP DOKUMENTU"
+                    android:text="@string/search_doctype"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 
@@ -108,11 +98,6 @@
             </LinearLayout>
 
 
-
-
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -126,7 +111,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="AUTOR"
+                    android:text="@string/search_author"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 
@@ -153,7 +138,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="SBÍRKA"
+                    android:text="@string/search_collection"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 
@@ -178,7 +163,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="KLÍČOVÉ SLOVO"
+                    android:text="@string/search_keyword"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 
@@ -203,7 +188,7 @@
                     android:background="#555"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="JAZYK"
+                    android:text="@string/search_language"
                     android:textColor="#fff"
                     android:textStyle="bold" />
 

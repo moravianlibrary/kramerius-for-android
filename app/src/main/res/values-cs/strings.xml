@@ -166,6 +166,19 @@
     <string name="sound_unit_play">Přehrát</string>
 
 
+
+    <string name="search_switch_filters">Upřesnit hledání</string>
+    <string name="search_switch_results">Zpět na výsledky hledání</string>
+    <string name="search_used_filters">POUŽITÉ FILTRY</string>
+    <string name="search_accessibility">DOSTUPNOST</string>
+    <string name="search_doctype">TYP DOKUMENTU</string>
+    <string name="search_author">AUTOR</string>
+    <string name="search_collection">SBÍRKA</string>
+    <string name="search_language">JAZYK</string>
+    <string name="search_keyword">KLÍČOVÉ SLOVO</string>
+
+
+
     <string name="search_public_only">Pouze veřejné</string>
     <string name="search_add_filter">Přidat filtr</string>
     <string name="search_fulltext">Fulltext</string>

@@ -212,13 +212,13 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
         mFiltersMode = inFilterMode;
         if(inFilterMode) {
 
-            mSwitchBtn.setText("Zpět na výsledky hledání");
+            mSwitchBtn.setText(R.string.search_switch_results);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             //ft.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_left);
             ft.hide(mSearchResultsFragment);
             ft.show(mSearchFiltersFragment).commit();
         } else {
-            mSwitchBtn.setText("Upřesnit hledání");
+            mSwitchBtn.setText(R.string.search_switch_filters);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.hide(mSearchFiltersFragment);
             ft.show(mSearchResultsFragment).commit();
@@ -233,11 +233,6 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
             switchMode();
         }
     }
-
-
-
-
-
 
 
 

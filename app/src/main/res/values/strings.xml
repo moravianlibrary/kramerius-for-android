@@ -170,6 +170,18 @@
     <string name="sound_unit_play">Play</string>
 
 
+
+    <string name="search_switch_filters">Search filters</string>
+    <string name="search_switch_results">Back to search results</string>
+    <string name="search_used_filters">APPLIED FILTERS</string>
+    <string name="search_accessibility">ACCESSIBILITY</string>
+    <string name="search_doctype">DOCUMENT TYPE</string>
+    <string name="search_author">AUTHOR</string>
+    <string name="search_collection">COLLECTION</string>
+    <string name="search_language">LANGUAGE</string>
+    <string name="search_keyword">KEYWORD</string>
+
+
     <string name="search_public_only">Public only</string>
     <string name="search_add_filter">Add filter</string>
     <string name="search_fulltext">Fulltext</string>
