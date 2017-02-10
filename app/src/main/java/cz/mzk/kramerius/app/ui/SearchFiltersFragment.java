@@ -54,22 +54,19 @@ public class SearchFiltersFragment extends BaseFragment {
     private Context mContext;
 
 
-    public void setQuery(Query query) {
-        mQuery = query;
+
+    public SearchFiltersFragment() {
     }
 
-    public SearchFiltersFragment(Context context) {
+    public void init(Context context, FilterListener callback, Query query) {
         mContext = context;
+        mQuery = query;
+        mCallback = callback;
         initLanguageMap(context);
     }
 
     public interface FilterListener {
         void onFilterChanged();
-    }
-
-
-    public void setCallback(FilterListener callback) {
-        mCallback = callback;
     }
 
     @Override

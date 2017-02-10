@@ -32,6 +32,14 @@
         android:layout_height="match_parent" />
 
 
+    <FrameLayout
+        android:id="@+id/search_filters_container"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/switch_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 
     <cz.mzk.kramerius.app.view.MaterialSearchView
         android:id="@+id/search_view"

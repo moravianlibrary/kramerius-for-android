@@ -75,32 +75,29 @@ public class SearchResultsActivity extends BaseActivity implements View.OnClickL
 
         if(savedInstanceState == null) {
             mSearchResultsFragment = new SearchResultsFragment();
-            mSearchResultsFragment.setQuery(mQuery);
-            mSearchResultsFragment.setOnItemSelectedListener(this);
+            mSearchResultsFragment.init(this, mQuery);
 
-            mSearchFiltersFragment = new SearchFiltersFragment(this);
-            mSearchFiltersFragment.setQuery(mQuery);
-            mSearchFiltersFragment.setCallback(this);
-
+            mSearchFiltersFragment = new SearchFiltersFragment();
+            mSearchFiltersFragment.init(this, this, mQuery);
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            if (getDevice() == TABLET && isLandscape()) {
+//            if (getDevice() == TABLET && isLandscape()) {
                 ft.replace(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
                 ft.replace(R.id.search_filters_container, mSearchFiltersFragment, "tag_search_filters").commit();
-            } else {
-                mSwitchBtn = (TextView) findViewById(R.id.switch_btn);
-                mSwitchBtn.setOnClickListener(this);
-                ft.add(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
-                ft.add(R.id.search_result_container, mSearchFiltersFragment, "tag_search_filters").commit();
-            }
+//            } else {
+//                ft.add(R.id.search_result_container, mSearchResultsFragment, "tag_search_results");
+//                ft.add(R.id.search_result_container, mSearchFiltersFragment, "tag_search_filters").commit();
+//            }
         } else {
             mSearchResultsFragment = (SearchResultsFragment) getFragmentManager().findFragmentByTag("tag_search_results");
-            mSearchResultsFragment.setQuery(mQuery);
-            mSearchResultsFragment.setOnItemSelectedListener(this);
+            mSearchResultsFragment.init(this, mQuery);
 
             mSearchFiltersFragment = (SearchFiltersFragment) getFragmentManager().findFragmentByTag("tag_search_filters");
-            mSearchFiltersFragment.setQuery(mQuery);
-            mSearchFiltersFragment.setCallback(this);
+            mSearchFiltersFragment.init(this, this, mQuery);
+        }
+        if (!(getDevice() == TABLET && isLandscape())) {
+            mSwitchBtn = (TextView) findViewById(R.id.switch_btn);
+            mSwitchBtn.setOnClickListener(this);
         }
         setMode(false);
 

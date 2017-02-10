@@ -8,8 +8,12 @@ android {
         applicationId "cz.mzk.kramerius.app"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 25
-        versionName "1.1.1"
+        versionCode 26
+        versionName "1.1.2"
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
     }
 
     buildTypes {
@@ -18,7 +22,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix ".debug"
+            applicationIdSuffix ".beta"
         }
     }
 

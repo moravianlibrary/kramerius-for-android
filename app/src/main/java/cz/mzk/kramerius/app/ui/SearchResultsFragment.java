@@ -57,13 +57,13 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
 
     private View mNoResults;
 
-    public void setQuery(Query query) {
-        mQuery = query;
-    }
-
     public SearchResultsFragment() {
     }
 
+    public void init(OnItemSelectedListener onItemSelectedListener, Query query) {
+        mOnItemSelectedListener = onItemSelectedListener;
+        mQuery = query;
+    }
 
     public void refresh() {
         if(mAdapter != null) {
@@ -76,10 +76,6 @@ public class SearchResultsFragment extends BaseFragment implements OnOpenDetailL
         mFirst = true;
         mLoading = true;
         new GetResultTask(getActivity().getApplicationContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mQuery);
-    }
-
-    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
-        mOnItemSelectedListener = onItemSelectedListener;
     }
 
     @Override

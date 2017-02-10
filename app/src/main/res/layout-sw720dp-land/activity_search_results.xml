@@ -22,6 +22,7 @@
 
     <View
         android:id="@+id/divider"
+        android:layout_below="@id/toolbar"
         android:layout_toRightOf="@id/search_filters_container"
         android:layout_width="1dp"
         android:layout_height="match_parent"
