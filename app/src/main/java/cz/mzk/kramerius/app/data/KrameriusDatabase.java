@@ -35,9 +35,10 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION_LIBRARY = 8;
     private static final int DATABASE_VERSION_NEW_LIBRARIES = 9;
     private static final int DATABASE_VERSION_SEARCH_SUGGESTIONS = 10;
+    private static final int DATABASE_VERSION_NEW_LIBRARIES2 = 11;
 
 
-    private static final int DATABASE_VERSION = DATABASE_VERSION_SEARCH_SUGGESTIONS;
+    private static final int DATABASE_VERSION = DATABASE_VERSION_NEW_LIBRARIES2;
 
     private static final String DATABASE_NAME_INTERNAL = "kramerius.db";
     private static final String DATABASE_NAME_EXTERNAL = Environment
@@ -274,6 +275,12 @@ public class KrameriusDatabase extends SQLiteOpenHelper {
             case DATABASE_VERSION_NEW_LIBRARIES:
                 db.execSQL(buildStatementCreateTable(SearchEntry.TABLE_NAME, version + 1));
                 version++;
+            case DATABASE_VERSION_SEARCH_SUGGESTIONS:
+                db.execSQL("DROP TABLE IF EXISTS " + LibraryEntry.TABLE_NAME);
+                db.execSQL(buildStatementCreateTable(LibraryEntry.TABLE_NAME, version + 1));
+                populateFrom(db, R.raw.libraries);
+                version++;
+
         }
     }
 
