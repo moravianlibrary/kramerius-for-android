@@ -48,7 +48,7 @@ public class Domain {
     }
 
     public String getLogo() {
-        return "http://registr.digitalniknihovna.cz/libraries/" + this.code + "/logo";
+        return "http://registrkrameriu.mzk.cz/libraries/" + this.code + "/logo";
     }
 
 }

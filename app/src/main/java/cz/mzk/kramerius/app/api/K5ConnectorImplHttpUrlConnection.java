@@ -733,7 +733,7 @@ public class K5ConnectorImplHttpUrlConnection {
 
     public boolean reloadLibraries(Context context) {
         try {
-            String url = "http://registr.digitalniknihovna.cz/libraries.json?android=2";
+            String url = "http://registrkrameriu.mzk.cz/libraries.json?android=2";
             String jsonString = getResponse(context, url, false);
             Logger.debug(LOG_TAG, "getLibraries - Response:" + jsonString);
             JSONArray jsonArray = (JSONArray) new JSONTokener(jsonString).nextValue();
