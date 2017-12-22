@@ -2,6 +2,7 @@ package cz.mzk.kramerius.app.ui;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +22,7 @@ import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.Analytics;
+import cz.mzk.kramerius.app.util.CardUtils;
 import cz.mzk.kramerius.app.util.DomainUtil;
 import cz.mzk.kramerius.app.view.MenuItemWidget;
 
@@ -111,7 +117,12 @@ public class MainMenuFragment extends Fragment implements OnClickListener {
         }
         mDomainTitle.setText(domain.getTitle());
         mDomainUrl.setText(domain.getDomain());
-        mDomainLogo.setImageResource(domain.getLogo());
+
+
+        DisplayImageOptions options = CardUtils.initUniversalImageLoaderLibrary(getActivity());
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+        imageLoader.displayImage(domain.getLogo(), (ImageView) mDomainLogo, options);
 
     }
 

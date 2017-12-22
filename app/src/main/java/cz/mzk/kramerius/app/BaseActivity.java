@@ -3,6 +3,11 @@ package cz.mzk.kramerius.app;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -17,9 +22,16 @@ public class BaseActivity extends ActionBarActivity {
 
     private int mDevice;
 
+    private Animation mLoaderAnimation;
+    private View mLoaderView;
+    private View mLoaderContainer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mLoaderAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation);
+        mLoaderAnimation.setRepeatCount(Animation.INFINITE);
         Configuration config = getResources().getConfiguration();
         if (config.smallestScreenWidthDp >= 720) {
             mDevice = TABLET;
@@ -51,6 +63,28 @@ public class BaseActivity extends ActionBarActivity {
 
     public boolean isPortrait() {
         return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    protected void stopLoaderAnimation() {
+        if (mLoaderContainer == null || mLoaderView == null) {
+            return;
+        }
+        mLoaderView.clearAnimation();
+        mLoaderContainer.setVisibility(View.GONE);
+    }
+
+    protected void startLoaderAnimation() {
+        if (mLoaderContainer == null) {
+            return;
+        }
+        mLoaderContainer.setVisibility(View.VISIBLE);
+        mLoaderView.startAnimation(mLoaderAnimation);
+    }
+
+    protected void inflateLoader(ViewGroup root) {
+        mLoaderContainer = getLayoutInflater().inflate(R.layout.view_loader, root, false);
+        mLoaderView = mLoaderContainer.findViewById(R.id.loader);
+        root.addView(mLoaderContainer);
     }
 
 

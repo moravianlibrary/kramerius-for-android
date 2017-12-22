@@ -1,19 +1,17 @@
 package cz.mzk.kramerius.app.ui;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cz.mzk.kramerius.app.BaseActivity;
 import cz.mzk.kramerius.app.KrameriusApplication;
@@ -22,7 +20,6 @@ import cz.mzk.kramerius.app.api.K5Api;
 import cz.mzk.kramerius.app.api.K5ConnectorFactory;
 import cz.mzk.kramerius.app.card.DomainCard;
 import cz.mzk.kramerius.app.card.DomainCard.OnDomainPopupListener;
-import cz.mzk.kramerius.app.data.KrameriusContract;
 import cz.mzk.kramerius.app.model.Domain;
 import cz.mzk.kramerius.app.util.Analytics;
 import cz.mzk.kramerius.app.util.CardUtils;
@@ -52,8 +49,16 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        ViewGroup container = (ViewGroup) findViewById(R.id.domain_container);
+        inflateLoader(container);
+
         mList = (CardListView) findViewById(R.id.card_list);
-        populate();
+        if (KrameriusApplication.getInstance().currentLibraries()) {
+            populate();
+        } else {
+            refreshLibraries();
+        }
+
     }
 
     @Override
@@ -62,19 +67,15 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
             case android.R.id.home:
                 finish();
                 return true;
-            case 999:
-                refreshLibraries();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void populate() {
-        String currentDomain = K5Api.getDomain(this); // TODO
+//        String currentDomain = K5Api.getDomain(this); // TODO
         ArrayList<Card> cards = new ArrayList<Card>();
-        boolean allDomains = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_all_sources), false);
-        for (Domain domain : DomainUtil.getDomains(allDomains)) {
+        for (Domain domain : DomainUtil.getDomains()) {
             DomainCard card = new DomainCard(this, domain);
             card.setOnDomainPopupListener(this);
             card.setOnClickListener(new OnCardClickListener() {
@@ -98,18 +99,9 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
         }
         mAdapter = new CardArrayAdapter(this, cards);
         CardUtils.setAnimationAdapter(mAdapter, mList);
+        mList.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        boolean allDomains = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_all_sources), false);
-        if(allDomains) {
-            MenuItem item = menu.add(Menu.NONE, 999, Menu.NONE, "Obnovit");
-            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            item.setIcon(android.R.drawable.ic_menu_add);
-        }
-        return true;
-    }
 
     @Override
     public void onStart() {
@@ -150,6 +142,8 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
 
 
     private void refreshLibraries() {
+        startLoaderAnimation();
+        mList.setVisibility(View.GONE);
         new GetLibrariesTask().execute();
     }
 
@@ -158,19 +152,18 @@ public class DomainActivity extends BaseActivity implements OnDomainPopupListene
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return K5ConnectorFactory.getConnector().reloadTestLibraries(DomainActivity.this);
+            return K5ConnectorFactory.getConnector().reloadLibraries(DomainActivity.this);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if(result) {
-                onLibrariesReloaded();
-            }
+            stopLoaderAnimation();
+            onLibrariesReloaded(result);
         }
     }
 
-    private void onLibrariesReloaded() {
-        KrameriusApplication.getInstance().reloadLibraries();
+    private void onLibrariesReloaded(boolean newData) {
+        KrameriusApplication.getInstance().reloadLibraries(newData);
         populate();
     }
 

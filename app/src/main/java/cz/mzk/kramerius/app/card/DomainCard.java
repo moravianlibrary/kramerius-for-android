@@ -6,8 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
 import cz.mzk.kramerius.app.R;
 import cz.mzk.kramerius.app.model.Domain;
+import cz.mzk.kramerius.app.util.CardUtils;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.internal.CardThumbnail;
@@ -21,9 +24,10 @@ public class DomainCard extends Card {
 
     public DomainCard(Context context, Domain domain) {
         super(context, R.layout.view_card_domain_content);
+        DisplayImageOptions options = CardUtils.initUniversalImageLoaderLibrary(context);
         mContext = context;
         mDomain = domain;
-        init();
+        init(options);
     }
 
     public void setOnDomainPopupListener(OnDomainPopupListener onDomainPopupListener) {
@@ -40,7 +44,7 @@ public class DomainCard extends Card {
         public void onDomainPopupContent(Domain domain);
     }
 
-    private void init() {
+    private void init(DisplayImageOptions options) {
         //MainCardHeader header = new MainCardHeader(getContext(), 17, R.color.grey, 1);
         MainCardHeader header = new MainCardHeader(getContext(), 2);
         header.setTitle(mDomain.getTitle());
@@ -58,9 +62,12 @@ public class DomainCard extends Card {
         });
 
         addCardHeader(header);
-        CardThumbnail thumbnail = new CardThumbnail(mContext);
-        thumbnail.setDrawableResource(mDomain.getLogo());
-        addCardThumbnail(thumbnail);
+//        CardThumbnail thumbnail = new CardThumbnail(mContext);
+//        thumbnail.setDrawableResource(mDomain.getLogo());
+//        addCardThumbnail(thumbnail);
+        UniversalCardThumbnail cardThumbnail = new UniversalCardThumbnail(mContext, mDomain.getLogo(), options);
+        cardThumbnail.setExternalUsage(true);
+        addCardThumbnail(cardThumbnail);
     }
 
     @Override

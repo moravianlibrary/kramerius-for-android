@@ -26,6 +26,7 @@ public class KrameriusApplication extends Application {
 
     private static KrameriusApplication INSTANCE;
     private List<Domain> mLibraries;
+    private boolean currentLibraries = false;
 
     @Override
     public void onCreate() {
@@ -75,12 +76,19 @@ public class KrameriusApplication extends Application {
 
     public List<Domain> getLibraries() {
         if(mLibraries == null) {
-            reloadLibraries();
+            reloadLibraries(false);
         }
         return mLibraries;
     }
 
-    public void reloadLibraries() {
+    public boolean currentLibraries() {
+        return this.currentLibraries;
+    }
+
+    public void reloadLibraries(boolean newData) {
+        if (newData) {
+            this.currentLibraries = true;
+        }
         if(mLibraries == null) {
             mLibraries = new ArrayList<>();
         }
@@ -101,18 +109,7 @@ public class KrameriusApplication extends Application {
             d.setTitle(c.getString(0));
             d.setProtocol(c.getString(1));
             d.setDomain(c.getString(2));
-
-            int locked = c.getInt(4);
-            d.setUnlocked(locked == 0);
-
-            int logo = R.drawable.ic_empty_36dp;
-            if(locked == 0) {
-                String logoName = "logo_" + c.getString(3);
-                Logger.debug(TAG, "logoName: " + logoName);
-                logo = getResources().getIdentifier(logoName, "drawable", getPackageName());
-            }
-            Logger.debug(TAG, "logo: " + logo);
-            d.setLogo(logo);
+            d.setCode(c.getString(3));
             mLibraries.add(d);
         }
         c.close();

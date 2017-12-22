@@ -729,13 +729,15 @@ public class K5ConnectorImplHttpUrlConnection {
     }
 
 
-    public boolean reloadTestLibraries(Context context) {
-        context.getContentResolver().delete(KrameriusContract.LibraryEntry.CONTENT_URI, KrameriusContract.LibraryEntry.COLUMN_LOCKED + "=?", new String[]{String.valueOf(1)});
+
+
+    public boolean reloadLibraries(Context context) {
         try {
-            String url = "https://registr-krameriu.herokuapp.com/libraries.json?android=1";
+            String url = "http://registr.digitalniknihovna.cz/libraries.json?android=2";
             String jsonString = getResponse(context, url, false);
             Logger.debug(LOG_TAG, "getLibraries - Response:" + jsonString);
             JSONArray jsonArray = (JSONArray) new JSONTokener(jsonString).nextValue();
+            context.getContentResolver().delete(KrameriusContract.LibraryEntry.CONTENT_URI, null, null);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonItem = jsonArray.getJSONObject(i);
                 String name = jsonItem.optString("name");
@@ -757,6 +759,7 @@ public class K5ConnectorImplHttpUrlConnection {
                 cv.put(KrameriusContract.LibraryEntry.COLUMN_LOCKED, 1);
                 context.getContentResolver().insert(KrameriusContract.LibraryEntry.CONTENT_URI, cv);
             }
+            return true;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -764,7 +767,7 @@ public class K5ConnectorImplHttpUrlConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
 
